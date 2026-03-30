@@ -6,29 +6,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
-import json, urllib.request
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('landing.urls')),
-    path('accounts/', include('accounts.urls')),
-    path('companies/', include('companies.urls')),
-    path('employees/', include('employees.urls')),
-    path('forms/', include('forms_builder.urls')),
-    path('reports/', include('reports.urls')),
-    path('billing/', include('billing.urls')),
-    path('api/', include('accounts.api_urls')),
-    path('api/cnpj/<str:cnpj>/', cnpj_lookup, name='cnpj_lookup'),
-]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
-else:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
 from django.http import JsonResponse
+import json, urllib.request
 
 def cnpj_lookup(request, cnpj):
     """Proxy para APIs gratuitas de consulta de CNPJ."""
@@ -69,3 +48,22 @@ def cnpj_lookup(request, cnpj):
             continue
 
     return JsonResponse({'error': 'Não foi possível consultar o CNPJ. Tente novamente.'}, status=503)
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('landing.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('companies/', include('companies.urls')),
+    path('employees/', include('employees.urls')),
+    path('forms/', include('forms_builder.urls')),
+    path('reports/', include('reports.urls')),
+    path('billing/', include('billing.urls')),
+    path('api/', include('accounts.api_urls')),
+    path('api/cnpj/<str:cnpj>/', cnpj_lookup, name='cnpj_lookup'),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+else:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

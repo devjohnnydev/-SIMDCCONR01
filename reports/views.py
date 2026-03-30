@@ -11,7 +11,8 @@ from django.template.loader import render_to_string
 from django.db.models import Avg, Count, Q
 from django.utils import timezone
 
-from weasyprint import HTML, CSS
+# WeasyPrint importado de forma lazily dentro de cada view para evitar
+# falha na inicializacao do Django quando bibliotecas do sistema nao estao presentes.
 
 from .models import Report
 from forms_builder.models import FormInstance, FormAnswer, FormQuestion
@@ -155,6 +156,7 @@ def generate_form_report(request, form_pk):
     
     html_string = render_to_string('reports/pdf/form_report.html', context)
     
+    from weasyprint import HTML
     html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
     pdf = html.write_pdf()
     
@@ -247,6 +249,7 @@ def generate_simdcconr01_report(request, form_pk):
     }
     
     html_string = render_to_string('reports/pdf/simdcconr01_report.html', context)
+    from weasyprint import HTML
     html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
     pdf = html.write_pdf()
     
@@ -311,6 +314,7 @@ def generate_period_report(request):
     
     html_string = render_to_string('reports/pdf/period_report.html', context)
     
+    from weasyprint import HTML
     html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
     pdf = html.write_pdf()
     

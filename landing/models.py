@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.db.utils import ProgrammingError
+from django.core.management import call_command
 
 
 class LandingConfig(models.Model):
@@ -56,8 +58,15 @@ class LandingConfig(models.Model):
 
     @classmethod
     def get(cls):
-        obj, _ = cls.objects.get_or_create(pk=1)
-        return obj
+        try:
+            obj, _ = cls.objects.get_or_create(pk=1)
+            return obj
+        except ProgrammingError:
+            print("AVISO: Tabela landing ausente. Forçando migração em tempo real (runtime)...")
+            call_command('makemigrations', 'landing', interactive=False)
+            call_command('migrate', 'landing', interactive=False)
+            obj, _ = cls.objects.get_or_create(pk=1)
+            return obj
 
 
 class Testimonial(models.Model):

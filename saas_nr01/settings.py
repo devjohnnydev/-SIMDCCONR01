@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'reports',
     'billing',
     'audit',
-    'landing',
+    'landing.apps.LandingAppConfig',
 ]
 
 MIDDLEWARE = [

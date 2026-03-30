@@ -70,6 +70,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     lgpd_aggregate_accepted = models.BooleanField('Consentimento Agregado (PGR/GRO)', default=False)
     lgpd_aggregate_at = models.DateTimeField('Data Consentimento Agregado', null=True, blank=True)
     
+    terms_accepted = models.BooleanField('Termos Aceitos', default=False)
+    terms_accepted_at = models.DateTimeField('Data Aceite Termos', null=True, blank=True)
+    privacy_accepted = models.BooleanField('Privacidade Aceita', default=False)
+    privacy_accepted_at = models.DateTimeField('Data Aceite Privacidade', null=True, blank=True)
+    
     date_joined = models.DateTimeField('Data de Cadastro', default=timezone.now)
     
     objects = UserManager()

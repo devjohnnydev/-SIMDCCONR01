@@ -162,7 +162,9 @@
                             <div class="row g-3">
                                 <div class="col-md-6">{{ form.nome_fantasia|as_crispy_field }}</div>
                                 <div class="col-md-6">{{ form.razao_social|as_crispy_field }}</div>
-                                <div class="col-md-6">{{ form.cnpj|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.cnpj|as_crispy_field }}
+                                    <small id="cnpj-status" class="text-muted d-block mt-1"></small>
+                                </div>
                                 <div class="col-md-6">{{ form.telefone|as_crispy_field }}</div>
                             </div>
                         </div>
@@ -307,4 +309,70 @@
         </div>
     </div>
 </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const cnpjInput = document.getElementById("id_cnpj");
+    const statusText = document.getElementById("cnpj-status");
+
+    // Fields to auto-fill
+    const fields = {
+        razao_social: document.getElementById("id_razao_social"),
+        nome_fantasia: document.getElementById("id_nome_fantasia"),
+        telefone: document.getElementById("id_telefone"),
+        endereco: document.getElementById("id_endereco"),
+        cidade: document.getElementById("id_cidade"),
+        estado: document.getElementById("id_estado"),
+        cep: document.getElementById("id_cep")
+    };
+
+    if (cnpjInput) {
+        cnpjInput.addEventListener("input", function(e) {
+            let val = e.target.value.replace(/\D/g, "");
+            if (val.length === 14) {
+                statusText.innerHTML = '<span class="text-primary"><i class="bi bi-hourglass-split"></i> Consultando Receita Federal/APIs...</span>';
+                
+                fetch(`/api/cnpj/${val}/`)
+                    .then(response => {
+                        if (!response.ok) throw new Error("CNPJ não encontrado");
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) throw new Error(data.error);
+                        
+                        statusText.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> Dados encontrados e preenchidos!</span>';
+                        
+                        if (fields.razao_social && data.razao_social) fields.razao_social.value = data.razao_social;
+                        if (fields.nome_fantasia && data.nome_fantasia) fields.nome_fantasia.value = data.nome_fantasia;
+                        
+                        if (fields.telefone && data.telefone) {
+                            let telObj = data.telefone.split('/')[0].trim();
+                            fields.telefone.value = telObj;
+                        }
+                        
+                        if (fields.endereco && data.logradouro) {
+                            let end = data.logradouro;
+                            if (data.numero) end += `, ${data.numero}`;
+                            if (data.complemento) end += ` - ${data.complemento}`;
+                            if (data.bairro) end += ` (${data.bairro})`;
+                            fields.endereco.value = end;
+                        }
+                        
+                        if (fields.cidade && data.municipio) fields.cidade.value = data.municipio;
+                        if (fields.estado && data.uf) fields.estado.value = data.uf;
+                        if (fields.cep && data.cep) fields.cep.value = data.cep.replace(/\D/g, "");
+                    })
+                    .catch(err => {
+                        statusText.innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> ${err.message}</span>`;
+                    });
+            } else if (val.length < 14) {
+                statusText.innerHTML = '';
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

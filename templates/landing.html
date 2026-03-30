@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMDCCONR01 - Saúde Mental Corporativa e NR-1</title>
+    <meta name="description" content="O sistema mais completo do Brasil para diagnóstico de riscos psicossociais, compliance NR-1, NR-17 e NR-12. Proteja sua equipe e sua empresa.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --blue: #2563EB;
+            --blue-dark: #1D4ED8;
+            --teal: #0D9488;
+            --purple: #7C3AED;
+            --dark: #0A0F1E;
+            --dark2: #111827;
+            --dark3: #1F2937;
+            --text: #F9FAFB;
+            --muted: #9CA3AF;
+            --card: rgba(255,255,255,0.05);
+            --border: rgba(255,255,255,0.08);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 2rem;
+            background: rgba(10,15,30,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 0.6rem; }
+        .nav-logo .dot { width: 10px; height: 10px; background: var(--teal); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+        .nav-logo span { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px; }
+        .nav-logo span em { color: var(--teal); font-style: normal; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .btn-nav {
+            background: var(--blue); color: #fff; padding: 0.55rem 1.4rem;
+            border-radius: 8px; font-weight: 600; font-size: 0.9rem;
+            text-decoration: none; transition: background 0.2s, transform 0.2s;
+        }
+        .btn-nav:hover { background: var(--blue-dark); transform: translateY(-1px); color: #fff; }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+            padding: 7rem 1.5rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.25) 0%, transparent 70%),
+                        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(13,148,136,0.2) 0%, transparent 60%);
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.4);
+            color: #93C5FD; font-size: 0.8rem; font-weight: 600;
+            padding: 0.4rem 1rem; border-radius: 999px; margin-bottom: 1.5rem;
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        .hero h1 {
+            font-size: clamp(2.2rem, 6vw, 4.5rem);
+            font-weight: 900; line-height: 1.08;
+            letter-spacing: -2px; max-width: 900px; margin: 0 auto 1.5rem;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #38BDF8, #6EE7B7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--muted); max-width: 640px; margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+        .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            color: #fff; padding: 0.9rem 2.2rem; border-radius: 12px;
+            font-weight: 700; font-size: 1rem; text-decoration: none;
+            box-shadow: 0 8px 32px rgba(37,99,235,0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(37,99,235,0.5); }
+        .btn-outline {
+            background: transparent; color: var(--text);
+            border: 1.5px solid var(--border); padding: 0.9rem 2.2rem;
+            border-radius: 12px; font-weight: 600; font-size: 1rem;
+            text-decoration: none; transition: border-color 0.2s, background 0.2s;
+        }
+        .btn-outline:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); }
+
+        .hero-stats {
+            display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
+            margin-top: 4rem; padding-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+        .stat { text-align: center; }
+        .stat-num { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: -1px; }
+        .stat-num span { color: var(--teal); }
+        .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* ── SECTIONS ── */
+        section { padding: 5rem 1.5rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .section-tag {
+            display: inline-block; color: var(--teal); font-size: 0.78rem;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.8rem;
+        }
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800;
+            letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.15;
+        }
+        .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 560px; line-height: 1.7; }
+
+        /* ── PROBLEMA ── */
+        .problem-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem; margin-top: 3rem;
+        }
+        .problem-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 2rem;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .problem-card:hover { border-color: rgba(37,99,235,0.4); transform: translateY(-4px); }
+        .problem-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .problem-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .problem-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+        /* ── SOLUÇÃO / FEATURES ── */
+        .features-bg { background: var(--dark2); }
+        .features-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem; margin-top: 3rem;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 20px; padding: 2rem;
+            position: relative; overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .feature-card:hover { transform: translateY(-6px); }
+        .feature-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--blue), var(--teal));
+        }
+        .feature-num { font-size: 3rem; font-weight: 900; color: rgba(255,255,255,0.06); line-height: 1; margin-bottom: 0.5rem; }
+        .feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+        .tag {
+            display: inline-block; font-size: 0.72rem; font-weight: 600;
+            padding: 0.2rem 0.6rem; border-radius: 6px; margin-bottom: 0.8rem;
+        }
+        .tag-blue { background: rgba(37,99,235,0.2); color: #93C5FD; }
+        .tag-teal { background: rgba(13,148,136,0.2); color: #5EEAD4; }
+        .tag-purple { background: rgba(124,58,237,0.2); color: #C4B5FD; }
+
+        /* ── NR-1 SPOTLIGHT ── */
+        .nr1-section {
+            background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(13,148,136,0.1));
+            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+        }
+        .nr1-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .nr1-visual {
+            background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+            border-radius: 20px; padding: 2rem; position: relative;
+        }
+        .nr1-visual .label {
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            color: var(--muted); letter-spacing: 1px; margin-bottom: 1rem;
+        }
+        .risk-bar { margin-bottom: 1rem; }
+        .risk-bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; }
+        .risk-bar-track { height: 8px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; }
+        .risk-bar-fill { height: 100%; border-radius: 99px; animation: growBar 2s ease forwards; }
+        @keyframes growBar { from { width: 0%; } }
+        .fill-red { background: linear-gradient(90deg, #EF4444, #F97316); width: 78%; }
+        .fill-yellow { background: linear-gradient(90deg, #F59E0B, #FCD34D); width: 52%; }
+        .fill-green { background: linear-gradient(90deg, #10B981, #6EE7B7); width: 24%; }
+        .fill-blue { background: linear-gradient(90deg, #3B82F6, #60A5FA); width: 65%; }
+
+        /* ── PLANOS ── */
+        .plans-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem; margin-top: 3rem; align-items: start;
+        }
+        .plan-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 2rem;
+            transition: transform 0.3s;
+        }
+        .plan-card:hover { transform: translateY(-4px); }
+        .plan-card.featured {
+            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(124,58,237,0.15));
+            border-color: rgba(37,99,235,0.5);
+            position: relative;
+        }
+        .plan-badge {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            color: #fff; font-size: 0.72rem; font-weight: 700;
+            padding: 0.25rem 1rem; border-radius: 999px; white-space: nowrap;
+        }
+        .plan-name { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.5rem; }
+        .plan-price { font-size: 2.5rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 0.5rem; }
+        .plan-price small { font-size: 1rem; font-weight: 400; color: var(--muted); }
+        .plan-desc { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.5rem; }
+        .plan-features { list-style: none; margin-bottom: 2rem; }
+        .plan-features li {
+            padding: 0.5rem 0; font-size: 0.88rem; color: var(--muted);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .plan-features li .check { color: var(--teal); font-size: 1rem; }
+        .btn-plan {
+            display: block; text-align: center; padding: 0.8rem;
+            border-radius: 10px; font-weight: 700; font-size: 0.95rem;
+            text-decoration: none; transition: 0.2s;
+        }
+        .btn-plan-solid { background: linear-gradient(135deg, var(--blue), var(--purple)); color: #fff; }
+        .btn-plan-solid:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-plan-ghost { border: 1.5px solid var(--border); color: var(--text); }
+        .btn-plan-ghost:hover { border-color: rgba(255,255,255,0.3); }
+
+        /* ── LOGIN CTA ── */
+        .cta-section {
+            background: linear-gradient(135deg, var(--blue-dark), var(--purple));
+            border-radius: 24px; padding: 4rem 2rem; text-align: center; margin: 0 1.5rem;
+        }
+        .cta-section h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 1rem; }
+        .cta-section p { color: rgba(255,255,255,0.75); margin-bottom: 2rem; font-size: 1.05rem; }
+        .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-white { background: #fff; color: #1D4ED8; padding: 0.9rem 2rem; border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.2s; }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .btn-white-ghost { background: rgba(255,255,255,0.15); color: #fff; border: 1.5px solid rgba(255,255,255,0.3); padding: 0.9rem 2rem; border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.2s; }
+        .btn-white-ghost:hover { background: rgba(255,255,255,0.25); }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 3rem 1.5rem 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        footer p { color: var(--muted); font-size: 0.85rem; }
+        footer a { color: var(--teal); text-decoration: none; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            nav { padding: 1rem; }
+            .nav-links { display: none; }
+            .nr1-inner { grid-template-columns: 1fr; gap: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-logo">
+        <div class="dot"></div>
+        <span>SIMDCC<em>ONR01</em></span>
+    </div>
+    <div class="nav-links">
+        <a href="#problema">Por que importa</a>
+        <a href="#solucao">Solução</a>
+        <a href="#nr1">NR-1</a>
+        <a href="#planos">Planos</a>
+    </div>
+    <a href="/accounts/login/" class="btn-nav">Entrar na Plataforma →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div style="position:relative;z-index:1;width:100%">
+        <div class="hero-badge">🧠 Nova Obrigação Legal — NR-1 / Portaria MTE 1.419/2024</div>
+        <h1>Saúde Mental no Trabalho<br>não é opcional.<br><span class="highlight">É lei. É urgente.</span></h1>
+        <p>O sistema mais completo do Brasil para diagnóstico de riscos psicossociais, compliance NR-1, NR-17 e NR-12 — com 160 questões validadas e inteligência artificial.</p>
+        <div class="hero-ctas">
+            <a href="#planos" class="btn-primary">Proteja sua Empresa Agora</a>
+            <a href="/accounts/login/" class="btn-outline">Acessar Plataforma →</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat"><div class="stat-num">1<span>em 3</span></div><div class="stat-label">trabalhadores com burnout</div></div>
+            <div class="stat"><div class="stat-num">R$<span>28bi</span></div><div class="stat-label">custo anual em afastamentos</div></div>
+            <div class="stat"><div class="stat-num">160</div><div class="stat-label">questões validadas</div></div>
+            <div class="stat"><div class="stat-num">3<span>NRs</span></div><div class="stat-label">cobertas em 1 sistema</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- PROBLEMA -->
+<section id="problema">
+    <div class="container">
+        <span class="section-tag">O Problema</span>
+        <h2 class="section-title">Sua empresa está em risco<br>sem saber</h2>
+        <p class="section-sub">A partir de 2024, a NR-1 tornou obrigatório o mapeamento dos riscos psicossociais. O custo de ignorar isso é enorme.</p>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="problem-icon">⚖️</div>
+                <h3>Multas e Sanções</h3>
+                <p>Empresas que não cumprirem a NR-1 atualizada estão sujeitas a autuações do MTE, interdições e processos trabalhistas com altíssimas indenizações.</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">🧠</div>
+                <h3>Sofrimento Real da Equipe</h3>
+                <p>Burnout, ansiedade e depressão geram absenteísmo, queda de produtividade e turnover elevado. O custo humano e financeiro é devastador.</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">📋</div>
+                <h3>PGR Incompleto</h3>
+                <p>Sem o mapeamento psicossocial integrado ao GRO, seu Programa de Gerenciamento de Riscos está oficialmente incompleto e vulnerável a fiscalizações.</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">🔍</div>
+                <h3>Sem Dados, Sem Solução</h3>
+                <p>Sem um instrumento estruturado e validado, sua empresa não tem base para tomar decisões preventivas ou demonstrar conformidade em uma auditoria.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SOLUÇÃO -->
+<section id="solucao" class="features-bg">
+    <div class="container">
+        <span class="section-tag">A Solução</span>
+        <h2 class="section-title">SIMDCCONR01: O sistema que<br>sua empresa precisa</h2>
+        <p class="section-sub">Um instrumento de 160 questões, validado cientificamente, com IA integrada para gerar laudos periciais prontos para auditoria.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="tag tag-blue">IMCO · 88 questões</span>
+                <div class="feature-num">01</div>
+                <h3>Clima Organizacional</h3>
+                <p>Instrumento validado por Coda et al. (2009) medindo motivação, liderança, filosofia de gestão, políticas de RH e comunicação interna.</p>
+            </div>
+            <div class="feature-card">
+                <span class="tag tag-teal">FDAC · 12 questões</span>
+                <div class="feature-num">02</div>
+                <h3>Cultura Organizacional</h3>
+                <p>Identifica dissonâncias entre a cultura declarada e a percebida, revelando os ruídos invisíveis que corroem o engajamento.</p>
+            </div>
+            <div class="feature-card">
+                <span class="tag tag-purple">NR-01 · 46 questões</span>
+                <div class="feature-num">03</div>
+                <h3>Riscos Psicossociais</h3>
+                <p>Mapeamento completo de fatores de risco para o PGR/GRO: sobrecarga, assédio, conflitos interpessoais e neurocognição.</p>
+            </div>
+            <div class="feature-card">
+                <span class="tag tag-blue">NR-17 · 12 questões</span>
+                <div class="feature-num">04</div>
+                <h3>Ergonomia</h3>
+                <p>Avaliação de aspectos ergonômicos físicos e cognitivos conforme a NR-17 atualizada.</p>
+            </div>
+            <div class="feature-card">
+                <span class="tag tag-teal">NR-12 · 2 questões</span>
+                <div class="feature-num">05</div>
+                <h3>Segurança em Máquinas</h3>
+                <p>Checagem de conformidade em segurança e ergonomia de máquinas e equipamentos.</p>
+            </div>
+            <div class="feature-card">
+                <span class="tag tag-purple">IA · Groq Llama-3.3</span>
+                <div class="feature-num">06</div>
+                <h3>Laudo Pericial por IA</h3>
+                <p>Motor de inteligência artificial analisa as 160 respostas e gera automaticamente laudos periciais com diagnóstico e recomendações para o PGR.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- NR-1 SPOTLIGHT -->
+<section id="nr1" class="nr1-section">
+    <div class="container">
+        <div class="nr1-inner">
+            <div>
+                <span class="section-tag">⚠️ Atenção: Nova NR-1</span>
+                <h2 class="section-title">A Portaria MTE 1.419/2024 mudou tudo</h2>
+                <p style="color:var(--muted);line-height:1.7;margin-bottom:1.5rem">A partir de maio de 2025, o Gerenciamento de Riscos Ocupacionais (GRO) é OBRIGATÓRIO incluir a identificação e avaliação de riscos psicossociais, com laudos e planos de ação documentados.</p>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:0.8rem">
+                    <li style="display:flex;align-items:flex-start;gap:0.8rem;color:var(--muted);font-size:0.9rem"><span style="color:#10B981;font-size:1.2rem;margin-top:0.1rem">✓</span><span><strong style="color:#fff">GRO/PGR atualizado</strong> com fatores psicossociais mapeados e documentados</span></li>
+                    <li style="display:flex;align-items:flex-start;gap:0.8rem;color:var(--muted);font-size:0.9rem"><span style="color:#10B981;font-size:1.2rem;margin-top:0.1rem">✓</span><span><strong style="color:#fff">Rastreabilidade por CPF</strong> para histórico ocupacional entre empresas</span></li>
+                    <li style="display:flex;align-items:flex-start;gap:0.8rem;color:var(--muted);font-size:0.9rem"><span style="color:#10B981;font-size:1.2rem;margin-top:0.1rem">✓</span><span><strong style="color:#fff">Reaplicação semestral</strong> automática conforme exigência legal</span></li>
+                    <li style="display:flex;align-items:flex-start;gap:0.8rem;color:var(--muted);font-size:0.9rem"><span style="color:#10B981;font-size:1.2rem;margin-top:0.1rem">✓</span><span><strong style="color:#fff">LGPD compliant</strong> com consentimento duplo e anonimização de dados</span></li>
+                </ul>
+            </div>
+            <div class="nr1-visual">
+                <div class="label">DRPS — Diagnóstico de Risco Psicossocial (Amostra)</div>
+                <div class="risk-bar">
+                    <div class="risk-bar-label"><span>Sobrecarga de Trabalho</span><span style="color:#F87171">Crítico</span></div>
+                    <div class="risk-bar-track"><div class="risk-bar-fill fill-red"></div></div>
+                </div>
+                <div class="risk-bar">
+                    <div class="risk-bar-label"><span>Relacionamento com Liderança</span><span style="color:#FCD34D">Médio</span></div>
+                    <div class="risk-bar-track"><div class="risk-bar-fill fill-yellow"></div></div>
+                </div>
+                <div class="risk-bar">
+                    <div class="risk-bar-label"><span>Conflitos Interpessoais</span><span style="color:#6EE7B7">Baixo</span></div>
+                    <div class="risk-bar-track"><div class="risk-bar-fill fill-green"></div></div>
+                </div>
+                <div class="risk-bar">
+                    <div class="risk-bar-label"><span>Clareza de Objetivos</span><span style="color:#93C5FD">Médio-Alto</span></div>
+                    <div class="risk-bar-track"><div class="risk-bar-fill fill-blue"></div></div>
+                </div>
+                <div style="margin-top:1.5rem;padding:1rem;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px">
+                    <p style="font-size:0.78rem;color:#6EE7B7;font-weight:600;margin-bottom:0.3rem">🤖 Análise IA — Llama-3.3</p>
+                    <p style="font-size:0.82rem;color:var(--muted)">Detectado risco crítico de burnout no setor financeiro. Recomendo inclusão no PGR com plano de ação imediato.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PLANOS -->
+<section id="planos">
+    <div class="container">
+        <div style="text-align:center">
+            <span class="section-tag">Planos e Preços</span>
+            <h2 class="section-title">Escolha o plano ideal<br>para sua empresa</h2>
+            <p class="section-sub" style="margin:0 auto">Todos os planos incluem as 160 questões SIMDCCONR01, compliance NR-1 e geração de laudos.</p>
+        </div>
+        <div class="plans-grid">
+            <div class="plan-card">
+                <div class="plan-name">Starter</div>
+                <div class="plan-price">R$297<small>/mês</small></div>
+                <div class="plan-desc">Para PMEs até 50 colaboradores</div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span>Até 50 funcionários</li>
+                    <li><span class="check">✓</span>160 questões SIMDCCONR01</li>
+                    <li><span class="check">✓</span>Reaplicação semestral automática</li>
+                    <li><span class="check">✓</span>Dashboard de resultados</li>
+                    <li><span class="check">✓</span>Laudo PDF básico</li>
+                </ul>
+                <a href="/accounts/company-signup/" class="btn-plan btn-plan-ghost">Começar Agora</a>
+            </div>
+            <div class="plan-card featured">
+                <div class="plan-badge">⭐ Mais Popular</div>
+                <div class="plan-name">Professional</div>
+                <div class="plan-price">R$697<small>/mês</small></div>
+                <div class="plan-desc">Para empresas de 50 a 300 colaboradores</div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span>Até 300 funcionários</li>
+                    <li><span class="check">✓</span>160 questões SIMDCCONR01</li>
+                    <li><span class="check">✓</span>Reaplicação semestral automática</li>
+                    <li><span class="check">✓</span>IA — Laudo Pericial Completo</li>
+                    <li><span class="check">✓</span>Rastreabilidade por CPF</li>
+                    <li><span class="check">✓</span>PGR/GRO pronto para auditoria</li>
+                    <li><span class="check">✓</span>Suporte prioritário</li>
+                </ul>
+                <a href="/accounts/company-signup/" class="btn-plan btn-plan-solid">Começar Agora</a>
+            </div>
+            <div class="plan-card">
+                <div class="plan-name">Enterprise</div>
+                <div class="plan-price">Sob<small> consulta</small></div>
+                <div class="plan-desc">Para grupos e conglomerados +300</div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span>Colaboradores ilimitados</li>
+                    <li><span class="check">✓</span>Multi-empresa (CNPJ)</li>
+                    <li><span class="check">✓</span>IA com relatórios consolidados</li>
+                    <li><span class="check">✓</span>API de integração</li>
+                    <li><span class="check">✓</span>Implementação assistida</li>
+                    <li><span class="check">✓</span>SLA e suporte dedicado</li>
+                </ul>
+                <a href="mailto:contato@simdcconr01.com.br" class="btn-plan btn-plan-ghost">Falar com Especialista</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA FINAL -->
+<section style="padding:3rem 0">
+    <div class="cta-section">
+        <h2>Sua empresa está pronta<br>para a nova NR-1?</h2>
+        <p>Evite multas, proteja sua equipe e mantenha o PGR atualizado.<br>Comece hoje com o sistema mais completo do Brasil.</p>
+        <div class="cta-btns">
+            <a href="/accounts/company-signup/" class="btn-white">Cadastrar Minha Empresa</a>
+            <a href="/accounts/login/" class="btn-white-ghost">Já sou cliente — Entrar</a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p style="margin-bottom:0.5rem"><strong>SIMDCCONR01</strong> — Sistema de Medida de Dissonância de Cultura e Clima Organizacional</p>
+    <p>Conforme Portaria MTE 1.419/2024 · NR-1 · NR-17 · NR-12 · LGPD</p>
+    <p style="margin-top:1rem">
+        <a href="/accounts/login/">Entrar na Plataforma</a> · 
+        <a href="/admin/">Admin Master</a> ·
+        <a href="mailto:contato@simdcconr01.com.br">contato@simdcconr01.com.br</a>
+    </p>
+    <p style="margin-top:1rem;font-size:0.78rem">© 2026 SIMDCCONR01. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>

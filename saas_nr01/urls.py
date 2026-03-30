@@ -5,11 +5,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.generic import RedirectView
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(pattern_name='accounts:dashboard'), name='home'),
+    path('', TemplateView.as_view(template_name='landing.html'), name='home'),
     path('accounts/', include('accounts.urls')),
     path('companies/', include('companies.urls')),
     path('employees/', include('employees.urls')),

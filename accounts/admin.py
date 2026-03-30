@@ -20,7 +20,7 @@ class UserAdmin(BaseUserAdmin):
         ('Informacoes Pessoais', {'fields': ('first_name', 'last_name')}),
         ('Empresa e Papel', {'fields': ('company', 'role')}),
         ('Permissoes', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Termos', {'fields': ('terms_accepted', 'terms_accepted_at', 'privacy_accepted', 'privacy_accepted_at')}),
+        ('LGPD - Consentimentos', {'fields': ('lgpd_individual_accepted', 'lgpd_individual_at', 'lgpd_aggregate_accepted', 'lgpd_aggregate_at')}),
         ('Datas', {'fields': ('last_login', 'date_joined')}),
     )
     
@@ -31,4 +31,4 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
     
-    readonly_fields = ['date_joined', 'last_login', 'terms_accepted_at', 'privacy_accepted_at']
+    readonly_fields = ['date_joined', 'last_login', 'lgpd_individual_at', 'lgpd_aggregate_at']

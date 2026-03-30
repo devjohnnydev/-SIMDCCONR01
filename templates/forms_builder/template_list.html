@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Templates de Formularios - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="h2 mb-4"><i class="bi bi-file-earmark-text"></i> Templates de Formularios</h1>
+    
+    <div class="row g-4">
+        <div class="col-12">
+            <h5>Templates Globais</h5>
+            <p class="text-muted">Templates prontos para uso imediato.</p>
+        </div>
+        
+        {% for template in global_templates %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <span class="badge bg-{% if template.category == 'NR01' %}danger{% elif template.category == 'CLIMATE' %}primary{% elif template.category == 'WELLBEING' %}success{% else %}secondary{% endif %} mb-2">
+                        {{ template.get_category_display }}
+                    </span>
+                    <h5 class="card-title">{{ template.name }}</h5>
+                    <p class="card-text text-muted">{{ template.description|truncatechars:100 }}</p>
+                    <p class="small text-muted">{{ template.questions.count }} perguntas</p>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{% url 'forms:template_detail' template.pk %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-eye"></i> Ver
+                    </a>
+                    <a href="{% url 'forms:instance_create' template.pk %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus"></i> Usar
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                Nenhum template global disponivel. Execute o comando de criacao de templates iniciais.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if company_templates %}
+    <hr class="my-5">
+    
+    <div class="row g-4">
+        <div class="col-12">
+            <h5>Templates da Empresa</h5>
+            <p class="text-muted">Templates personalizados para sua empresa.</p>
+        </div>
+        
+        {% for template in company_templates %}
+        <div class="col-md-4">
+            <div class="card h-100 border-primary">
+                <div class="card-body">
+                    <span class="badge bg-{% if template.category == 'NR01' %}danger{% elif template.category == 'CLIMATE' %}primary{% elif template.category == 'WELLBEING' %}success{% else %}secondary{% endif %} mb-2">
+                        {{ template.get_category_display }}
+                    </span>
+                    <h5 class="card-title">{{ template.name }}</h5>
+                    <p class="card-text text-muted">{{ template.description|truncatechars:100 }}</p>
+                    <p class="small text-muted">{{ template.questions.count }} perguntas</p>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{% url 'forms:template_detail' template.pk %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-eye"></i> Ver
+                    </a>
+                    <a href="{% url 'forms:instance_create' template.pk %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus"></i> Usar
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

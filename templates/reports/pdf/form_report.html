@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatorio - {{ form_instance.title }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .header {
+            border-bottom: 2px solid {{ company.cor_primaria }};
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: {{ company.cor_primaria }};
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            color: #666;
+        }
+        .company-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .company-info h3 {
+            margin: 0 0 10px 0;
+            color: {{ company.cor_primaria }};
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section h2 {
+            color: {{ company.cor_primaria }};
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: {{ company.cor_primaria }};
+            color: white;
+        }
+        .stats-grid {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            flex: 1;
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: {{ company.cor_primaria }};
+        }
+        .stat-label {
+            color: #666;
+            font-size: 11px;
+        }
+        .methodology {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 10px;
+            color: #666;
+        }
+        .anonymous-notice {
+            background-color: #d1ecf1;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            color: #0c5460;
+        }
+        .signature-area {
+            margin-top: 50px;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Relatorio de Pesquisa</h1>
+        <p>{{ form_instance.title }}</p>
+        <p>{{ form_instance.template.get_category_display }}</p>
+    </div>
+    
+    <div class="company-info">
+        <h3>{{ company.nome_fantasia }}</h3>
+        <p>CNPJ: {{ company.cnpj|slice:":2" }}.{{ company.cnpj|slice:"2:5" }}.{{ company.cnpj|slice:"5:8" }}/{{ company.cnpj|slice:"8:12" }}-{{ company.cnpj|slice:"12:" }}</p>
+        <p>Responsavel: {{ company.responsavel_nome }} - {{ company.responsavel_email }}</p>
+    </div>
+    
+    <div class="section">
+        <h2>Resumo Executivo</h2>
+        
+        <table>
+            <tr>
+                <th>Metrica</th>
+                <th>Valor</th>
+            </tr>
+            <tr>
+                <td>Periodo da Pesquisa</td>
+                <td>{{ form_instance.start_date|date:"d/m/Y" }} a {{ form_instance.end_date|date:"d/m/Y" }}</td>
+            </tr>
+            <tr>
+                <td>Total de Participantes Convocados</td>
+                <td>{{ stats.total_assigned }}</td>
+            </tr>
+            <tr>
+                <td>Total de Respostas</td>
+                <td>{{ stats.total_completed }}</td>
+            </tr>
+            <tr>
+                <td>Taxa de Resposta</td>
+                <td>{{ stats.response_rate }}%</td>
+            </tr>
+            {% if stats.average_score %}
+            <tr>
+                <td>Media Geral (Escala)</td>
+                <td>{{ stats.average_score|floatformat:2 }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+    
+    {% if is_anonymous %}
+    <div class="anonymous-notice">
+        <strong>Pesquisa Anonima:</strong> As respostas foram coletadas de forma anonima, garantindo a confidencialidade dos participantes.
+    </div>
+    {% endif %}
+    
+    <div class="methodology">
+        <h3>Metodologia</h3>
+        <p><strong>Instrumento:</strong> {{ form_instance.template.name }}</p>
+        <p><strong>Tipo:</strong> {{ form_instance.template.get_category_display }}</p>
+        <p><strong>Numero de Questoes:</strong> {{ question_results|length }}</p>
+        <p><strong>Tipos de Resposta:</strong> Escalas Likert (1-5), multipla escolha, sim/nao, respostas abertas.</p>
+        <p><strong>Coleta:</strong> Online, via plataforma SaaS NR-01.</p>
+    </div>
+    
+    <div class="section">
+        <h2>Resultados por Questao</h2>
+        
+        {% for result in question_results %}
+        <div style="margin-bottom: 15px; page-break-inside: avoid;">
+            <p><strong>{{ forloop.counter }}. {{ result.question.text }}</strong></p>
+            <p style="color: #666; font-size: 11px;">Tipo: {{ result.question.get_question_type_display }} | Respostas: {{ result.total_answers }}</p>
+            
+            {% if result.average %}
+            <p>Media: <strong>{{ result.average }}</strong></p>
+            {% endif %}
+            
+            {% if result.yes_count is not None %}
+            <p>Sim: {{ result.yes_count }} | Nao: {{ result.no_count }}</p>
+            {% endif %}
+            
+            {% if result.option_counts %}
+            <table>
+                <tr>
+                    <th>Opcao</th>
+                    <th>Quantidade</th>
+                </tr>
+                {% for opt, count in result.option_counts.items %}
+                <tr>
+                    <td>{{ opt }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+            
+            {% if result.distribution %}
+            <table>
+                <tr>
+                    {% for val, count in result.distribution.items %}
+                    <th>{{ val }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for val, count in result.distribution.items %}
+                    <td>{{ count }}</td>
+                    {% endfor %}
+                </tr>
+            </table>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="section">
+        <h2>Espaco para Parecer Tecnico</h2>
+        <div style="border: 1px solid #ddd; min-height: 150px; padding: 15px;">
+            <p style="color: #999;">Espaco reservado para observacoes e parecer do perito/consultor.</p>
+        </div>
+    </div>
+    
+    <div class="signature-area">
+        <p>Data: ___/___/_____</p>
+        <p>Assinatura do Responsavel Tecnico</p>
+    </div>
+    
+    <div class="footer">
+        <p>Relatorio gerado em {{ generated_at|date:"d/m/Y H:i" }} pela plataforma SaaS NR-01.</p>
+        <p>Este documento possui fins tecnicos e pode ser utilizado como evidencia em processos de auditoria e pericia.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciar Planos - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="h2 mb-4"><i class="bi bi-credit-card"></i> Gerenciar Planos</h1>
+    
+    <div class="alert alert-info">
+        Use o Django Admin para criar, editar e gerenciar planos.
+        <a href="/admin/billing/plan/" class="btn btn-sm btn-primary ms-2">Ir para Admin</a>
+    </div>
+    
+    <div class="row g-4">
+        {% for plan in plans %}
+        <div class="col-md-4">
+            <div class="card {% if plan.is_featured %}border-warning{% endif %}">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ plan.name }}</h5>
+                    {% if not plan.is_active %}
+                    <span class="badge bg-secondary">Inativo</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h4>R$ {{ plan.price_monthly }}/mes</h4>
+                    <p class="text-muted">{{ plan.description|truncatechars:100 }}</p>
+                    <hr>
+                    <ul class="list-unstyled small">
+                        <li>{{ plan.max_employees }} funcionarios</li>
+                        <li>{{ plan.max_forms }} formularios</li>
+                        <li>{{ plan.max_reports }} relatorios/mes</li>
+                        <li>Retencao: {{ plan.data_retention_days }} dias</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning">Nenhum plano cadastrado.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

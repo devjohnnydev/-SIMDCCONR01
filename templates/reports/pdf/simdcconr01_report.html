@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Laudo Pericial SIMDCCONR01 - {{ company.nome_fantasia }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+            @bottom-right {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 9pt;
+            }
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            line-height: 1.4;
+            font-size: 10pt;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2pt solid #003366;
+            margin-bottom: 20pt;
+            padding-bottom: 10pt;
+        }
+        .header h1 {
+            color: #003366;
+            font-size: 18pt;
+            margin: 0;
+        }
+        .header p {
+            margin: 5pt 0;
+            font-weight: bold;
+        }
+        .section {
+            margin-bottom: 15pt;
+        }
+        .section-title {
+            background-color: #003366;
+            color: white;
+            padding: 5pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 11pt;
+            margin-bottom: 10pt;
+        }
+        .grid {
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .grid-row {
+            display: table-row;
+        }
+        .grid-cell {
+            display: table-cell;
+            border: 1pt solid #ccc;
+            padding: 5pt;
+        }
+        .label {
+            font-weight: bold;
+            background-color: #f2f2f2;
+            width: 30%;
+        }
+        .ai-box {
+            border: 1.5pt solid #003366;
+            padding: 10pt;
+            background-color: #f9f9f9;
+        }
+        .alert {
+            color: #cc0000;
+            font-weight: bold;
+        }
+        .signature-box {
+            margin-top: 40pt;
+            text-align: center;
+            border-top: 1pt solid #333;
+            width: 250pt;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 5pt;
+        }
+        .footer-note {
+            font-size: 8pt;
+            color: #666;
+            margin-top: 20pt;
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SIMDCCONR01 - LAUDO PERICIAL INTEGRADO</h1>
+        <p>Sistema de Medida de Dissonância de Cultura e Clima Organizacional e NR-1/17/12</p>
+        <p>Versão 2026 - Conforme Portaria MTE nº 1.419/2024</p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Identificação</div>
+        <div class="grid">
+            <div class="grid-row">
+                <div class="grid-cell label">Empresa</div>
+                <div class="grid-cell">{{ company.razao_social }} ({{ company.cnpj }})</div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell label">Unidade/Setor</div>
+                <div class="grid-cell">{{ sector_filter|default:"Todas as Unidades" }}</div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell label">Período de Coleta</div>
+                <div class="grid-cell">{{ form_instance.start_date|date:"d/m/Y" }} a {{ form_instance.end_date|date:"d/m/Y" }}</div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell label">Data do Laudo</div>
+                <div class="grid-cell">{{ generated_at|date:"d/m/Y H:i" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Análise de Inteligência Artificial para PGR/GRO</div>
+        <div class="ai-box">
+            <p><strong>Diagnóstico Psicossocial:</strong> {{ ai_results.diagnostico_psicossocial }}</p>
+            <p><strong>Dissonância Clima x Cultura:</strong> {{ ai_results.dissonancia_clima_cultura }}</p>
+            <p><strong>Riscos Identificados (PGR/GRO):</strong> {{ ai_results.riscos_pgr_gro }}</p>
+            <p><strong>Recomendações de Ação:</strong> {{ ai_results.recomendacoes_acao }}</p>
+            
+            {% if ai_results.encaminhamento_medico %}
+            <p class="alert">ENCAMINHAMENTO MÉDICO URGENTE SUGERIDO:</p>
+            <p>{{ ai_results.justificativa_encaminhamento }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Consolidado do Instrumento (160 Questões)</div>
+        <p>Resultados baseados em {{ stats.total_completed }} respondentes.</p>
+        
+        <h3>IMCO - Clima Organizacional (Média por Vetor)</h3>
+        <ul>
+            <li>Vetor Motivação: {{ imco_stats.motivacao_avg|floatformat:2 }} / 5.0</li>
+            <li>Vetor Liderança: {{ imco_stats.lideranca_avg|floatformat:2 }} / 5.0</li>
+            <li>Vetor Filosofia de Gestão: {{ imco_stats.filosofia_avg|floatformat:2 }} / 5.0</li>
+        </ul>
+
+        <h3>FDAC - Dissonância de Cultura</h3>
+        <p>Índice de Alinhamento Cultural: {{ fdac_score }}%</p>
+
+        <h3>Rastreabilidade NR - Fatores de Risco</h3>
+        <p>Pontuação de Risco Psicossocial (Bloco K/M/O): {{ nr01_risk_score }} / 10.0</p>
+    </div>
+
+    <div class="signature-box">
+        <p><strong>ADMINISTRADOR ISMCBE</strong></p>
+        <p>Assinado Digitalmente via ICP-Brasil</p>
+        <p><small>Token ID: {{ signature_token }}</small></p>
+    </div>
+
+    <div class="footer-note">
+        Este documento é um laudo pericial gerado automaticamente pelo sistema SIMDCCONR01 em plena conformidade com a LGPD (Lei nº 13.709/2018) e as NRs 01, 17 e 12. Os dados individuais são tratados de forma anônima e agregada para fins corporativos, garantindo a rastreabilidade por CPF para fins de histórico ocupacional conforme exigido pela legislação vigente.
+    </div>
+</body>
+</html>

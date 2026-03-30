@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard de Relatorios - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="h2 mb-4"><i class="bi bi-graph-up"></i> Dashboard de Metricas</h1>
+    
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary">
+                <div class="card-body text-center">
+                    <i class="bi bi-people text-primary" style="font-size: 2rem;"></i>
+                    <h3 class="mt-2">{{ total_employees }}</h3>
+                    <p class="mb-0 text-muted">Funcionarios Ativos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-clipboard-check text-success" style="font-size: 2rem;"></i>
+                    <h3 class="mt-2">{{ active_forms_count }}</h3>
+                    <p class="mb-0 text-muted">Formularios Ativos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info">
+                <div class="card-body text-center">
+                    <i class="bi bi-emoji-smile text-info" style="font-size: 2rem;"></i>
+                    <h3 class="mt-2">{% if climate_score %}{{ climate_score }}{% else %}-{% endif %}</h3>
+                    <p class="mb-0 text-muted">Indice de Clima</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-warning">
+                <div class="card-body text-center">
+                    <i class="bi bi-heart text-warning" style="font-size: 2rem;"></i>
+                    <h3 class="mt-2">{% if wellbeing_score %}{{ wellbeing_score }}{% else %}-{% endif %}</h3>
+                    <p class="mb-0 text-muted">Indice de Bem-estar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if form_metrics %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Metricas por Formulario</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Formulario</th>
+                            <th>Categoria</th>
+                            <th>Respostas</th>
+                            <th>Taxa</th>
+                            <th>Media</th>
+                            <th>Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in form_metrics %}
+                        <tr>
+                            <td>{{ m.form.title }}</td>
+                            <td><span class="badge bg-secondary">{{ m.form.template.get_category_display }}</span></td>
+                            <td>{{ m.completed }}/{{ m.total }}</td>
+                            <td>
+                                <div class="progress" style="height: 20px; width: 100px;">
+                                    <div class="progress-bar" style="width: {{ m.response_rate }}%;">{{ m.response_rate }}%</div>
+                                </div>
+                            </td>
+                            <td>
+                                {% if m.avg_score %}
+                                <span class="badge bg-{% if m.avg_score >= 4 %}success{% elif m.avg_score >= 3 %}warning{% else %}danger{% endif %}">
+                                    {{ m.avg_score|floatformat:1 }}
+                                </span>
+                                {% else %}-{% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'reports:form_pdf' m.form.pk %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-file-pdf"></i> PDF
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Funcionarios por Setor</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="sectorChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h5 class="mb-0"><i class="bi bi-file-pdf"></i> Gerar Relatorio de Periodo</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" action="{% url 'reports:period_pdf' %}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Data Inicio</label>
+                                <input type="date" name="start_date" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Data Fim</label>
+                                <input type="date" name="end_date" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-file-pdf"></i> Gerar PDF do Periodo
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+var sectorData = {{ sector_data|safe }};
+if (sectorData.length > 0) {
+    var ctx = document.getElementById('sectorChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: sectorData.map(function(item) { return item.setor || 'Sem Setor'; }),
+            datasets: [{
+                data: sectorData.map(function(item) { return item.count; }),
+                backgroundColor: [
+                    '#0d6efd', '#198754', '#ffc107', '#dc3545', '#6c757d',
+                    '#0dcaf0', '#fd7e14', '#20c997', '#6610f2', '#d63384'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}

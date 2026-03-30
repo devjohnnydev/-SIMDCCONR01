@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ instance.title }} - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2">{{ instance.title }}</h1>
+            <span class="badge bg-{% if instance.template.category == 'NR01' %}danger{% elif instance.template.category == 'CLIMATE' %}primary{% elif instance.template.category == 'WELLBEING' %}success{% else %}secondary{% endif %}">
+                {{ instance.template.get_category_display }}
+            </span>
+            <span class="badge bg-{% if instance.status == 'ACTIVE' %}success{% elif instance.status == 'DRAFT' %}warning{% else %}secondary{% endif %}">
+                {{ instance.get_status_display }}
+            </span>
+            {% if instance.is_anonymous %}
+            <span class="badge bg-info"><i class="bi bi-incognito"></i> Anonimo</span>
+            {% endif %}
+        </div>
+        <div>
+            {% if instance.status == 'DRAFT' %}
+            <a href="{% url 'forms:instance_publish' instance.pk %}" class="btn btn-success" onclick="return confirm('Publicar formulario?')">
+                <i class="bi bi-send"></i> Publicar
+            </a>
+            {% elif instance.status == 'ACTIVE' %}
+            <a href="{% url 'forms:instance_close' instance.pk %}" class="btn btn-warning" onclick="return confirm('Encerrar formulario?')">
+                <i class="bi bi-stop-circle"></i> Encerrar
+            </a>
+            <a href="{% url 'reports:form_pdf' instance.pk %}" class="btn btn-danger">
+                <i class="bi bi-file-pdf"></i> Gerar PDF
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary">
+                <div class="card-body text-center">
+                    <h3 class="text-primary">{{ stats.total }}</h3>
+                    <p class="mb-0 text-muted">Total Atribuidos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success">
+                <div class="card-body text-center">
+                    <h3 class="text-success">{{ stats.completed }}</h3>
+                    <p class="mb-0 text-muted">Respondidos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-warning">
+                <div class="card-body text-center">
+                    <h3 class="text-warning">{{ stats.pending }}</h3>
+                    <p class="mb-0 text-muted">Pendentes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info">
+                <div class="card-body text-center">
+                    <h3 class="text-info">{{ stats.response_rate }}%</h3>
+                    <p class="mb-0 text-muted">Taxa de Resposta</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informacoes</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Periodo:</strong> {{ instance.start_date|date:"d/m/Y H:i" }} a {{ instance.end_date|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Template:</strong> {{ instance.template.name }}</p>
+                </div>
+                <div class="col-md-6">
+                    {% if instance.target_sectors %}
+                    <p><strong>Setores:</strong> {{ instance.target_sectors|join:", " }}</p>
+                    {% endif %}
+                    {% if instance.target_positions %}
+                    <p><strong>Cargos:</strong> {{ instance.target_positions|join:", " }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% if instance.description %}
+            <p><strong>Descricao:</strong> {{ instance.description }}</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if question_stats %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Medias por Pergunta (Escala)</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Pergunta</th>
+                            <th>Media</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for qs in question_stats %}
+                        <tr>
+                            <td>{{ qs.question.text|truncatechars:80 }}</td>
+                            <td>
+                                {% if qs.avg %}
+                                <span class="badge bg-{% if qs.avg >= 4 %}success{% elif qs.avg >= 3 %}warning{% else %}danger{% endif %}">
+                                    {{ qs.avg }}
+                                </span>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-people"></i> Respostas</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Funcionario</th>
+                            <th>Setor</th>
+                            <th>Status</th>
+                            <th>Respondido em</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assignment in assignments %}
+                        <tr>
+                            <td>
+                                {% if instance.is_anonymous and assignment.status == 'COMPLETED' %}
+                                <i class="bi bi-incognito"></i> Anonimo
+                                {% else %}
+                                {{ assignment.employee.nome }}
+                                {% endif %}
+                            </td>
+                            <td>{{ assignment.employee.setor }}</td>
+                            <td>
+                                {% if assignment.status == 'COMPLETED' %}
+                                <span class="badge bg-success">Respondido</span>
+                                {% elif assignment.status == 'IN_PROGRESS' %}
+                                <span class="badge bg-warning">Em Andamento</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Pendente</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ assignment.completed_at|date:"d/m/Y H:i"|default:"-" }}</td>
+                            <td>
+                                {% if assignment.status == 'COMPLETED' and not instance.is_anonymous %}
+                                <a href="{% url 'forms:view_responses' assignment.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-muted text-center">Nenhuma atribuicao encontrada.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{% url 'forms:instances' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+modules = ["python-3.11", "web"]
+[agent]
+expertMode = true
+integrations = ["python_openai:1.0.0", "python_database:1.0.0"]
+
+[nix]
+channel = "stable-25_05"
+packages = ["fontconfig", "freetype", "ghostscript", "glib", "harfbuzz", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "pango", "tcl", "tk", "zlib", "cairo", "gdk-pixbuf", "libffi", "gobject-introspection"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Django Server"
+
+[[workflows.workflow]]
+name = "Django Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "gunicorn --bind 0.0.0.0:5000 --reuse-port saas_nr01.wsgi:application"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 36399
+externalPort = 3000
+
+[[ports]]
+localPort = 42023
+externalPort = 3001

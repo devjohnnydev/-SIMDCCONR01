@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Formularios - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2"><i class="bi bi-clipboard-check"></i> Formularios</h1>
+        <a href="{% url 'forms:templates' %}" class="btn btn-primary">
+            <i class="bi bi-plus"></i> Novo Formulario
+        </a>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <select name="status" class="form-select">
+                        <option value="">Todos os Status</option>
+                        <option value="DRAFT" {% if status_filter == 'DRAFT' %}selected{% endif %}>Rascunho</option>
+                        <option value="ACTIVE" {% if status_filter == 'ACTIVE' %}selected{% endif %}>Ativo</option>
+                        <option value="CLOSED" {% if status_filter == 'CLOSED' %}selected{% endif %}>Encerrado</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        {% for instance in instances %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-{% if instance.status == 'ACTIVE' %}success{% elif instance.status == 'DRAFT' %}warning{% else %}secondary{% endif %}">
+                <div class="card-header d-flex justify-content-between">
+                    <span class="badge bg-{% if instance.template.category == 'NR01' %}danger{% elif instance.template.category == 'CLIMATE' %}primary{% elif instance.template.category == 'WELLBEING' %}success{% else %}secondary{% endif %}">
+                        {{ instance.template.get_category_display }}
+                    </span>
+                    <span class="badge bg-{% if instance.status == 'ACTIVE' %}success{% elif instance.status == 'DRAFT' %}warning{% else %}secondary{% endif %}">
+                        {{ instance.get_status_display }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ instance.title }}</h5>
+                    <p class="card-text text-muted small">{{ instance.description|truncatechars:80 }}</p>
+                    
+                    {% if instance.is_anonymous %}
+                    <span class="badge bg-info mb-2"><i class="bi bi-incognito"></i> Anonimo</span>
+                    {% endif %}
+                    
+                    <div class="small text-muted">
+                        <i class="bi bi-calendar"></i> {{ instance.start_date|date:"d/m/Y" }} - {{ instance.end_date|date:"d/m/Y" }}
+                    </div>
+                    
+                    {% if instance.status == 'ACTIVE' %}
+                    <div class="mt-2">
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success" style="width: {{ instance.get_response_rate }}%;">
+                                {{ instance.get_response_rate }}%
+                            </div>
+                        </div>
+                        <small class="text-muted">Taxa de resposta</small>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{% url 'forms:instance_detail' instance.pk %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye"></i> Detalhes
+                    </a>
+                    {% if instance.status == 'DRAFT' %}
+                    <a href="{% url 'forms:instance_publish' instance.pk %}" class="btn btn-sm btn-success" onclick="return confirm('Publicar formulario?')">
+                        <i class="bi bi-send"></i> Publicar
+                    </a>
+                    {% elif instance.status == 'ACTIVE' %}
+                    <a href="{% url 'reports:form_pdf' instance.pk %}" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-file-pdf"></i> PDF
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="bi bi-info-circle"></i> Nenhum formulario encontrado.
+                <br><a href="{% url 'forms:templates' %}">Clique aqui para criar seu primeiro formulario.</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

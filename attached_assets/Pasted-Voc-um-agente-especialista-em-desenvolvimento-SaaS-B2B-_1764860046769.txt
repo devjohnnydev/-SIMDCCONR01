@@ -1,0 +1,249 @@
+Você é um agente especialista em desenvolvimento SaaS B2B usando PYTHON, com foco em:
+- Django, Django REST Framework, Django Admin.
+- PostgreSQL.
+- Multi-tenant (django-tenants OU abordagem por company_id).
+- Geração de PDFs (WeasyPrint ou similar).
+- Boas práticas de segurança, LGPD e auditoria.
+
+Quero que você ME GUIE E TAMBÉM GERE CÓDIGO em Python para construir um SaaS profissional com as características abaixo. Estruture sempre as respostas em etapas, explicando onde criar cada arquivo no Replit.
+
+1) VISÃO GERAL DO PRODUTO
+
+- Plataforma SaaS multi-tenant para empresas, focada em:
+  - Gestão de NR-01 (Gestão de Riscos Ocupacionais / Segurança e Saúde no Trabalho).
+  - Clima organizacional.
+  - Bem-estar no trabalho.
+- Objetivos:
+  - Coletar, organizar e analisar dados de funcionários via formulários/pesquisas.
+  - Gerar métricas e relatórios robustos, com qualidade técnica suficiente para embasar pareceres de peritos judiciais.
+  - Garantir rastreabilidade (logs, auditoria), histórico de formulários e respostas.
+- Público-alvo:
+  - Empresas (médio/grande porte).
+  - Clínicas/consultorias de SST.
+  - Peritos judiciais.
+
+2) ARQUITETURA E STACK TÉCNICA (EM PYTHON)
+
+- Backend:
+  - Django + Django REST Framework.
+  - Organização modular em apps: por exemplo `accounts`, `companies`, `employees`, `forms`, `reports`, `billing`, `audit`.
+- Frontend:
+  - Primeiro momento: Django templates + Bootstrap para entregar rápido.
+  - Estruturar a API REST já preparada para um futuro frontend separado (React, etc.).
+- Banco:
+  - PostgreSQL.
+- Multi-tenant:
+  - SUGIRA a melhor estratégia entre:
+    - django-tenants (multi-schema) OU
+    - multi-tenant por `company_id` em todas as tabelas.
+  - Explique a escolha e implemente a base.
+- PDFs:
+  - Usar WeasyPrint ou biblioteca semelhante baseada em HTML/CSS para gerar relatórios em PDF.[web:7][web:19]
+
+PEÇA: 
+- Propor a árvore de pastas do projeto Django.
+- Criar o projeto base (settings, urls, wsgi/asgi).
+- Configurar Postgres.
+- Explicar como rodar `migrate` e criar superusuário.
+
+3) MULTI-TENANT E PERSONALIZAÇÃO POR EMPRESA
+
+- Cada empresa é um tenant:
+  - Tabela `Company` (ou `companies_company`) com: 
+    - nome_fantasia, razao_social, cnpj, responsavel_nome, responsavel_email, telefone,
+    - logo (ImageField),
+    - cor_primaria, cor_secundaria,
+    - status (`PENDING`, `ACTIVE`, `SUSPENDED`),
+    - configs gerais (JSONField opcional).
+  - Dados sempre vinculados a uma empresa (tenant) via `company` FK ou schema.
+- Fluxo de cadastro da empresa (público):
+  - Form de sign-up de empresa.
+  - Cria automaticamente um usuário admin daquela empresa.
+  - Empresa entra como `PENDING`.
+- Aprovação:
+  - ADMIN MASTER acessa Django Admin ou um painel próprio para aprovar/reprovar empresa.
+  - Ao aprovar, dispara e-mail de boas-vindas (pode começar com função simulada e depois integrar SMTP/SendGrid).
+- Personalização visual:
+  - Ao logar, os templates carregam logo e cores da empresa e aplicam no layout (base.html).
+  - Middleware ou context processor para injetar dados da empresa em todas as páginas.
+
+PEÇA:
+- Model para `Company`.
+- Middleware/context processor para carregar dados da empresa no template.
+- Views e templates para: 
+  - sign-up de empresa,
+  - tela de “aguardando aprovação”.
+
+4) GESTÃO DE USUÁRIOS, PERMISSÕES E FUNCIONÁRIOS
+
+- Tipos de usuário (roles):
+  - ADMIN_MASTER: dono do SaaS, vê todas as empresas, aprova cadastros, gerencia planos.
+  - COMPANY_ADMIN: administra apenas a própria empresa, seus funcionários, formulários e relatórios.
+  - EMPLOYEE (funcionário): acessa apenas seu próprio perfil e formulários atribuídos.
+- Autenticação:
+  - Usar Custom User Model em Django (email como username).
+  - JWT ou Session Auth (pode começar com sessão tradicional do Django e depois expor API JWT).
+- Funcionários:
+  - Modelo `Employee` vinculado à `Company` e a um `User` ou desacoplado com campo de email.
+  - Campos: nome, email corporativo, cpf (opcional), setor, cargo, turno, data_admissao, status (ativo/inativo).
+  - Cadastro em massa por CSV (upload) e individual.
+  - Geração automática de credenciais ou link de primeiro acesso por e-mail.
+- Perfil do funcionário:
+  - Página/painel onde o funcionário vê:
+    - Formulários pendentes.
+    - Histórico de formulários respondidos.
+    - Comunicados da empresa (avisos sobre SST, NR-01 etc.).
+
+PEÇA:
+- Modelos `User`, `Role`/perfis, `Employee`.
+- Views/API para:
+  - cadastro/login/logout,
+  - CRUD de funcionários (apenas COMPANY_ADMIN da empresa).
+- Telas iniciais:
+  - Dashboard do COMPANY_ADMIN.
+  - Dashboard simples do EMPLOYEE com lista de formulários pendentes.
+
+5) MÓDULO DE FORMULÁRIOS (NR-01, CLIMA, BEM-ESTAR)
+
+- Objetivo:
+  - Criar um sistema flexível de formulários/pesquisas, com modelos (templates) e instâncias por empresa.
+- Escopo:
+  - NR-01:
+    - Formulários para levantamento de riscos, percepções de segurança, comunicação de incidentes/quase acidentes, etc.
+  - Clima organizacional:
+    - Questionários com escala (Likert), múltipla escolha e perguntas abertas.
+  - Bem-estar:
+    - Perguntas sobre estresse, saúde mental percebida, equilíbrio vida-trabalho, apoio da liderança etc.
+- Requisitos de modelagem:
+  - `FormTemplate`: modelos de formulário globais ou por empresa.
+  - `FormQuestion`: perguntas, tipo de resposta (escala 1–5, múltipla escolha, texto aberto, sim/não).
+  - `FormInstance`: uma aplicação específica de um template para uma empresa, com período definido.
+  - `FormAssignment`: vínculo entre formulário e funcionários (ou grupos por setor/cargo).
+  - `FormAnswer`: respostas dos funcionários.
+  - Campos para configurar ANONIMATO (quando ativado, armazenar resposta sem vínculo direto ao funcionário, mas mantendo registro de participação).
+- Fluxos:
+  - COMPANY_ADMIN:
+    - Seleciona templates prontos (NR-01, clima, bem-estar).
+    - Personaliza perguntas (adicionar, remover, editar).
+    - Define quem recebe (todos, setores, cargos, lista manual).
+    - Define prazo de resposta.
+    - Publica formulário.
+  - EMPLOYEE:
+    - Recebe notificação no painel.
+    - Preenche formulário com interface simples e responsiva (mobile-friendly).
+    - Em formulários anônimos, ver indicação clara de anonimato.
+
+PEÇA:
+- Modelos completos para templates, perguntas, respostas.
+- 2 ou 3 templates de exemplo:
+  - 1 de NR-01,
+  - 1 de clima,
+  - 1 de bem-estar,
+  com perguntas bem descritas (texto), para posterior revisão de especialista.
+- Views/API para:
+  - criar/publicar formulário,
+  - responder formulário como funcionário,
+  - ver histórico.
+
+6) MÉTRICAS, DASHBOARDS E RELATÓRIOS PROFISSIONAIS
+
+- Métricas para o COMPANY_ADMIN:
+  - Taxa de resposta por formulário (quantidade respondida / quantidade atribuída).
+  - Índice geral de clima organizacional (média de escalas).
+  - Indicadores de bem-estar (ex.: média de estresse percebido, satisfação etc.).
+  - Segmentação por:
+    - setor,
+    - cargo,
+    - turno,
+    com gráficos simples (barras, pizza, linha).
+  - Flags/alertas quando algum indicador fica abaixo de um limiar definido.
+- Relatórios para perito judicial:
+  - Geração de PDF com:
+    - Dados da empresa.
+    - Período analisado.
+    - Descrição resumida da metodologia (formulários, escalas, amostra).
+    - Tabelas e gráficos com resultados agregados.
+    - Demonstração de que anonimato foi respeitado (quando aplicável).
+    - Espaço reservado para parecer/assinatura do perito.
+  - Histórico:
+    - Linha do tempo de pesquisas realizadas (NR-01, clima, bem-estar).
+    - Comparação de indicadores ao longo do tempo.
+
+PEÇA:
+- Consultas agregadas em Django ORM para calcular métricas.
+- Views/API para dados de dashboard.
+- Templates HTML e integração com WeasyPrint (ou similar) para gerar PDF de relatório.[web:7][web:10][web:19]
+- Endpoint para download de relatório em PDF.
+
+7) AUDITORIA, LGPD E SEGURANÇA
+
+- Auditoria:
+  - Tabela de `AuditLog` registrando:
+    - quem fez o quê (usuário, empresa),
+    - quando,
+    - em que recurso (empresa, funcionário, formulário, resposta),
+    - IP aproximado.
+- LGPD / Privacidade:
+  - Campos sensíveis (ex.: CPF) claramente marcados.
+  - Opção de anonimizar respostas em determinados formulários.
+  - Termos de uso e política de privacidade aceitos pelo usuário no primeiro acesso (marcar data/hora).
+  - Possibilidade de desativar/arquivar funcionário mantendo histórico estatístico.
+- Segurança:
+  - Hash de senha com padrão Django.
+  - Permissões por role (decorators, DRF permissions).
+  - Proteções padrões contra CSRF/XSS.
+  - Validação de inputs nos uploads de CSV.
+
+PEÇA:
+- Model `AuditLog`.
+- Middleware ou signals para registrar auditoria em operações importantes (criação/edição de empresas, formulários, relatórios).
+- Configurações básicas de segurança em `settings.py`.
+
+8) PLANOS, ASSINATURAS E LIMITES (BILLING – VERSÃO SIMPLES)
+
+- Mesmo que não integre imediatamente com gateway de pagamento, preparar:
+  - Modelo `Plan` com:
+    - nome, preço_mensal, limites (nº de funcionários, nº de formulários ativos, retenção de dados, etc.).
+  - Cada `Company` vinculado a um `Plan`.
+  - Regras simples de limite:
+    - se empresa atingir limite de funcionários ou formulários, bloquear criação adicional ou mostrar aviso.
+- Futuro:
+  - Integração com Stripe/Pagar.me pode ser adicionada depois.
+
+PEÇA:
+- Modelos `Plan` e vínculo em `Company`.
+- Validações de limite no backend.
+
+9) FLUXO INICIAL DE DESENVOLVIMENTO (PASSO A PASSO)
+
+Quero que você siga esta ordem:
+
+1. Definir a arquitetura multi-tenant que será usada em Django e explicar brevemente a escolha.
+2. Desenhar o modelo de dados principal (texto, explicando tabelas e relações).
+3. Criar o projeto Django, configurar Postgres e criar os apps principais (`accounts`, `companies`, `employees`, `forms`, `reports`, `billing`, `audit`).
+4. Implementar:
+   - Custom User Model + roles.
+   - Cadastro e login de usuários.
+   - Cadastro de empresas, aprovação pelo ADMIN_MASTER.
+   - Upload de logo e aplicação de cores da empresa no layout básico.
+5. Implementar:
+   - Cadastro/listagem/edição de funcionários.
+   - Importação de funcionários via CSV.
+6. Implementar módulo inicial de formulários:
+   - Criação de templates.
+   - Publicação de um formulário para funcionários.
+   - Página simples para o funcionário responder.
+7. Implementar dashboard básico:
+   - 1 ou 2 métricas simples (ex.: taxa de resposta de um formulário, média de satisfação).
+8. Implementar geração de um relatório PDF simples para um formulário ou período.
+9. Adicionar logs de auditoria em operações importantes.
+10. Em cada etapa:
+    - Gerar o código.
+    - Explicar em qual arquivo colocar.
+    - Informar os comandos a rodar (migrations, runserver, etc.).
+
+IMPORTANTE:
+- Sempre comente o código gerado de forma clara.
+- Sempre assumir SOLUÇÃO MAIS SIMPLES que funcione, evitando overengineering.
+- Se precisar tomar decisões (por exemplo, usar django-tenants ou company_id), explique em 1–2 parágrafos e siga em frente.
+- Sempre que possível, reutilizar poder do Django Admin para acelerar (ex.: aprovação de empresas, visualização de tabelas, etc.).

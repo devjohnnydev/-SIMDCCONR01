@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Importar Funcionarios - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-upload"></i> Importar Funcionarios via CSV</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-info-circle"></i> Instrucoes</h6>
+                        <ol class="mb-0">
+                            <li>Baixe o <a href="{% url 'employees:export_template' %}">template CSV</a></li>
+                            <li>Preencha os dados seguindo o modelo</li>
+                            <li>Use ponto-e-virgula (;) como separador</li>
+                            <li>Salve o arquivo em formato CSV (UTF-8)</li>
+                            <li>Faca o upload abaixo</li>
+                        </ol>
+                    </div>
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload"></i> Importar
+                            </button>
+                            <a href="{% url 'employees:list' %}" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <h6>Campos do CSV:</h6>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Obrigatorio</th>
+                                <th>Formato</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>nome</td><td>Sim</td><td>Texto</td></tr>
+                            <tr><td>email</td><td>Sim</td><td>Email valido</td></tr>
+                            <tr><td>cpf</td><td>Nao</td><td>11 digitos</td></tr>
+                            <tr><td>setor</td><td>Nao</td><td>Texto</td></tr>
+                            <tr><td>cargo</td><td>Nao</td><td>Texto</td></tr>
+                            <tr><td>turno</td><td>Nao</td><td>MORNING, AFTERNOON, NIGHT, FULL, ROTATING</td></tr>
+                            <tr><td>data_admissao</td><td>Nao</td><td>DD/MM/AAAA ou AAAA-MM-DD</td></tr>
+                            <tr><td>matricula</td><td>Nao</td><td>Texto</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

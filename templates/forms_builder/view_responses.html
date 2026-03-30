@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Respostas - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Respostas: {{ assignment.form_instance.title }}</h5>
+                    <small class="text-muted">
+                        {{ assignment.employee.nome }} - Respondido em {{ assignment.completed_at|date:"d/m/Y H:i" }}
+                    </small>
+                </div>
+                <div class="card-body">
+                    {% for answer in answers %}
+                    <div class="border-bottom pb-3 mb-3">
+                        <p class="fw-bold mb-1">{{ answer.question.text }}</p>
+                        <p class="mb-0">
+                            {% if answer.question.question_type in 'SCALE,SCALE_10,NUMBER' %}
+                            <span class="badge bg-primary">{{ answer.numeric_value|floatformat:0 }}</span>
+                            {% elif answer.question.question_type == 'YESNO' %}
+                            {% if answer.boolean_value %}
+                            <span class="badge bg-success">Sim</span>
+                            {% else %}
+                            <span class="badge bg-danger">Nao</span>
+                            {% endif %}
+                            {% elif answer.question.question_type in 'SINGLE,MULTIPLE' %}
+                            {{ answer.selected_options|join:", " }}
+                            {% elif answer.question.question_type == 'DATE' %}
+                            {{ answer.date_value|date:"d/m/Y" }}
+                            {% else %}
+                            {{ answer.text_value }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">Nenhuma resposta encontrada.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

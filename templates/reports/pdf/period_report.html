@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatorio de Periodo - {{ company.nome_fantasia }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .header {
+            border-bottom: 2px solid {{ company.cor_primaria }};
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: {{ company.cor_primaria }};
+            margin: 0;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: {{ company.cor_primaria }};
+            color: white;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section h2 {
+            color: {{ company.cor_primaria }};
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .summary-box {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Relatorio Consolidado</h1>
+        <p>Periodo: {{ start_date }} a {{ end_date }}</p>
+        <p>{{ company.nome_fantasia }}</p>
+    </div>
+    
+    <div class="summary-box">
+        <h3>Indicadores Gerais do Periodo</h3>
+        <p><strong>Clima Organizacional:</strong> {% if climate_avg %}{{ climate_avg }}{% else %}Sem dados{% endif %}</p>
+        <p><strong>Bem-estar:</strong> {% if wellbeing_avg %}{{ wellbeing_avg }}{% else %}Sem dados{% endif %}</p>
+    </div>
+    
+    <div class="section">
+        <h2>Pesquisas Realizadas no Periodo</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Formulario</th>
+                    <th>Categoria</th>
+                    <th>Respostas</th>
+                    <th>Taxa</th>
+                    <th>Media</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for summary in form_summaries %}
+                <tr>
+                    <td>{{ summary.form.title }}</td>
+                    <td>{{ summary.category }}</td>
+                    <td>{{ summary.total_responses }}</td>
+                    <td>{{ summary.response_rate }}%</td>
+                    <td>{% if summary.avg_score %}{{ summary.avg_score|floatformat:2 }}{% else %}-{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Nenhuma pesquisa encontrada no periodo.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="footer">
+        <p>Relatorio gerado em {{ generated_at|date:"d/m/Y H:i" }} pela plataforma SaaS NR-01.</p>
+    </div>
+</body>
+</html>

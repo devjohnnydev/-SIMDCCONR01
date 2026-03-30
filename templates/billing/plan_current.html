@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu Plano - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="h2 mb-4"><i class="bi bi-credit-card"></i> Meu Plano</h1>
+    
+    {% if current_plan %}
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{{ current_plan.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="text-primary">R$ {{ current_plan.price_monthly }}<small class="text-muted">/mes</small></h3>
+                    <hr>
+                    <ul class="list-unstyled">
+                        {% for feature in current_plan.get_features_list %}
+                        <li><i class="bi bi-check-circle text-success"></i> {{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Uso Atual</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label class="form-label">Funcionarios</label>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar {% if limits.employees_percent > 90 %}bg-danger{% elif limits.employees_percent > 70 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 style="width: {{ limits.employees_percent }}%;">
+                                {{ usage.employees }}/{{ limits.max_employees }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Formularios Ativos</label>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar {% if limits.forms_percent > 90 %}bg-danger{% elif limits.forms_percent > 70 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 style="width: {{ limits.forms_percent }}%;">
+                                {{ usage.forms }}/{{ limits.max_forms }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        Sua empresa ainda nao possui um plano definido. Entre em contato com o suporte.
+    </div>
+    {% endif %}
+    
+    <h4 class="mt-5 mb-4">Outros Planos Disponiveis</h4>
+    <div class="row g-4">
+        {% for plan in all_plans %}
+        <div class="col-md-4">
+            <div class="card {% if plan == current_plan %}border-primary{% endif %} {% if plan.is_featured %}shadow{% endif %}">
+                {% if plan.is_featured %}
+                <div class="card-header bg-warning text-dark text-center">
+                    <strong>Recomendado</strong>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5>{{ plan.name }}</h5>
+                    <h4>R$ {{ plan.price_monthly }}<small class="text-muted">/mes</small></h4>
+                    <hr>
+                    <ul class="list-unstyled small">
+                        <li><i class="bi bi-check"></i> {{ plan.max_employees }} funcionarios</li>
+                        <li><i class="bi bi-check"></i> {{ plan.max_forms }} formularios</li>
+                        <li><i class="bi bi-check"></i> {{ plan.max_reports }} relatorios/mes</li>
+                    </ul>
+                    {% if plan == current_plan %}
+                    <button class="btn btn-outline-primary w-100" disabled>Plano Atual</button>
+                    {% else %}
+                    <button class="btn btn-primary w-100">Fazer Upgrade</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

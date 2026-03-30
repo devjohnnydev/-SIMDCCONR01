@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu Painel - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Meu Painel</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="h2 mb-1">Ola, {% if employee %}{{ employee.nome }}{% else %}{{ user.first_name }}{% endif %}!</h1>
+                <p class="text-muted mb-0">Bem-vindo ao seu painel de funcionario</p>
+            </div>
+            {% if employee %}
+            <span class="badge bg-primary px-3 py-2">{{ employee.cargo }}</span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if not employee %}
+    <div class="alert alert-warning d-flex align-items-center">
+        <i class="bi bi-exclamation-triangle me-3" style="font-size: 1.5rem;"></i>
+        <div>
+            <h6 class="mb-1">Perfil nao vinculado</h6>
+            <p class="mb-0">Seu perfil de funcionario ainda nao foi vinculado. Entre em contato com o administrador da sua empresa.</p>
+        </div>
+    </div>
+    {% else %}
+    
+    <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-lg-4">
+            <div class="card card-dashboard border-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="metric-label mb-2">Formularios Pendentes</p>
+                            <p class="metric-value text-warning">{{ pending_forms.count }}</p>
+                        </div>
+                        <div class="metric-icon bg-warning-soft">
+                            <i class="bi bi-clipboard-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+            <div class="card card-dashboard border-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="metric-label mb-2">Respondidos</p>
+                            <p class="metric-value text-success">{{ completed_forms.count }}</p>
+                        </div>
+                        <div class="metric-icon bg-success-soft">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+            <div class="card card-dashboard border-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="metric-label mb-2">Seu Setor</p>
+                            <p class="h4 text-info fw-bold mb-0">{{ employee.setor }}</p>
+                        </div>
+                        <div class="metric-icon bg-info-soft">
+                            <i class="bi bi-building"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center">
+                    <span class="badge bg-warning me-3 px-3 py-2">
+                        <i class="bi bi-exclamation-circle me-1"></i>Pendentes
+                    </span>
+                    <h5 class="mb-0">Formularios para Responder</h5>
+                </div>
+                <div class="card-body">
+                    {% if pending_forms %}
+                    <div class="list-group list-group-flush">
+                        {% for assignment in pending_forms %}
+                        <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-start">
+                                <div class="avatar me-3" style="background: #fef3c7; color: #b45309;">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">{{ assignment.form_instance.title }}</h6>
+                                    <div class="d-flex flex-wrap gap-2 mb-1">
+                                        <span class="badge bg-secondary">{{ assignment.form_instance.template.get_category_display }}</span>
+                                        {% if assignment.form_instance.is_anonymous %}
+                                        <span class="badge bg-info"><i class="bi bi-incognito me-1"></i>Anonimo</span>
+                                        {% endif %}
+                                    </div>
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar me-1"></i>Prazo: {{ assignment.form_instance.end_date|date:"d/m/Y H:i" }}
+                                    </small>
+                                </div>
+                            </div>
+                            <a href="{% url 'forms:respond' assignment.pk %}" class="btn btn-primary">
+                                <i class="bi bi-pencil me-1"></i>Responder
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state py-5">
+                        <div class="empty-state-icon" style="background: #d1fae5;">
+                            <i class="bi bi-check-all text-success"></i>
+                        </div>
+                        <h5>Tudo em dia!</h5>
+                        <p>Voce nao tem formularios pendentes no momento.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history me-2 text-primary"></i>Historico de Respostas
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if completed_forms %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Formulario</th>
+                                    <th>Categoria</th>
+                                    <th>Respondido em</th>
+                                    <th class="text-end"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for assignment in completed_forms %}
+                                <tr>
+                                    <td>
+                                        <p class="mb-0 fw-medium">{{ assignment.form_instance.title }}</p>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ assignment.form_instance.template.get_category_display }}</span>
+                                    </td>
+                                    <td>{{ assignment.completed_at|date:"d/m/Y H:i" }}</td>
+                                    <td class="text-end">
+                                        {% if not assignment.form_instance.is_anonymous %}
+                                        <a href="{% url 'forms:view_responses' assignment.pk %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        {% else %}
+                                        <span class="badge bg-secondary"><i class="bi bi-lock me-1"></i>Anonimo</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state py-5">
+                        <div class="empty-state-icon">
+                            <i class="bi bi-file-earmark"></i>
+                        </div>
+                        <h5>Nenhum historico</h5>
+                        <p>Voce ainda nao respondeu nenhum formulario.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-megaphone me-2 text-primary"></i>Comunicados
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if announcements %}
+                    <div class="list-group list-group-flush">
+                        {% for ann in announcements %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="mb-0 fw-semibold">{{ ann.title }}</h6>
+                                <small class="text-muted">{{ ann.created_at|date:"d/m" }}</small>
+                            </div>
+                            <p class="mb-0 text-muted small">{{ ann.content|truncatechars:150 }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state py-4">
+                        <div class="empty-state-icon">
+                            <i class="bi bi-megaphone"></i>
+                        </div>
+                        <h5>Sem comunicados</h5>
+                        <p>Nenhum comunicado disponivel no momento.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Funcionarios - {{ request.user.company.nome_fantasia }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2"><i class="bi bi-people"></i> Funcionarios</h1>
+        <div>
+            <a href="{% url 'employees:export_template' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-download"></i> Template CSV
+            </a>
+            <a href="{% url 'employees:import' %}" class="btn btn-outline-primary">
+                <i class="bi bi-upload"></i> Importar CSV
+            </a>
+            <a href="{% url 'employees:create' %}" class="btn btn-primary">
+                <i class="bi bi-plus"></i> Novo Funcionario
+            </a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar por nome..." value="{{ search }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="setor" class="form-select">
+                        <option value="">Todos os Setores</option>
+                        {% for s in setores %}
+                        <option value="{{ s }}" {% if s == setor_filter %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">Todos os Status</option>
+                        <option value="ACTIVE" {% if status_filter == 'ACTIVE' %}selected{% endif %}>Ativo</option>
+                        <option value="INACTIVE" {% if status_filter == 'INACTIVE' %}selected{% endif %}>Inativo</option>
+                        <option value="ON_LEAVE" {% if status_filter == 'ON_LEAVE' %}selected{% endif %}>Afastado</option>
+                        <option value="TERMINATED" {% if status_filter == 'TERMINATED' %}selected{% endif %}>Desligado</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Setor</th>
+                            <th>Cargo</th>
+                            <th>Turno</th>
+                            <th>Status</th>
+                            <th>Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for emp in employees %}
+                        <tr>
+                            <td>{{ emp.nome }}</td>
+                            <td>{{ emp.email }}</td>
+                            <td>{{ emp.setor }}</td>
+                            <td>{{ emp.cargo }}</td>
+                            <td>{{ emp.get_turno_display }}</td>
+                            <td>
+                                {% if emp.status == 'ACTIVE' %}
+                                <span class="badge bg-success">Ativo</span>
+                                {% elif emp.status == 'INACTIVE' %}
+                                <span class="badge bg-secondary">Inativo</span>
+                                {% elif emp.status == 'ON_LEAVE' %}
+                                <span class="badge bg-warning">Afastado</span>
+                                {% else %}
+                                <span class="badge bg-danger">Desligado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'employees:edit' emp.pk %}" class="btn btn-sm btn-outline-primary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if not emp.user %}
+                                <a href="{% url 'employees:create_user' emp.pk %}" class="btn btn-sm btn-outline-info" title="Criar Acesso">
+                                    <i class="bi bi-key"></i>
+                                </a>
+                                {% endif %}
+                                {% if emp.status == 'ACTIVE' %}
+                                <a href="{% url 'employees:deactivate' emp.pk %}" class="btn btn-sm btn-outline-danger" title="Desativar" onclick="return confirm('Deseja desativar este funcionario?')">
+                                    <i class="bi bi-person-x"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                Nenhum funcionario encontrado.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if employees.has_other_pages %}
+            <nav>
+                <ul class="pagination justify-content-center">
+                    {% if employees.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ employees.previous_page_number }}&search={{ search }}&setor={{ setor_filter }}&status={{ status_filter }}">Anterior</a>
+                    </li>
+                    {% endif %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ employees.number }} de {{ employees.paginator.num_pages }}</span>
+                    </li>
+                    {% if employees.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ employees.next_page_number }}&search={{ search }}&setor={{ setor_filter }}&status={{ status_filter }}">Proximo</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

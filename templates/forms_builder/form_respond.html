@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Responder Formulario - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ instance.title }}</h5>
+                    <span class="badge bg-{% if instance.template.category == 'NR01' %}danger{% elif instance.template.category == 'CLIMATE' %}primary{% elif instance.template.category == 'WELLBEING' %}success{% else %}secondary{% endif %}">
+                        {{ instance.template.get_category_display }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    {% if instance.is_anonymous %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-incognito"></i>
+                        <strong>Formulario Anonimo</strong>
+                        <br>Suas respostas nao serao vinculadas ao seu nome. Responda com sinceridade.
+                    </div>
+                    {% endif %}
+                    
+                    {% if instance.description %}
+                    <p class="text-muted mb-4">{{ instance.description }}</p>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% for question in questions %}
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <label class="form-label fw-bold">
+                                    {{ forloop.counter }}. {{ question.text }}
+                                    {% if question.is_required %}<span class="text-danger">*</span>{% endif %}
+                                </label>
+                                {% if question.help_text %}
+                                <p class="text-muted small">{{ question.help_text }}</p>
+                                {% endif %}
+                                
+                                {% if question.question_type == 'SCALE' %}
+                                <div class="d-flex justify-content-between mt-3">
+                                    {% for i in "12345" %}
+                                    <label class="scale-option">
+                                        <input type="radio" name="question_{{ question.pk }}" value="{{ i }}" {% if question.is_required %}required{% endif %}>
+                                        {{ i }}
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <small class="text-muted">Discordo totalmente</small>
+                                    <small class="text-muted">Concordo totalmente</small>
+                                </div>
+                                
+                                {% elif question.question_type == 'SCALE_10' %}
+                                <div class="d-flex flex-wrap gap-2 mt-3">
+                                    {% for i in "12345678910"|make_list %}
+                                    <label class="scale-option" style="width: 35px; height: 35px; font-size: 0.8rem;">
+                                        <input type="radio" name="question_{{ question.pk }}" value="{{ forloop.counter }}" {% if question.is_required %}required{% endif %}>
+                                        {{ forloop.counter }}
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                
+                                {% elif question.question_type == 'YESNO' %}
+                                <div class="mt-3">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="question_{{ question.pk }}" value="Sim" {% if question.is_required %}required{% endif %}>
+                                        <label class="form-check-label">Sim</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="question_{{ question.pk }}" value="Nao">
+                                        <label class="form-check-label">Nao</label>
+                                    </div>
+                                </div>
+                                
+                                {% elif question.question_type == 'SINGLE' %}
+                                <div class="mt-3">
+                                    {% for option in question.options %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_{{ question.pk }}" value="{{ option }}" {% if question.is_required %}required{% endif %}>
+                                        <label class="form-check-label">{{ option }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                {% elif question.question_type == 'MULTIPLE' %}
+                                <div class="mt-3">
+                                    {% for option in question.options %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="question_{{ question.pk }}" value="{{ option }}">
+                                        <label class="form-check-label">{{ option }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                {% elif question.question_type == 'TEXT' %}
+                                <textarea class="form-control mt-3" name="question_{{ question.pk }}" rows="3" {% if question.is_required %}required{% endif %}></textarea>
+                                
+                                {% elif question.question_type == 'DATE' %}
+                                <input type="date" class="form-control mt-3" name="question_{{ question.pk }}" {% if question.is_required %}required{% endif %}>
+                                
+                                {% elif question.question_type == 'NUMBER' %}
+                                <input type="number" class="form-control mt-3" name="question_{{ question.pk }}" {% if question.is_required %}required{% endif %}>
+                                
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-send"></i> Enviar Respostas
+                            </button>
+                            <a href="{% url 'accounts:employee_dashboard' %}" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.scale-option').forEach(function(el) {
+    el.addEventListener('click', function() {
+        this.closest('.d-flex').querySelectorAll('.scale-option').forEach(function(opt) {
+            opt.classList.remove('selected');
+        });
+        this.classList.add('selected');
+        this.querySelector('input').checked = true;
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Admin - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+            <div class="position-sticky pt-3">
+                <div class="sidebar-header">
+                    <h6>Menu Principal</h6>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'accounts:admin_master_dashboard' %}">
+                            <i class="bi bi-grid-1x2-fill"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'companies:list' %}">
+                            <i class="bi bi-building"></i>
+                            <span>Empresas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'billing:plan_list' %}">
+                            <i class="bi bi-credit-card-2-front"></i>
+                            <span>Planos</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="sidebar-header mt-4">
+                    <h6>Sistema</h6>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/">
+                            <i class="bi bi-sliders"></i>
+                            <span>Admin Django</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div class="page-header">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </nav>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h2 mb-0">Dashboard Administrativo</h1>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'companies:list' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-building-add me-1"></i>Nova Empresa
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-4 mb-4">
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card card-dashboard border-warning h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="metric-label mb-2">Empresas Pendentes</p>
+                                    <p class="metric-value text-warning mb-3">{{ pending_companies|default:0 }}</p>
+                                    <a href="{% url 'companies:list' %}?status=PENDING" class="btn btn-outline-warning btn-sm">
+                                        Ver Pendentes
+                                    </a>
+                                </div>
+                                <div class="metric-icon bg-warning-soft">
+                                    <i class="bi bi-hourglass-split"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card card-dashboard border-success h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="metric-label mb-2">Empresas Ativas</p>
+                                    <p class="metric-value text-success mb-3">{{ active_companies|default:0 }}</p>
+                                    <a href="{% url 'companies:list' %}?status=ACTIVE" class="btn btn-outline-success btn-sm">
+                                        Ver Ativas
+                                    </a>
+                                </div>
+                                <div class="metric-icon bg-success-soft">
+                                    <i class="bi bi-building-check"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card card-dashboard border-primary h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="metric-label mb-2">Total de Usuarios</p>
+                                    <p class="metric-value text-primary mb-0">{{ total_users|default:0 }}</p>
+                                </div>
+                                <div class="metric-icon bg-primary-soft">
+                                    <i class="bi bi-people-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-6 col-xl-3">
+                    <div class="card card-dashboard border-info h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="metric-label mb-2">Total Empresas</p>
+                                    <p class="metric-value text-info mb-0">{{ total_companies|default:0 }}</p>
+                                </div>
+                                <div class="metric-icon bg-info-soft">
+                                    <i class="bi bi-buildings"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-building me-2 text-primary"></i>Empresas Recentes
+                            </h5>
+                            <a href="{% url 'companies:list' %}" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Empresa</th>
+                                            <th>Status</th>
+                                            <th>Data Cadastro</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for company in recent_companies %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar avatar-sm me-2" style="background: #e2e8f0; color: #475569;">
+                                                        {{ company.nome_fantasia.0 }}
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0 fw-medium">{{ company.nome_fantasia }}</p>
+                                                        <small class="text-muted">{{ company.cnpj }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% if company.status == 'PENDING' %}
+                                                <span class="badge bg-warning">Pendente</span>
+                                                {% elif company.status == 'ACTIVE' %}
+                                                <span class="badge bg-success">Ativa</span>
+                                                {% elif company.status == 'SUSPENDED' %}
+                                                <span class="badge bg-danger">Suspensa</span>
+                                                {% else %}
+                                                <span class="badge bg-secondary">{{ company.get_status_display }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ company.created_at|date:"d/m/Y" }}</td>
+                                            <td class="text-end">
+                                                <a href="#" class="btn btn-sm btn-outline-secondary">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="4">
+                                                <div class="empty-state py-4">
+                                                    <div class="empty-state-icon">
+                                                        <i class="bi bi-building"></i>
+                                                    </div>
+                                                    <h5>Nenhuma empresa cadastrada</h5>
+                                                    <p>As empresas cadastradas aparecerão aqui.</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-5">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="bi bi-clock-history me-2 text-primary"></i>Atividade Recente
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                {% for log in recent_logs %}
+                                <div class="list-group-item px-0 d-flex justify-content-between align-items-start">
+                                    <div class="d-flex align-items-start">
+                                        <div class="avatar avatar-sm me-3" style="background: #e2e8f0; color: #475569;">
+                                            <i class="bi bi-activity"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-1 fw-medium">{{ log.description|truncatechars:50 }}</p>
+                                            <small class="text-muted">
+                                                {{ log.user.email|default:"Sistema" }} - {{ log.created_at|date:"d/m H:i" }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-secondary">{{ log.get_action_display }}</span>
+                                </div>
+                                {% empty %}
+                                <div class="empty-state py-4">
+                                    <div class="empty-state-icon">
+                                        <i class="bi bi-clock"></i>
+                                    </div>
+                                    <h5>Nenhuma atividade</h5>
+                                    <p>As atividades recentes aparecerão aqui.</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

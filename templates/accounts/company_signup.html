@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Cadastrar Empresa - SaaS NR-01{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+        min-height: 100vh;
+    }
+    
+    .signup-container {
+        padding: 2rem 0;
+    }
+    
+    .signup-card {
+        background: #fff;
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        overflow: hidden;
+    }
+    
+    .signup-header {
+        text-align: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 2rem;
+    }
+    
+    .signup-icon {
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        box-shadow: 0 10px 15px -3px rgb(37 99 235 / 0.3);
+    }
+    
+    .signup-icon i {
+        font-size: 2rem;
+        color: #fff;
+    }
+    
+    .signup-header h2 {
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .signup-header p {
+        color: #64748b;
+        margin: 0;
+    }
+    
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    
+    .section-title i {
+        color: #2563eb;
+    }
+    
+    .form-section {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .signup-form .form-control,
+    .signup-form .form-select {
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.9375rem;
+    }
+    
+    .signup-form label {
+        font-weight: 500;
+        color: #334155;
+    }
+    
+    .btn-signup {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 0.75rem;
+    }
+    
+    .terms-check {
+        background: #f0f9ff;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #bae6fd;
+    }
+    
+    footer {
+        background: transparent !important;
+        border-top: none !important;
+    }
+    
+    footer p {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+    
+    .navbar {
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    
+    .modal-content {
+        border-radius: 1rem;
+    }
+    
+    .modal-header {
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .modal-body h6 {
+        color: #1e293b;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+    
+    .modal-body h6:first-child {
+        margin-top: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container signup-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <div class="signup-card">
+                <div class="card-body p-4 p-md-5">
+                    <div class="signup-header">
+                        <div class="signup-icon">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <h2>Cadastrar Empresa</h2>
+                        <p>Preencha os dados para criar sua conta na plataforma</p>
+                    </div>
+                    
+                    <form method="post" enctype="multipart/form-data" class="signup-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-section">
+                            <h5 class="section-title">
+                                <i class="bi bi-building"></i>Dados da Empresa
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">{{ form.nome_fantasia|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.razao_social|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.cnpj|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.telefone|as_crispy_field }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h5 class="section-title">
+                                <i class="bi bi-person"></i>Responsavel pela Empresa
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">{{ form.responsavel_nome|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.responsavel_email|as_crispy_field }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h5 class="section-title">
+                                <i class="bi bi-geo-alt"></i>Endereco <span class="badge bg-secondary fw-normal ms-2">Opcional</span>
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-12">{{ form.endereco|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.cidade|as_crispy_field }}</div>
+                                <div class="col-md-3">{{ form.estado|as_crispy_field }}</div>
+                                <div class="col-md-3">{{ form.cep|as_crispy_field }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h5 class="section-title">
+                                <i class="bi bi-key"></i>Dados de Acesso
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">{{ form.admin_first_name|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.admin_last_name|as_crispy_field }}</div>
+                                <div class="col-12">{{ form.admin_email|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.admin_password|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.admin_password_confirm|as_crispy_field }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="terms-check mb-4">
+                            <div class="form-check">
+                                {{ form.accept_terms }}
+                                <label class="form-check-label" for="{{ form.accept_terms.id_for_label }}">
+                                    Aceito os <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" class="fw-medium">Termos de Uso</a> e 
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal" class="fw-medium">Politica de Privacidade</a>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger mb-4">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            <strong>Por favor, corrija os erros abaixo:</strong>
+                            <ul class="mb-0 mt-2">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+                        <button type="submit" class="btn btn-primary btn-signup w-100">
+                            <i class="bi bi-check-lg me-2"></i>Cadastrar Empresa
+                        </button>
+                    </form>
+                    
+                    <div class="text-center mt-4 pt-4 border-top">
+                        <p class="mb-2 text-muted">Ja tem uma conta?</p>
+                        <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Fazer Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p class="text-white-50 small mb-0">Plataforma de Gestao de Riscos Ocupacionais</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-file-text me-2 text-primary"></i>Termos de Uso
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Aceitacao dos Termos</h6>
+                <p>Ao utilizar a plataforma SaaS NR-01, voce concorda com estes termos de uso. A utilizacao da plataforma implica na aceitacao integral de todas as clausulas e condicoes aqui estabelecidas.</p>
+                
+                <h6>2. Uso da Plataforma</h6>
+                <p>A plataforma destina-se a gestao de riscos ocupacionais, clima organizacional e bem-estar no trabalho, em conformidade com a NR-01 e demais normas regulamentadoras aplicaveis.</p>
+                
+                <h6>3. Responsabilidades do Usuario</h6>
+                <p>O usuario e responsavel pela veracidade, integridade e confidencialidade dos dados inseridos na plataforma. Informacoes incorretas ou incompletas podem comprometer a eficacia das avaliacoes.</p>
+                
+                <h6>4. Propriedade Intelectual</h6>
+                <p>Todos os direitos de propriedade intelectual relacionados a plataforma pertencem exclusivamente a SaaS NR-01. E vedada a reproducao, distribuicao ou modificacao sem autorizacao expressa.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="privacyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-shield-check me-2 text-primary"></i>Politica de Privacidade
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Coleta de Dados</h6>
+                <p>Coletamos apenas os dados necessarios para a operacao da plataforma, em conformidade com a Lei Geral de Protecao de Dados (LGPD). Os dados coletados incluem informacoes de cadastro e respostas a formularios de avaliacao.</p>
+                
+                <h6>2. Uso dos Dados</h6>
+                <p>Os dados coletados sao utilizados exclusivamente para fins operacionais da plataforma, geracao de relatorios e melhoria continua do servico. Nao compartilhamos informacoes pessoais com terceiros.</p>
+                
+                <h6>3. Seguranca dos Dados</h6>
+                <p>Implementamos medidas de seguranca tecnicas e organizacionais para proteger seus dados contra acesso nao autorizado, alteracao, divulgacao ou destruicao.</p>
+                
+                <h6>4. Direitos do Titular</h6>
+                <p>Voce tem direito de acessar, corrigir, excluir ou portar seus dados pessoais. Para exercer esses direitos, entre em contato conosco atraves dos canais oficiais.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendi</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,315 @@
+"""
+Views para gestao de formularios e respostas.
+"""
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import JsonResponse
+from django.utils import timezone
+from django.db.models import Avg, Count
+
+from .models import FormTemplate, FormQuestion, FormInstance, FormAssignment, FormAnswer
+from .forms import FormInstanceForm, FormQuestionFormSet
+from companies.views import require_company_admin
+from employees.models import Employee
+from audit.models import AuditLog
+
+
+@login_required
+@require_company_admin
+def template_list(request):
+    """Lista templates de formularios disponiveis."""
+    company = request.user.company
+    
+    global_templates = FormTemplate.objects.filter(is_global=True, is_active=True)
+    company_templates = FormTemplate.objects.filter(company=company, is_active=True)
+    
+    context = {
+        'global_templates': global_templates,
+        'company_templates': company_templates,
+    }
+    return render(request, 'forms_builder/template_list.html', context)
+
+
+@login_required
+@require_company_admin
+def template_detail(request, pk):
+    """Detalhes de um template."""
+    template = get_object_or_404(FormTemplate, pk=pk)
+    
+    if not template.is_global and template.company != request.user.company:
+        messages.error(request, 'Acesso nao autorizado.')
+        return redirect('forms:templates')
+    
+    questions = template.questions.all().order_by('order')
+    
+    return render(request, 'forms_builder/template_detail.html', {
+        'template': template,
+        'questions': questions
+    })
+
+
+@login_required
+@require_company_admin
+def form_instance_list(request):
+    """Lista formularios aplicados da empresa."""
+    company = request.user.company
+    
+    instances = FormInstance.objects.filter(company=company).select_related('template')
+    
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        instances = instances.filter(status=status_filter)
+    
+    context = {
+        'instances': instances,
+        'status_filter': status_filter,
+    }
+    return render(request, 'forms_builder/instance_list.html', context)
+
+
+@login_required
+@require_company_admin
+def form_instance_create(request, template_pk):
+    """Cria nova instancia de formulario a partir de um template."""
+    company = request.user.company
+    
+    if not company.can_add_form():
+        messages.error(request, 'Limite de formularios ativos do plano atingido.')
+        return redirect('forms:instances')
+    
+    template = get_object_or_404(FormTemplate, pk=template_pk)
+    
+    if not template.is_global and template.company != company:
+        messages.error(request, 'Acesso nao autorizado.')
+        return redirect('forms:templates')
+    
+    if request.method == 'POST':
+        form = FormInstanceForm(request.POST, company=company)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.template = template
+            instance.company = company
+            instance.created_by = request.user
+            instance.save()
+            
+            AuditLog.log(
+                user=request.user,
+                action='CREATE',
+                description=f'Formulario "{instance.title}" criado',
+                obj=instance,
+                request=request
+            )
+            
+            messages.success(request, 'Formulario criado com sucesso!')
+            return redirect('forms:instance_detail', pk=instance.pk)
+    else:
+        form = FormInstanceForm(company=company, initial={
+            'title': f"{template.name} - {timezone.now().strftime('%d/%m/%Y')}"
+        })
+    
+    return render(request, 'forms_builder/instance_form.html', {
+        'form': form,
+        'template': template,
+        'action': 'Criar'
+    })
+
+
+@login_required
+@require_company_admin
+def form_instance_detail(request, pk):
+    """Detalhes de um formulario aplicado."""
+    company = request.user.company
+    instance = get_object_or_404(FormInstance, pk=pk, company=company)
+    
+    assignments = instance.assignments.select_related('employee').order_by('-completed_at', 'employee__nome')
+    
+    stats = {
+        'total': assignments.count(),
+        'completed': assignments.filter(status='COMPLETED').count(),
+        'pending': assignments.filter(status='PENDING').count(),
+        'in_progress': assignments.filter(status='IN_PROGRESS').count(),
+        'response_rate': instance.get_response_rate(),
+    }
+    
+    question_stats = []
+    for question in instance.template.questions.all():
+        if question.question_type in ['SCALE', 'SCALE_10']:
+            avg = FormAnswer.objects.filter(
+                assignment__form_instance=instance,
+                question=question
+            ).aggregate(avg=Avg('numeric_value'))['avg']
+            question_stats.append({
+                'question': question,
+                'avg': round(avg, 2) if avg else None
+            })
+    
+    context = {
+        'instance': instance,
+        'assignments': assignments,
+        'stats': stats,
+        'question_stats': question_stats,
+    }
+    return render(request, 'forms_builder/instance_detail.html', context)
+
+
+@login_required
+@require_company_admin
+def form_instance_publish(request, pk):
+    """Publica um formulario e cria atribuicoes."""
+    company = request.user.company
+    instance = get_object_or_404(FormInstance, pk=pk, company=company)
+    
+    if instance.status != 'DRAFT':
+        messages.warning(request, 'Este formulario ja foi publicado.')
+        return redirect('forms:instance_detail', pk=pk)
+    
+    instance.publish()
+    
+    AuditLog.log(
+        user=request.user,
+        action='PUBLISH',
+        description=f'Formulario "{instance.title}" publicado',
+        obj=instance,
+        request=request
+    )
+    
+    messages.success(
+        request,
+        f'Formulario publicado! {instance.assignments.count()} funcionarios foram notificados.'
+    )
+    return redirect('forms:instance_detail', pk=pk)
+
+
+@login_required
+@require_company_admin
+def form_instance_close(request, pk):
+    """Encerra um formulario."""
+    company = request.user.company
+    instance = get_object_or_404(FormInstance, pk=pk, company=company)
+    
+    instance.status = 'CLOSED'
+    instance.save()
+    
+    AuditLog.log(
+        user=request.user,
+        action='UPDATE',
+        description=f'Formulario "{instance.title}" encerrado',
+        obj=instance,
+        request=request
+    )
+    
+    messages.success(request, 'Formulario encerrado.')
+    return redirect('forms:instance_detail', pk=pk)
+
+
+@login_required
+def form_respond(request, assignment_pk):
+    """Pagina para funcionario responder formulario."""
+    assignment = get_object_or_404(
+        FormAssignment,
+        pk=assignment_pk
+    )
+    
+    if hasattr(request.user, 'employee_profile'):
+        employee = request.user.employee_profile
+    else:
+        employee = Employee.objects.filter(
+            email=request.user.email,
+            company=request.user.company
+        ).first()
+    
+    if not employee or assignment.employee != employee:
+        messages.error(request, 'Voce nao tem permissao para responder este formulario.')
+        return redirect('accounts:dashboard')
+    
+    if assignment.status == 'COMPLETED':
+        messages.info(request, 'Voce ja respondeu este formulario.')
+        return redirect('accounts:employee_dashboard')
+    
+    instance = assignment.form_instance
+    
+    if not instance.is_active:
+        messages.warning(request, 'Este formulario nao esta mais disponivel.')
+        return redirect('accounts:employee_dashboard')
+    
+    questions = instance.template.questions.all().order_by('order')
+    
+    if request.method == 'POST':
+        assignment.start()
+        
+        all_valid = True
+        for question in questions:
+            answer_key = f'question_{question.pk}'
+            value = request.POST.get(answer_key, '')
+            
+            if question.is_required and not value:
+                all_valid = False
+                messages.error(request, f'A pergunta "{question.text[:50]}..." e obrigatoria.')
+                break
+            
+            answer, created = FormAnswer.objects.get_or_create(
+                assignment=assignment,
+                question=question
+            )
+            
+            if question.question_type in ['SCALE', 'SCALE_10', 'NUMBER']:
+                answer.numeric_value = float(value) if value else None
+            elif question.question_type == 'YESNO':
+                answer.boolean_value = value.lower() == 'sim' if value else None
+            elif question.question_type == 'DATE':
+                answer.date_value = value if value else None
+            elif question.question_type in ['MULTIPLE']:
+                answer.selected_options = request.POST.getlist(answer_key)
+            elif question.question_type == 'SINGLE':
+                answer.selected_options = [value] if value else []
+            else:
+                answer.text_value = value
+            
+            if instance.is_anonymous:
+                answer.anonymous_employee = employee
+            
+            answer.save()
+        
+        if all_valid:
+            assignment.complete()
+            
+            AuditLog.log(
+                user=request.user,
+                action='SUBMIT',
+                description=f'Formulario "{instance.title}" respondido',
+                obj=assignment,
+                request=request,
+                company=instance.company
+            )
+            
+            messages.success(request, 'Formulario enviado com sucesso! Obrigado pela sua participacao.')
+            return redirect('accounts:employee_dashboard')
+    
+    context = {
+        'assignment': assignment,
+        'instance': instance,
+        'questions': questions,
+    }
+    return render(request, 'forms_builder/form_respond.html', context)
+
+
+@login_required
+def form_view_responses(request, assignment_pk):
+    """Visualiza respostas de um formulario."""
+    assignment = get_object_or_404(FormAssignment, pk=assignment_pk)
+    
+    if request.user.is_company_admin and assignment.form_instance.company == request.user.company:
+        pass
+    elif hasattr(request.user, 'employee_profile') and assignment.employee == request.user.employee_profile:
+        pass
+    else:
+        messages.error(request, 'Acesso nao autorizado.')
+        return redirect('accounts:dashboard')
+    
+    answers = assignment.answers.select_related('question').order_by('question__order')
+    
+    return render(request, 'forms_builder/view_responses.html', {
+        'assignment': assignment,
+        'answers': answers
+    })

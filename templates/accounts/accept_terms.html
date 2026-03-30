@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Aceitar Termos - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-file-text"></i> Termos de Uso e Politica de Privacidade</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        Para continuar utilizando a plataforma, voce precisa aceitar nossos termos.
+                    </div>
+                    
+                    <div class="border p-3 mb-4" style="max-height: 300px; overflow-y: auto;">
+                        <h6>Termos de Uso</h6>
+                        <p>Ao utilizar a plataforma SaaS NR-01, voce concorda com os seguintes termos...</p>
+                        <p>1. A plataforma destina-se a gestao de riscos ocupacionais e bem-estar no trabalho.</p>
+                        <p>2. O usuario e responsavel pela veracidade dos dados inseridos.</p>
+                        <p>3. Os dados sao tratados conforme a LGPD.</p>
+                        
+                        <h6 class="mt-4">Politica de Privacidade</h6>
+                        <p>Seus dados pessoais sao tratados com seguranca e confidencialidade...</p>
+                        <p>1. Coletamos apenas dados necessarios para o funcionamento da plataforma.</p>
+                        <p>2. Seus dados nao sao compartilhados com terceiros sem autorizacao.</p>
+                        <p>3. Voce pode solicitar a exclusao dos seus dados a qualquer momento.</p>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-check mb-2">
+                            <input type="checkbox" class="form-check-input" id="accept_terms" name="accept_terms" required>
+                            <label class="form-check-label" for="accept_terms">
+                                Li e aceito os <strong>Termos de Uso</strong>
+                            </label>
+                        </div>
+                        <div class="form-check mb-4">
+                            <input type="checkbox" class="form-check-input" id="accept_privacy" name="accept_privacy" required>
+                            <label class="form-check-label" for="accept_privacy">
+                                Li e aceito a <strong>Politica de Privacidade</strong>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check"></i> Aceitar e Continuar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

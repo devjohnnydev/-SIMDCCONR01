@@ -1,0 +1,208 @@
+"""
+Views para autenticacao e dashboards de usuarios.
+"""
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib import messages
+from django.views.generic import CreateView, TemplateView
+from django.urls import reverse_lazy
+from django.db.models import Count, Avg
+
+from .forms import LoginForm, CompanySignupForm, TermsAcceptanceForm
+from .models import User
+from companies.models import Company
+from employees.models import Employee
+from forms_builder.models import FormInstance, FormAssignment, FormAnswer
+from audit.models import AuditLog
+
+
+class CustomLoginView(LoginView):
+    """View de login customizada."""
+    
+    form_class = LoginForm
+    template_name = 'accounts/login.html'
+    redirect_authenticated_user = True
+    
+    def form_valid(self, form):
+        user = form.get_user()
+        
+        if user.company and user.company.status == 'PENDING':
+            messages.warning(self.request, 'Sua empresa ainda esta aguardando aprovacao.')
+            return redirect('accounts:pending_approval')
+        
+        if user.company and user.company.status == 'SUSPENDED':
+            messages.error(self.request, 'Sua empresa esta suspensa. Entre em contato com o suporte.')
+            return redirect('accounts:login')
+        
+        AuditLog.log(
+            user=user,
+            action='LOGIN',
+            description=f'Usuario {user.email} realizou login',
+            request=self.request
+        )
+        
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy('accounts:dashboard')
+
+
+class CustomLogoutView(LogoutView):
+    """View de logout customizada."""
+    
+    next_page = 'accounts:login'
+    
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            AuditLog.log(
+                user=request.user,
+                action='LOGOUT',
+                description=f'Usuario {request.user.email} realizou logout',
+                request=request
+            )
+        return super().dispatch(request, *args, **kwargs)
+
+
+class CompanySignupView(CreateView):
+    """View para cadastro de nova empresa."""
+    
+    form_class = CompanySignupForm
+    template_name = 'accounts/company_signup.html'
+    success_url = reverse_lazy('accounts:pending_approval')
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(
+            self.request,
+            'Cadastro realizado com sucesso! Aguarde a aprovacao da sua empresa.'
+        )
+        return response
+
+
+class PendingApprovalView(TemplateView):
+    """View para exibir mensagem de aguardando aprovacao."""
+    
+    template_name = 'accounts/pending_approval.html'
+
+
+@login_required
+def dashboard(request):
+    """Dashboard principal - redireciona baseado no role do usuario."""
+    user = request.user
+    
+    if user.is_admin_master:
+        return redirect('accounts:admin_master_dashboard')
+    elif user.is_company_admin:
+        return redirect('accounts:company_admin_dashboard')
+    else:
+        return redirect('accounts:employee_dashboard')
+
+
+@login_required
+def admin_master_dashboard(request):
+    """Dashboard do ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso nao autorizado.')
+        return redirect('accounts:dashboard')
+    
+    context = {
+        'pending_companies': Company.objects.filter(status='PENDING').count(),
+        'active_companies': Company.objects.filter(status='ACTIVE').count(),
+        'total_users': User.objects.count(),
+        'recent_companies': Company.objects.order_by('-created_at')[:10],
+        'recent_logs': AuditLog.objects.select_related('user', 'company').order_by('-created_at')[:20],
+    }
+    
+    return render(request, 'accounts/admin_master_dashboard.html', context)
+
+
+@login_required
+def company_admin_dashboard(request):
+    """Dashboard do COMPANY_ADMIN."""
+    if not request.user.is_company_admin:
+        messages.error(request, 'Acesso nao autorizado.')
+        return redirect('accounts:dashboard')
+    
+    company = request.user.company
+    
+    active_forms = FormInstance.objects.filter(
+        company=company,
+        status='ACTIVE'
+    ).select_related('template')
+    
+    form_stats = []
+    for form in active_forms:
+        stats = {
+            'form': form,
+            'total': form.assignments.count(),
+            'completed': form.assignments.filter(status='COMPLETED').count(),
+            'response_rate': form.get_response_rate(),
+            'avg_score': form.get_average_score()
+        }
+        form_stats.append(stats)
+    
+    context = {
+        'company': company,
+        'total_employees': company.get_employee_count(),
+        'active_forms_count': company.get_active_forms_count(),
+        'form_stats': form_stats,
+        'recent_employees': Employee.objects.filter(company=company).order_by('-created_at')[:5],
+        'announcements': company.announcements.filter(is_active=True)[:5],
+    }
+    
+    return render(request, 'accounts/company_admin_dashboard.html', context)
+
+
+@login_required
+def employee_dashboard(request):
+    """Dashboard do EMPLOYEE."""
+    user = request.user
+    
+    try:
+        employee = user.employee_profile
+    except Employee.DoesNotExist:
+        employee = Employee.objects.filter(email=user.email, company=user.company).first()
+        if employee:
+            employee.user = user
+            employee.save()
+    
+    if not employee:
+        messages.warning(request, 'Seu perfil de funcionario nao foi encontrado.')
+        return render(request, 'accounts/employee_dashboard.html', {'employee': None})
+    
+    pending_forms = employee.get_pending_forms()
+    completed_forms = employee.get_completed_forms()
+    
+    announcements = []
+    if employee.company:
+        announcements = employee.company.announcements.filter(is_active=True)[:5]
+    
+    context = {
+        'employee': employee,
+        'pending_forms': pending_forms,
+        'completed_forms': completed_forms,
+        'announcements': announcements,
+    }
+    
+    return render(request, 'accounts/employee_dashboard.html', context)
+
+
+@login_required
+def accept_terms(request):
+    """View para aceite de termos e politica de privacidade."""
+    if request.user.terms_accepted and request.user.privacy_accepted:
+        return redirect('accounts:dashboard')
+    
+    if request.method == 'POST':
+        form = TermsAcceptanceForm(request.POST)
+        if form.is_valid():
+            request.user.accept_terms()
+            request.user.accept_privacy()
+            messages.success(request, 'Termos aceitos com sucesso!')
+            return redirect('accounts:dashboard')
+    else:
+        form = TermsAcceptanceForm()
+    
+    return render(request, 'accounts/accept_terms.html', {'form': form})

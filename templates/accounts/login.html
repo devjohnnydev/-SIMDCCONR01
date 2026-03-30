@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login - SaaS NR-01{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+        min-height: 100vh;
+    }
+    
+    .login-container {
+        min-height: calc(100vh - 180px);
+        display: flex;
+        align-items: center;
+    }
+    
+    .login-card {
+        background: #fff;
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        overflow: hidden;
+    }
+    
+    .login-header {
+        text-align: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .login-icon {
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        box-shadow: 0 10px 15px -3px rgb(37 99 235 / 0.3);
+    }
+    
+    .login-icon i {
+        font-size: 2rem;
+        color: #fff;
+    }
+    
+    .login-header h2 {
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .login-header p {
+        color: #64748b;
+        margin: 0;
+    }
+    
+    .login-form .form-control {
+        padding: 0.875rem 1rem;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+    }
+    
+    .login-form label {
+        font-weight: 600;
+        color: #334155;
+    }
+    
+    .btn-login {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 0.75rem;
+    }
+    
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.875rem;
+    }
+    
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .divider::before {
+        margin-right: 1rem;
+    }
+    
+    .divider::after {
+        margin-left: 1rem;
+    }
+    
+    .signup-section {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        text-align: center;
+    }
+    
+    .signup-section p {
+        color: #64748b;
+        margin-bottom: 0.75rem;
+    }
+    
+    footer {
+        background: transparent !important;
+        border-top: none !important;
+    }
+    
+    footer p {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+    
+    .navbar {
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container login-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-5 col-lg-4">
+            <div class="login-card">
+                <div class="card-body p-4 p-md-5">
+                    <div class="login-header">
+                        <div class="login-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h2>Bem-vindo!</h2>
+                        <p>Acesse sua conta para continuar</p>
+                    </div>
+                    
+                    <form method="post" class="login-form">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Email</label>
+                            <input type="email" name="username" id="id_username" class="form-control" placeholder="seu@email.com" required autofocus>
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_password" class="form-label">Senha</label>
+                            <input type="password" name="password" id="id_password" class="form-control" placeholder="Sua senha" required autocomplete="current-password">
+                        </div>
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger mb-4">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Email ou senha incorretos. Tente novamente.
+                        </div>
+                        {% endif %}
+                        
+                        <button type="submit" class="btn btn-primary btn-login w-100">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+                        </button>
+                    </form>
+                    
+                    <div class="divider my-4">ou</div>
+                    
+                    <div class="signup-section">
+                        <p class="mb-2">Ainda nao tem uma conta?</p>
+                        <a href="{% url 'accounts:signup' %}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-building me-2"></i>Cadastrar Empresa
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p class="text-white-50 small mb-0">Plataforma de Gestao de Riscos Ocupacionais</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Aguardando Aprovacao - SaaS NR-01{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow text-center">
+                <div class="card-body p-5">
+                    <i class="bi bi-hourglass-split text-warning" style="font-size: 5rem;"></i>
+                    <h2 class="mt-4">Aguardando Aprovacao</h2>
+                    <p class="text-muted lead mt-3">
+                        Seu cadastro foi recebido com sucesso!
+                    </p>
+                    <p class="text-muted">
+                        Nossa equipe esta analisando sua solicitacao. Voce recebera um email assim que sua empresa for aprovada.
+                    </p>
+                    <hr class="my-4">
+                    <p class="small text-muted">
+                        Em caso de duvidas, entre em contato conosco.
+                    </p>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary mt-3">
+                        <i class="bi bi-arrow-left"></i> Voltar para Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

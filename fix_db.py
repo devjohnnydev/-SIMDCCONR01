@@ -14,7 +14,7 @@ def execute(sql):
             print("Skipped/Err:", sql, "->", e)
 
 print("Forcing safety columns on accounts_user...")
-execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS company_id integer REFERENCES companies_company(id) DEFERRABLE INITIALLY DEFERRED;")
+execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS company_id integer;")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS lgpd_individual_accepted boolean DEFAULT false;")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS lgpd_individual_at timestamp with time zone;")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS lgpd_aggregate_accepted boolean DEFAULT false;")

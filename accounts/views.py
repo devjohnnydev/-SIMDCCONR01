@@ -52,17 +52,26 @@ class CustomLoginView(LoginView):
 class CustomLogoutView(LogoutView):
     """View de logout customizada."""
     
-    next_page = 'accounts:login'
-    
     def dispatch(self, request, *args, **kwargs):
+        url = '/'
         if request.user.is_authenticated:
+            user = request.user
             AuditLog.log(
-                user=request.user,
+                user=user,
                 action='LOGOUT',
-                description=f'Usuario {request.user.email} realizou logout',
+                description=f'Usuario {user.email} realizou logout',
                 request=request
             )
-        return super().dispatch(request, *args, **kwargs)
+            
+            if user.role == 'ADMIN_MASTER':
+                url = '/'
+            elif getattr(user, 'company', None):
+                website = user.company.configs.get('website') if getattr(user.company, 'configs', None) else None
+                if website and website.startswith('http'):
+                    url = website
+            
+            logout(request)
+        return redirect(url)
 
 
 class CompanySignupView(CreateView):

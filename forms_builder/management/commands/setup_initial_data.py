@@ -430,9 +430,6 @@ class Command(BaseCommand):
                 defaults={'text': text, 'question_type': qtype, 'is_required': qtype != 'TEXT'}
             )
 
-    def create_form_templates(self):
-        # ... (metodo original mantido ou refatorado)
-
 
     def create_admin_master(self):
         if not User.objects.filter(role='ADMIN_MASTER').exists():

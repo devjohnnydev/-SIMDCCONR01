@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "gunicorn saas_nr01.wsgi:application --bind 0.0.0.0:$PORT",
-    "runtime": "v2"
+    "startCommand": "bash start.sh",
+    "runtime": "V2"
   }
 }

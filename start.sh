@@ -5,8 +5,12 @@ set -e
 # Makemigrations should be run locally and committed to Git
 # python manage.py makemigrations --noinput
 
+echo "Checking for existing DB columns..."
+python manage.py migrate --fake reports 0003 --noinput || true
+python manage.py migrate --fake accounts 0003 --noinput || true
+
 echo "Running migrate..."
-python manage.py migrate --noinput || (python manage.py migrate --fake reports 0003 && python manage.py migrate --fake accounts 0003)
+python manage.py migrate --noinput
 
 echo "Running fix_db..."
 python fix_db.py

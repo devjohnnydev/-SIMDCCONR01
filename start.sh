@@ -6,7 +6,7 @@ set -e
 # python manage.py makemigrations --noinput
 
 echo "Running migrate..."
-python manage.py migrate --noinput || python manage.py migrate --fake reports 0003
+python manage.py migrate --noinput || (python manage.py migrate --fake reports 0003 && python manage.py migrate --fake accounts 0003)
 
 echo "Running fix_db..."
 python fix_db.py

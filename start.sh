@@ -14,5 +14,8 @@ python fix_db.py
 echo "Running setup_initial_data..."
 python manage.py setup_initial_data
 
+echo "Running fix_missing_options..."
+python fix_missing_options.py
+
 echo "Starting Gunicorn..."
 exec gunicorn saas_nr01.wsgi:application --bind 0.0.0.0:$PORT

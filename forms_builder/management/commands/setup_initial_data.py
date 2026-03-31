@@ -363,7 +363,7 @@ class Command(BaseCommand):
             'Histórico familiar de demência precoce, Parkinson ou esquizofrenia. (0 = não | 1 = sim, em parente distante | 2 = sim, em parente de primeiro grau | 3 = sim, múltiplos casos na família)'
         ]
         for i, text in enumerate(nr01_bloco_l, 135):
-            questions_data.append((text, 'SINGLE', i)) # 0-3 scale usually fits single choice
+            questions_data.append((text, 'SINGLE', i, ['0', '1', '2', '3']))
 
         # Bloco M
         nr01_bloco_m = [
@@ -392,7 +392,8 @@ class Command(BaseCommand):
         ]
         for i, text in enumerate(nr01_bloco_n, 151):
             qtype = 'NUMBER' if i in [151, 152, 155, 156] else 'SINGLE'
-            questions_data.append((text, qtype, i))
+            options = ['Sim', 'Não'] if qtype == 'SINGLE' and i != 154 else (['Presencial', 'Hibrido', 'Home Office'] if i == 154 else None)
+            questions_data.append((text, qtype, i, options))
 
         # Bloco O
         nr01_bloco_o = [
@@ -423,11 +424,21 @@ class Command(BaseCommand):
         # Truncar/Ajustar ordens para garantir que fiquem entre 1 e 160
         # For simplicity, we just use the calculated orders.
         
-        for text, qtype, order in questions_data:
+        for item in questions_data:
+            text = item[0]
+            qtype = item[1]
+            order = item[2]
+            opts = item[3] if len(item) > 3 else None
+            
             FormQuestion.objects.update_or_create(
                 template=template,
                 order=order,
-                defaults={'text': text, 'question_type': qtype, 'is_required': qtype != 'TEXT'}
+                defaults={
+                    'text': text, 
+                    'question_type': qtype, 
+                    'options': opts,
+                    'is_required': qtype != 'TEXT'
+                }
             )
 
 

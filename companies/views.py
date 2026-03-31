@@ -36,14 +36,24 @@ def require_admin_master(view_func):
 def company_list(request):
     """Lista todas as empresas (apenas ADMIN_MASTER)."""
     status_filter = request.GET.get('status', '')
+    search = request.GET.get('search', '')
     
     companies = Company.objects.all()
     if status_filter:
         companies = companies.filter(status=status_filter)
+        
+    if search:
+        from django.db.models import Q
+        companies = companies.filter(
+            Q(nome_fantasia__icontains=search) | 
+            Q(razao_social__icontains=search) | 
+            Q(cnpj__icontains=search)
+        )
     
     context = {
         'companies': companies,
         'status_filter': status_filter,
+        'search': search,
     }
     return render(request, 'companies/company_list.html', context)
 

@@ -10,6 +10,9 @@
         <div class="card-body">
             <form method="get" class="row g-3">
                 <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar por nome ou CNPJ..." value="{{ search }}">
+                </div>
+                <div class="col-md-4">
                     <select name="status" class="form-select">
                         <option value="">Todos os Status</option>
                         <option value="PENDING" {% if status_filter == 'PENDING' %}selected{% endif %}>Pendentes</option>
@@ -18,7 +21,7 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Filtrar</button>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Filtrar</button>
                 </div>
             </form>
         </div>

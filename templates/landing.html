@@ -449,7 +449,7 @@
                     <li><span class="check">✓</span>Dashboard de resultados</li>
                     <li><span class="check">✓</span>Laudo PDF básico</li>
                 </ul>
-                <a href="/accounts/company-signup/" class="btn-plan btn-plan-ghost">Começar Agora</a>
+                <a href="{% url 'accounts:signup' %}" class="btn-plan btn-plan-ghost">Começar Agora</a>
             </div>
             <div class="plan-card featured">
                 <div class="plan-badge">⭐ Mais Popular</div>
@@ -465,7 +465,7 @@
                     <li><span class="check">✓</span>PGR/GRO pronto para auditoria</li>
                     <li><span class="check">✓</span>Suporte prioritário</li>
                 </ul>
-                <a href="/accounts/company-signup/" class="btn-plan btn-plan-solid">Começar Agora</a>
+                <a href="{% url 'accounts:signup' %}" class="btn-plan btn-plan-solid">Começar Agora</a>
             </div>
             <div class="plan-card">
                 <div class="plan-name">Enterprise</div>
@@ -491,7 +491,7 @@
         <h2>Sua empresa está pronta<br>para a nova NR-1?</h2>
         <p>Evite multas, proteja sua equipe e mantenha o PGR atualizado.<br>Comece hoje com o sistema mais completo do Brasil.</p>
         <div class="cta-btns">
-            <a href="/accounts/company-signup/" class="btn-white">Cadastrar Minha Empresa</a>
+            <a href="{% url 'accounts:signup' %}" class="btn-white">Cadastrar Minha Empresa</a>
             <a href="/accounts/login/" class="btn-white-ghost">Já sou cliente — Entrar</a>
         </div>
     </div>

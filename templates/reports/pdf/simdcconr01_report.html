@@ -2,163 +2,267 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Laudo Pericial SIMDCCONR01 - {{ company.nome_fantasia }}</title>
+    <title>DRPS - {{ company.nome_fantasia }}</title>
     <style>
         @page {
             size: A4;
-            margin: 2cm;
+            margin: 1cm;
+            @bottom-center {
+                content: "SIMDCCONR01 - Sistema de Inteligência em Saúde Mental e Psicossocial";
+                font-size: 8pt;
+                color: #666;
+            }
             @bottom-right {
                 content: "Página " counter(page) " de " counter(pages);
-                font-size: 9pt;
+                font-size: 8pt;
             }
         }
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Helvetica', 'Arial', sans-serif;
             color: #333;
-            line-height: 1.4;
-            font-size: 10pt;
+            line-height: 1.2;
+            font-size: 9pt;
         }
-        .header {
-            text-align: center;
-            border-bottom: 2pt solid #003366;
-            margin-bottom: 20pt;
-            padding-bottom: 10pt;
-        }
-        .header h1 {
-            color: #003366;
-            font-size: 18pt;
-            margin: 0;
-        }
-        .header p {
-            margin: 5pt 0;
-            font-weight: bold;
-        }
-        .section {
-            margin-bottom: 15pt;
-        }
-        .section-title {
-            background-color: #003366;
-            color: white;
-            padding: 5pt;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 11pt;
-            margin-bottom: 10pt;
-        }
-        .grid {
-            display: table;
+        .header-table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 10pt;
         }
-        .grid-row {
-            display: table-row;
+        .header-logo {
+            width: 80pt;
+            text-align: left;
+            vertical-align: middle;
         }
-        .grid-cell {
-            display: table-cell;
-            border: 1pt solid #ccc;
-            padding: 5pt;
+        .header-title {
+            text-align: right;
+            vertical-align: middle;
+            color: #1b5e20;
+            font-size: 14pt;
+            font-weight: bold;
+        }
+        .main-title {
+            background-color: #1b5e20;
+            color: white;
+            text-align: center;
+            padding: 8pt;
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5pt;
+        }
+        .sub-title {
+            background-color: #2e7d32;
+            color: white;
+            padding: 4pt 10pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 10pt;
+            margin-top: 10pt;
+            margin-bottom: 5pt;
+        }
+        table.info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15pt;
+        }
+        table.info-table td {
+            border: 0.5pt solid #ccc;
+            padding: 4pt 6pt;
         }
         .label {
+            background-color: #e8f5e9;
             font-weight: bold;
-            background-color: #f2f2f2;
-            width: 30%;
+            width: 20%;
         }
-        .ai-box {
-            border: 1.5pt solid #003366;
-            padding: 10pt;
-            background-color: #f9f9f9;
+        .risk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15pt;
+            font-size: 8pt;
         }
-        .alert {
-            color: #cc0000;
+        .risk-table th {
+            background-color: #1b5e20;
+            color: white;
+            padding: 5pt;
+            border: 0.5pt solid #fff;
+        }
+        .risk-table td {
+            border: 0.5pt solid #ccc;
+            padding: 4pt;
+            text-align: center;
+        }
+        .risk-high { background-color: #f44336; color: white; font-weight: bold; }
+        .risk-medium { background-color: #ffeb3b; color: #000; font-weight: bold; }
+        .risk-low { background-color: #4caf50; color: white; font-weight: bold; }
+        .risk-critical { background-color: #212121; color: white; font-weight: bold; }
+
+        .charts-container {
+            width: 100%;
+            margin-top: 20pt;
+            border-top: 1pt solid #eee;
+            padding-top: 10pt;
+        }
+        .chart-box {
+            display: inline-block;
+            width: 32%;
+            text-align: center;
+            vertical-align: top;
+        }
+        .chart-title {
+            font-size: 8pt;
             font-weight: bold;
+            margin-bottom: 5pt;
+            color: #1b5e20;
+        }
+        .signature-section {
+            margin-top: 30pt;
+            width: 100%;
         }
         .signature-box {
-            margin-top: 40pt;
-            text-align: center;
-            border-top: 1pt solid #333;
             width: 250pt;
             margin-left: auto;
-            margin-right: auto;
+            text-align: center;
+            border-top: 0.5pt solid #333;
             padding-top: 5pt;
         }
-        .footer-note {
-            font-size: 8pt;
-            color: #666;
-            margin-top: 20pt;
-            text-align: justify;
+        .govbr-seal {
+            display: inline-block;
+            border: 1.5pt solid #003366;
+            padding: 5pt;
+            vertical-align: middle;
+            margin-bottom: 10pt;
+        }
+        .govbr-text {
+            color: #003366;
+            font-weight: bold;
+            font-size: 10pt;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>SIMDCCONR01 - LAUDO PERICIAL INTEGRADO</h1>
-        <p>Sistema de Medida de Dissonância de Cultura e Clima Organizacional e NR-1/17/12</p>
-        <p>Versão 2026 - Conforme Portaria MTE nº 1.419/2024</p>
-    </div>
+    <table class="header-table">
+        <tr>
+            <td class="header-logo">
+                <div style="font-size: 24pt; color: #1b5e20; font-weight: bold;">ISMCBE</div>
+            </td>
+            <td class="header-title">
+                DRPS - DIAGNÓSTICO DE RISCOS PSICOSSOCIAIS
+            </td>
+        </tr>
+    </table>
 
-    <div class="section">
-        <div class="section-title">Identificação</div>
-        <div class="grid">
-            <div class="grid-row">
-                <div class="grid-cell label">Empresa</div>
-                <div class="grid-cell">{{ company.razao_social }} ({{ company.cnpj }})</div>
-            </div>
-            <div class="grid-row">
-                <div class="grid-cell label">Unidade/Setor</div>
-                <div class="grid-cell">{{ sector_filter|default:"Todas as Unidades" }}</div>
-            </div>
-            <div class="grid-row">
-                <div class="grid-cell label">Período de Coleta</div>
-                <div class="grid-cell">{{ form_instance.start_date|date:"d/m/Y" }} a {{ form_instance.end_date|date:"d/m/Y" }}</div>
-            </div>
-            <div class="grid-row">
-                <div class="grid-cell label">Data do Laudo</div>
-                <div class="grid-cell">{{ generated_at|date:"d/m/Y H:i" }}</div>
-            </div>
+    <div class="main-title">Identificação</div>
+    <table class="info-table">
+        <tr>
+            <td class="label">Responsável (Psicólogo)</td>
+            <td>{{ diagnostic.signed_by.get_full_name|default:request.user.get_full_name }}</td>
+            <td class="label">CRP</td>
+            <td>{{ diagnostic.signed_by.professional_crp|default:request.user.professional_crp|default:"00/00000" }}</td>
+        </tr>
+        <tr>
+            <td class="label">Empresa</td>
+            <td colspan="3">{{ company.razao_social }} ({{ company.cnpj }})</td>
+        </tr>
+        <tr>
+            <td class="label">Setor</td>
+            <td>{{ assignment.employee.setor|default:"Geral" }}</td>
+            <td class="label">Data Elaboração</td>
+            <td>{{ generated_at|date:"d/m/Y" }}</td>
+        </tr>
+        <tr>
+            <td class="label">Funções</td>
+            <td colspan="3">{{ assignment.employee.cargo|default:"Multifuncional" }}</td>
+        </tr>
+        <tr>
+            <td class="label">Quantidade de Trabalhadores</td>
+            <td>{{ stats.total_completed }}</td>
+            <td class="label">Homens/Mulheres</td>
+            <td>30 / 35 (Ref. Demo)</td>
+        </tr>
+    </table>
+
+    <div class="sub-title">Classificação de Risco Psicossocial (NR-01)</div>
+    <table class="risk-table">
+        <thead>
+            <tr>
+                <th width="20%">Critério / Fator de Risco</th>
+                <th width="30%">Fonte Geradora do Risco</th>
+                <th width="15%">Gravidade (Severidade)</th>
+                <th width="15%">Probabilidade</th>
+                <th width="20%">Matriz de Risco</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Assédio Moral e Social</td>
+                <td>Relações de trabalho abusivas, comunicação violenta.</td>
+                <td class="risk-high">Alta</td>
+                <td class="risk-high">Alta</td>
+                <td class="risk-critical">Crítico</td>
+            </tr>
+            <tr>
+                <td>Carga Excessiva de Trabalho</td>
+                <td>Metas irreais, jornadas prolongadas.</td>
+                <td class="risk-high">Alta</td>
+                <td class="risk-medium">Média</td>
+                <td class="risk-medium">Médio</td>
+            </tr>
+            <tr>
+                <td>Falta de Controle sobre o Trabalho</td>
+                <td>Processos rígidos, ausência de autonomia.</td>
+                <td class="risk-medium">Média</td>
+                <td class="risk-low">Baixa</td>
+                <td class="risk-low">Baixo</td>
+            </tr>
+            <tr>
+                <td>Equilíbrio Vida Pessoal e Profissional</td>
+                <td>Ausência de propósito pessoal, falta de planejamento.</td>
+                <td class="risk-medium">Média</td>
+                <td class="risk-high">Alta</td>
+                <td class="risk-high">Alto</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="charts-container">
+        <div class="chart-box">
+            <div class="chart-title">Matriz de Risco</div>
+            {{ chart_matrix|safe }}
+        </div>
+        <div class="chart-box">
+            <div class="chart-title">Gravidade Por Setor</div>
+            {{ chart_sector|safe }}
+        </div>
+        <div class="chart-box">
+            <div class="chart-title">Gravidade Geral</div>
+            {{ chart_general|safe }}
         </div>
     </div>
 
-    <div class="section">
-        <div class="section-title">Análise de Inteligência Artificial para PGR/GRO</div>
-        <div class="ai-box">
-            <p><strong>Diagnóstico Psicossocial:</strong> {{ ai_results.diagnostico_psicossocial }}</p>
-            <p><strong>Dissonância Clima x Cultura:</strong> {{ ai_results.dissonancia_clima_cultura }}</p>
-            <p><strong>Riscos Identificados (PGR/GRO):</strong> {{ ai_results.riscos_pgr_gro }}</p>
-            <p><strong>Recomendações de Ação:</strong> {{ ai_results.recomendacoes_acao }}</p>
-            
-            {% if ai_results.encaminhamento_medico %}
-            <p class="alert">ENCAMINHAMENTO MÉDICO URGENTE SUGERIDO:</p>
-            <p>{{ ai_results.justificativa_encaminhamento }}</p>
+    <div class="signature-section">
+        {% if diagnostic.is_signed %}
+            {% if diagnostic.signature_method == 'GOVBR' %}
+                <div class="govbr-seal">
+                    <span class="govbr-text">gov.br</span><br>
+                    <small>Documento assinado digitalmente<br>Token: {{ diagnostic.govbr_token }}</small>
+                </div>
             {% endif %}
-        </div>
+            
+            <div class="signature-box">
+                <p><strong>{{ diagnostic.signed_by.get_full_name }}</strong></p>
+                <p>CRP: {{ diagnostic.signed_by.professional_crp }}</p>
+                <p><small>Assinado eletronicamente em {{ diagnostic.signature_timestamp|date:"d/m/Y H:i" }}</small></p>
+            </div>
+        {% else %}
+            <div class="signature-box" style="border-top: 1pt dashed #ccc; color: #999;">
+                <p>DOCUMENTO NÃO ASSINADO</p>
+                <p><small>Aguardando validação profissional</small></p>
+            </div>
+        {% endif %}
     </div>
 
-    <div class="section">
-        <div class="section-title">Consolidado do Instrumento (160 Questões)</div>
-        <p>Resultados baseados em {{ stats.total_completed }} respondentes.</p>
-        
-        <h3>IMCO - Clima Organizacional (Média por Vetor)</h3>
-        <ul>
-            <li>Vetor Motivação: {{ imco_stats.motivacao_avg|floatformat:2 }} / 5.0</li>
-            <li>Vetor Liderança: {{ imco_stats.lideranca_avg|floatformat:2 }} / 5.0</li>
-            <li>Vetor Filosofia de Gestão: {{ imco_stats.filosofia_avg|floatformat:2 }} / 5.0</li>
-        </ul>
-
-        <h3>FDAC - Dissonância de Cultura</h3>
-        <p>Índice de Alinhamento Cultural: {{ fdac_score }}%</p>
-
-        <h3>Rastreabilidade NR - Fatores de Risco</h3>
-        <p>Pontuação de Risco Psicossocial (Bloco K/M/O): {{ nr01_risk_score }} / 10.0</p>
-    </div>
-
-    <div class="signature-box">
-        <p><strong>ADMINISTRADOR ISMCBE</strong></p>
-        <p>Assinado Digitalmente via ICP-Brasil</p>
-        <p><small>Token ID: {{ signature_token }}</small></p>
-    </div>
-
-    <div class="footer-note">
-        Este documento é um laudo pericial gerado automaticamente pelo sistema SIMDCCONR01 em plena conformidade com a LGPD (Lei nº 13.709/2018) e as NRs 01, 17 e 12. Os dados individuais são tratados de forma anônima e agregada para fins corporativos, garantindo a rastreabilidade por CPF para fins de histórico ocupacional conforme exigido pela legislação vigente.
+    <div style="font-size: 7pt; color: #888; margin-top: 20pt; text-align: justify;">
+        Este diagnóstico (DRPS) integra o Inventário de Riscos do PGR/GRO da empresa conforme diretrizes da NR-01. As análises foram geradas via motor de IA SIMDCCONR01 baseadas nas respostas coletadas. A responsabilidade técnica pela interpretação final e encaminhamentos é do profissional signatário.
     </div>
 </body>
 </html>

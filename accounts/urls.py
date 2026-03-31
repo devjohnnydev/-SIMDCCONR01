@@ -19,4 +19,5 @@ urlpatterns = [
     path('dashboard/admin/laudos/', views.admin_laudos, name='admin_laudos'),
     path('dashboard/admin/laudos/generate/<int:assignment_id>/', views.generate_laudo_action, name='generate_laudo'),
     path('dashboard/employee/', views.employee_dashboard, name='employee_dashboard'),
+    path('profile/update/', views.profile_update, name='profile_update'),
 ]

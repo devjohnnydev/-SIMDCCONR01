@@ -96,6 +96,24 @@ class EmployeeDiagnostic(models.Model):
     
     generated_at = models.DateTimeField('Gerado em', auto_now_add=True)
     
+    # Electronic Signature
+    is_signed = models.BooleanField('Assinado', default=False)
+    signed_by = models.ForeignKey(
+        'accounts.User', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='signed_diagnostics'
+    )
+    signature_method = models.CharField(
+        'Metodo de Assinatura', 
+        max_length=20, 
+        choices=[('INTERNAL', 'Interna'), ('GOVBR', 'Gov.br'), ('MANUAL', 'Manual')],
+        blank=True
+    )
+    signature_timestamp = models.DateTimeField('Data da Assinatura', null=True, blank=True)
+    govbr_token = models.CharField('Token Gov.br', max_length=255, blank=True)
+    
     class Meta:
         verbose_name = 'Laudo Individual'
         verbose_name_plural = 'Laudos Individuais'

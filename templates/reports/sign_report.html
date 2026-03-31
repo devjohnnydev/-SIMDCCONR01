@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white p-4">
+                    <h2 class="mb-0 h4"><i class="bi bi-pen-fill me-2"></i>Assinar Laudo Pericial</h2>
+                    <p class="mb-0 opacity-75 small">Laudo ID: {{ diagnostic.validation_code }}</p>
+                </div>
+                <div class="card-body p-5">
+                    <div class="alert alert-info border-0 rounded-3 mb-4">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        Este laudo será selado com sua identidade profissional. Uma vez assinado, o documento torna-se oficial e rastreável.
+                    </div>
+
+                    <div class="mb-5">
+                        <h5 class="fw-bold mb-3">Resumo do Laudo</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0">
+                                <span class="text-muted">Funcionário:</span>
+                                <span class="fw-bold text-dark">{{ diagnostic.assignment.employee.nome }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0">
+                                <span class="text-muted">Empresa:</span>
+                                <span class="fw-bold text-dark">{{ diagnostic.assignment.form_instance.company.nome_fantasia }}</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Assinatura Interna -->
+                        <div class="col-md-6">
+                            <div class="h-100 p-4 border rounded-4 bg-light hover-shadow transition">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-primary text-white p-2 rounded-3 me-3">
+                                        <i class="bi bi-person-badge fs-4"></i>
+                                    </div>
+                                    <h6 class="mb-0 fw-bold">Assinatura Interna</h6>
+                                </div>
+                                <p class="small text-muted mb-4">Use seu registro CRP e assinatura eletrônica salvos no seu perfil ISMCBE.</p>
+                                
+                                {% if request.user.professional_crp %}
+                                <form method="post" action="">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="method" value="INTERNAL">
+                                    <button type="submit" class="btn btn-primary w-100 rounded-pill">
+                                        Assinar com Perfil
+                                    </button>
+                                </form>
+                                {% else %}
+                                <div class="alert alert-warning py-2 small mb-0">
+                                    Configure seu CRP no perfil.
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Assinatura Gov.br -->
+                        <div class="col-md-6">
+                            <div class="h-100 p-4 border rounded-4 bg-light hover-shadow transition">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-success text-white p-2 rounded-3 me-3">
+                                        <i class="bi bi-shield-check fs-4"></i>
+                                    </div>
+                                    <h6 class="mb-0 fw-bold">Gov.br (Avançada)</h6>
+                                </div>
+                                <p class="small text-muted mb-4">Assinatura avançada via Portal do Governo Federal para plena validade jurídica.</p>
+                                
+                                <form method="post" action="">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="method" value="GOVBR">
+                                    <button type="submit" class="btn btn-success w-100 rounded-pill">
+                                        Entrar com Gov.br
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 text-center">
+                        <a href="{% url 'reports:view_diagnostic' diagnostic.validation_code %}" class="text-decoration-none text-muted small">
+                            <i class="bi bi-arrow-left me-1"></i> Voltar para o Laudo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .transition { transition: all 0.3s ease; }
+    .hover-shadow:hover { 
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important;
+        border-color: var(--bs-primary) !important;
+    }
+</style>
+{% endblock %}

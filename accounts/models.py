@@ -75,6 +75,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     privacy_accepted = models.BooleanField('Privacidade Aceita', default=False)
     privacy_accepted_at = models.DateTimeField('Data Aceite Privacidade', null=True, blank=True)
     
+    # Professional Credentials (Psychologists / Admins)
+    professional_crp = models.CharField('Registro CRP', max_length=50, blank=True)
+    signature_image = models.ImageField('Assinatura Digital', upload_to='signatures/', null=True, blank=True)
+    
     date_joined = models.DateTimeField('Data de Cadastro', default=timezone.now)
     
     objects = UserManager()

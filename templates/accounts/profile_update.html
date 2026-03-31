@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white p-4">
+                    <h2 class="h4 mb-0"><i class="bi bi-person-circle me-2"></i>Editar Perfil Profissional</h2>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Nome</label>
+                                <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Sobrenome</label>
+                                <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Registro CRP (Psicólogo)</label>
+                            <input type="text" name="professional_crp" class="form-control" value="{{ user.professional_crp }}" placeholder="Ex: CRP 06/12345">
+                            <div class="form-text">Necessário para assinar os laudos diagnósticos.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Assinatura Digital (Imagem)</label>
+                            {% if user.signature_image %}
+                                <div class="mb-2">
+                                    <img src="{{ user.signature_image.url }}" alt="Assinatura Atual" class="img-thumbnail" style="max-height: 100px;">
+                                </div>
+                            {% endif %}
+                            <input type="file" name="signature_image" class="form-control" accept="image/*">
+                            <div class="form-text">Upload de imagem da sua assinatura (formato PNG ou JPG).</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill">
+                                <i class="bi bi-check-lg me-1"></i> Salvar Alterações
+                            </button>
+                            <a href="{% url 'accounts:dashboard' %}" class="btn btn-light rounded-pill">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

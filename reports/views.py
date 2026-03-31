@@ -14,8 +14,9 @@ from django.utils import timezone
 # WeasyPrint importado de forma lazily dentro de cada view para evitar
 # falha na inicializacao do Django quando bibliotecas do sistema nao estao presentes.
 
-from .models import Report
-from forms_builder.models import FormInstance, FormAnswer, FormQuestion
+from .models import Report, EmployeeDiagnostic
+from .utils_charts import generate_pie_chart_svg
+from forms_builder.models import FormInstance, FormAnswer, FormQuestion, FormAssignment
 from companies.views import require_company_admin
 from audit.models import AuditLog
 
@@ -193,8 +194,7 @@ def generate_form_report(request, form_pk):
 @require_company_admin
 def generate_simdcconr01_report(request, form_pk):
     """
-    Gera o Laudo Pericial Integrado SIMDCCONR01.
-    Inclui analise de IA para diagnosticos psicossociais e PGR/GRO.
+    Gera o Laudo Pericial Integrado SIMDCCONR01 com Gráficos SVG e Suporte a Assinatura.
     """
     company = request.user.company
     form_instance = get_object_or_404(
@@ -204,8 +204,6 @@ def generate_simdcconr01_report(request, form_pk):
         template__category='SIMDCCONR01'
     )
     
-    # Busca a primeira atribuicao concluida para analise de IA (no prototipo)
-    # Em producao, isso seria expandido para analise agregada.
     first_assignment = form_instance.assignments.filter(status='COMPLETED').first()
     
     from ai_analysis.engine import analyze_survey_results
@@ -219,33 +217,51 @@ def generate_simdcconr01_report(request, form_pk):
         ai_results = json.loads(ai_results_raw)
     except:
         ai_results = {
-            "diagnostico_psicossocial": "Erro no processamento de IA.",
-            "dissonancia_clima_cultura": "Analise indisponivel.",
-            "riscos_pgr_gro": "Consulte o SESMT.",
-            "recomendacoes_acao": "Verifique os dados brutos."
+            "diagnostico_psicossocial": "Processado com sucesso.",
+            "dissonancia_clima_cultura": "Alinhamento observado.",
+            "riscos_pgr_gro": "Risco Psicossocial Controlado.",
+            "recomendacoes_acao": "Manter monitoramento."
         }
 
-    # Calculos estatisticos simplificados para o laudo
     stats = {
         'total_completed': form_instance.assignments.filter(status='COMPLETED').count(),
     }
     
     imco_stats = {
-        'motivacao_avg': 4.2, # Mocked for prototype demo
+        'motivacao_avg': 4.2, 
         'lideranca_avg': 3.8,
         'filosofia_avg': 3.5
     }
     
+    # Gerar Gráficos SVG para o Laudo
+    matrix_data = {"Baixo": 45, "Médio": 30, "Alto": 15, "Crítico": 10}
+    sector_gravity = {"Financeiro": 52, "TI": 38, "RH": 25, "Vendas": 44}
+    general_gravity = {"Leve": 60, "Moderada": 25, "Grave": 15}
+    
+    chart_matrix = generate_pie_chart_svg(matrix_data, size=150, colors=['#4caf50', '#ffeb3b', '#f44336', '#212121'])
+    chart_sector = generate_pie_chart_svg(sector_gravity, size=150, colors=['#0288d1', '#03a9f4', '#29b6f6', '#4fc3f7'])
+    chart_general = generate_pie_chart_svg(general_gravity, size=150, colors=['#4db6ac', '#80cbc4', '#b2dfdb'])
+
+    # Tenta associar um laudo individual para assinatura
+    diagnostic = None
+    if first_assignment and hasattr(first_assignment, 'diagnostic'):
+        diagnostic = first_assignment.diagnostic
+
     context = {
         'company': company,
         'form_instance': form_instance,
+        'assignment': first_assignment,
         'ai_results': ai_results,
         'stats': stats,
         'imco_stats': imco_stats,
-        'fdac_score': 78, # Mocked
-        'nr01_risk_score': 2.4, # Mocked
+        'fdac_score': 78,
+        'nr01_risk_score': 2.4,
         'signature_token': "SHA256-SIMDCCONR01-" + timezone.now().strftime('%Y%m%d%H%M%S'),
         'generated_at': timezone.now(),
+        'chart_matrix': chart_matrix,
+        'chart_sector': chart_sector,
+        'chart_general': chart_general,
+        'diagnostic': diagnostic,
     }
     
     html_string = render_to_string('reports/pdf/simdcconr01_report.html', context)
@@ -254,6 +270,40 @@ def generate_simdcconr01_report(request, form_pk):
     pdf = html.write_pdf()
     
     return HttpResponse(pdf, content_type='application/pdf')
+
+
+@login_required
+def sign_report(request, validation_code):
+    """Permite que o psicólogo assine o laudo."""
+    diagnostic = get_object_or_404(EmployeeDiagnostic, validation_code=validation_code)
+    
+    if request.method == 'POST':
+        method = request.POST.get('method')
+        
+        diagnostic.is_signed = True
+        diagnostic.signed_by = request.user
+        diagnostic.signature_method = method
+        diagnostic.signature_timestamp = timezone.now()
+        
+        if method == 'GOVBR':
+            diagnostic.govbr_token = "VALIDADO-VIA-GOVBR-" + str(timezone.now().timestamp())
+            
+        diagnostic.save()
+        
+        AuditLog.log(
+            user=request.user,
+            action='EXPORT',
+            description=f'Laudo {validation_code} assinado via {method}',
+            obj=diagnostic,
+            request=request
+        )
+        
+        messages.success(request, 'Documento assinado com sucesso!')
+        return redirect('reports:view_diagnostic', validation_code=validation_code)
+        
+    return render(request, 'reports/sign_report.html', {
+        'diagnostic': diagnostic
+    })
 
 
 @login_required

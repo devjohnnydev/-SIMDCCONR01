@@ -286,3 +286,25 @@ def accept_terms(request):
         form = TermsAcceptanceForm()
     
     return render(request, 'accounts/accept_terms.html', {'form': form})
+
+
+@login_required
+def profile_update(request):
+    """Permite que o usuário (especialmente psicólogos) atualize seu CRP e assinatura."""
+    user = request.user
+    
+    if request.method == 'POST':
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.professional_crp = request.POST.get('professional_crp', user.professional_crp)
+        
+        if 'signature_image' in request.FILES:
+            user.signature_image = request.FILES['signature_image']
+            
+        user.save()
+        messages.success(request, 'Perfil atualizado com sucesso!')
+        return redirect('accounts:dashboard')
+        
+    return render(request, 'accounts/profile_update.html', {
+        'user': user
+    })

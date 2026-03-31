@@ -14,6 +14,7 @@ urlpatterns = [
     path('create/<int:template_pk>/', views.form_instance_create, name='instance_create'),
     path('<int:pk>/', views.form_instance_detail, name='instance_detail'),
     path('<int:pk>/publish/', views.form_instance_publish, name='instance_publish'),
+    path('<int:pk>/resync/', views.form_instance_resync, name='instance_resync'),
     path('<int:pk>/close/', views.form_instance_close, name='instance_close'),
     
     path('respond/<int:assignment_pk>/', views.form_respond, name='respond'),

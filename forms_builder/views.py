@@ -179,6 +179,33 @@ def form_instance_publish(request, pk):
         f'Formulario publicado! {instance.assignments.count()} funcionarios foram notificados.'
     )
     return redirect('forms:instance_detail', pk=pk)
+    
+
+@login_required
+@require_company_admin
+def form_instance_resync(request, pk):
+    """Sincroniza e garante que todos os funcionarios ativos tenham o formulario."""
+    company = request.user.company
+    instance = get_object_or_404(FormInstance, pk=pk, company=company)
+    
+    if instance.status != 'ACTIVE':
+        messages.warning(request, 'O formulário precisa estar Ativo para sincronizar participantes.')
+        return redirect('forms:instance_detail', pk=pk)
+    
+    from employees.models import Employee
+    employees = Employee.objects.filter(company=company, status='ACTIVE')
+    count = 0
+    for employee in employees:
+        _, created = FormAssignment.objects.get_or_create(
+            employee=employee,
+            form_instance=instance,
+            defaults={'status': 'PENDING'}
+        )
+        if created:
+            count += 1
+            
+    messages.success(request, f'Sincronização concluída! {count} novos funcionários vinculados.')
+    return redirect('forms:instance_detail', pk=pk)
 
 
 @login_required

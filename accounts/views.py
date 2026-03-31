@@ -237,6 +237,21 @@ def employee_dashboard(request):
         messages.warning(request, 'Seu perfil de funcionario nao foi encontrado.')
         return render(request, 'accounts/employee_dashboard.html', {'employee': None})
     
+    # Auto-atribuicao de formularios ativos que o funcionario ainda nao recebeu
+    if employee.company:
+        from forms_builder.models import FormInstance, FormAssignment
+        active_instances = FormInstance.objects.filter(
+            company=employee.company,
+            status='ACTIVE'
+        )
+        for instance in active_instances:
+            if instance.is_active: # Valida datas tb
+                FormAssignment.objects.get_or_create(
+                    employee=employee,
+                    form_instance=instance,
+                    defaults={'status': 'PENDING'}
+                )
+    
     pending_forms = employee.get_pending_forms()
     completed_forms = employee.get_completed_forms()
     

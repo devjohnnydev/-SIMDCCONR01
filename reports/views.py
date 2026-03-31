@@ -323,3 +323,50 @@ def generate_period_report(request):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
     return response
+
+def validate_diagnostic(request, validation_code=None):
+    """View publica para validacao de Laudos via Codigo."""
+    from .models import EmployeeDiagnostic
+    import uuid
+    
+    diagnostic = None
+    error = None
+    
+    # Se recebeu via GET form (input name='code')
+    code = request.GET.get('code', validation_code)
+    
+    if code:
+        try:
+            val_uuid = uuid.UUID(code)
+            diagnostic = EmployeeDiagnostic.objects.get(validation_code=val_uuid)
+        except (ValueError, EmployeeDiagnostic.DoesNotExist):
+            error = "Codigo invalido ou laudo nao encontrado."
+            
+    return render(request, 'reports/validate.html', {
+        'diagnostic': diagnostic,
+        'error': error,
+        'searched_code': code,
+    })
+
+
+@login_required
+def view_diagnostic(request, validation_code):
+    """View restrita para leitura do Laudo."""
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Acesso restrito a administradores SaaS.')
+        return redirect('accounts:dashboard')
+        
+    from .models import EmployeeDiagnostic
+    import uuid
+    
+    try:
+        val_uuid = uuid.UUID(validation_code)
+        diagnostic = get_object_or_404(EmployeeDiagnostic, validation_code=val_uuid)
+    except ValueError:
+        messages.error(request, 'Codigo invalido.')
+        return redirect('accounts:admin_laudos')
+        
+    return render(request, 'reports/diagnostic_view.html', {
+        'diagnostic': diagnostic
+    })
+

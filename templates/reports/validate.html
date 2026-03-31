@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Validar Laudo Digital - SIMDCCONR01{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white p-4 text-center">
+                    <h3 class="mb-0"><i class="bi bi-shield-check text-success me-2"></i>Validação de Laudo Eletrônico</h3>
+                    <p class="mb-0 opacity-75 mt-2">Verifique a autenticidade e integridade dos laudos gerados pelo sistema.</p>
+                </div>
+                <div class="card-body p-5">
+                    
+                    {% if diagnostic %}
+                        <div class="alert alert-success d-flex align-items-center rounded-3 p-4 mb-4 border-0">
+                            <i class="bi bi-check-circle-fill fs-2 me-3"></i>
+                            <div>
+                                <h5 class="alert-heading mb-1">CÓDIGO VÁLIDO</h5>
+                                <span>Este documento é autêntico e foi gerado em nosso sistema oficial.</span>
+                            </div>
+                        </div>
+
+                        <div class="border rounded-4 p-4 mb-4 bg-light">
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="text-muted small text-uppercase fw-bold">Funcionário</label>
+                                    <p class="fs-5 mb-0 fw-bold text-dark">{{ diagnostic.assignment.employee.nome }}</p>
+                                </div>
+                                <div class="col-sm-6 text-sm-end">
+                                    <label class="text-muted small text-uppercase fw-bold">Data de Emissão</label>
+                                    <p class="fs-5 mb-0 fw-bold text-dark">{{ diagnostic.generated_at|date:"d/m/Y H:i" }}</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="text-muted small text-uppercase fw-bold">Empresa</label>
+                                    <p class="mb-0 text-secondary">{{ diagnostic.assignment.employee.company.nome_fantasia }}</p>
+                                </div>
+                                <div class="col-sm-6 text-sm-end">
+                                    <label class="text-muted small text-uppercase fw-bold">Código de Validação</label>
+                                    <p class="mb-0 font-monospace text-success fw-bold">{{ diagnostic.validation_code }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <p class="text-muted small">Este laudo pericial é assinado digitalmente e possui validade jurídica conforme as normas de telemedicina e SST vigentes.</p>
+                            <a href="{% url 'reports:validate' %}" class="btn btn-outline-primary px-4 rounded-pill mt-3">Validar Outro Código</a>
+                        </div>
+
+                    {% else %}
+                        {% if error %}
+                            <div class="alert alert-danger d-flex align-items-center rounded-3 p-4 mb-4 border-0">
+                                <i class="bi bi-exclamation-triangle-fill fs-2 me-3"></i>
+                                <div>
+                                    <h5 class="alert-heading mb-1">CÓDIGO NÃO ENCONTRADO</h5>
+                                    <span>{{ error }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <form method="GET" action="{% url 'reports:validate' %}" class="mt-4">
+                            <div class="form-group mb-4">
+                                <label for="code" class="form-label fw-bold">Insira o Código de Validação (UUID):</label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-qr-code-scan"></i></span>
+                                    <input type="text" name="code" id="code" class="form-control border-start-0" placeholder="Ex: 550e8400-e29b-41d4-a716-446655440000" required value="{{ searched_code|default:'' }}">
+                                </div>
+                                <div class="form-text mt-2">Você encontra este código no cabeçalho ou rodapé do PDF original.</div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3 transition-hover">
+                                    <i class="bi bi-search me-2"></i>Verificar Autenticidade
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+
+                </div>
+                <div class="card-footer bg-light p-3 text-center border-0">
+                    <small class="text-muted">Desenvolvido por <strong>SIMDCCONR01</strong> - Tecnologia para Saúde e Segurança.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.transition-hover {
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.transition-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.06);
+}
+#code:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}
+</style>
+{% endblock %}

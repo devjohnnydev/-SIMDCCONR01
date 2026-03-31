@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Laudo IA - {{ diagnostic.assignment.employee.nome }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'accounts:admin_master_dashboard' %}">Admin</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'accounts:admin_laudos' %}">Laudos</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Visualizar Laudo</li>
+                </ol>
+            </nav>
+            <h2 class="mb-0 fw-bold"><i class="bi bi-robot text-success me-2"></i>Laudo de IA Pericial</h2>
+        </div>
+        <div>
+            <button onclick="window.print()" class="btn btn-outline-dark rounded-pill me-2"><i class="bi bi-printer me-2"></i>Imprimir / PDF</button>
+            <a href="{% url 'accounts:admin_laudos' %}" class="btn btn-dark rounded-pill shadow-sm px-4">Voltar</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Sidebar Metadata -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2">Informações Gerais</h5>
+                    <div class="mb-3">
+                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Funcionário</label>
+                        <p class="mb-0 fw-bold text-dark">{{ diagnostic.assignment.employee.nome }}</p>
+                        <small class="text-muted">{{ diagnostic.assignment.employee.cpf|default:"CPF N/C" }}</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Empresa</label>
+                        <p class="mb-0 text-secondary">{{ diagnostic.assignment.employee.company.nome_fantasia }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Setor / Função</label>
+                        <p class="mb-0 text-secondary">{{ diagnostic.assignment.employee.setor }} - {{ diagnostic.assignment.employee.cargo }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Gerado em</label>
+                        <p class="mb-0 text-secondary">{{ diagnostic.generated_at|date:"d/m/Y H:i:s" }}</p>
+                    </div>
+                    <div class="p-3 bg-light rounded-3 mt-4">
+                        <label class="text-muted small fw-bold text-uppercase d-block mb-2">Chave de Autenticação</label>
+                        <code class="text-break small d-block font-monospace bg-white p-2 rounded shadow-sm">{{ diagnostic.validation_code }}</code>
+                        <div class="mt-2 text-center">
+                            <small class="text-success"><i class="bi bi-patch-check-fill me-1"></i>Assinatura Digital Verificada</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content (AI Results) -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow rounded-4 overflow-hidden mb-5">
+                <div class="card-header bg-success text-white p-4">
+                    <h4 class="mb-0"><i class="bi bi-journal-check me-2"></i>Relatório Estruturado de Inteligência Artificial</h4>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    
+                    <!-- Section: Diagnostico Psicossocial -->
+                    <section class="mb-5">
+                        <h5 class="fw-bold text-success border-bottom pb-2 mb-3"><i class="bi bi-heart-pulse me-2"></i>1. Diagnóstico Psicossocial</h5>
+                        <div class="p-4 bg-white border border-light rounded-4 shadow-sm">
+                            <p class="mb-0 lh-lg text-dark fs-5">{{ diagnostic.diagnostic_data.diagnostico_psicossocial }}</p>
+                        </div>
+                    </section>
+
+                    <!-- Section: Dissonancia Clima -->
+                    <section class="mb-5">
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-people me-2"></i>2. Dissonância de Clima e Cultura</h5>
+                        <div class="p-4 bg-white border border-light rounded-4 shadow-sm">
+                            <p class="mb-0 lh-lg text-dark">{{ diagnostic.diagnostic_data.dissonancia_clima_cultura }}</p>
+                        </div>
+                    </section>
+
+                    <!-- Section: Riscos PGR/GRO -->
+                    <section class="mb-5">
+                        <h5 class="fw-bold text-warning border-bottom pb-2 mb-3"><i class="bi bi-exclamation-octagon me-2"></i>3. Riscos Identificados (PGR/GRO)</h5>
+                        <div class="p-4 bg-white border border-light rounded-4 shadow-sm">
+                            <p class="mb-0 lh-lg text-dark">{{ diagnostic.diagnostic_data.riscos_pgr_gro }}</p>
+                        </div>
+                    </section>
+
+                    <!-- Section: Recomendacoes -->
+                    <section class="mb-4">
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="bi bi-clipboard-check me-2"></i>4. Recomendações de Ação</h5>
+                        <div class="p-4 bg-light rounded-4 border">
+                            <p class="mb-0 lh-lg italic">{{ diagnostic.diagnostic_data.recomendacoes_acao }}</p>
+                        </div>
+                    </section>
+
+                    <!-- Alert: Medical Referral -->
+                    {% if diagnostic.diagnostic_data.encaminhamento_medico %}
+                        <div class="alert alert-danger rounded-4 p-4 mt-5 border-0 shadow-sm d-flex align-items-center">
+                            <i class="bi bi-hospital fs-1 me-4"></i>
+                            <div>
+                                <h4 class="alert-heading fw-bold mb-1">Encaminhamento Médico Recomendado</h4>
+                                <p class="mb-0 fs-5">{{ diagnostic.diagnostic_data.justificativa_encaminhamento }}</p>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info rounded-4 p-4 mt-5 border-0 shadow-sm d-flex align-items-center">
+                            <i class="bi bi-info-circle fs-1 me-4"></i>
+                            <div>
+                                <h4 class="alert-heading fw-bold mb-1">Status de Saúde Ocupacional</h4>
+                                <p class="mb-0">Não foram identificados pontos de atenção que exijam encaminhamento médico imediato.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+                <div class="card-footer bg-light p-4 text-center border-0 border-top">
+                    <p class="text-muted small mb-0">Laudo gerado automaticamente pelo motor Groq Llama 3 - SIMDCCONR01.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        .breadcrumb, .btn, .card-header i { display: none !important; }
+        .card { border: none !important; box-shadow: none !important; }
+        .container { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+        .col-lg-4, .col-lg-8 { width: 100% !important; }
+    }
+    .rounded-4 { border-radius: 1.25rem !important; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.04)!important; }
+    .shadow { box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important; }
+</style>
+{% endblock %}

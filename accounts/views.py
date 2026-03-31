@@ -1,7 +1,7 @@
 """
 Views para autenticacao e dashboards de usuarios.
 """
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
@@ -163,6 +163,62 @@ def company_admin_dashboard(request):
     
     return render(request, 'accounts/company_admin_dashboard.html', context)
 
+
+@login_required
+def admin_laudos(request):
+    """View para o Admin Master gerenciar e gerar Laudos Individuais com IA."""
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Acesso restrito.')
+        return redirect('accounts:dashboard')
+        
+    # Busca funconarios/assignments que finalizaram o form
+    from forms_builder.models import FormAssignment
+    
+    # Todos concluidos, ordendo por mais recentes
+    completed_assignments = FormAssignment.objects.filter(
+        status='COMPLETED'
+    ).select_related(
+        'employee', 'employee__company', 'form_instance', 'diagnostic'
+    ).order_by('-completed_at')
+    
+    return render(request, 'accounts/admin_laudos.html', {
+        'assignments': completed_assignments
+    })
+
+@login_required
+def generate_laudo_action(request, assignment_id):
+    """View acionada pelo botao verde para gerar o laudo via Groq."""
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Acesso restrito.')
+        return redirect('accounts:dashboard')
+        
+    from forms_builder.models import FormAssignment
+    from ai_analysis.engine import generate_employee_diagnostic
+    
+    assignment = get_object_or_404(FormAssignment, pk=assignment_id)
+    
+    if assignment.status != 'COMPLETED':
+        messages.warning(request, 'Funcionario ainda nao concluiu o questionario.')
+        return redirect('accounts:admin_laudos')
+        
+    # Gera ou retorna o existente
+    result = generate_employee_diagnostic(assignment)
+    
+    if isinstance(result, dict) and result.get('status') == 'failed':
+        messages.error(request, f"Erro na IA: {result.get('error')}")
+    else:
+        messages.success(request, f"Laudo de {assignment.employee.nome} gerado com sucesso!")
+        
+    from audit.models import AuditLog
+    AuditLog.log(
+        user=request.user,
+        action='EXPORT',
+        description=f'Gerou (ou acessou) Laudo IA para {assignment.employee.nome}',
+        obj=assignment,
+        request=request
+    )
+    
+    return redirect('accounts:admin_laudos')
 
 @login_required
 def employee_dashboard(request):

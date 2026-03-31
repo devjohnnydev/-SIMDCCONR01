@@ -69,3 +69,37 @@ class Report(models.Model):
     
     def __str__(self):
         return f"{self.title} - {self.company.nome_fantasia}"
+
+
+class EmployeeDiagnostic(models.Model):
+    """
+    Laudo individual de um funcionario gerado pela inteligencia artificial (Groq).
+    Mantem idempotencia e permite validacao publica por um hash unico.
+    """
+    import uuid
+    
+    assignment = models.OneToOneField(
+        'forms_builder.FormAssignment',
+        on_delete=models.CASCADE,
+        related_name='diagnostic',
+        verbose_name='Formulario Respondido'
+    )
+    
+    validation_code = models.UUIDField(
+        'Codigo de Validacao', 
+        default=uuid.uuid4, 
+        editable=False, 
+        unique=True
+    )
+    
+    diagnostic_data = models.JSONField('Dados do Laudo (Groq)', default=dict)
+    
+    generated_at = models.DateTimeField('Gerado em', auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Laudo Individual'
+        verbose_name_plural = 'Laudos Individuais'
+        ordering = ['-generated_at']
+        
+    def __str__(self):
+        return f"Laudo {self.validation_code} - {self.assignment.employee.nome}"

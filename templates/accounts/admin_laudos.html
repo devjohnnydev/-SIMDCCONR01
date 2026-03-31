@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerador de Laudos IA - SIMDCCONR01{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-file-earmark-medical text-success me-2"></i>Gerador de Laudos Individuais (IA)</h2>
+        <a href="{% url 'accounts:admin_master_dashboard' %}" class="btn btn-outline-secondary">Voltar</a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <p class="text-muted">Abaixo estão os questionários concluídos pelos funcionários. Clique em Gerar para que a Inteligência Artificial (Groq) leia as 160 respostas e emita o laudo oficial assinado.</p>
+            
+            <table class="table table-hover mt-4 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Data Conclusão</th>
+                        <th>Funcionário</th>
+                        <th>Empresa</th>
+                        <th>Status do Laudo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in assignments %}
+                    <tr>
+                        <td>{{ assignment.completed_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <strong>{{ assignment.employee.nome }}</strong><br>
+                            <small class="text-muted">{{ assignment.employee.cpf|default:"CPF N/C" }}</small>
+                        </td>
+                        <td>{{ assignment.employee.company.nome_fantasia }}</td>
+                        <td>
+                            {% if assignment.diagnostic %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Gerado e Assinado</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass me-1"></i>Aguardando IA</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if assignment.diagnostic %}
+                                <a href="{% url 'reports:view_diagnostic' assignment.diagnostic.validation_code %}" class="btn btn-sm btn-primary" target="_blank">
+                                    <i class="bi bi-eye"></i> Ler Laudo
+                                </a>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="alert('Código de Validação Pública:\n{{ assignment.diagnostic.validation_code }}\n\nURL: {{ request.scheme }}://{{ request.get_host }}/reports/validar/')">
+                                    <i class="bi bi-upc-scan"></i> Hash
+                                </button>
+                            {% else %}
+                                <form method="POST" action="{% url 'accounts:generate_laudo' assignment.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-success fw-bold" onclick="this.innerHTML='<span class=\'spinner-border spinner-border-sm\'></span> Gerando...'; this.disabled=true; this.form.submit();">
+                                        <i class="bi bi-robot"></i> Gerar com IA
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Nenhum funcionário concluiu questionários ainda.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

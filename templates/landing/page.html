@@ -46,7 +46,7 @@
         h1 span { color: var(--primary); }
         .hero-p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2.5rem; line-height: 1.6; }
         .hero-img-container { position: relative; }
-        .hero-img { width: 100%; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); position: relative; z-index: 2; transition: 0.5s; }
+        .hero-img { width: 100%; height: 100%; max-height: 550px; object-fit: cover; object-position: top center; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); position: relative; z-index: 2; transition: 0.5s; }
         .hero-img:hover { transform: scale(1.02); }
         .hero-shape { position: absolute; top: -10%; right: -10%; width: 50%; height: 50%; background: var(--primary); border-radius: 50%; filter: blur(80px); opacity: 0.15; z-index: 1; }
 
@@ -137,20 +137,28 @@
 
 <section class="section" id="ciencia">
     <div class="container">
-        <div class="grid-2">
-            <img src="{% static 'img/landing/science.png' %}" alt="Ciência e Pesquisa" class="modern-img">
-            <div>
-                <span class="section-tag">Fundamentação Científica</span>
-                <h2 class="section-title">50 anos de pesquisa traduzidos em tecnologia</h2>
-                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 2rem;">
-                    Estudos recentes Revisaram 50 anos de condições psicossociais no trabalho. Os resultados indicam que <strong>26% dos casos de depressão</strong> na população trabalhadora estão ligados a riscos psicossociais, como estresse laboral e bullying.
-                </p>
-                <div class="card" style="padding: 1.5rem;">
-                    <p style="font-style: italic; color: var(--text-muted); font-size: 0.9rem;">
-                        "Altas demandas, baixo controle do processo de trabalho e desequilíbrio esforço-recompensa aumentam o risco de depressão (50%) e doenças cardiovasculares (20-40%)."
-                    </p>
-                    <p style="margin-top: 1rem; font-weight: 700; font-size: 0.8rem;">— Niedhammer, Bertrais, 2021</p>
-                </div>
+        <div class="text-center" style="margin-bottom: 4rem;">
+            <span class="section-tag">Fundamentação Científica</span>
+            <h2 class="section-title">50 anos de pesquisa traduzidos em tecnologia</h2>
+            <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6;">
+                Saúde mental não é passivo, é ativo com elevados retornos garantidos pela ciência.
+            </p>
+        </div>
+        <div class="grid-3">
+            <div class="card">
+                <i class="bi bi-journal-medical card-icon"></i>
+                <h3>Estudo de 50 Anos</h3>
+                <p>Foram examinados aspectos como demandas no trabalho, controle, suporte social e insegurança. Os resultados indicam que <strong>26% dos casos de depressão</strong> na população trabalhadora estão ligados a riscos psicossociais, como estresse laboral e bullying.</p>
+            </div>
+            <div class="card">
+                <i class="bi bi-diagram-3 card-icon"></i>
+                <h3>72 Meta-análises</h3>
+                <p>Altas demandas e baixo controle do processo aumentam o risco de <strong>depressão (50%)</strong>, <strong>doenças cardiovasculares (20-40%)</strong> e <strong>dores musculoesqueléticas (30%)</strong>, além de contribuírem para ansiedade e burnout (Niedhammer, Bertrais, 2021).</p>
+            </div>
+            <div class="card">
+                <i class="bi bi-globe-americas card-icon"></i>
+                <h3>Cenário Global (EU-OSHA)</h3>
+                <p>Pesquisa conduzida com 41.458 empresas na Europa revela que <strong>75% delas já reconhecem publicamente algum risco psicossocial</strong>, impulsionando a necessidade urgente de monitoramento e planos de ação como exigido pela nova NR-01.</p>
             </div>
         </div>
     </div>
@@ -167,14 +175,35 @@
         <div class="grid-2" style="gap: 2rem; align-items: stretch;">
             <div class="card">
                 <i class="bi bi-graph-down-arrow card-icon"></i>
-                <h3>Impacto no Desempenho</h3>
-                <p>O Burnout leva a uma queda de <strong>13% no desempenho</strong> geral da equipe (SHRM). Funcionários esgotados têm <strong>2,6x mais chances</strong> de deixar a empresa.</p>
-                <div style="margin-top: 2rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 12px;">
-                    <p style="color: #ef4444; font-weight: 700;">-40% Criatividade</p>
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">Redução na capacidade criativa causada pelo esgotamento (HBR).</p>
+                <h3>Impacto Direto nos Resultados</h3>
+                <p>O Burnout leva a uma queda de <strong>13% no desempenho</strong> geral da equipe (SHRM). Além disso, funcionários esgotados têm <strong>2,6x mais chances</strong> de deixar a empresa, elevando os custos de recrutamento.</p>
+                <div style="margin-top: 2rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 12px; border-left: 4px solid #ef4444;">
+                    <p style="color: #ef4444; font-weight: 700; margin-bottom: 0.2rem;">-40% na Criatividade Coletiva</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">Redução drástica na capacidade inovadora causada pelo esgotamento prolongado (HBR, 2017).</p>
                 </div>
             </div>
-            <img src="{% static 'img/landing/roi_stats.png' %}" alt="Estatísticas ROI" class="modern-img" style="height: 100%; object-fit: contain;">
+            
+            <div class="card" style="background: var(--secondary); color: white;">
+                <i class="bi bi-exclamation-triangle card-icon" style="color: #fbbf24;"></i>
+                <h3 style="color: white;">A Reação em Cadeia do Maior Risco</h3>
+                <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 2rem;">O bem-estar corporativo representa uma reação em cadeia: comportamentos tóxicos não tratados trazem grandes despesas através do aumento nas taxas de burnout.</p>
+                
+                <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #fbbf24;">Ambiente Tóxico</span>
+                        <strong style="font-size: 1.5rem; color: white;">8x pior</strong>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">Probabilidade maior de apresentar sintomas de burnout severo.</p>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #ef4444;">Turnover Iminente</span>
+                        <strong style="font-size: 1.5rem; color: white;">6x mais</strong>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">Chances de pedir demissão nos 3 a 6 meses seguintes (McKinsey, 2022).</p>
+                </div>
+            </div>
         </div>
 
         <div class="stat-grid">
@@ -204,11 +233,32 @@
                     </li>
                     <li style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
                         <span style="background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700;">3</span>
-                        <div><strong style="display: block;">Registros de Treinamento</strong><span style="color: var(--text-muted); font-size: 0.9rem;">Sensibilização realizada com lideranças e equipes.</span></div>
+                        <div><strong style="display: block;">Registros de Treinamento</strong><span style="color: var(--text-muted); font-size: 0.9rem;">Sensibilização e capacitação exigidas realizadas com lideranças e equipes.</span></div>
+                    </li>
+                    <li style="display: flex; gap: 1rem;">
+                        <span style="background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700;">4</span>
+                        <div><strong style="display: block;">Indicadores Internos</strong><span style="color: var(--text-muted); font-size: 0.9rem;">Painel de monitoramento com taxas de absenteísmo, turnover e afastamentos por questões psicológicas.</span></div>
                     </li>
                 </ul>
             </div>
-            <img src="{% static 'img/landing/compliance.png' %}" alt="Conformidade e Evidências" class="modern-img">
+            
+            <div class="card" style="border: 2px solid var(--primary); background: rgba(16, 185, 129, 0.05);">
+                <i class="bi bi-shield-check" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem; display: block;"></i>
+                <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 1rem;">Blindagem Jurídica e Trabalhista</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6;">A nova NR-1 (Portaria MTE 1.419/2024) exige a avaliação ergonômica e psicossocial integrada ao PGR. Nossa tecnologia garante:</p>
+                <div style="background: var(--card); padding: 1rem; border-radius: 12px; margin-bottom: 0.8rem; border-left: 3px solid var(--primary); display: flex; align-items: center; gap: 1rem;">
+                    <i class="bi bi-fingerprint text-primary fs-4"></i>
+                    <span style="font-weight: 600; font-size: 0.9rem;">Rastreabilidade por CPF do Colaborador</span>
+                </div>
+                <div style="background: var(--card); padding: 1rem; border-radius: 12px; margin-bottom: 0.8rem; border-left: 3px solid var(--primary); display: flex; align-items: center; gap: 1rem;">
+                    <i class="bi bi-file-earmark-lock text-primary fs-4"></i>
+                    <span style="font-weight: 600; font-size: 0.9rem;">Laudo Bloqueado com Assinatura (Double Check)</span>
+                </div>
+                <div style="background: var(--card); padding: 1rem; border-radius: 12px; border-left: 3px solid var(--primary); display: flex; align-items: center; gap: 1rem;">
+                    <i class="bi bi-robot text-primary fs-4"></i>
+                    <span style="font-weight: 600; font-size: 0.9rem;">Auditoria Pronta para Fiscalização (MTE)</span>
+                </div>
+            </div>
         </div>
 
         <div class="validator-box" style="margin-top: 5rem;">

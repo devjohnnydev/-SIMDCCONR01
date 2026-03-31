@@ -428,7 +428,7 @@ class Command(BaseCommand):
             text = item[0]
             qtype = item[1]
             order = item[2]
-            opts = item[3] if len(item) > 3 else []
+            opts = item[3] if len(item) > 3 and item[3] is not None else []
             
             FormQuestion.objects.update_or_create(
                 template=template,

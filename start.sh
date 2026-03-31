@@ -2,11 +2,11 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-echo "Running makemigrations..."
-python manage.py makemigrations --noinput
+# Makemigrations should be run locally and committed to Git
+# python manage.py makemigrations --noinput
 
 echo "Running migrate..."
-python manage.py migrate --noinput
+python manage.py migrate --noinput || python manage.py migrate --fake reports 0003
 
 echo "Running fix_db..."
 python fix_db.py

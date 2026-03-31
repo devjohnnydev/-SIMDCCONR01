@@ -70,12 +70,16 @@
     
     </div>
     
-    {% if instance.status == 'ACTIVE' %}
     <div class="card mb-4 border-info bg-light">
         <div class="card-header bg-info text-white">
             <h5 class="mb-0"><i class="bi bi-share"></i> Convite para Participação</h5>
         </div>
         <div class="card-body">
+            {% if instance.status == 'DRAFT' %}
+            <div class="alert alert-warning py-2 mb-3 small">
+                <i class="bi bi-exclamation-triangle me-2"></i><strong>Aviso:</strong> O formulário está em <strong>Rascunho</strong>. Publique-o para que os funcionários consigam responder.
+            </div>
+            {% endif %}
             <p class="mb-2">Copie o link abaixo para enviar aos funcionários via WhatsApp ou Email:</p>
             <div class="input-group mb-3 shadow-sm">
                 <input type="text" id="inviteLink" class="form-control font-monospace" value="{{ request.scheme }}://{{ request.get_host }}/accounts/login/" readonly>
@@ -93,7 +97,6 @@
             </div>
         </div>
     </div>
-    {% endif %}
     
     {% if question_stats %}
     <div class="card mb-4">

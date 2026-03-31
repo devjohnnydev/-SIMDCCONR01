@@ -85,13 +85,13 @@ class Employee(models.Model):
         is_new = self.pk is None
         super().save(*args, **kwargs)
         
-        # Se for novo ou nao tiver usuario, tenta criar se tiver email e cpf
-        if (is_new or not self.user) and self.email and self.cpf:
+        # Garante que o usuario existe e a senha e o CPF (se tiver email e cpf)
+        if self.email and self.cpf:
             try:
                 self.create_user_account()
             except Exception as e:
                 # Log do erro, mas permite salvar o funcionario
-                print(f"Erro ao criar usuario para funcionario {self.nome}: {str(e)}")
+                print(f"Erro ao sincronizar usuario para funcionario {self.nome}: {str(e)}")
 
     def __str__(self):
         return f"{self.nome} - {self.cargo} ({self.company.nome_fantasia})"
@@ -127,6 +127,9 @@ class Employee(models.Model):
         import secrets
         
         if self.user:
+            if not password and self.cpf:
+                self.user.set_password(self.cpf)
+                self.user.save()
             return self.user
         
         if not password:

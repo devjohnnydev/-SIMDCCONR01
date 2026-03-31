@@ -8,6 +8,8 @@ set -e
 echo "Checking for existing DB columns..."
 python manage.py migrate --fake reports 0003 --noinput || true
 python manage.py migrate --fake accounts 0003 --noinput || true
+python manage.py migrate --fake reports 0004 --noinput || true
+python manage.py migrate --fake accounts 0004 --noinput || true
 
 echo "Running migrate..."
 python manage.py migrate --noinput

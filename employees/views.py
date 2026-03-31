@@ -286,6 +286,6 @@ def employee_create_user(request, pk):
     
     messages.success(
         request,
-        f'Conta criada para {employee.nome}. Uma senha temporaria foi gerada.'
+        f'Conta criada para {employee.nome}. A senha de acesso padrao é o CPF do funcionario (apenas numeros).'
     )
     return redirect('employees:list')

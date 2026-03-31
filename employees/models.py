@@ -117,7 +117,10 @@ class Employee(models.Model):
             return self.user
         
         if not password:
-            password = secrets.token_urlsafe(12)
+            if self.cpf:
+                password = self.cpf
+            else:
+                password = secrets.token_urlsafe(12)
         
         names = self.nome.split(' ', 1)
         first_name = names[0]

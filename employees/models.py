@@ -80,6 +80,19 @@ class Employee(models.Model):
         ordering = ['nome']
         unique_together = [['company', 'email'], ['company', 'cpf']]
     
+    def save(self, *args, **kwargs):
+        """Sobrescreve save para garantir criacao de usuario."""
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        
+        # Se for novo ou nao tiver usuario, tenta criar se tiver email e cpf
+        if (is_new or not self.user) and self.email and self.cpf:
+            try:
+                self.create_user_account()
+            except Exception as e:
+                # Log do erro, mas permite salvar o funcionario
+                print(f"Erro ao criar usuario para funcionario {self.nome}: {str(e)}")
+
     def __str__(self):
         return f"{self.nome} - {self.cargo} ({self.company.nome_fantasia})"
     

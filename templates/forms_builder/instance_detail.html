@@ -68,30 +68,32 @@
         </div>
     </div>
     
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informacoes</h5>
+    </div>
+    
+    {% if instance.status == 'ACTIVE' %}
+    <div class="card mb-4 border-info bg-light">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="bi bi-share"></i> Convite para Participação</h5>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Periodo:</strong> {{ instance.start_date|date:"d/m/Y H:i" }} a {{ instance.end_date|date:"d/m/Y H:i" }}</p>
-                    <p><strong>Template:</strong> {{ instance.template.name }}</p>
-                </div>
-                <div class="col-md-6">
-                    {% if instance.target_sectors %}
-                    <p><strong>Setores:</strong> {{ instance.target_sectors|join:", " }}</p>
-                    {% endif %}
-                    {% if instance.target_positions %}
-                    <p><strong>Cargos:</strong> {{ instance.target_positions|join:", " }}</p>
-                    {% endif %}
-                </div>
+            <p class="mb-2">Copie o link abaixo para enviar aos funcionários via WhatsApp ou Email:</p>
+            <div class="input-group mb-3 shadow-sm">
+                <input type="text" id="inviteLink" class="form-control font-monospace" value="{{ request.scheme }}://{{ request.get_host }}/accounts/login/" readonly>
+                <button class="btn btn-primary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('inviteLink').value); this.innerText='Copiado!'; setTimeout(() => this.innerText='Copiar', 2000)">
+                    <i class="bi bi-clipboard"></i> Copiar
+                </button>
             </div>
-            {% if instance.description %}
-            <p><strong>Descricao:</strong> {{ instance.description }}</p>
-            {% endif %}
+            <div class="p-3 bg-white rounded border border-info-subtle">
+                <strong>Sugestão de Mensagem:</strong><br>
+                <span class="text-secondary small">
+                    Olá! Precisamos que você responda à nossa nova pesquisa de <strong>{{ instance.title }}</strong> no sistema SIMDCCONR01. <br>
+                    Para entrar, use seu <strong>E-mail Corporativo</strong> e seu <strong>CPF</strong> (apenas números) como senha inicial. <br>
+                    Link de Acesso: {{ request.scheme }}://{{ request.get_host }}/accounts/login/
+                </span>
+            </div>
         </div>
     </div>
+    {% endif %}
     
     {% if question_stats %}
     <div class="card mb-4">
@@ -149,10 +151,9 @@
                         {% for assignment in assignments %}
                         <tr>
                             <td>
-                                {% if instance.is_anonymous and assignment.status == 'COMPLETED' %}
-                                <i class="bi bi-incognito"></i> Anonimo
-                                {% else %}
                                 {{ assignment.employee.nome }}
+                                {% if instance.is_anonymous %}
+                                <br><small class="text-info"><i class="bi bi-incognito"></i> (Respostas Anônimas)</small>
                                 {% endif %}
                             </td>
                             <td>{{ assignment.employee.setor }}</td>

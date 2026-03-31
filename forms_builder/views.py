@@ -300,6 +300,9 @@ def form_view_responses(request, assignment_pk):
     assignment = get_object_or_404(FormAssignment, pk=assignment_pk)
     
     if request.user.is_company_admin and assignment.form_instance.company == request.user.company:
+        if assignment.form_instance.is_anonymous:
+            messages.error(request, 'Este formulário é anônimo. Você pode ver apenas quem participou, mas não as respostas individuais.')
+            return redirect('forms:instance_detail', pk=assignment.form_instance.pk)
         pass
     elif hasattr(request.user, 'employee_profile') and assignment.employee == request.user.employee_profile:
         pass

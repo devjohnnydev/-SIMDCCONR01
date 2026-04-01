@@ -40,4 +40,15 @@ execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS signatu
 execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS signature_timestamp timestamp with time zone;")
 execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS govbr_token varchar(255) DEFAULT '';")
 
+print("Filling missing UUIDs for diagnostics...")
+import uuid
+with connection.cursor() as cursor:
+    cursor.execute("SELECT id FROM reports_employeediagnostic WHERE validation_code IS NULL;")
+    ids = cursor.fetchall()
+    for row in ids:
+        diag_id = row[0]
+        new_uuid = str(uuid.uuid4())
+        cursor.execute(f"UPDATE reports_employeediagnostic SET validation_code = '{new_uuid}' WHERE id = {diag_id};")
+        print(f"Assigned UUID {new_uuid} to diagnostic {diag_id}")
+
 print("Safety columns check complete.")

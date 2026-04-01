@@ -104,7 +104,7 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-end">
-                                    {% if assignment.diagnostic %}
+                                    {% if assignment.diagnostic and assignment.diagnostic.validation_code %}
                                     <a href="{% url 'reports:view_diagnostic' assignment.diagnostic.validation_code %}"
                                         class="btn btn-sm {% if assignment.diagnostic.is_signed %}btn-outline-primary{% else %}btn-primary{% endif %} rounded-pill px-3"
                                         target="_blank">
@@ -115,6 +115,8 @@
                                         title="Ver Código Hash">
                                         <i class="bi bi-upc-scan"></i>
                                     </button>
+                                    {% elif assignment.diagnostic %}
+                                    <span class="text-danger small"><i class="bi bi-exclamation-triangle"></i> Laudo sem código</span>
                                     {% else %}
                                     <form method="POST" action="{% url 'accounts:generate_laudo' assignment.id %}"
                                         style="display: inline;">

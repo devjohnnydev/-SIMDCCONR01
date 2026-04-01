@@ -178,7 +178,7 @@ def admin_laudos(request):
     completed_assignments = FormAssignment.objects.filter(
         status='COMPLETED'
     ).select_related(
-        'employee', 'employee__company', 'form_instance', 'diagnostic'
+        'employee', 'employee__company', 'form_instance'
     ).order_by('-completed_at')
     
     # Lista de profissionais que podem assinar (Admin Master ou outros perfis de especialista se houver)

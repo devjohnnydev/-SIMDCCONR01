@@ -26,4 +26,9 @@ urlpatterns = [
     path('dashboard/admin/laudos/assign-signatory/', views.assign_signatory, name='assign_signatory'),
     path('dashboard/admin/laudos/sign-internal/<int:diagnostic_id>/', views.sign_laudo_internal, name='sign_laudo_internal'),
     path('dashboard/admin/laudos/sign-govbr/<int:diagnostic_id>/', views.sign_laudo_govbr, name='sign_laudo_govbr'),
+    
+    # Gerenciar Signatários
+    path('dashboard/admin/signatarios/', views.manage_signatarios, name='manage_signatarios'),
+    path('dashboard/admin/signatarios/<int:pk>/delete/', views.delete_signatario, name='delete_signatario'),
+    path('dashboard/admin/signatarios/<int:pk>/edit/', views.edit_signatario, name='edit_signatario'),
 ]

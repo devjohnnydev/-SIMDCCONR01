@@ -173,27 +173,29 @@ def admin_laudos(request):
         
     from forms_builder.models import FormAssignment
     from accounts.models import User
+    from reports.models import SignerProfile
     
     try:
-        # Todos concluidos, ordendo por mais recentes
         completed_assignments = FormAssignment.objects.filter(
             status='COMPLETED'
         ).select_related(
             'employee', 'employee__company', 'form_instance'
         ).order_by('-completed_at')
         
-        # Lista de profissionais que podem assinar (Admin Master ou outros perfis de especialista se houver)
         professionals = User.objects.filter(role='ADMIN_MASTER')
+        signatarios = SignerProfile.objects.filter(is_active=True)
         
         return render(request, 'accounts/admin_laudos.html', {
             'assignments': completed_assignments,
-            'professionals': professionals
+            'professionals': professionals,
+            'signatarios': signatarios,
         })
     except Exception as e:
-        messages.error(request, f'Erro no banco de dados ao carregar laudos: {str(e)}')
+        messages.error(request, f'Erro ao carregar laudos: {str(e)}')
         return render(request, 'accounts/admin_laudos.html', {
             'assignments': [],
-            'professionals': []
+            'professionals': [],
+            'signatarios': [],
         })
 
 @login_required
@@ -325,7 +327,7 @@ def profile_update(request):
 @login_required
 def sign_laudo_internal(request, diagnostic_id):
     """Assinatura de laudo individual pela interface (Assinatura do Profissional)"""
-    from reports.models import EmployeeDiagnostic
+    from reports.models import EmployeeDiagnostic, SignerProfile
     from django.utils import timezone
     
     diagnostic = get_object_or_404(EmployeeDiagnostic, pk=diagnostic_id)
@@ -334,7 +336,15 @@ def sign_laudo_internal(request, diagnostic_id):
         if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
             messages.error(request, 'Ação não permitida. Apenas Peritos e Administradores podem assinar.')
             return redirect('accounts:admin_laudos')
-            
+        
+        signer_profile_id = request.POST.get('signer_profile_id')
+        if signer_profile_id:
+            try:
+                signer = SignerProfile.objects.get(pk=signer_profile_id)
+                diagnostic.signer_profile = signer
+            except SignerProfile.DoesNotExist:
+                pass
+
         diagnostic.is_signed = True
         diagnostic.signed_by = request.user
         diagnostic.signature_method = 'INTERNAL'
@@ -343,13 +353,13 @@ def sign_laudo_internal(request, diagnostic_id):
         
         messages.success(request, 'Laudo assinado eletronicamente com sucesso.')
         
-    return redirect('reports:view_diagnostic', code=diagnostic.validation_code)
+    return redirect('reports:view_diagnostic', validation_code=diagnostic.validation_code)
 
 
 @login_required
 def sign_laudo_govbr(request, diagnostic_id):
     """Simulação de assinatura via API do Gov.br"""
-    from reports.models import EmployeeDiagnostic
+    from reports.models import EmployeeDiagnostic, SignerProfile
     from django.utils import timezone
     import uuid
     
@@ -359,8 +369,15 @@ def sign_laudo_govbr(request, diagnostic_id):
         if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
             messages.error(request, 'Ação não permitida. Faça login com conta habilitada.')
             return redirect('accounts:admin_laudos')
-            
-        # Simula o redirecionamento e retorno do callback do oauth gov.br
+        
+        signer_profile_id = request.POST.get('signer_profile_id')
+        if signer_profile_id:
+            try:
+                signer = SignerProfile.objects.get(pk=signer_profile_id)
+                diagnostic.signer_profile = signer
+            except SignerProfile.DoesNotExist:
+                pass
+
         diagnostic.is_signed = True
         diagnostic.signed_by = request.user
         diagnostic.signature_method = 'GOVBR'
@@ -370,7 +387,7 @@ def sign_laudo_govbr(request, diagnostic_id):
         
         messages.success(request, 'Sucesso! O laudo foi validado digitalmente com selo Gov.br.')
         
-    return redirect('reports:view_diagnostic', code=diagnostic.validation_code)
+    return redirect('reports:view_diagnostic', validation_code=diagnostic.validation_code)
 
 
 @login_required
@@ -401,7 +418,7 @@ def assign_signatory(request):
 @login_required
 def bulk_sign_laudos(request):
     """Assinatura em lote selecionado no painel Admin"""
-    from reports.models import EmployeeDiagnostic
+    from reports.models import EmployeeDiagnostic, SignerProfile
     from django.utils import timezone
     
     if request.method == 'POST':
@@ -410,26 +427,123 @@ def bulk_sign_laudos(request):
             return redirect('accounts:dashboard')
             
         diagnostic_ids = request.POST.getlist('diagnostic_ids')
+        signer_profile_id = request.POST.get('signer_profile_id')
+        signature_method = request.POST.get('signature_method', 'INTERNAL')
+        
         if not diagnostic_ids:
             messages.warning(request, 'Nenhum laudo foi selecionado para assinatura.')
             return redirect('accounts:admin_laudos')
+        
+        signer = None
+        if signer_profile_id:
+            try:
+                signer = SignerProfile.objects.get(pk=signer_profile_id)
+            except SignerProfile.DoesNotExist:
+                pass
             
         diagnostics = EmployeeDiagnostic.objects.filter(id__in=diagnostic_ids, is_signed=False)
         count = diagnostics.count()
         
         for d in diagnostics:
             d.is_signed = True
-            # Se já tem um profissional atribuído, ele é quem "assinou" (registro do sistema)
-            # Se não tem, o usuário atual assume a autoria.
             if d.assigned_professional:
                 d.signed_by = d.assigned_professional
             else:
                 d.signed_by = request.user
+            
+            if signer:
+                d.signer_profile = signer
                 
-            d.signature_method = 'INTERNAL'
+            d.signature_method = signature_method
             d.signature_timestamp = timezone.now()
+            
+            if signature_method == 'GOVBR':
+                import uuid
+                d.govbr_token = f"GOVBR-{uuid.uuid4().hex[:12].upper()}"
+            
             d.save()
             
         messages.success(request, f'{count} laudo(s) assinados em lote com as rubricas correspondentes.')
         
     return redirect('accounts:admin_laudos')
+
+
+@login_required
+def manage_signatarios(request):
+    """CRUD de perfis de signatários."""
+    from reports.models import SignerProfile
+    
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Acesso restrito.')
+        return redirect('accounts:dashboard')
+    
+    if request.method == 'POST':
+        nome = request.POST.get('nome_completo', '').strip()
+        if not nome:
+            messages.error(request, 'O nome do signatário é obrigatório.')
+            return redirect('accounts:manage_signatarios')
+        
+        signer = SignerProfile(
+            nome_completo=nome,
+            registro_profissional=request.POST.get('registro_profissional', '').strip(),
+            especialidade=request.POST.get('especialidade', 'PSICOLOGO'),
+            email=request.POST.get('email', '').strip(),
+            govbr_cpf=request.POST.get('govbr_cpf', '').strip(),
+        )
+        if 'signature_image' in request.FILES:
+            signer.signature_image = request.FILES['signature_image']
+        signer.save()
+        messages.success(request, f'Signatário "{nome}" cadastrado com sucesso!')
+        return redirect('accounts:manage_signatarios')
+    
+    signatarios = SignerProfile.objects.all()
+    return render(request, 'accounts/manage_signatarios.html', {
+        'signatarios': signatarios,
+        'specialty_choices': SignerProfile.SPECIALTY_CHOICES,
+    })
+
+
+@login_required
+def delete_signatario(request, pk):
+    """Remove um signatário."""
+    from reports.models import SignerProfile
+    
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Acesso restrito.')
+        return redirect('accounts:dashboard')
+    
+    signer = get_object_or_404(SignerProfile, pk=pk)
+    if request.method == 'POST':
+        nome = signer.nome_completo
+        signer.delete()
+        messages.success(request, f'Signatário "{nome}" removido.')
+    return redirect('accounts:manage_signatarios')
+
+
+@login_required
+def edit_signatario(request, pk):
+    """Edita dados de um signatário existente."""
+    from reports.models import SignerProfile
+    
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Acesso restrito.')
+        return redirect('accounts:dashboard')
+    
+    signer = get_object_or_404(SignerProfile, pk=pk)
+    
+    if request.method == 'POST':
+        signer.nome_completo = request.POST.get('nome_completo', signer.nome_completo).strip()
+        signer.registro_profissional = request.POST.get('registro_profissional', signer.registro_profissional).strip()
+        signer.especialidade = request.POST.get('especialidade', signer.especialidade)
+        signer.email = request.POST.get('email', signer.email).strip()
+        signer.govbr_cpf = request.POST.get('govbr_cpf', signer.govbr_cpf).strip()
+        if 'signature_image' in request.FILES:
+            signer.signature_image = request.FILES['signature_image']
+        signer.save()
+        messages.success(request, f'Signatário "{signer.nome_completo}" atualizado com sucesso!')
+        return redirect('accounts:manage_signatarios')
+    
+    return render(request, 'accounts/edit_signatario.html', {
+        'signer': signer,
+        'specialty_choices': SignerProfile.SPECIALTY_CHOICES,
+    })

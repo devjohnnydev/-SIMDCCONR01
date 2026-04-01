@@ -62,3 +62,20 @@ with connection.cursor() as cursor:
         print(f"Assigned UUID {new_uuid} to diagnostic {diag_id}")
 
 print("Safety columns check complete.")
+
+print("Forcing safety for reports_signerprofile table...")
+execute("""
+    CREATE TABLE IF NOT EXISTS reports_signerprofile (
+        id bigserial PRIMARY KEY,
+        nome_completo varchar(200) NOT NULL,
+        registro_profissional varchar(50) NOT NULL DEFAULT '',
+        especialidade varchar(30) NOT NULL DEFAULT 'PSICOLOGO',
+        email varchar(254) NOT NULL DEFAULT '',
+        govbr_cpf varchar(11) NOT NULL DEFAULT '',
+        signature_image varchar(100),
+        is_active boolean NOT NULL DEFAULT true,
+        created_at timestamp with time zone NOT NULL DEFAULT NOW()
+    );
+""")
+execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS signer_profile_id integer;")
+print("SignerProfile table ensured.")

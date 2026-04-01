@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Editar Signatário - SIMDCCONR01{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width:700px;">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h2 class="mb-0"><i class="bi bi-pencil-square text-primary me-2"></i>Editar Signatário</h2>
+        <a href="{% url 'accounts:manage_signatarios' %}" class="btn btn-outline-secondary rounded-pill px-4">Voltar</a>
+    </div>
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Nome Completo <span class="text-danger">*</span></label>
+                        <input type="text" name="nome_completo" class="form-control" value="{{ signer.nome_completo }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Especialidade</label>
+                        <select name="especialidade" class="form-select">
+                            {% for value, label in specialty_choices %}
+                            <option value="{{ value }}" {% if signer.especialidade == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Registro Profissional</label>
+                        <input type="text" name="registro_profissional" class="form-control" value="{{ signer.registro_profissional }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">E-mail</label>
+                        <input type="email" name="email" class="form-control" value="{{ signer.email }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">CPF (para Gov.br)</label>
+                        <input type="text" name="govbr_cpf" class="form-control" maxlength="11" value="{{ signer.govbr_cpf }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Imagem da Assinatura</label>
+                        {% if signer.signature_image %}
+                        <div class="mb-2 p-2 border rounded-3 bg-light text-center">
+                            <img src="{{ signer.signature_image.url }}" alt="Assinatura atual" style="max-height:80px;">
+                            <p class="text-muted small mb-0 mt-1">Assinatura atual — Envie um novo arquivo para substituir</p>
+                        </div>
+                        {% endif %}
+                        <input type="file" name="signature_image" class="form-control" accept="image/*">
+                    </div>
+                    <div class="col-12 pt-2">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 fw-semibold">
+                            <i class="bi bi-save me-2"></i>Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

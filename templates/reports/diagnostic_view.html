@@ -274,7 +274,10 @@
                         <div class="col-md-5 position-relative">
                             <div class="signature-line border-bottom border-dark border-2 mx-auto mb-2"
                                 style="width: 80%; height: 60px; position:relative;">
-                                {% if diagnostic.signed_by.signature_image %}
+                                {% if diagnostic.signer_profile and diagnostic.signer_profile.signature_image %}
+                                <img src="{{ diagnostic.signer_profile.signature_image.url }}" alt="Assinatura"
+                                    style="max-height: 55px; position:absolute; bottom:2px; left:50%; transform:translateX(-50%);">
+                                {% elif diagnostic.signed_by and diagnostic.signed_by.signature_image %}
                                 <img src="{{ diagnostic.signed_by.signature_image.url }}" alt="Assinatura"
                                     style="max-height: 55px; position:absolute; bottom:2px; left:50%; transform:translateX(-50%);">
                                 {% else %}
@@ -282,10 +285,15 @@
                                     style="bottom: 5px; left: 0;">Assinado Eletronicamente</span>
                                 {% endif %}
                             </div>
+                            {% if diagnostic.signer_profile %}
+                            <h6 class="fw-bold text-dark mb-0">{{ diagnostic.signer_profile.nome_completo }}</h6>
+                            <small class="text-muted d-block">{{ diagnostic.signer_profile.get_especialidade_display }}</small>
+                            <small class="text-muted d-block mt-1">{{ diagnostic.signer_profile.registro_profissional|default:"Registro N/C" }}</small>
+                            {% else %}
                             <h6 class="fw-bold text-dark mb-0">{% if diagnostic.signed_by.get_full_name %}{{ diagnostic.signed_by.get_full_name }}{% else %}{{ diagnostic.signed_by.email }}{% endif %}</h6>
-                            <small class="text-muted d-block">{% if diagnostic.signed_by.get_role_display %}{{ diagnostic.signed_by.get_role_display }}{% else %}Perito / Especialista em Saúde
-                                Ocupacional{% endif %}</small>
+                            <small class="text-muted d-block">{% if diagnostic.signed_by.get_role_display %}{{ diagnostic.signed_by.get_role_display }}{% else %}Perito / Especialista em Saúde Ocupacional{% endif %}</small>
                             <small class="text-muted d-block mt-1">CREA/CRM/CRP: {% if diagnostic.signed_by.professional_crp %}{{ diagnostic.signed_by.professional_crp }}{% else %}___________________{% endif %}</small>
+                            {% endif %}
                         </div>
                         {% endif %}
                     </div>

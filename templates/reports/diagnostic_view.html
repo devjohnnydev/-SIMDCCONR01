@@ -262,9 +262,7 @@
                                     {% if diagnostic.signature_method == 'GOVBR' %}
                                     <small class="d-block text-success fw-bold" style="font-size: 0.75rem;"><i
                                             class="bi bi-check-circle-fill me-1"></i>Autenticado via Gov.br</small>
-                                    <small class="d-block text-dark mt-1" style="font-size: 0.70rem;">Token: {% if
-                                        diagnostic.govbr_token %}{{ diagnostic.govbr_token }}{% else %}N/A{% endif
-                                        %}</small>
+                                    <small class="d-block text-dark mt-1" style="font-size: 0.70rem;">Token: {% if diagnostic.govbr_token %}{{ diagnostic.govbr_token }}{% else %}N/A{% endif %}</small>
                                     {% else %}
                                     <small class="d-block text-dark fw-medium" style="font-size: 0.75rem;">Assinado por:
                                         <strong>Representante Legal</strong></small>
@@ -291,15 +289,11 @@
                                     style="bottom: 5px; left: 0;">Assinado Eletronicamente</span>
                                 {% endif %}
                             </div>
-                            <h6 class="fw-bold text-dark mb-0">{% if diagnostic.signed_by.get_full_name %}{{
-                                diagnostic.signed_by.get_full_name }}{% else %}{{ diagnostic.signed_by.email }}{% endif
-                                %}</h6>
+                            <h6 class="fw-bold text-dark mb-0">{% if diagnostic.signed_by.get_full_name %}{{ diagnostic.signed_by.get_full_name }}{% else %}{{ diagnostic.signed_by.email }}{% endif %}</h6>
                             <small class="text-muted d-block">{% if diagnostic.signed_by.get_role_display %}{{
                                 diagnostic.signed_by.get_role_display }}{% else %}Perito / Especialista em Saúde
                                 Ocupacional{% endif %}</small>
-                            <small class="text-muted d-block mt-1">CREA/CRM/CRP: {% if
-                                diagnostic.signed_by.professional_crp %}{{ diagnostic.signed_by.professional_crp }}{%
-                                else %}___________________{% endif %}</small>
+                            <small class="text-muted d-block mt-1">CREA/CRM/CRP: {% if diagnostic.signed_by.professional_crp %}{{ diagnostic.signed_by.professional_crp }}{% else %}___________________{% endif %}</small>
                         </div>
                         {% endif %}
                     </div>

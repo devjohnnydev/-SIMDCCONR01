@@ -48,14 +48,12 @@
                     <div class="mb-3">
                         <label class="text-muted small fw-bold text-uppercase d-block mb-1"
                             style="letter-spacing: 0.5px;">Setor / Função</label>
-                        <p class="mb-0 text-dark">{{ diagnostic.assignment.employee.setor }} - {{
-                            diagnostic.assignment.employee.cargo }}</p>
+                        <p class="mb-0 text-dark">{{ diagnostic.assignment.employee.setor }} - {{ diagnostic.assignment.employee.cargo }}</p>
                     </div>
                     <div class="mb-3">
                         <label class="text-muted small fw-bold text-uppercase d-block mb-1"
                             style="letter-spacing: 0.5px;">Gerado em</label>
-                        <p class="mb-0 text-dark"><i class="bi bi-calendar3 me-2 text-primary"></i>{{
-                            diagnostic.generated_at|date:"d/m/Y H:i" }}</p>
+                        <p class="mb-0 text-dark"><i class="bi bi-calendar3 me-2 text-primary"></i>{{ diagnostic.generated_at|date:"d/m/Y H:i" }}</p>
                     </div>
                     <div class="p-3 bg-white border border-primary border-opacity-25 rounded-3 mt-4 shadow-sm">
                         <label class="text-primary small fw-bold text-uppercase d-block mb-2"><i
@@ -101,8 +99,7 @@
                             <h5 class="fw-bold text-dark mb-0">1. Diagnóstico Psicossocial</h5>
                         </div>
                         <div class="p-4 bg-light border-start border-4 border-primary rounded-end-3 shadow-sm">
-                            <p class="mb-0 lh-lg text-dark" style="text-align: justify;">{{
-                                diagnostic.diagnostic_data.diagnostico_psicossocial }}</p>
+                            <p class="mb-0 lh-lg text-dark" style="text-align: justify;">{{ diagnostic.diagnostic_data.diagnostico_psicossocial }}</p>
                         </div>
                     </section>
 
@@ -116,8 +113,7 @@
                             <h5 class="fw-bold text-dark mb-0">2. Dissonância de Clima e Cultura</h5>
                         </div>
                         <div class="p-4 bg-light border-start border-4 border-secondary rounded-end-3 shadow-sm">
-                            <p class="mb-0 lh-lg text-dark" style="text-align: justify;">{{
-                                diagnostic.diagnostic_data.dissonancia_clima_cultura }}</p>
+                            <p class="mb-0 lh-lg text-dark" style="text-align: justify;">{{ diagnostic.diagnostic_data.dissonancia_clima_cultura }}</p>
                         </div>
                     </section>
 
@@ -131,8 +127,7 @@
                             <h5 class="fw-bold text-dark mb-0">3. Riscos Identificados (PGR/GRO)</h5>
                         </div>
                         <div class="p-4 bg-light border-start border-4 border-warning rounded-end-3 shadow-sm">
-                            <p class="mb-0 lh-lg text-dark" style="text-align: justify;">{{
-                                diagnostic.diagnostic_data.riscos_pgr_gro }}</p>
+                            <p class="mb-0 lh-lg text-dark" style="text-align: justify;">{{ diagnostic.diagnostic_data.riscos_pgr_gro }}</p>
                         </div>
                     </section>
 
@@ -161,8 +156,7 @@
                         <div>
                             <h5 class="alert-heading fw-bold mb-2 text-danger text-uppercase"
                                 style="letter-spacing: 0.5px;">Encaminhamento Médico Recomendado</h5>
-                            <p class="mb-0 fs-6 text-dark fw-medium">{{
-                                diagnostic.diagnostic_data.justificativa_encaminhamento }}</p>
+                            <p class="mb-0 fs-6 text-dark fw-medium">{{ diagnostic.diagnostic_data.justificativa_encaminhamento }}</p>
                         </div>
                     </div>
                     {% else %}
@@ -267,8 +261,7 @@
                                     <small class="d-block text-dark fw-medium" style="font-size: 0.75rem;">Assinado por:
                                         <strong>Representante Legal</strong></small>
                                     {% endif %}
-                                    <small class="d-block text-muted" style="font-size: 0.70rem;">Data: {{
-                                        diagnostic.signature_timestamp|date:"d/m/Y H:i:s" }}</small>
+                                    <small class="d-block text-muted" style="font-size: 0.70rem;">Data: {{ diagnostic.signature_timestamp|date:"d/m/Y H:i:s" }}</small>
                                 </div>
                                 <div class="mt-2 d-none d-print-block text-center mx-auto">
                                     <img src="https://chart.googleapis.com/chart?chs=80x80&cht=qr&chl={{ request.build_absolute_uri|default:'https://gov.br/validador' }}"
@@ -290,8 +283,7 @@
                                 {% endif %}
                             </div>
                             <h6 class="fw-bold text-dark mb-0">{% if diagnostic.signed_by.get_full_name %}{{ diagnostic.signed_by.get_full_name }}{% else %}{{ diagnostic.signed_by.email }}{% endif %}</h6>
-                            <small class="text-muted d-block">{% if diagnostic.signed_by.get_role_display %}{{
-                                diagnostic.signed_by.get_role_display }}{% else %}Perito / Especialista em Saúde
+                            <small class="text-muted d-block">{% if diagnostic.signed_by.get_role_display %}{{ diagnostic.signed_by.get_role_display }}{% else %}Perito / Especialista em Saúde
                                 Ocupacional{% endif %}</small>
                             <small class="text-muted d-block mt-1">CREA/CRM/CRP: {% if diagnostic.signed_by.professional_crp %}{{ diagnostic.signed_by.professional_crp }}{% else %}___________________{% endif %}</small>
                         </div>
@@ -336,13 +328,13 @@
         }
 
         .col-lg-4 {
-            width: 35% !important;
+            width: 100% !important; float: none !important;
             float: left;
             padding-right: 20px;
         }
 
         .col-lg-8 {
-            width: 65% !important;
+            width: 100% !important; float: none !important;
             float: left;
         }
 

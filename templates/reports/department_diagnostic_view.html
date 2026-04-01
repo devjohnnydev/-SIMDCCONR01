@@ -112,12 +112,15 @@
                             Este documento foi gerado automaticamente pelo motor de IA do SIMDCCONR01 baseando-se no cruzamento de dados de múltiplos respondentes.
                             As análises individuais permanecem sigilosas.
                         </p>
-                        <div class="mt-4">
-                            <button onclick="window.print();" class="btn btn-outline-dark me-2">
-                                <i class="bi bi-printer"></i> Imprimir Laudo
+                        <div class="mt-4 d-flex justify-content-center gap-2">
+                            <button onclick="window.print();" class="btn btn-outline-dark rounded-pill px-4">
+                                <i class="bi bi-printer me-2"></i> Imprimir Laudo
                             </button>
-                            <a href="{% url 'accounts:department_reports_list' %}" class="btn btn-primary px-4">
-                                Voltar para a Lista
+                            <a href="{% url 'accounts:department_reports_list' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                                <i class="bi bi-arrow-left me-2"></i> Voltar à Lista
+                            </a>
+                            <a href="{% url 'accounts:dashboard' %}" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
                             </a>
                         </div>
                     </div>

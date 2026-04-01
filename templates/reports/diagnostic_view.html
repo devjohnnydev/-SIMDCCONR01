@@ -18,8 +18,11 @@
             <h2 class="mb-0 fw-bold text-dark" style="letter-spacing: -0.5px;"><i
                     class="bi bi-file-earmark-medical text-primary me-2"></i>Parecer Técnico Pericial</h2>
         </div>
-        <div class="d-print-none">
-            <button onclick="window.print()" class="btn btn-outline-dark rounded-pill me-2 px-4 fw-medium"><i
+        <div class="d-print-none d-flex gap-2">
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4 fw-medium">
+                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+            </a>
+            <button onclick="window.print()" class="btn btn-outline-dark rounded-pill px-4 fw-medium"><i
                     class="bi bi-printer me-2"></i>Imprimir / PDF</button>
             <a href="{% url 'accounts:admin_laudos' %}"
                 class="btn btn-dark rounded-pill shadow-sm px-4 fw-medium">Voltar</a>

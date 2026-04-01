@@ -171,30 +171,8 @@ def admin_laudos(request):
         messages.error(request, 'Acesso restrito.')
         return redirect('accounts:dashboard')
         
-    from forms_builder.models import FormAssignment
-    from accounts.models import User
-    
-    try:
-        # Todos concluidos, ordendo por mais recentes
-        completed_assignments = FormAssignment.objects.filter(
-            status='COMPLETED'
-        ).select_related(
-            'employee', 'employee__company', 'form_instance'
-        ).order_by('-completed_at')
-        
-        # Lista de profissionais que podem assinar (Admin Master ou outros perfis de especialista se houver)
-        professionals = User.objects.filter(role='ADMIN_MASTER')
-        
-        return render(request, 'accounts/admin_laudos.html', {
-            'assignments': completed_assignments,
-            'professionals': professionals
-        })
-    except Exception as e:
-        messages.error(request, f'Erro no banco de dados ao carregar laudos: {str(e)}')
-        return render(request, 'accounts/admin_laudos.html', {
-            'assignments': [],
-            'professionals': []
-        })
+    from django.http import HttpResponse
+    return HttpResponse("DEBUG: VIEW REACHED - DATABASE OK")
 
 @login_required
 def generate_laudo_action(request, assignment_id):

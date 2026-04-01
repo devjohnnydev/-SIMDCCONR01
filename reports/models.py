@@ -96,14 +96,22 @@ class EmployeeDiagnostic(models.Model):
     
     generated_at = models.DateTimeField('Gerado em', auto_now_add=True)
     
-    # Electronic Signature
+    # Electronic Signature and Assignment
+    assigned_professional = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='assigned_diagnostics',
+        verbose_name='Signatario Atribuido'
+    )
     is_signed = models.BooleanField('Assinado', default=False)
     signed_by = models.ForeignKey(
         'accounts.User', 
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True,
-        related_name='signed_diagnostics'
+        related_name='signed_diagnostics_final'
     )
     signature_method = models.CharField(
         'Metodo de Assinatura', 

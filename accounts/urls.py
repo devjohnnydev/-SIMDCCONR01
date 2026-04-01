@@ -23,6 +23,7 @@ urlpatterns = [
     
     # Assinaturas
     path('dashboard/admin/laudos/bulk-sign/', views.bulk_sign_laudos, name='bulk_sign_laudos'),
+    path('dashboard/admin/laudos/assign-signatory/', views.assign_signatory, name='assign_signatory'),
     path('dashboard/admin/laudos/sign-internal/<int:diagnostic_id>/', views.sign_laudo_internal, name='sign_laudo_internal'),
     path('dashboard/admin/laudos/sign-govbr/<int:diagnostic_id>/', views.sign_laudo_govbr, name='sign_laudo_govbr'),
 ]

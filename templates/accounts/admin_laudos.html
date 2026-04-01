@@ -37,6 +37,7 @@
                                 <th>Data Conclusão</th>
                                 <th>Funcionário</th>
                                 <th>Empresa</th>
+                                <th>Signatário</th>
                                 <th>Status do Laudo</th>
                                 <th class="text-end">Ações</th>
                             </tr>
@@ -58,6 +59,38 @@
                                     <small class="text-muted">{{ assignment.employee.cpf|default:"CPF N/C" }}</small>
                                 </td>
                                 <td>{{ assignment.employee.company.nome_fantasia }}</td>
+                                <td>
+                                    {% if assignment.diagnostic %}
+                                    {% if not assignment.diagnostic.is_signed %}
+                                    <form method="POST" action="{% url 'accounts:assign_signatory' %}"
+                                        class="d-flex gap-1 align-items-center">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="diagnostic_id"
+                                            value="{{ assignment.diagnostic.id }}">
+                                        <select name="professional_id" class="form-select form-select-sm"
+                                            style="min-width: 150px;">
+                                            <option value="">Selecione...</option>
+                                            {% for prof in professionals %}
+                                            <option value="{{ prof.id }}" {% if
+                                                assignment.diagnostic.assigned_professional==prof %}selected{% endif %}>
+                                                {{ prof.get_full_name|default:prof.email }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-outline-success"
+                                            title="Salvar Atribuição">
+                                            <i class="bi bi-save"></i>
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <span class="text-dark small"><i class="bi bi-person-check me-1"></i>{{
+                                        assignment.diagnostic.signed_by.get_full_name|default:assignment.diagnostic.signed_by.email
+                                        }}</span>
+                                    {% endif %}
+                                    {% else %}
+                                    <span class="text-muted small italic">Aguardando IA</span>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     {% if assignment.diagnostic %}
                                     {% if assignment.diagnostic.is_signed %}

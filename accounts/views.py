@@ -171,8 +171,8 @@ def admin_laudos(request):
         messages.error(request, 'Acesso restrito.')
         return redirect('accounts:dashboard')
         
-    # Busca funconarios/assignments que finalizaram o form
     from forms_builder.models import FormAssignment
+    from accounts.models import User
     
     # Todos concluidos, ordendo por mais recentes
     completed_assignments = FormAssignment.objects.filter(
@@ -181,8 +181,12 @@ def admin_laudos(request):
         'employee', 'employee__company', 'form_instance', 'diagnostic'
     ).order_by('-completed_at')
     
+    # Lista de profissionais que podem assinar (Admin Master ou outros perfis de especialista se houver)
+    professionals = User.objects.filter(role='ADMIN_MASTER')
+    
     return render(request, 'accounts/admin_laudos.html', {
-        'assignments': completed_assignments
+        'assignments': completed_assignments,
+        'professionals': professionals
     })
 
 @login_required
@@ -363,6 +367,31 @@ def sign_laudo_govbr(request, diagnostic_id):
 
 
 @login_required
+def assign_signatory(request):
+    """Atribui um signatário específico a um laudo."""
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Ação não permitida.')
+        return redirect('accounts:dashboard')
+        
+    if request.method == 'POST':
+        from reports.models import EmployeeDiagnostic
+        from accounts.models import User
+        
+        diagnostic_id = request.POST.get('diagnostic_id')
+        professional_id = request.POST.get('professional_id')
+        
+        diagnostic = get_object_or_404(EmployeeDiagnostic, pk=diagnostic_id)
+        professional = get_object_or_404(User, pk=professional_id)
+        
+        diagnostic.assigned_professional = professional
+        diagnostic.save()
+        
+        messages.success(request, f'Profissional {professional.get_full_name()} atribuído como signatário do laudo.')
+        
+    return redirect('accounts:admin_laudos')
+
+
+@login_required
 def bulk_sign_laudos(request):
     """Assinatura em lote selecionado no painel Admin"""
     from reports.models import EmployeeDiagnostic
@@ -383,11 +412,17 @@ def bulk_sign_laudos(request):
         
         for d in diagnostics:
             d.is_signed = True
-            d.signed_by = request.user
+            # Se já tem um profissional atribuído, ele é quem "assinou" (registro do sistema)
+            # Se não tem, o usuário atual assume a autoria.
+            if d.assigned_professional:
+                d.signed_by = d.assigned_professional
+            else:
+                d.signed_by = request.user
+                
             d.signature_method = 'INTERNAL'
             d.signature_timestamp = timezone.now()
             d.save()
             
-        messages.success(request, f'{count} laudo(s) assinados em lote com a sua rubrica eletrônica.')
+        messages.success(request, f'{count} laudo(s) assinados em lote com as rubricas correspondentes.')
         
     return redirect('accounts:admin_laudos')

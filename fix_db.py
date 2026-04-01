@@ -27,8 +27,12 @@ execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS professional_crp var
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS signature_image varchar(100);")
 
 print("Forcing safety columns on reports_employeediagnostic...")
-# Ensure table exists first if possible, though migration 0002 should have created it.
-# We focus on adding the columns that might be missing from faked migrations.
+# Ensure table exists (though migration 0002 should have done this)
+# We add every core field from the model to be safe against partial migrations.
+execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS assignment_id integer;")
+execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS validation_code uuid;")
+execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS diagnostic_data jsonb DEFAULT '{}';")
+execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS generated_at timestamp with time zone;")
 execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS assigned_professional_id integer;")
 execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS is_signed boolean DEFAULT false;")
 execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS signed_by_id integer;")

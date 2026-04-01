@@ -1,70 +1,144 @@
 {% extends 'base.html' %}
 
-{% block title %}Gerador de Laudos IA - SIMDCCONR01{% endblock %}
+{% block title %}Gerenciador de Laudos e Assinaturas - SIMDCCONR01{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="bi bi-file-earmark-medical text-success me-2"></i>Gerador de Laudos Individuais (IA)</h2>
-        <a href="{% url 'accounts:admin_master_dashboard' %}" class="btn btn-outline-secondary">Voltar</a>
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h2><i class="bi bi-file-earmark-medical text-primary me-2"></i>Gerenciador de Laudos e Assinaturas</h2>
+        <a href="{% url 'accounts:admin_master_dashboard' %}"
+            class="btn btn-outline-secondary rounded-pill px-4">Voltar</a>
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            <p class="text-muted">Abaixo estão os questionários concluídos pelos funcionários. Clique em Gerar para que a Inteligência Artificial (Groq) leia as 160 respostas e emita o laudo oficial assinado.</p>
-            
-            <table class="table table-hover mt-4 align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Data Conclusão</th>
-                        <th>Funcionário</th>
-                        <th>Empresa</th>
-                        <th>Status do Laudo</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for assignment in assignments %}
-                    <tr>
-                        <td>{{ assignment.completed_at|date:"d/m/Y H:i" }}</td>
-                        <td>
-                            <strong>{{ assignment.employee.nome }}</strong><br>
-                            <small class="text-muted">{{ assignment.employee.cpf|default:"CPF N/C" }}</small>
-                        </td>
-                        <td>{{ assignment.employee.company.nome_fantasia }}</td>
-                        <td>
-                            {% if assignment.diagnostic %}
-                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Gerado e Assinado</span>
-                            {% else %}
-                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass me-1"></i>Aguardando IA</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if assignment.diagnostic %}
-                                <a href="{% url 'reports:view_diagnostic' assignment.diagnostic.validation_code %}" class="btn btn-sm btn-primary" target="_blank">
-                                    <i class="bi bi-eye"></i> Ler Laudo
-                                </a>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="alert('Código de Validação Pública:\n{{ assignment.diagnostic.validation_code }}\n\nURL: {{ request.scheme }}://{{ request.get_host }}/reports/validar/')">
-                                    <i class="bi bi-upc-scan"></i> Hash
-                                </button>
-                            {% else %}
-                                <form method="POST" action="{% url 'accounts:generate_laudo' assignment.id %}" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-success fw-bold" onclick="this.innerHTML='<span class=\'spinner-border spinner-border-sm\'></span> Gerando...'; this.disabled=true; this.form.submit();">
-                                        <i class="bi bi-robot"></i> Gerar com IA
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+
+            <form id="bulk-sign-form" method="POST" action="{% url 'accounts:bulk_sign_laudos' %}">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between align-items-center mb-4 bg-light p-3 rounded-3 border">
+                    <div>
+                        <h5 class="fw-bold mb-1 text-dark">Laudos Emitidos e Questionários</h5>
+                        <p class="text-muted mb-0 small">Selecione os laudos gerados ("Aguardando Assinatura") para
+                            assiná-los em lote eletronicamente.</p>
+                    </div>
+                    <button type="submit" class="btn btn-primary fw-bold shadow-sm rounded-pill px-4" id="btn-bulk-sign"
+                        disabled>
+                        <i class="bi bi-pen me-2"></i>Assinar Lote Selecionado
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 40px;" class="text-center">
+                                    <input class="form-check-input" type="checkbox" id="selectAll">
+                                </th>
+                                <th>Data Conclusão</th>
+                                <th>Funcionário</th>
+                                <th>Empresa</th>
+                                <th>Status do Laudo</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for assignment in assignments %}
+                            <tr>
+                                <td class="text-center">
+                                    {% if assignment.diagnostic and not assignment.diagnostic.is_signed %}
+                                    <input class="form-check-input row-checkbox" type="checkbox" name="diagnostic_ids"
+                                        value="{{ assignment.diagnostic.id }}">
+                                    {% else %}
+                                    <input class="form-check-input" type="checkbox" disabled>
+                                    {% endif %}
+                                </td>
+                                <td>{{ assignment.completed_at|date:"d/m/Y H:i" }}</td>
+                                <td>
+                                    <strong>{{ assignment.employee.nome }}</strong><br>
+                                    <small class="text-muted">{{ assignment.employee.cpf|default:"CPF N/C" }}</small>
+                                </td>
+                                <td>{{ assignment.employee.company.nome_fantasia }}</td>
+                                <td>
+                                    {% if assignment.diagnostic %}
+                                    {% if assignment.diagnostic.is_signed %}
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success"><i
+                                            class="bi bi-check-circle-fill me-1"></i>Assinado</span>
+                                    {% else %}
+                                    <span class="badge bg-warning bg-opacity-10 text-dark border border-warning"><i
+                                            class="bi bi-clock me-1"></i>Pendente Assinatura</span>
+                                    {% endif %}
+                                    {% else %}
+                                    <span
+                                        class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary"><i
+                                            class="bi bi-robot me-1"></i>Aguardando IA</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if assignment.diagnostic %}
+                                    <a href="{% url 'reports:view_diagnostic' assignment.diagnostic.validation_code %}"
+                                        class="btn btn-sm {% if assignment.diagnostic.is_signed %}btn-outline-primary{% else %}btn-primary{% endif %} rounded-pill px-3"
+                                        target="_blank">
+                                        <i class="bi bi-file-text"></i> Abrir Parecer
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-light rounded-pill ms-1"
+                                        onclick="alert('Código de Validação Pública:\n{{ assignment.diagnostic.validation_code }}\n\nURL: {{ request.scheme }}://{{ request.get_host }}/reports/validar/')"
+                                        title="Ver Código Hash">
+                                        <i class="bi bi-upc-scan"></i>
                                     </button>
-                                </form>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center text-muted py-4">Nenhum funcionário concluiu questionários ainda.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                                    {% else %}
+                                    <form method="POST" action="{% url 'accounts:generate_laudo' assignment.id %}"
+                                        style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success fw-bold rounded-pill px-3"
+                                            onclick="this.innerHTML='<span class=\'spinner-border spinner-border-sm\'></span> Gerando...'; this.disabled=true; this.form.submit();">
+                                            <i class="bi bi-cpu"></i> Gerar IA
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-5">
+                                    <i class="bi bi-inbox fs-2 d-block mb-3 text-light"></i>
+                                    Nenhum questionário concluído para emissão de laudo.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.row-checkbox');
+        const bulkBtn = document.getElementById('btn-bulk-sign');
+
+        if (selectAll && checkboxes.length > 0) {
+            selectAll.addEventListener('change', function () {
+                checkboxes.forEach(cb => cb.checked = this.checked);
+                toggleBulkButton();
+            });
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', toggleBulkButton);
+            });
+
+            function toggleBulkButton() {
+                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+                bulkBtn.disabled = !anyChecked;
+            }
+        } else if (selectAll) {
+            selectAll.disabled = true;
+        }
+    });
+</script>
+{% endblock %}
 {% endblock %}

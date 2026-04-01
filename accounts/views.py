@@ -308,3 +308,84 @@ def profile_update(request):
     return render(request, 'accounts/profile_update.html', {
         'user': user
     })
+
+# --- NOVAS ROTAS PARA ASSINATURA ELETRONICA ---
+
+@login_required
+def sign_laudo_internal(request, diagnostic_id):
+    """Assinatura de laudo individual pela interface (Assinatura do Profissional)"""
+    from reports.models import EmployeeDiagnostic
+    from django.utils import timezone
+    
+    if request.method == 'POST':
+        if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
+            messages.error(request, 'Ação não permitida. Apenas Peritos e Administradores podem assinar.')
+            return redirect('accounts:admin_laudos')
+            
+        diagnostic = get_object_or_404(EmployeeDiagnostic, pk=diagnostic_id)
+        diagnostic.is_signed = True
+        diagnostic.signed_by = request.user
+        diagnostic.signature_method = 'INTERNAL'
+        diagnostic.signature_timestamp = timezone.now()
+        diagnostic.save()
+        
+        messages.success(request, 'Laudo assinado eletronicamente com sucesso.')
+        
+    return redirect('reports:view_diagnostic', code=diagnostic.validation_code)
+
+
+@login_required
+def sign_laudo_govbr(request, diagnostic_id):
+    """Simulação de assinatura via API do Gov.br"""
+    from reports.models import EmployeeDiagnostic
+    from django.utils import timezone
+    import uuid
+    
+    if request.method == 'POST':
+        if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
+            messages.error(request, 'Ação não permitida. Faça login com conta habilitada.')
+            return redirect('accounts:admin_laudos')
+            
+        diagnostic = get_object_or_404(EmployeeDiagnostic, pk=diagnostic_id)
+        # Simula o redirecionamento e retorno do callback do oauth gov.br
+        diagnostic.is_signed = True
+        diagnostic.signed_by = request.user
+        diagnostic.signature_method = 'GOVBR'
+        diagnostic.signature_timestamp = timezone.now()
+        diagnostic.govbr_token = f"GOVBR-{uuid.uuid4().hex[:12].upper()}"
+        diagnostic.save()
+        
+        messages.success(request, 'Sucesso! O laudo foi validado digitalmente com selo Gov.br.')
+        
+    return redirect('reports:view_diagnostic', code=diagnostic.validation_code)
+
+
+@login_required
+def bulk_sign_laudos(request):
+    """Assinatura em lote selecionado no painel Admin"""
+    from reports.models import EmployeeDiagnostic
+    from django.utils import timezone
+    
+    if request.method == 'POST':
+        if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
+            messages.error(request, 'Ação não permitida para o seu perfil.')
+            return redirect('accounts:dashboard')
+            
+        diagnostic_ids = request.POST.getlist('diagnostic_ids')
+        if not diagnostic_ids:
+            messages.warning(request, 'Nenhum laudo foi selecionado para assinatura.')
+            return redirect('accounts:admin_laudos')
+            
+        diagnostics = EmployeeDiagnostic.objects.filter(id__in=diagnostic_ids, is_signed=False)
+        count = diagnostics.count()
+        
+        for d in diagnostics:
+            d.is_signed = True
+            d.signed_by = request.user
+            d.signature_method = 'INTERNAL'
+            d.signature_timestamp = timezone.now()
+            d.save()
+            
+        messages.success(request, f'{count} laudo(s) assinados em lote com a sua rubrica eletrônica.')
+        
+    return redirect('accounts:admin_laudos')

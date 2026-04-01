@@ -1,6 +1,4 @@
-"""
-Modelo para armazenar relatorios gerados.
-"""
+import uuid
 from django.db import models
 
 
@@ -76,7 +74,6 @@ class EmployeeDiagnostic(models.Model):
     Laudo individual de um funcionario gerado pela inteligencia artificial (Groq).
     Mantem idempotencia e permite validacao publica por um hash unico.
     """
-    import uuid
     
     assignment = models.OneToOneField(
         'forms_builder.FormAssignment',

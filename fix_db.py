@@ -43,6 +43,16 @@ execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS govbr_t
 print("Filling missing UUIDs for diagnostics...")
 import uuid
 with connection.cursor() as cursor:
+    # 1. Clean up potential duplicates from partial former attempts (OneToOne consistency)
+    cursor.execute("""
+        DELETE FROM reports_employeediagnostic a 
+        WHERE a.id > (
+            SELECT MIN(b.id) FROM reports_employeediagnostic b 
+            WHERE a.assignment_id = b.assignment_id
+        );
+    """)
+    
+    # 2. Fill missing UUIDs
     cursor.execute("SELECT id FROM reports_employeediagnostic WHERE validation_code IS NULL;")
     ids = cursor.fetchall()
     for row in ids:

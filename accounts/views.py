@@ -174,20 +174,27 @@ def admin_laudos(request):
     from forms_builder.models import FormAssignment
     from accounts.models import User
     
-    # Todos concluidos, ordendo por mais recentes
-    completed_assignments = FormAssignment.objects.filter(
-        status='COMPLETED'
-    ).select_related(
-        'employee', 'employee__company', 'form_instance'
-    ).order_by('-completed_at')
-    
-    # Lista de profissionais que podem assinar (Admin Master ou outros perfis de especialista se houver)
-    professionals = User.objects.filter(role='ADMIN_MASTER')
-    
-    return render(request, 'accounts/admin_laudos.html', {
-        'assignments': completed_assignments,
-        'professionals': professionals
-    })
+    try:
+        # Todos concluidos, ordendo por mais recentes
+        completed_assignments = FormAssignment.objects.filter(
+            status='COMPLETED'
+        ).select_related(
+            'employee', 'employee__company', 'form_instance'
+        ).order_by('-completed_at')
+        
+        # Lista de profissionais que podem assinar (Admin Master ou outros perfis de especialista se houver)
+        professionals = User.objects.filter(role='ADMIN_MASTER')
+        
+        return render(request, 'accounts/admin_laudos.html', {
+            'assignments': completed_assignments,
+            'professionals': professionals
+        })
+    except Exception as e:
+        messages.error(request, f'Erro no banco de dados ao carregar laudos: {str(e)}')
+        return render(request, 'accounts/admin_laudos.html', {
+            'assignments': [],
+            'professionals': []
+        })
 
 @login_required
 def generate_laudo_action(request, assignment_id):

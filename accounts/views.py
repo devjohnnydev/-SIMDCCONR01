@@ -317,12 +317,13 @@ def sign_laudo_internal(request, diagnostic_id):
     from reports.models import EmployeeDiagnostic
     from django.utils import timezone
     
+    diagnostic = get_object_or_404(EmployeeDiagnostic, pk=diagnostic_id)
+    
     if request.method == 'POST':
         if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
             messages.error(request, 'Ação não permitida. Apenas Peritos e Administradores podem assinar.')
             return redirect('accounts:admin_laudos')
             
-        diagnostic = get_object_or_404(EmployeeDiagnostic, pk=diagnostic_id)
         diagnostic.is_signed = True
         diagnostic.signed_by = request.user
         diagnostic.signature_method = 'INTERNAL'
@@ -341,12 +342,13 @@ def sign_laudo_govbr(request, diagnostic_id):
     from django.utils import timezone
     import uuid
     
+    diagnostic = get_object_or_404(EmployeeDiagnostic, pk=diagnostic_id)
+    
     if request.method == 'POST':
         if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
             messages.error(request, 'Ação não permitida. Faça login com conta habilitada.')
             return redirect('accounts:admin_laudos')
             
-        diagnostic = get_object_or_404(EmployeeDiagnostic, pk=diagnostic_id)
         # Simula o redirecionamento e retorno do callback do oauth gov.br
         diagnostic.is_signed = True
         diagnostic.signed_by = request.user

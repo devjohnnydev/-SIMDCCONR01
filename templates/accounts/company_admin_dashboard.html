@@ -38,7 +38,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'reports:dashboard' %}">
                             <i class="bi bi-bar-chart-line-fill"></i>
-                            <span>Relatorios</span>
+                            <span>Painel de Dados</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:department_reports_list' %}">
+                            <i class="bi bi-building-check"></i>
+                            <span>Laudos por Setor</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -146,20 +152,20 @@
                 </div>
                 
                 <div class="col-sm-6 col-xl-3">
-                    <div class="card card-dashboard border-warning h-100">
+                    <div class="card card-dashboard border-danger h-100 shadow-sm" style="background: rgba(220, 53, 69, 0.03);">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <p class="metric-label mb-2">Relatorios</p>
-                                    <p class="metric-value text-warning mb-3">
-                                        <i class="bi bi-file-earmark-pdf"></i>
+                                    <p class="metric-label mb-2 text-danger fw-bold">Clima Socioemocional</p>
+                                    <p class="metric-value text-danger mb-3">
+                                        <i class="bi bi-heart-pulse-fill"></i>
                                     </p>
-                                    <a href="{% url 'reports:dashboard' %}" class="btn btn-outline-warning btn-sm">
-                                        Ver Dashboard
+                                    <a href="{% url 'accounts:department_reports_list' %}" class="btn btn-danger btn-sm px-3">
+                                        Ver Setores
                                     </a>
                                 </div>
-                                <div class="metric-icon bg-warning-soft">
-                                    <i class="bi bi-bar-chart-line"></i>
+                                <div class="metric-icon bg-danger-soft text-danger">
+                                    <i class="bi bi-graph-up-arrow"></i>
                                 </div>
                             </div>
                         </div>

@@ -79,3 +79,18 @@ execute("""
 """)
 execute("ALTER TABLE reports_employeediagnostic ADD COLUMN IF NOT EXISTS signer_profile_id integer;")
 print("SignerProfile table ensured.")
+
+print("Forcing safety for reports_departmentdiagnostic table...")
+execute("""
+    CREATE TABLE IF NOT EXISTS reports_departmentdiagnostic (
+        id bigserial PRIMARY KEY,
+        setor varchar(100) NOT NULL,
+        diagnostic_data jsonb NOT NULL DEFAULT '{}',
+        generated_at timestamp with time zone NOT NULL DEFAULT NOW(),
+        company_id integer NOT NULL,
+        form_instance_id integer NOT NULL,
+        generated_by_id integer,
+        UNIQUE (company_id, setor, form_instance_id)
+    );
+""")
+print("DepartmentDiagnostic table ensured.")

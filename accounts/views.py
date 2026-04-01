@@ -547,3 +547,81 @@ def edit_signatario(request, pk):
         'signer': signer,
         'specialty_choices': SignerProfile.SPECIALTY_CHOICES,
     })
+
+
+@login_required
+def department_reports_list(request):
+    """Listagem de laudos por departamento para a empresa."""
+    if request.user.role != 'COMPANY_ADMIN':
+        messages.error(request, 'Acesso restrito a administradores de empresa.')
+        return redirect('accounts:dashboard')
+    
+    from reports.models import DepartmentDiagnostic
+    from employees.models import Employee
+    from forms_builder.models import FormInstance
+    
+    company = request.user.company
+    
+    # Busca todos os setores que têm pelo menos 1 funcionário ativo
+    setores = Employee.objects.filter(company=company, status='ACTIVE').values_list('setor', flat=True).distinct()
+    
+    # Busca formulários ativos para esta empresa (excluindo rascunhos)
+    active_forms = FormInstance.objects.filter(company=company).exclude(status='DRAFT')
+    
+    # Laudos já gerados
+    existing_reports = DepartmentDiagnostic.objects.filter(company=company).select_related('form_instance')
+    
+    return render(request, 'accounts/department_reports_list.html', {
+        'setores': setores,
+        'active_forms': active_forms,
+        'reports': existing_reports
+    })
+
+
+@login_required
+def generate_department_report_action(request):
+    """Action POST para gerar laudo de departamento via IA."""
+    if request.user.role != 'COMPANY_ADMIN':
+        messages.error(request, 'Ação não permitida.')
+        return redirect('accounts:dashboard')
+        
+    if request.method == 'POST':
+        from forms_builder.models import FormInstance
+        from ai_analysis.engine import generate_department_diagnostic
+        
+        setor = request.POST.get('setor')
+        form_id = request.POST.get('form_id')
+        
+        form_instance = get_object_or_404(FormInstance, pk=form_id, company=request.user.company)
+        
+        result = generate_department_diagnostic(request.user.company, setor, form_instance, user=request.user)
+        
+        if isinstance(result, dict) and 'error' in result:
+            messages.error(request, result['error'])
+        else:
+            messages.success(request, f'Laudo do departamento "{setor}" gerado com sucesso!')
+            
+    return redirect('accounts:department_reports_list')
+
+
+@login_required
+def view_department_report(request, setor, form_id):
+    """Visualização de um laudo de departamento específico."""
+    from reports.models import DepartmentDiagnostic
+    
+    report = get_object_or_404(
+        DepartmentDiagnostic, 
+        company=request.user.company, 
+        setor=setor, 
+        form_instance_id=form_id
+    )
+    
+    if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
+        messages.error(request, 'Acesso negado.')
+        return redirect('accounts:dashboard')
+        
+    return render(request, 'reports/department_diagnostic_view.html', {
+        'report': report,
+        'data': report.diagnostic_data
+    })
+

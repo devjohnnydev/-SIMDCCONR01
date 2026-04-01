@@ -80,9 +80,80 @@ def analyze_survey_results(assignment):
         return json.dumps(diagnostic)
     return json.dumps(diagnostic.diagnostic_data)
 
-def generate_consolidated_report(form_instance):
+def generate_department_diagnostic(company, sector_name, form_instance, user=None):
     """
-    Gera analise consolidada por departamento ou empresa usando Groq.
+    Gera analise consolidada por departamento usando Groq.
+    Categoriza clima, riscos e sugestoes para a gestao da empresa.
     """
-    # ... Logica similar para analise agregada
-    pass
+    from reports.models import DepartmentDiagnostic
+    from forms_builder.models import FormAssignment, FormAnswer
+    
+    # 1. Busca assignments concluidos do setor
+    assignments = FormAssignment.objects.filter(
+        form_instance=form_instance,
+        employee__company=company,
+        employee__setor=sector_name,
+        status='COMPLETED'
+    )
+    
+    if not assignments.exists():
+        return {"error": "Nenhuma resposta concluída encontrada para este departamento.", "status": "failed"}
+
+    # 2. Agrega respostas para o prompt
+    all_answers = FormAnswer.objects.filter(assignment__in=assignments).select_related('question')
+    
+    aggregation = {}
+    for a in all_answers:
+        q_text = a.question.text
+        if q_text not in aggregation:
+            aggregation[q_text] = []
+        # Limitamos a amostra para nao estourar o contexto se houver muitos funcionarios
+        if len(aggregation[q_text]) < 20: 
+            aggregation[q_text].append(a.get_display_value())
+
+    context = ""
+    for q_text, values in aggregation.items():
+        context += f"Pergunta: {q_text}\nRespostas (amostra): {', '.join(map(str, values))}\n\n"
+
+    prompt = f"""
+    Como um consultor sênior em Psicologia Organizacional e SST, analise o CLIMA SOCIOEMOCIONAL do departamento '{sector_name}' da empresa {company.nome_fantasia}.
+    Baseie-se nestes dados agregados (anônimos) de {assignments.count()} funcionários:
+    
+    {context}
+    
+    Gere um relatório JSON rigoroso com:
+    1. clima_geral: Resumo do estado emocional coletivo.
+    2. pontos_fortes: O que está funcionando bem no setor.
+    3. areas_alerta: Riscos de clima ou esgotamento identificados.
+    4. sugestoes_gestao: Acões recomendadas para o gestor do setor.
+    5. indice_bem_estar: Valor de 0 a 100.
+    """
+
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": "Você é um analista de clima organizacional que responde exclusivamente em JSON."},
+                {"role": "user", "content": prompt}
+            ],
+            response_format={ "type": "json_object" },
+            temperature=0.2
+        )
+        data = json.loads(response.choices[0].message.content)
+        
+        # 3. Salva ou atualiza o laudo do departamento
+        diagnostic, created = DepartmentDiagnostic.objects.update_or_create(
+            company=company,
+            setor=sector_name,
+            form_instance=form_instance,
+            defaults={
+                'diagnostic_data': data,
+                'generated_by': user
+            }
+        )
+        return diagnostic
+        
+    except Exception as e:
+        print(f"ERROR in Department AI Analysis: {str(e)}")
+        return {"error": f"Erro na IA: {str(e)}", "status": "failed"}
+

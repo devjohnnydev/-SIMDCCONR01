@@ -31,4 +31,10 @@ urlpatterns = [
     path('dashboard/admin/signatarios/', views.manage_signatarios, name='manage_signatarios'),
     path('dashboard/admin/signatarios/<int:pk>/delete/', views.delete_signatario, name='delete_signatario'),
     path('dashboard/admin/signatarios/<int:pk>/edit/', views.edit_signatario, name='edit_signatario'),
+
+    # Relatórios de Departamento (Empresa)
+    path('dashboard/company/department-reports/', views.department_reports_list, name='department_reports_list'),
+    path('dashboard/company/department-report/<str:setor>/<int:form_id>/', views.view_department_report, name='view_department_report'),
+    path('dashboard/company/department-report/generate/', views.generate_department_report_action, name='generate_department_report'),
 ]
+

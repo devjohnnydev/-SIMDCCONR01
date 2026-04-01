@@ -185,3 +185,44 @@ class EmployeeDiagnostic(models.Model):
         
     def __str__(self):
         return f"Laudo {self.validation_code} - {self.assignment.employee.nome}"
+
+
+class DepartmentDiagnostic(models.Model):
+    """
+    Laudo agregado por departamento/setor.
+    Focado no clima socioemocional e andamento das equipes.
+    """
+    company = models.ForeignKey(
+        'companies.Company',
+        on_delete=models.CASCADE,
+        related_name='department_diagnostics',
+        verbose_name='Empresa'
+    )
+    setor = models.CharField('Setor/Departamento', max_length=100)
+    form_instance = models.ForeignKey(
+        'forms_builder.FormInstance',
+        on_delete=models.CASCADE,
+        related_name='department_diagnostics',
+        verbose_name='Formulário'
+    )
+    
+    diagnostic_data = models.JSONField('Dados da Análise (IA)', default=dict)
+    
+    generated_at = models.DateTimeField('Gerado em', auto_now_add=True)
+    generated_by = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='department_diagnostics',
+        verbose_name='Gerado por'
+    )
+
+    class Meta:
+        verbose_name = 'Laudo de Departamento'
+        verbose_name_plural = 'Laudos de Departamento'
+        unique_together = [['company', 'setor', 'form_instance']]
+        ordering = ['-generated_at']
+
+    def __str__(self):
+        return f"Clima {self.setor} - {self.company.nome_fantasia}"
+

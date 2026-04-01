@@ -262,8 +262,9 @@
                                     {% if diagnostic.signature_method == 'GOVBR' %}
                                     <small class="d-block text-success fw-bold" style="font-size: 0.75rem;"><i
                                             class="bi bi-check-circle-fill me-1"></i>Autenticado via Gov.br</small>
-                                    <small class="d-block text-dark mt-1" style="font-size: 0.70rem;">Token: {{
-                                        diagnostic.govbr_token|default:"N/A" }}</small>
+                                    <small class="d-block text-dark mt-1" style="font-size: 0.70rem;">Token: {% if
+                                        diagnostic.govbr_token %}{{ diagnostic.govbr_token }}{% else %}N/A{% endif
+                                        %}</small>
                                     {% else %}
                                     <small class="d-block text-dark fw-medium" style="font-size: 0.75rem;">Assinado por:
                                         <strong>Representante Legal</strong></small>
@@ -290,12 +291,15 @@
                                     style="bottom: 5px; left: 0;">Assinado Eletronicamente</span>
                                 {% endif %}
                             </div>
-                            <h6 class="fw-bold text-dark mb-0">{{
-                                diagnostic.signed_by.get_full_name|default:diagnostic.signed_by.email }}</h6>
-                            <small class="text-muted d-block">{{ diagnostic.signed_by.get_role_display|default:"Perito /
-                                Especialista em Saúde Ocupacional" }}</small>
-                            <small class="text-muted d-block mt-1">CREA/CRM/CRP: {{
-                                diagnostic.signed_by.professional_crp|default:"___________________" }}</small>
+                            <h6 class="fw-bold text-dark mb-0">{% if diagnostic.signed_by.get_full_name %}{{
+                                diagnostic.signed_by.get_full_name }}{% else %}{{ diagnostic.signed_by.email }}{% endif
+                                %}</h6>
+                            <small class="text-muted d-block">{% if diagnostic.signed_by.get_role_display %}{{
+                                diagnostic.signed_by.get_role_display }}{% else %}Perito / Especialista em Saúde
+                                Ocupacional{% endif %}</small>
+                            <small class="text-muted d-block mt-1">CREA/CRM/CRP: {% if
+                                diagnostic.signed_by.professional_crp %}{{ diagnostic.signed_by.professional_crp }}{%
+                                else %}___________________{% endif %}</small>
                         </div>
                         {% endif %}
                     </div>
@@ -478,6 +482,30 @@
     };
 
     new Chart(ctx, config);
+
+    // Format python string lists into actual HTML lists
+    document.querySelectorAll('p.lh-lg').forEach(el => {
+        let text = el.innerText || el.textContent;
+        text = text.trim();
+        if (text.startsWith("['") && text.endsWith("']")) {
+            try {
+                // Captura itens entre aspas simples, lidando com escape (\\') de forma simples se houver
+                let items = text.match(/'([^']*)'|"([^"]*)"/g);
+                if (items) {
+                    let htmlList = "<ul class='mb-0 ps-3'>";
+                    items.forEach(i => {
+                        let cleanStr = i.replace(/^['"]|['"]$/g, '').trim();
+                        if (cleanStr.length > 0) {
+                            htmlList += "<li class='mb-2'>" + cleanStr + "</li>";
+                        }
+                    });
+                    htmlList += "</ul>";
+                    el.innerHTML = htmlList;
+                }
+            } catch (e) { console.error("Could not parse list", e); }
+        }
+    });
+
     });
 </script>
 {% endblock %}

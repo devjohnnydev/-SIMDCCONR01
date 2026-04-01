@@ -484,6 +484,35 @@
                 font-size: 2rem;
             }
         }
+        @media print {
+            @page {
+                size: A4;
+                margin: 1.5cm;
+            }
+            body {
+                background-color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .no-print, .navbar, footer, .btn, .alert, .breadcrumb, .dropdown-menu {
+                display: none !important;
+            }
+            .container, .container-fluid {
+                width: 100% !important;
+                max-width: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .card {
+                border: 1px solid var(--border-color) !important;
+                box-shadow: none !important;
+                break-inside: avoid;
+            }
+            .card-header {
+                background-color: #f8fafc !important;
+                border-bottom: 1px solid var(--border-color) !important;
+            }
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>

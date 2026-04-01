@@ -133,9 +133,77 @@
 <style>
     .bg-light-blue { background-color: #f0f7ff; }
     @media print {
-        .btn, .navbar { display: none !important; }
-        body { background-color: white !important; }
-        .card { border: none !important; box-shadow: none !important; }
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        body {
+            background-color: white !important;
+            color: #000 !important;
+            font-size: 11pt !important;
+        }
+        .container {
+            width: 100% !important;
+            max-width: none !important;
+            padding: 0 !important;
+        }
+        .col-lg-10 {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+        }
+        .card {
+            border: 1px solid #eee !important;
+            box-shadow: none !important;
+            break-inside: auto;
+        }
+        .card-header {
+            background-color: #212529 !important;
+            color: white !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .card-body {
+            padding: 20pt !important;
+        }
+        .row {
+            display: flex !important;
+            flex-wrap: wrap !important;
+        }
+        /* Keep the metrics row as a simple grid in print */
+        .card-body.bg-light .row.g-4 {
+            display: flex !important;
+            flex-direction: row !important;
+        }
+        .card-body.bg-light .col-md-3 {
+            width: 25% !important;
+            border-right: 1px solid #ddd !important;
+        }
+        .card-body.bg-light .col-md-3:last-child {
+            border-right: none !important;
+        }
+        /* Stack larger sections */
+        .mb-5, .mb-4 {
+            break-inside: avoid;
+            margin-bottom: 25pt !important;
+        }
+        .col-md-6 {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 15pt !important;
+        }
+        .btn, .navbar, .no-print {
+            display: none !important;
+        }
+        h2, h4, h5 {
+            color: #000 !important;
+            page-break-after: avoid;
+        }
+        .badge {
+            border: 1px solid #ccc !important;
+            color: #000 !important;
+            background: transparent !important;
+        }
     }
 </style>
 {% endblock %}

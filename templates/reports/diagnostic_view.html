@@ -312,77 +312,70 @@
 
 <style>
     @media print {
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
         body {
             background-color: white !important;
+            color: #000 !important;
+            font-size: 11pt !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
-
-        .breadcrumb,
-        .btn,
-        .card-header i,
+        .container {
+            width: 100% !important;
+            max-width: none !important;
+            padding: 0 !important;
+        }
+        .row {
+            display: block !important;
+        }
+        .col-lg-4, .col-lg-8 {
+            width: 100% !important;
+            max-width: 100% !important;
+            display: block !important;
+            float: none !important;
+            padding: 0 !important;
+        }
+        .card {
+            border: 1px solid #eee !important;
+            box-shadow: none !important;
+            margin-bottom: 20pt !important;
+            break-inside: avoid;
+        }
+        section {
+            break-inside: avoid;
+            margin-bottom: 25pt !important;
+        }
+        .govbr-signature-box {
+            border: 1px solid #000 !important;
+            break-inside: avoid;
+        }
+        .print-signature-block {
+            break-inside: avoid;
+            margin-top: 30pt !important;
+        }
+        h2, h4, h5 {
+            color: #000 !important;
+            page-break-after: avoid;
+        }
+        p {
+            orphans: 3;
+            widows: 3;
+        }
         .d-print-none {
             display: none !important;
         }
-
-        .card {
-            border: none !important;
-            box-shadow: none !important;
-            background: white !important;
+        .breadcrumb, .btn {
+            display: none !important;
         }
-
-        .container {
-            max-width: 100% !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .col-lg-4 {
-            width: 100% !important; float: none !important;
-            float: left;
-            padding-right: 20px;
-        }
-
-        .col-lg-8 {
-            width: 100% !important; float: none !important;
-            float: left;
-        }
-
-        .shadow-sm {
-            box-shadow: none !important;
-            border: 1px solid #dee2e6 !important;
-            background: white !important;
-        }
-
-        .bg-light {
-            background-color: #f8f9fa !important;
-        }
-
-        .bg-white {
-            background-color: #ffffff !important;
-        }
-
-        .break-inside-avoid {
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
-        section {
-            page-break-inside: avoid;
-            break-inside: avoid;
-            margin-bottom: 2rem !important;
-        }
-
-        .govbr-signature-box {
-            border: 1px solid #000 !important;
-        }
-
-        .border-start,
-        .border-primary,
-        .border-secondary,
-        .border-warning {
-            border-left-width: 4px !important;
+        /* Ensure Radar chart is visible and well-sized in print */
+        canvas {
+            max-width: 300px !important;
+            height: auto !important;
+            margin: 0 auto !important;
+            display: block !important;
         }
     }
 

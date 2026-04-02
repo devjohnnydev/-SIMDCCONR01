@@ -32,7 +32,7 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; overflow-x: hidden; }
 
         nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 1rem 5%; background: var(--nav-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-        .nav-logo { display: flex; align-items: center; gap: 0.8rem; font-weight: 800; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+        .nav-logo { display: inline-flex; align-items: center; font-weight: 800; font-size: 1.25rem; color: var(--text); text-decoration: none; }
         .nav-logo span { color: var(--primary); }
         .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
@@ -92,7 +92,7 @@
         .plan-features i { color: var(--primary); }
 
         footer { padding: 6rem 5% 4rem; background: var(--secondary); color: white; text-align: center; }
-        footer .nav-logo { color: white; justify-content: center; margin-bottom: 2rem; }
+        footer .nav-logo { color: white; display: flex; justify-content: center; margin-bottom: 2rem; }
         footer p { color: #94a3b8; font-size: 0.9rem; }
         footer a { color: var(--primary); text-decoration: none; }
 

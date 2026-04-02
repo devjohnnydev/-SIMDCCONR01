@@ -27,5 +27,8 @@ python manage.py setup_initial_data
 echo "Running fix_missing_options..."
 python fix_missing_options.py
 
+echo "Running collectstatic..."
+python manage.py collectstatic --noinput
+
 echo "Starting Gunicorn..."
 exec gunicorn saas_nr01.wsgi:application --bind 0.0.0.0:$PORT

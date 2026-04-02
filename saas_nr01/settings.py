@@ -133,6 +133,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.app',
     'https://*.up.railway.app',
     'https://web-production-4c50c.up.railway.app',
+    'https://safeclima.com.br',
+    'https://www.safeclima.com.br',
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -153,7 +155,7 @@ EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='SIMDCCONR01 <noreply@simdcconr01.com.br>')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='SafeClima NR-01 <noreply@safeclima.com.br>')
 
 # Se não preencheu usuário do email (ambiente de desenvolvimento/teste local), redirecionar logs de email pro console
 if not EMAIL_HOST_USER:

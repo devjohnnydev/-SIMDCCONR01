@@ -26,9 +26,18 @@ class ResendBackend(BaseEmailBackend):
 
     def _send_api(self, message):
         try:
+            # Limpeza do remetente (Resend prefere apenas o e-mail ou formato RFC correto)
+            from_email = message.from_email
+            if '<' in from_email and '>' in from_email:
+                # Extrai apenas o que está dentro de < > se o Resend estiver rejeitando o formato completo
+                import re
+                match = re.search(r'<(.*?)>', from_email)
+                if match:
+                    from_email = match.group(1)
+
             # Resend API Payload
             payload = {
-                "from": message.from_email,
+                "from": from_email,
                 "to": message.to,
                 "subject": message.subject,
                 "html": message.body if message.content_subtype == 'html' else None,

@@ -625,3 +625,27 @@ def view_department_report(request, setor, form_id):
         'data': report.diagnostic_data
     })
 
+
+def test_email(request):
+    """View temporaria para diagnostico de erro de SMTP via interface."""
+    from django.core.mail import send_mail
+    from django.conf import settings
+    from django.http import HttpResponse
+    
+    subject = "Teste de Diagnóstico SMTP - SIMDCCONR01"
+    message = f"Este é um e-mail de teste para verificar as configurações de produção.\n\nHost: {settings.EMAIL_HOST}\nPorta: {settings.EMAIL_PORT}\nSSL: {settings.EMAIL_USE_SSL}\nTLS: {settings.EMAIL_USE_TLS}\nUser: {settings.EMAIL_HOST_USER}"
+    recipient_list = ["johnnybraga2@gmail.com"] # Destinatário fixo para o teste
+    
+    try:
+        sent = send_mail(
+            subject, 
+            message, 
+            settings.DEFAULT_FROM_EMAIL, 
+            recipient_list, 
+            fail_silently=False
+        )
+        return HttpResponse(f"<h1>Sucesso!</h1><p>E-mail enviado para {recipient_list}. Status: {sent}</p>")
+    except Exception as e:
+        import traceback
+        error_msg = f"<h1>Erro no Envio</h1><pre>{str(e)}</pre><h2>Traceback:</h2><pre>{traceback.format_exc()}</pre>"
+        return HttpResponse(error_msg)

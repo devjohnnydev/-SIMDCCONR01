@@ -149,11 +149,17 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 WHITENOISE_USE_FINDERS = True
 
 # ----------------- EMAIL / RECUPERACAO DE SENHA -----------------
+# ----------------- EMAIL / RECUPERACAO DE SENHA -----------------
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+
+# Django doesn't allow both to be True
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
+if EMAIL_USE_SSL:
+    EMAIL_USE_TLS = False
+
 EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')

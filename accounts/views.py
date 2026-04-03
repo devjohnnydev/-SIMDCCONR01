@@ -638,6 +638,8 @@ def test_email(request):
         ('email-ssl.com.br', 587),
         ('smtp.locaweb.com.br', 465),
         ('smtp.locaweb.com.br', 587),
+        ('smtp.gmail.com', 465),
+        ('smtp.gmail.com', 587),
     ]
     
     scan_results = "<h2>Scanner de Conectividade SMTP</h2><ul>"

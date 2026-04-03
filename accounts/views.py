@@ -651,6 +651,7 @@ def test_resend(request):
         req = urllib.request.Request("https://api.resend.com/emails", data=data)
         req.add_header('Content-Type', 'application/json')
         req.add_header('Authorization', f'Bearer {api_key}')
+        req.add_header('User-Agent', 'SafeClima-SaaS/1.0')
         
         with urllib.request.urlopen(req) as response:
             res_body = response.read().decode('utf-8')

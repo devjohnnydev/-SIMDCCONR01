@@ -3,9 +3,10 @@
 set -e
 
 # Makemigrations should be run locally and committed to Git
-python manage.py makemigrations --noinput
+# python manage.py makemigrations --noinput
 
-echo "Checking for existing DB columns..."
+echo "Checking for existing DB columns (Faking old migrations)..."
+# Consolidate fake migrations into fewer calls if possible
 python manage.py migrate --fake reports 0003 --noinput || true
 python manage.py migrate --fake accounts 0003 --noinput || true
 python manage.py migrate --fake reports 0004 --noinput || true

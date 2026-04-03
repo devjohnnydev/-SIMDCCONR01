@@ -632,20 +632,54 @@ def test_email(request):
     from django.conf import settings
     from django.http import HttpResponse
     
+    # Mascarar variáveis sensíveis para o log de tela
+    user = getattr(settings, 'EMAIL_HOST_USER', 'NÃO DEFINIDO')
+    host = getattr(settings, 'EMAIL_HOST', 'NÃO DEFINIDO')
+    port = getattr(settings, 'EMAIL_PORT', 'NÃO DEFINIDO')
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'NÃO DEFINIDO')
+    backend = settings.EMAIL_BACKEND
+    
     subject = "Teste de Diagnóstico SMTP - SIMDCCONR01"
-    message = f"Este é um e-mail de teste para verificar as configurações de produção.\n\nHost: {settings.EMAIL_HOST}\nPorta: {settings.EMAIL_PORT}\nSSL: {settings.EMAIL_USE_SSL}\nTLS: {settings.EMAIL_USE_TLS}\nUser: {settings.EMAIL_HOST_USER}"
+    message = (
+        f"Diagnóstico de Configurações:\n"
+        f"-------------------------------\n"
+        f"Backend: {backend}\n"
+        f"Host: {host}\n"
+        f"Porta: {port}\n"
+        f"User: {user}\n"
+        f"From: {from_email}\n"
+        f"SSL: {settings.EMAIL_USE_SSL}\n"
+        f"TLS: {settings.EMAIL_USE_TLS}\n"
+    )
+    
     recipient_list = ["johnnybraga2@gmail.com"] # Destinatário fixo para o teste
     
     try:
-        sent = send_mail(
+        # Tenta enviar e captura o retorno
+        sent_count = send_mail(
             subject, 
             message, 
-            settings.DEFAULT_FROM_EMAIL, 
+            from_email, 
             recipient_list, 
             fail_silently=False
         )
-        return HttpResponse(f"<h1>Sucesso!</h1><p>E-mail enviado para {recipient_list}. Status: {sent}</p>")
+        
+        status_msg = f"<h1>Status: SUCESSO</h1>" if sent_count else "<h1>Status: FALHA (Zero e-mails enviados)</h1>"
+        return HttpResponse(
+            f"{status_msg}"
+            f"<h3>Detalhes do Envio:</h3>"
+            f"<pre>{message}</pre>"
+            f"<p>E-mail disparado para {recipient_list}. Se não chegou, verifique o SPAM ou se a Locaweb exige validação do domínio {from_email.split('@')[-1].replace('>', '')}.</p>"
+        )
     except Exception as e:
         import traceback
-        error_msg = f"<h1>Erro no Envio</h1><pre>{str(e)}</pre><h2>Traceback:</h2><pre>{traceback.format_exc()}</pre>"
+        error_msg = (
+            f"<h1>Status: ERRO NO SMTP</h1>"
+            f"<h3>Detalhes capturados:</h3>"
+            f"<pre>{str(e)}</pre>"
+            f"<h3>Configurações que o Django usou:</h3>"
+            f"<pre>{message}</pre>"
+            f"<h3>Traceback Completo:</h3>"
+            f"<pre>{traceback.format_exc()}</pre>"
+        )
         return HttpResponse(error_msg)

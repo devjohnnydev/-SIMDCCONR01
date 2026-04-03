@@ -163,7 +163,7 @@ if EMAIL_USE_SSL:
 EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='"SafeClima NR-01" <noreply@safeclima.com.br>')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 
 # Se não preencheu usuário do email (ambiente de desenvolvimento/teste local), redirecionar logs de email pro console
 if not EMAIL_HOST_USER:

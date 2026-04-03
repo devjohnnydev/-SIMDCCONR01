@@ -641,7 +641,7 @@ def test_resend(request):
     
     payload = {
         "from": from_email,
-        "to": ["johnnybraga2@gmail.com"],
+        "to": ["bragabraga19888@gmail.com"],
         "subject": "Teste Direto Resend API",
         "html": "<h1>Funciona!</h1><p>Se voce esta lendo isso, a API do Resend respondeu com sucesso.</p>"
     }

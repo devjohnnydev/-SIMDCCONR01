@@ -627,59 +627,76 @@ def view_department_report(request, setor, form_id):
 
 
 def test_email(request):
-    """View temporaria para diagnostico de erro de SMTP via interface."""
+    """View de scanner SMTP para diagnosticar bloqueios de rede no Railway."""
     from django.core.mail import send_mail
     from django.conf import settings
     from django.http import HttpResponse
+    import socket
     
-    # Mascarar variáveis sensíveis para o log de tela
-    user = getattr(settings, 'EMAIL_HOST_USER', 'NÃO DEFINIDO')
-    host = getattr(settings, 'EMAIL_HOST', 'NÃO DEFINIDO')
-    port = getattr(settings, 'EMAIL_PORT', 'NÃO DEFINIDO')
-    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'NÃO DEFINIDO')
-    backend = settings.EMAIL_BACKEND
+    hosts_to_test = [
+        ('email-ssl.com.br', 465),
+        ('email-ssl.com.br', 587),
+        ('smtp.locaweb.com.br', 465),
+        ('smtp.locaweb.com.br', 587),
+    ]
     
-    subject = "Teste de Diagnóstico SMTP - SIMDCCONR01"
-    message = (
-        f"Diagnóstico de Configurações:\n"
-        f"-------------------------------\n"
-        f"Backend: {backend}\n"
-        f"Host: {host}\n"
-        f"Porta: {port}\n"
-        f"User: {user}\n"
-        f"From: {from_email}\n"
-        f"SSL: {settings.EMAIL_USE_SSL}\n"
-        f"TLS: {settings.EMAIL_USE_TLS}\n"
+    scan_results = "<h2>Scanner de Conectividade SMTP</h2><ul>"
+    working_host = None
+    working_port = None
+    
+    for host, port in hosts_to_test:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(5)
+        result = s.connect_ex((host, port))
+        if result == 0:
+            scan_results += f"<li style='color:green'>[ATIVO] {host}:{port} - Conexão estabelecida com sucesso!</li>"
+            if not working_host: # Pega o primeiro que funcionar
+                working_host, working_port = host, port
+        else:
+            scan_results += f"<li style='color:red'>[FORA] {host}:{port} - Timeout ou Bloqueio (Erro: {result})</li>"
+        s.close()
+    scan_results += "</ul>"
+    
+    if not working_host:
+        return HttpResponse(
+            f"{scan_results}"
+            f"<h1>ERRO CRÍTICO</h1>"
+            f"<p>Nenhuma combinação de Host/Porta da Locaweb respondeu. "
+            f"Isso indica que o Railway está sendo bloqueado ou os endereços mudaram.</p>"
+        )
+
+    # Tenta enviar de verdade pelo primeiro que funcionou
+    from django.core.mail.backends.smtp import EmailBackend
+    backend = EmailBackend(
+        host=working_host,
+        port=working_port,
+        username=settings.EMAIL_HOST_USER,
+        password=settings.EMAIL_HOST_PASSWORD,
+        use_tls=(working_port == 587),
+        use_ssl=(working_port == 465),
+        timeout=10
     )
     
-    recipient_list = ["johnnybraga2@gmail.com"] # Destinatário fixo para o teste
-    
     try:
-        # Tenta enviar e captura o retorno
-        sent_count = send_mail(
-            subject, 
-            message, 
-            from_email, 
-            recipient_list, 
-            fail_silently=False
+        from django.core.mail import EmailMessage
+        msg = EmailMessage(
+            "Teste de Scanner SMTP - SIMDCCONR01",
+            f"Conexão bem sucedida via {working_host}:{working_port}",
+            settings.DEFAULT_FROM_EMAIL,
+            ["johnnybraga2@gmail.com"],
+            connection=backend
         )
-        
-        status_msg = f"<h1>Status: SUCESSO</h1>" if sent_count else "<h1>Status: FALHA (Zero e-mails enviados)</h1>"
+        msg.send(fail_silently=False)
         return HttpResponse(
-            f"{status_msg}"
-            f"<h3>Detalhes do Envio:</h3>"
-            f"<pre>{message}</pre>"
-            f"<p>E-mail disparado para {recipient_list}. Se não chegou, verifique o SPAM ou se a Locaweb exige validação do domínio {from_email.split('@')[-1].replace('>', '')}.</p>"
+            f"{scan_results}"
+            f"<h1>SUCESSO NO ENVIO!</h1>"
+            f"<p>O e-mail foi enviado com sucesso usando <b>{working_host}:{working_port}</b>.</p>"
+            f"<p><b>IMPORTANTE:</b> Vá no Railway e ajuste EMAIL_HOST='{working_host}' e EMAIL_PORT='{working_port}'.</p>"
         )
     except Exception as e:
-        import traceback
-        error_msg = (
-            f"<h1>Status: ERRO NO SMTP</h1>"
-            f"<h3>Detalhes capturados:</h3>"
+        return HttpResponse(
+            f"{scan_results}"
+            f"<h1>CONEXÃO OK, MAS ERRO NO ENVIO</h1>"
             f"<pre>{str(e)}</pre>"
-            f"<h3>Configurações que o Django usou:</h3>"
-            f"<pre>{message}</pre>"
-            f"<h3>Traceback Completo:</h3>"
-            f"<pre>{traceback.format_exc()}</pre>"
+            f"<p>A rede funcionou em {working_host}:{working_port}, mas a Locaweb rejeitou o usuário/senha ou o remetente.</p>"
         )
-        return HttpResponse(error_msg)

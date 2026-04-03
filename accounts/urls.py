@@ -58,6 +58,5 @@ urlpatterns = [
     path('dashboard/company/department-reports/', views.department_reports_list, name='department_reports_list'),
     path('dashboard/company/department-report/<str:setor>/<int:form_id>/', views.view_department_report, name='view_department_report'),
     path('dashboard/company/department-report/generate/', views.generate_department_report_action, name='generate_department_report'),
-    path('test-email/', views.test_email, name='test_email'),
 ]
 

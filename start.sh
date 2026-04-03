@@ -19,14 +19,14 @@ python manage.py migrate --fake reports 0007 --noinput || true
 echo "Running migrate..."
 python manage.py migrate --noinput
 
-# echo "Running fix_db..."
-# python fix_db.py
+echo "Running fix_db..."
+python fix_db.py
 
 echo "Running setup_initial_data..."
 python manage.py setup_initial_data
 
-# echo "Running fix_missing_options..."
-# python fix_missing_options.py
+echo "Running fix_missing_options..."
+python fix_missing_options.py
 
 echo "Running collectstatic..."
 python manage.py collectstatic --noinput

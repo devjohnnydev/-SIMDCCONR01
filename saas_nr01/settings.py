@@ -150,7 +150,14 @@ WHITENOISE_USE_FINDERS = True
 
 # ----------------- EMAIL / RECUPERACAO DE SENHA -----------------
 # ----------------- EMAIL / RECUPERACAO DE SENHA -----------------
-EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+# No Railway, o SMTP tradicional está bloqueado. Usamos a API do Resend via HTTP.
+RESEND_API_KEY = config('RESEND_API_KEY', default='')
+
+if RESEND_API_KEY:
+    EMAIL_BACKEND = 'saas_nr01.email_backends.ResendBackend'
+else:
+    EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 

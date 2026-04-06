@@ -67,7 +67,7 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
-elif not config('RAILWAY_ENVIRONMENT', default=False, cast=bool):
+elif not config('RAILWAY_ENVIRONMENT', default=False):
     # Serve media locally even if DEBUG=False (if not in production)
     from django.views.static import serve
     import re

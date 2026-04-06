@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from decouple import config
 from django.views.generic import TemplateView
 from django.http import JsonResponse
 import json, urllib.request
@@ -58,6 +59,7 @@ urlpatterns = [
     path('forms/', include('forms_builder.urls')),
     path('reports/', include('reports.urls')),
     path('billing/', include('billing.urls')),
+    path('support/', include('support.urls')),
     path('api/', include('accounts.api_urls')),
     path('api/cnpj/<str:cnpj>/', cnpj_lookup, name='cnpj_lookup'),
 ]
@@ -65,5 +67,12 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+elif not config('RAILWAY_ENVIRONMENT', default=False, cast=bool):
+    # Serve media locally even if DEBUG=False (if not in production)
+    from django.views.static import serve
+    import re
+    urlpatterns += [
+        path(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), serve, {'document_root': settings.MEDIA_ROOT}),
+    ]
 else:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

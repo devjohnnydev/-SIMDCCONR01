@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 
 from .models import Company, Announcement
-from .forms import CompanySettingsForm, AnnouncementForm
+from .forms import CompanySettingsForm, AnnouncementForm, CompanyAdminForm
 from audit.models import AuditLog
 
 
@@ -120,6 +120,34 @@ def company_suspend(request, pk):
     
     messages.success(request, f'Empresa {company.nome_fantasia} suspensa.')
     return redirect('companies:list')
+
+
+@login_required
+@require_admin_master
+def company_edit(request, pk):
+    """Edita detalhes de faturamento e plano de uma empresa (apenas ADMIN_MASTER)."""
+    company = get_object_or_404(Company, pk=pk)
+    
+    if request.method == 'POST':
+        form = CompanyAdminForm(request.POST, instance=company)
+        if form.is_valid():
+            form.save()
+            AuditLog.log(
+                user=request.user,
+                action='UPDATE',
+                description=f'Dados de faturamento da empresa {company.nome_fantasia} atualizados',
+                obj=company,
+                request=request
+            )
+            messages.success(request, 'Dados da empresa atualizados com sucesso!')
+            return redirect('companies:list')
+    else:
+        form = CompanyAdminForm(instance=company)
+        
+    return render(request, 'companies/company_edit.html', {
+        'form': form,
+        'company': company
+    })
 
 
 @login_required

@@ -17,7 +17,7 @@ from django.utils import timezone
 from .models import Report, EmployeeDiagnostic
 from .utils_charts import generate_pie_chart_svg
 from forms_builder.models import FormInstance, FormAnswer, FormQuestion, FormAssignment
-from companies.views import require_company_admin
+from companies.views import require_company_admin, require_admin_master
 from audit.models import AuditLog
 
 
@@ -31,12 +31,8 @@ def report_list(request):
     return render(request, 'reports/report_list.html', {'reports': reports})
 
 
-@login_required
-@require_company_admin
-def report_dashboard(request):
-    """Dashboard com metricas gerais da empresa."""
-    company = request.user.company
-    
+def get_dashboard_data(company):
+    """Helper function to fetch dashboard metrics for a company."""
     active_forms = FormInstance.objects.filter(company=company, status='ACTIVE')
     
     total_employees = company.get_employee_count()
@@ -79,7 +75,7 @@ def report_dashboard(request):
         status='ACTIVE'
     ).values('setor').annotate(count=Count('id')).order_by('-count')
     
-    context = {
+    return {
         'company': company,
         'total_employees': total_employees,
         'active_forms_count': active_forms_count,
@@ -88,6 +84,29 @@ def report_dashboard(request):
         'wellbeing_score': round(wellbeing_score, 2) if wellbeing_score else None,
         'sector_data': list(sector_data),
     }
+
+
+@login_required
+@require_company_admin
+def report_dashboard(request):
+    """Dashboard com metricas gerais da empresa."""
+    company = request.user.company
+    context = get_dashboard_data(company)
+    return render(request, 'reports/dashboard.html', context)
+
+
+@login_required
+@require_admin_master
+def admin_company_dashboard(request, company_pk):
+    """Dashboard de uma empresa específica visto pelo ADMIN_MASTER."""
+    from companies.models import Company
+    company = get_object_or_404(Company, pk=company_pk)
+    
+    # Injeta a empresa no request para o context_processor de logo/cores
+    request.current_company = company
+    
+    context = get_dashboard_data(company)
+    context['is_admin_view'] = True
     
     return render(request, 'reports/dashboard.html', context)
 

@@ -33,6 +33,34 @@ class CompanySettingsForm(forms.ModelForm):
         }
 
 
+class CompanyAdminForm(forms.ModelForm):
+    """Formulario para ADMIN_MASTER gerenciar planos e faturamento da empresa."""
+    
+    class Meta:
+        model = Company
+        fields = [
+            'plan', 'custom_price_monthly', 'custom_price_yearly',
+            'subscription_status', 'status', 'stripe_customer_id',
+            'stripe_subscription_id', 'current_period_end'
+        ]
+        widgets = {
+            'plan': forms.Select(attrs={'class': 'form-select'}),
+            'custom_price_monthly': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'custom_price_yearly': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'subscription_status': forms.Select(choices=[
+                ('active', 'Ativa'),
+                ('trialing', 'Trial'),
+                ('past_due', 'Atrasada'),
+                ('canceled', 'Cancelada'),
+                ('inactive', 'Inativa'),
+            ], attrs={'class': 'form-select'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'stripe_customer_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'stripe_subscription_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'current_period_end': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        }
+
+
 class AnnouncementForm(forms.ModelForm):
     """Formulario para criacao de comunicados."""
     

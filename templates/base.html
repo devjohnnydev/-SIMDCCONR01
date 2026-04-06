@@ -535,7 +535,12 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     {% if user.is_authenticated %}
-                    <li class="nav-item me-3 d-none d-lg-block">
+                    <li class="nav-item me-2">
+                        <a class="nav-link bg-white bg-opacity-10 rounded-pill px-3 py-1 btn btn-sm" href="{% url 'support:ticket_list' %}">
+                            <i class="bi bi-chat-dots-fill me-1"></i> Suporte
+                        </a>
+                    </li>
+                    <li class="nav-item me-2 d-none d-lg-block">
                         <a class="nav-link bg-white bg-opacity-10 rounded-pill px-3 py-1 btn btn-sm" href="{% url 'accounts:dashboard' %}">
                             <i class="bi bi-speedometer2 me-1"></i> Dashboard
                         </a>

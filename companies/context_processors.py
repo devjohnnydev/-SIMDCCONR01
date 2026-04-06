@@ -18,7 +18,12 @@ def company_context(request):
     if hasattr(request, 'current_company') and request.current_company:
         company = request.current_company
         context['current_company'] = company
-        context['company_logo'] = company.logo.url if company.logo else None
+        try:
+            if company.logo:
+                context['company_logo'] = company.logo.url
+        except ValueError:
+            # Em alguns casos o arquivo pode não existir no disco gerando erro no .url
+            context['company_logo'] = None
         context['company_primary_color'] = company.cor_primaria
         context['company_secondary_color'] = company.cor_secundaria
     

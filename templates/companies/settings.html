@@ -85,6 +85,29 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-credit-card"></i> Plano e Assinatura</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>Plano:</strong> {{ company.plan.name|default:"Nenhum" }}</p>
+                    <p class="mb-1"><strong>Status:</strong> 
+                        <span class="badge {% if company.subscription_status == 'active' %}bg-success{% else %}bg-warning{% endif %}">
+                            {{ company.subscription_status|capfirst }}
+                        </span>
+                    </p>
+                    <p class="mb-3"><strong>Valor Mensal:</strong> R$ {{ company.get_price_monthly }}</p>
+                    
+                    <hr>
+                    
+                    <div class="d-grid">
+                        <a href="{% url 'support:ticket_create' %}?subject=Alteracao de Plano" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-arrow-repeat"></i> Alterar Plano / Suporte
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

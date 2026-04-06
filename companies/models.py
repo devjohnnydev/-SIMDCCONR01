@@ -58,6 +58,16 @@ class Company(models.Model):
         verbose_name='Plano'
     )
     
+    # Custom Pricing (Overrides Plan default if set)
+    custom_price_monthly = models.DecimalField('Preco Mensal Customizado', max_digits=10, decimal_places=2, null=True, blank=True)
+    custom_price_yearly = models.DecimalField('Preco Anual Customizado', max_digits=10, decimal_places=2, null=True, blank=True)
+    
+    # Stripe Integration
+    stripe_customer_id = models.CharField('ID Cliente Stripe', max_length=100, blank=True)
+    stripe_subscription_id = models.CharField('ID Assinatura Stripe', max_length=100, blank=True)
+    subscription_status = models.CharField('Status Assinatura', max_length=50, default='inactive')
+    current_period_end = models.DateTimeField('Fim do Periodo Atual', null=True, blank=True)
+    
     configs = models.JSONField('Configuracoes', default=dict, blank=True)
     
     created_at = models.DateTimeField('Criado em', auto_now_add=True)
@@ -99,8 +109,24 @@ class Company(models.Model):
     
     @property
     def is_active(self):
-        """Verifica se a empresa esta ativa."""
-        return self.status == 'ACTIVE'
+        """Verifica se a empresa esta ativa conforme status e assinatura."""
+        return self.status == 'ACTIVE' and self.subscription_status in ['active', 'trialing']
+    
+    def get_price_monthly(self):
+        """Retorna o preco mensal efetivo (customizado ou do plano)."""
+        if self.custom_price_monthly:
+            return self.custom_price_monthly
+        if self.plan:
+            return self.plan.price_monthly
+        return 0
+    
+    def get_price_yearly(self):
+        """Retorna o preco anual efetivo (customizado ou do plano)."""
+        if self.custom_price_yearly:
+            return self.custom_price_yearly
+        if self.plan:
+            return self.plan.price_yearly
+        return 0
     
     @property
     def is_pending(self):

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'reports',
     'billing',
     'audit',
+    'support',
     'landing.apps.LandingAppConfig',
 ]
 

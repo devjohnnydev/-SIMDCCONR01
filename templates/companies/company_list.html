@@ -79,6 +79,9 @@
                                 <a href="{% url 'companies:suspend' company.pk %}" class="btn btn-sm btn-warning" onclick="return confirm('Suspender empresa?')">
                                     <i class="bi bi-pause"></i>
                                 </a>
+                                <a href="{% url 'companies:delete' company.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('ATENÇÃO: Esta ação é IRREVERSÍVEL. Todos os dados da empresa (usuários, funcionários, relatórios, faturamento) serão EXCLUÍDOS PERMANENTEMENTE. Deseja continuar?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
                                 {% endif %}
                             </td>
                         </tr>

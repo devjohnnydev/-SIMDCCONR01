@@ -151,6 +151,28 @@ def company_edit(request, pk):
 
 
 @login_required
+@require_admin_master
+def company_delete(request, pk):
+    """Exclui permanentemente uma empresa e todos os seus dados vinculados."""
+    company = get_object_or_404(Company, pk=pk)
+    company_name = company.nome_fantasia
+    
+    # Audit log before deletion
+    AuditLog.log(
+        user=request.user,
+        action='DELETE',
+        description=f'Empresa {company_name} excluida permanentemente',
+        obj=company,
+        request=request
+    )
+    
+    company.delete()
+    
+    messages.success(request, f'Empresa {company_name} e todos os seus dados foram removidos com sucesso.')
+    return redirect('companies:list')
+
+
+@login_required
 @require_company_admin
 def company_settings(request):
     """Configuracoes da empresa (logo, cores, dados)."""

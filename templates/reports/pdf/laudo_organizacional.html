@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Laudo Pericial Organizacional — SIMDCCONR01</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm 1.5cm;
+            @bottom-center {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 8pt;
+                color: #999;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 10pt;
+            color: #222;
+            line-height: 1.5;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #0d47a1;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            font-size: 16pt;
+            color: #0d47a1;
+            margin: 0;
+        }
+        .header h2 {
+            font-size: 11pt;
+            color: #666;
+            margin: 4px 0 0;
+            font-weight: normal;
+        }
+        .header .badge-pericial {
+            display: inline-block;
+            background: #0d47a1;
+            color: white;
+            padding: 3px 12px;
+            border-radius: 3px;
+            font-size: 8pt;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .meta-info {
+            background: #e3f2fd;
+            border-left: 4px solid #0d47a1;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            font-size: 9pt;
+        }
+        .meta-info table { width: 100%; }
+        .meta-info td { padding: 2px 10px 2px 0; }
+        .meta-info .label { font-weight: bold; color: #555; width: 180px; }
+
+        .section-title {
+            background: #0d47a1;
+            color: white;
+            padding: 8px 14px;
+            font-size: 11pt;
+            font-weight: bold;
+            margin: 25px 0 12px 0;
+            page-break-after: avoid;
+        }
+
+        .subsection-title {
+            background: #e3f2fd;
+            padding: 6px 12px;
+            font-size: 10pt;
+            font-weight: bold;
+            color: #0d47a1;
+            border-left: 4px solid #0d47a1;
+            margin: 15px 0 8px 0;
+            page-break-after: avoid;
+        }
+
+        .overall-box {
+            text-align: center;
+            padding: 20px;
+            border: 3px solid #0d47a1;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .overall-box .score {
+            font-size: 32pt;
+            font-weight: bold;
+            color: #0d47a1;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 8pt;
+            font-weight: bold;
+            color: white;
+        }
+        .badge-critico { background: #c62828; }
+        .badge-atencao { background: #f9a825; color: #333; }
+        .badge-adequado { background: #43a047; }
+        .badge-forte { background: #1565c0; }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 8.5pt;
+        }
+        table.data-table th, table.data-table td {
+            border: 1px solid #ddd;
+            padding: 5px 8px;
+            text-align: left;
+        }
+        table.data-table th {
+            background: #0d47a1;
+            color: white;
+            font-weight: bold;
+            font-size: 8pt;
+        }
+        table.data-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .risk-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+        }
+        .risk-card .dim-header {
+            font-weight: bold;
+            color: #0d47a1;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+        }
+        .risk-card .risk-grid {
+            display: flex;
+            gap: 20px;
+            margin: 6px 0;
+            font-size: 9pt;
+        }
+        .risk-card .risk-grid div {
+            flex: 1;
+        }
+
+        .sesmt-box {
+            border: 2px solid #0d47a1;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .sesmt-box h4 {
+            color: #0d47a1;
+            margin: 0 0 8px;
+        }
+
+        .mitigation-list {
+            font-size: 9pt;
+        }
+        .mitigation-list .level {
+            font-weight: bold;
+            color: #0d47a1;
+        }
+
+        .chart-container {
+            text-align: center;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+
+        .dept-summary {
+            background: #f5f7fa;
+            border-radius: 4px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+        }
+        .dept-summary .dept-name {
+            font-weight: bold;
+            font-size: 10pt;
+            color: #0d47a1;
+        }
+
+        .conclusao {
+            background: #f5f5f5;
+            border: 2px solid #0d47a1;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 9.5pt;
+        }
+
+        .integration-note {
+            border: 2px dashed #0d47a1;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 9pt;
+            color: #0d47a1;
+            font-weight: bold;
+        }
+
+        .references-section {
+            margin-top: 25px;
+            padding-top: 10px;
+            border-top: 2px solid #0d47a1;
+        }
+        .references-section h3 {
+            color: #0d47a1;
+            font-size: 11pt;
+        }
+        .references-section p {
+            font-size: 8pt;
+            color: #555;
+            margin: 3px 0;
+            text-indent: -20px;
+            padding-left: 20px;
+        }
+
+        .signature-area {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .signature-block {
+            width: 35%;
+            text-align: center;
+        }
+        .signature-block .line {
+            margin-top: 60px;
+            border-top: 1px solid #333;
+            padding-top: 5px;
+            font-size: 9pt;
+        }
+
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            font-size: 8pt;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- CABEÇALHO -->
+<div class="header">
+    {% if laudo_data.company.logo %}
+    <img src="{{ laudo_data.company.logo.url }}" style="max-height: 50px; margin-bottom: 8px;" alt="Logo">
+    {% endif %}
+    <h1>LAUDO PERICIAL ORGANIZACIONAL</h1>
+    <h2>Sistema Integrado SIMDCCONR01</h2>
+    <span class="badge-pericial">DOCUMENTO TÉCNICO — USO PERICIAL</span>
+</div>
+
+<!-- DADOS DA EMPRESA -->
+<div class="meta-info">
+    <table>
+        <tr>
+            <td class="label">Empresa:</td>
+            <td>{{ laudo_data.company.nome_fantasia }}</td>
+            <td class="label">CNPJ:</td>
+            <td>{{ laudo_data.company.cnpj }}</td>
+        </tr>
+        <tr>
+            <td class="label">Formulário:</td>
+            <td>{{ form_instance.title }}</td>
+            <td class="label">Total Respondentes:</td>
+            <td>{{ laudo_data.total_respondentes }}</td>
+        </tr>
+        <tr>
+            <td class="label">Data da Análise:</td>
+            <td>{{ generated_at|date:"d/m/Y" }}</td>
+            <td class="label">Período:</td>
+            <td>{{ form_instance.start_date|date:"d/m/Y" }} a {{ form_instance.end_date|date:"d/m/Y" }}</td>
+        </tr>
+    </table>
+</div>
+
+<!-- RESULTADO GERAL -->
+<div class="overall-box">
+    <div class="score">{{ laudo_data.overall_avg }}</div>
+    <div>
+        <span class="badge badge-{{ laudo_data.overall_key }}">
+            {{ laudo_data.overall_classification }}
+        </span>
+    </div>
+    <div style="font-size: 9pt; color: #666; margin-top: 6px;">
+        Índice Geral Organizacional
+    </div>
+</div>
+
+<!-- GRÁFICOS -->
+<div class="section-title">VISUALIZAÇÃO GRÁFICA</div>
+
+{% if chart_radar %}
+<div class="subsection-title">Radar — Dimensões Organizacionais</div>
+<div class="chart-container">{{ chart_radar|safe }}</div>
+{% endif %}
+
+{% if chart_heatmap %}
+<div class="subsection-title">Heatmap — Risco por Departamento</div>
+<div class="chart-container">{{ chart_heatmap|safe }}</div>
+{% endif %}
+
+{% if chart_bars %}
+<div class="subsection-title">Distribuição Likert</div>
+<div class="chart-container">{{ chart_bars|safe }}</div>
+{% endif %}
+
+<!-- MATRIZ DE RISCO -->
+<div class="section-title">MATRIZ DE RISCO ORGANIZACIONAL</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Instrumento</th>
+            <th>Dimensão</th>
+            <th>Média</th>
+            <th>Classificação</th>
+            <th>Risco</th>
+            <th>Prob.</th>
+            <th>Impacto</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in laudo_data.risk_matrix %}
+        <tr>
+            <td>{{ item.instrumento }}</td>
+            <td>{{ item.dimensao }}</td>
+            <td>{{ item.media }}</td>
+            <td><span class="badge badge-{{ item.classificacao_key }}">{{ item.classificacao }}</span></td>
+            <td>{{ item.risco }}</td>
+            <td>{{ item.probabilidade }}</td>
+            <td>{{ item.impacto }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- IMCO — CLIMA ORGANIZACIONAL -->
+{% if laudo_data.imco %}
+<div class="section-title">CLIMA ORGANIZACIONAL (IMCO)</div>
+<p style="font-size: 9pt; color: #555;">
+    Base: Litwin & Stringer (1968); Coda (2009)
+</p>
+{% for item in laudo_data.imco %}
+<div class="risk-card">
+    <div class="dim-header">{{ item.dimensao }}</div>
+    <div class="risk-grid">
+        <div>Média: <strong>{{ item.media }}</strong></div>
+        <div><span class="badge badge-{{ item.classificacao_key }}">{{ item.classificacao }}</span></div>
+        <div>Risco: {{ item.risco }}</div>
+    </div>
+    <p style="font-size: 9pt;">{{ item.interpretacao }}</p>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- FDAC — CULTURA ORGANIZACIONAL -->
+{% if laudo_data.fdac %}
+<div class="section-title">CULTURA ORGANIZACIONAL (FDAC)</div>
+<p style="font-size: 9pt; color: #555;">
+    Base: Goulart (2025) — Fairness, Disclosure, Accountability & Compliance
+</p>
+{% for item in laudo_data.fdac %}
+<div class="risk-card">
+    <div class="dim-header">{{ item.dimensao }}</div>
+    <div class="risk-grid">
+        <div>Média: <strong>{{ item.media }}</strong></div>
+        <div><span class="badge badge-{{ item.classificacao_key }}">{{ item.classificacao }}</span></div>
+        <div>Risco: {{ item.risco }}</div>
+    </div>
+    <p style="font-size: 9pt;">{{ item.interpretacao }}</p>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- SESMT — NR-01 / NR-17 / NR-12 -->
+<div class="section-title">CAMADA SESMT — INTEGRAÇÃO NR-01 / NR-17 / NR-12</div>
+
+<!-- PGR/GRO -->
+<div class="subsection-title">Integração ao PGR / GRO (NR-01)</div>
+<div class="sesmt-box">
+    <h4>Riscos Identificados: {{ laudo_data.sesmt.pgr_gro.total_riscos }}</h4>
+    <p style="font-size: 9pt;">
+        Críticos: <strong style="color: #c62828;">{{ laudo_data.sesmt.pgr_gro.riscos_criticos }}</strong> |
+        Atenção: <strong style="color: #f9a825;">{{ laudo_data.sesmt.pgr_gro.riscos_atencao }}</strong>
+    </p>
+
+    {% for item in laudo_data.sesmt.pgr_gro.items %}
+    <div class="risk-card" style="margin-top: 8px;">
+        <div class="dim-header">{{ item.instrumento }} — {{ item.dimensao }}</div>
+        <div class="risk-grid">
+            <div>Probabilidade: {{ item.probabilidade }}</div>
+            <div>Impacto: {{ item.impacto }}</div>
+            <div><span class="badge badge-{{ item.classificacao_key }}">{{ item.classificacao }}</span></div>
+        </div>
+        <div class="mitigation-list" style="margin-top: 8px;">
+            <strong>Ação PGR:</strong><br>
+            {{ item.acao_pgr }}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="mitigation-list" style="margin-top: 15px;">
+        <p><span class="level">Medidas de Mitigação (Hierarquia Técnica):</span></p>
+        <ol>
+            <li><strong>Eliminação:</strong> Redesenho organizacional do trabalho</li>
+            <li><strong>Substituição:</strong> Ajuste de processos críticos</li>
+            <li><strong>Engenharia:</strong> Reestruturação de fluxos e carga de trabalho</li>
+            <li><strong>Administrativas:</strong> Revisão de metas, redefinição de papéis, capacitação de liderança</li>
+            <li><strong>Monitoramento:</strong> Indicadores contínuos via clima organizacional</li>
+        </ol>
+    </div>
+</div>
+
+<!-- NR-17 -->
+<div class="subsection-title">NR-17 — Ergonomia (Física + Cognitiva)</div>
+<div class="sesmt-box">
+    <p><strong>Achado:</strong> {{ laudo_data.sesmt.nr17.achado }}</p>
+    <p><strong>Ações:</strong></p>
+    <ul>
+        {% for acao in laudo_data.sesmt.nr17.acoes %}
+        <li>{{ acao }}</li>
+        {% endfor %}
+    </ul>
+    <p style="font-size: 8.5pt; color: #666;">
+        <strong>Base teórica:</strong> {{ laudo_data.sesmt.nr17.base_teorica }}
+    </p>
+</div>
+
+<!-- NR-12 -->
+<div class="subsection-title">NR-12 — Segurança</div>
+<div class="sesmt-box">
+    <p><strong>Achado:</strong> {{ laudo_data.sesmt.nr12.achado }}</p>
+    <p><strong>Ações:</strong></p>
+    <ul>
+        {% for acao in laudo_data.sesmt.nr12.acoes %}
+        <li>{{ acao }}</li>
+        {% endfor %}
+    </ul>
+    <p style="font-size: 8.5pt; color: #666;">
+        <strong>Base normativa:</strong> {{ laudo_data.sesmt.nr12.base_normativa }}
+    </p>
+</div>
+
+<!-- ANÁLISE POR DEPARTAMENTO -->
+{% if laudo_data.department_reports %}
+<div class="section-title">ANÁLISE POR DEPARTAMENTO</div>
+{% for dept in laudo_data.department_reports %}
+<div class="dept-summary">
+    <div class="dept-name">{{ dept.setor }} ({{ dept.total_respondentes }} respondentes)</div>
+    <div style="margin-top: 6px;">
+        Média: <strong>{{ dept.overall_avg }}</strong>
+        <span class="badge badge-{{ dept.overall_key }}">{{ dept.overall_classification }}</span>
+    </div>
+    {% if dept.risk_clusters %}
+    <div style="margin-top: 6px; font-size: 9pt; color: #c62828;">
+        ⚠ Clusters de risco:
+        {% for cluster in dept.risk_clusters %}
+        {{ cluster.dimensao }} ({{ cluster.classificacao }}){% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- INTEGRAÇÃO OBRIGATÓRIA -->
+<div class="integration-note">
+    <p>⚠ INTEGRAÇÃO OBRIGATÓRIA</p>
+    <p>PGR/GRO • PCMSO • NR-17 • NR-12</p>
+</div>
+
+<!-- CONCLUSÃO PERICIAL -->
+<div class="section-title">CONCLUSÃO PERICIAL</div>
+<div class="conclusao">
+    {{ laudo_data.conclusao }}
+</div>
+
+<!-- REFERÊNCIAS BIBLIOGRÁFICAS -->
+<div class="references-section">
+    <h3>REFERÊNCIAS BIBLIOGRÁFICAS (ABNT)</h3>
+    {% for ref in laudo_data.references %}
+    <p>{{ ref }}</p>
+    {% endfor %}
+</div>
+
+<!-- ASSINATURAS -->
+<div class="signature-area">
+    <div class="signature-block">
+        <div class="line">
+            Responsável Técnico<br>
+            <span style="font-size: 8pt; color: #999;">CRP/CRM:</span>
+        </div>
+    </div>
+    <div class="signature-block">
+        <div class="line">
+            Engenheiro de Segurança<br>
+            <span style="font-size: 8pt; color: #999;">CREA:</span>
+        </div>
+    </div>
+</div>
+
+<!-- RODAPÉ -->
+<div class="footer">
+    Documento gerado automaticamente pelo SIMDCCONR01 em {{ generated_at|date:"d/m/Y H:i" }}.<br>
+    Laudo pericial com rastreabilidade integral. Uso técnico, jurídico e médico ocupacional.
+</div>
+
+</body>
+</html>

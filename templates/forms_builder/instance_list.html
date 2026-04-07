@@ -83,6 +83,11 @@
                     <a href="{% url 'reports:form_pdf' instance.pk %}" class="btn btn-sm btn-outline-danger">
                         <i class="bi bi-file-pdf"></i> PDF
                     </a>
+                    {% if instance.template.category == 'SIMDCCONR01' %}
+                    <a href="{% url 'reports:organizational_pdf' instance.pk %}" class="btn btn-sm btn-dark" title="Laudo Pericial Organizacional">
+                        <i class="bi bi-file-earmark-medical"></i> Laudo
+                    </a>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>

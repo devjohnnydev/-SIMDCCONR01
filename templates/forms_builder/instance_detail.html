@@ -29,6 +29,11 @@
             <a href="{% url 'reports:form_pdf' instance.pk %}" class="btn btn-danger">
                 <i class="bi bi-file-pdf"></i> Gerar PDF
             </a>
+            {% if instance.template.category == 'SIMDCCONR01' %}
+            <a href="{% url 'reports:organizational_pdf' instance.pk %}" class="btn btn-dark" title="Laudo Pericial Organizacional com rastreabilidade 160/160">
+                <i class="bi bi-file-earmark-medical"></i> Laudo Pericial
+            </a>
+            {% endif %}
             {% endif %}
         </div>
     </div>
@@ -152,7 +157,7 @@
                             <th>Setor</th>
                             <th>Status</th>
                             <th>Respondido em</th>
-                            <th></th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -177,9 +182,19 @@
                             <td>{{ assignment.completed_at|date:"d/m/Y H:i"|default:"-" }}</td>
                             <td>
                                 {% if assignment.status == 'COMPLETED' and not instance.is_anonymous %}
-                                <a href="{% url 'forms:view_responses' assignment.pk %}" class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-eye"></i>
-                                </a>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'forms:view_responses' assignment.pk %}" class="btn btn-outline-primary" title="Ver respostas">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    {% if instance.template.category == 'SIMDCCONR01' %}
+                                    <a href="{% url 'reports:individual_pdf' instance.pk assignment.pk %}" class="btn btn-outline-danger" title="Devolutiva Individual (160 itens)">
+                                        <i class="bi bi-file-pdf"></i> Devolutiva
+                                    </a>
+                                    <a href="{% url 'reports:pcmso_pdf' instance.pk assignment.pk %}" class="btn btn-outline-dark" title="Anexo PCMSO Obrigatório">
+                                        <i class="bi bi-file-earmark-medical"></i> PCMSO
+                                    </a>
+                                    {% endif %}
+                                </div>
                                 {% endif %}
                             </td>
                         </tr>

@@ -139,6 +139,11 @@
                                 <a href="{% url 'reports:form_pdf' m.form.pk %}" class="btn btn-sm btn-outline-danger">
                                     <i class="bi bi-file-pdf"></i> PDF
                                 </a>
+                                {% if m.form.template.category == 'SIMDCCONR01' %}
+                                <a href="{% url 'reports:organizational_pdf' m.form.pk %}" class="btn btn-sm btn-dark" title="Laudo Pericial com rastreabilidade 160/160">
+                                    <i class="bi bi-file-earmark-medical"></i> Laudo
+                                </a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}

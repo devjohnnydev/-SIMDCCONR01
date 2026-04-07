@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Devolutiva Individual — SIMDCCONR01</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm 1.5cm;
+            @bottom-center {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 8pt;
+                color: #999;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 10pt;
+            color: #222;
+            line-height: 1.5;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #1565c0;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 16pt;
+            color: #1565c0;
+            margin: 0;
+        }
+        .header .subtitle {
+            font-size: 10pt;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .meta-info {
+            background: #f5f7fa;
+            border-left: 4px solid #1565c0;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            font-size: 9pt;
+        }
+        .meta-info table { width: 100%; }
+        .meta-info td { padding: 2px 10px 2px 0; }
+        .meta-info .label { font-weight: bold; color: #555; width: 150px; }
+
+        .section-title {
+            background: #1565c0;
+            color: white;
+            padding: 6px 12px;
+            font-size: 11pt;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            page-break-after: avoid;
+        }
+
+        .dimension-header {
+            background: #e3f2fd;
+            padding: 6px 12px;
+            font-size: 10pt;
+            font-weight: bold;
+            color: #1565c0;
+            border-left: 4px solid #1565c0;
+            margin: 15px 0 8px 0;
+            page-break-after: avoid;
+        }
+
+        .item-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+        }
+        .item-card .item-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+        }
+        .item-card .item-id {
+            font-weight: bold;
+            color: #1565c0;
+            font-size: 9pt;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 8pt;
+            font-weight: bold;
+            color: white;
+        }
+        .badge-critico { background: #c62828; }
+        .badge-atencao { background: #f9a825; color: #333; }
+        .badge-adequado { background: #43a047; }
+        .badge-forte { background: #1565c0; }
+
+        .item-card .pergunta {
+            font-size: 9pt;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        .item-card .fundamentacao {
+            background: #fafafa;
+            border-left: 3px solid #90caf9;
+            padding: 6px 10px;
+            font-size: 8.5pt;
+            color: #555;
+            margin: 6px 0;
+        }
+
+        .item-card .interpretacao {
+            font-size: 9pt;
+            margin: 6px 0;
+        }
+
+        .item-card .recomendacao {
+            background: #fff3e0;
+            border-left: 3px solid #f9a825;
+            padding: 6px 10px;
+            font-size: 8.5pt;
+            margin: 6px 0;
+        }
+
+        .item-card .referencia {
+            font-size: 7.5pt;
+            color: #888;
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 9pt;
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            text-align: left;
+        }
+        .summary-table th {
+            background: #1565c0;
+            color: white;
+            font-weight: bold;
+        }
+        .summary-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .overall-box {
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #1565c0;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .overall-box .score {
+            font-size: 28pt;
+            font-weight: bold;
+            color: #1565c0;
+        }
+
+        .chart-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .references-section {
+            margin-top: 25px;
+            padding-top: 10px;
+            border-top: 2px solid #1565c0;
+        }
+        .references-section h3 {
+            color: #1565c0;
+            font-size: 11pt;
+        }
+        .references-section p {
+            font-size: 8pt;
+            color: #555;
+            margin: 3px 0;
+            text-indent: -20px;
+            padding-left: 20px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            font-size: 8pt;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- CABEÇALHO -->
+<div class="header">
+    {% if company.logo %}
+    <img src="{{ company.logo.url }}" style="max-height: 50px; margin-bottom: 8px;" alt="Logo">
+    {% endif %}
+    <h1>DEVOLUTIVA INDIVIDUAL — SIMDCCONR01</h1>
+    <div class="subtitle">
+        Sistema Integrado de Medida de Dissonância de Cultura e Clima Organizacional e NR-01/NR-17/NR-12
+    </div>
+</div>
+
+<!-- INFORMAÇÕES DO RESPONDENTE -->
+<div class="meta-info">
+    <table>
+        <tr>
+            <td class="label">Empresa:</td>
+            <td>{{ company.nome_fantasia }}</td>
+            <td class="label">CNPJ:</td>
+            <td>{{ company.cnpj }}</td>
+        </tr>
+        <tr>
+            <td class="label">Colaborador:</td>
+            <td>{{ assignment.employee.nome }}</td>
+            <td class="label">Setor:</td>
+            <td>{{ assignment.employee.setor }}</td>
+        </tr>
+        <tr>
+            <td class="label">Cargo:</td>
+            <td>{{ assignment.employee.cargo }}</td>
+            <td class="label">Data:</td>
+            <td>{{ generated_at|date:"d/m/Y" }}</td>
+        </tr>
+        <tr>
+            <td class="label">Formulário:</td>
+            <td colspan="3">{{ form_instance.title }}</td>
+        </tr>
+    </table>
+</div>
+
+<!-- RESULTADO GERAL -->
+<div class="overall-box">
+    <div class="score">{{ report_data.overall_avg }}</div>
+    <div>
+        <span class="badge badge-{{ report_data.overall_key }}">
+            {{ report_data.overall_classification }}
+        </span>
+    </div>
+    <div style="font-size: 9pt; color: #666; margin-top: 6px;">
+        Resultado Geral — {{ report_data.total_items }} itens analisados
+    </div>
+</div>
+
+<!-- RESUMO POR DIMENSÃO -->
+<div class="section-title">RESUMO POR DIMENSÃO</div>
+
+{% if chart_radar %}
+<div class="chart-container">
+    {{ chart_radar|safe }}
+</div>
+{% endif %}
+
+<table class="summary-table">
+    <thead>
+        <tr>
+            <th>Instrumento</th>
+            <th>Dimensão</th>
+            <th>Média</th>
+            <th>Classificação</th>
+            <th>Itens</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dim in report_data.dimension_summary %}
+        <tr>
+            <td>{{ dim.instrumento }}</td>
+            <td>{{ dim.dimensao }}</td>
+            <td>{{ dim.media }}</td>
+            <td>
+                <span class="badge badge-{{ dim.classificacao_key }}">
+                    {{ dim.classificacao }}
+                </span>
+            </td>
+            <td>{{ dim.total_items }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- ANÁLISE ITEM A ITEM -->
+<div class="section-title">ANÁLISE ITEM A ITEM ({{ report_data.total_items }} Itens)</div>
+
+{% regroup report_data.items by dimensao as dimension_groups %}
+{% for dimension in dimension_groups %}
+
+<div class="dimension-header">
+    {{ dimension.list.0.instrumento }} — {{ dimension.grouper }}
+    (Vetor: {{ dimension.list.0.vetor }})
+</div>
+
+{% for item in dimension.list %}
+<div class="item-card">
+    <div class="item-header">
+        <span class="item-id">{{ item.id_item }}</span>
+        <span>
+            Resultado: <strong>{{ item.valor|default:"—" }}</strong>
+            <span class="badge badge-{{ item.classificacao_key }}">{{ item.classificacao }}</span>
+        </span>
+    </div>
+
+    <div class="pergunta">{{ item.pergunta }}</div>
+
+    <div class="fundamentacao">
+        <strong>Fundamentação Teórica:</strong><br>
+        Este item fundamenta-se em {{ item.autor }} ({{ item.ano }}),
+        na obra "{{ item.obra }}", que estabelece que {{ item.constructo }}.
+    </div>
+
+    <div class="interpretacao">
+        <strong>Análise Técnica:</strong><br>
+        {{ item.interpretacao }}
+    </div>
+
+    <div class="recomendacao">
+        <strong>Recomendação:</strong><br>
+        {{ item.recomendacao }}
+    </div>
+
+    <div class="referencia">
+        {{ item.referencia_abnt }}
+    </div>
+</div>
+{% endfor %}
+
+{% endfor %}
+
+<!-- REFERÊNCIAS BIBLIOGRÁFICAS -->
+<div class="references-section">
+    <h3>REFERÊNCIAS BIBLIOGRÁFICAS (ABNT)</h3>
+    {% for ref in report_data.references %}
+    <p>{{ ref }}</p>
+    {% endfor %}
+</div>
+
+<!-- RODAPÉ -->
+<div class="footer">
+    Documento gerado automaticamente pelo SIMDCCONR01 em {{ generated_at|date:"d/m/Y H:i" }}.<br>
+    Uso exclusivamente técnico. Rastreabilidade integral dos 160 itens garantida.
+</div>
+
+</body>
+</html>

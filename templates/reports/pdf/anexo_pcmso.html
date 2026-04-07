@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Anexo PCMSO — SIMDCCONR01</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm 1.5cm;
+            @bottom-center {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 8pt;
+                color: #999;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 10pt;
+            color: #222;
+            line-height: 1.5;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #c62828;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 14pt;
+            color: #c62828;
+            margin: 0;
+        }
+        .header .badge-mandatory {
+            display: inline-block;
+            background: #c62828;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 8pt;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+
+        .meta-info {
+            background: #fce4ec;
+            border-left: 4px solid #c62828;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            font-size: 9pt;
+        }
+        .meta-info table { width: 100%; }
+        .meta-info td { padding: 2px 10px 2px 0; }
+        .meta-info .label { font-weight: bold; color: #555; width: 150px; }
+
+        .section-title {
+            background: #c62828;
+            color: white;
+            padding: 6px 12px;
+            font-size: 11pt;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+        }
+
+        .risk-box {
+            text-align: center;
+            padding: 20px;
+            border: 3px solid;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .risk-elevated { border-color: #c62828; }
+        .risk-moderate { border-color: #f9a825; }
+        .risk-low { border-color: #43a047; }
+
+        .risk-box .level {
+            font-size: 24pt;
+            font-weight: bold;
+        }
+        .risk-elevated .level { color: #c62828; }
+        .risk-moderate .level { color: #f9a825; }
+        .risk-low .level { color: #43a047; }
+
+        .synthesis {
+            background: #f5f5f5;
+            border-left: 4px solid #666;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-size: 9.5pt;
+        }
+
+        .recommendations {
+            background: #fff3e0;
+            border-left: 4px solid #f9a825;
+            padding: 12px 15px;
+            margin: 15px 0;
+        }
+        .recommendations ol {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        .recommendations li {
+            margin-bottom: 8px;
+        }
+
+        .alert-items {
+            margin: 15px 0;
+        }
+        .alert-item {
+            border: 1px solid #ffcdd2;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background: #fff5f5;
+            font-size: 9pt;
+        }
+        .alert-item .dim-label {
+            font-weight: bold;
+            color: #c62828;
+        }
+
+        .integration-box {
+            border: 2px dashed #c62828;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 9pt;
+            color: #c62828;
+            font-weight: bold;
+        }
+        .integration-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .integration-box li {
+            margin: 3px 0;
+        }
+
+        .base-teorica {
+            font-size: 8.5pt;
+            color: #666;
+            font-style: italic;
+            margin: 15px 0;
+            padding: 8px 12px;
+            border-top: 1px solid #ddd;
+        }
+
+        .observacao {
+            background: #e8f5e9;
+            border-left: 4px solid #43a047;
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-size: 9pt;
+        }
+
+        .signature-area {
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 1px solid #ccc;
+        }
+        .signature-line {
+            margin-top: 50px;
+            border-top: 1px solid #333;
+            width: 300px;
+            text-align: center;
+            padding-top: 5px;
+            font-size: 9pt;
+        }
+
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            font-size: 8pt;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- CABEÇALHO -->
+<div class="header">
+    {% if company.logo %}
+    <img src="{{ company.logo.url }}" style="max-height: 45px; margin-bottom: 8px;" alt="Logo">
+    {% endif %}
+    <h1>ANEXO INDIVIDUAL OBRIGATÓRIO — PCMSO</h1>
+    <div style="font-size: 9pt; color: #666;">
+        Programa de Controle Médico de Saúde Ocupacional
+    </div>
+    <span class="badge-mandatory">DOCUMENTO DE REGISTRO OBRIGATÓRIO</span>
+</div>
+
+<!-- DADOS DO COLABORADOR -->
+<div class="meta-info">
+    <table>
+        <tr>
+            <td class="label">Colaborador:</td>
+            <td>{{ assignment.employee.nome }}</td>
+            <td class="label">Matrícula:</td>
+            <td>{{ assignment.employee.pk }}</td>
+        </tr>
+        <tr>
+            <td class="label">Empresa:</td>
+            <td>{{ company.nome_fantasia }}</td>
+            <td class="label">CNPJ:</td>
+            <td>{{ company.cnpj }}</td>
+        </tr>
+        <tr>
+            <td class="label">Setor:</td>
+            <td>{{ assignment.employee.setor }}</td>
+            <td class="label">Cargo:</td>
+            <td>{{ assignment.employee.cargo }}</td>
+        </tr>
+        <tr>
+            <td class="label">Data da Avaliação:</td>
+            <td>{{ generated_at|date:"d/m/Y" }}</td>
+            <td class="label">Instrumento:</td>
+            <td>SIMDCCONR01</td>
+        </tr>
+    </table>
+</div>
+
+<!-- CLASSIFICAÇÃO DE RISCO -->
+<div class="section-title">CLASSIFICAÇÃO DE RISCO PSICOSSOCIAL</div>
+
+<div class="risk-box {% if pcmso_data.nivel == 'Elevado' %}risk-elevated{% elif pcmso_data.nivel == 'Moderado' %}risk-moderate{% else %}risk-low{% endif %}">
+    <div class="level">{{ pcmso_data.nivel }}</div>
+    <div style="font-size: 9pt; color: #666;">
+        Média Geral: {{ pcmso_data.overall_avg }} / 5.0
+    </div>
+</div>
+
+<!-- SÍNTESE PSICOSSOCIAL -->
+<div class="section-title">SÍNTESE PSICOSSOCIAL</div>
+<div class="synthesis">
+    {{ pcmso_data.sintese }}
+</div>
+
+<!-- DIMENSÕES EM ALERTA -->
+{% if pcmso_data.dimensoes_alerta %}
+<div class="section-title">DIMENSÕES EM ALERTA</div>
+<div class="alert-items">
+    {% for dim in pcmso_data.dimensoes_alerta %}
+    <div class="alert-item">
+        <span class="dim-label">{{ dim.instrumento }} — {{ dim.dimensao }}</span>
+        <span style="float: right;">
+            Média: {{ dim.media }} | {{ dim.classificacao }}
+        </span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- RECOMENDAÇÃO CLÍNICA OCUPACIONAL -->
+<div class="section-title">RECOMENDAÇÃO CLÍNICA OCUPACIONAL</div>
+<div class="recommendations">
+    {{ pcmso_data.recomendacoes|linebreaksbr }}
+</div>
+
+<!-- INTEGRAÇÃO -->
+<div class="integration-box">
+    <p>⚠ ESTE DOCUMENTO DEVE SER ANEXADO A:</p>
+    <ul>
+        <li>📋 Ficha Admissional</li>
+        <li>📁 Prontuário Ocupacional</li>
+        <li>📄 PCMSO</li>
+    </ul>
+</div>
+
+<!-- BASE TEÓRICA -->
+<div class="base-teorica">
+    <strong>Base Teórica:</strong> {{ pcmso_data.base_teorica }}
+</div>
+
+<!-- OBSERVAÇÃO -->
+<div class="observacao">
+    <strong>Observação:</strong> {{ pcmso_data.observacao }}
+</div>
+
+<!-- ASSINATURA -->
+<div class="signature-area">
+    {% if diagnostic and diagnostic.is_signed %}
+    <p style="font-size: 9pt; color: #43a047;">
+        ✔ Documento assinado digitalmente em {{ diagnostic.signature_timestamp|date:"d/m/Y H:i" }}
+        {% if diagnostic.signer_profile %}
+        por {{ diagnostic.signer_profile.nome_completo }} — {{ diagnostic.signer_profile.registro_profissional }}
+        {% endif %}
+    </p>
+    {% else %}
+    <div class="signature-line">
+        Assinatura do Médico do Trabalho<br>
+        <span style="font-size: 8pt; color: #999;">CRM:</span>
+    </div>
+    {% endif %}
+</div>
+
+<!-- RODAPÉ -->
+<div class="footer">
+    Documento gerado automaticamente pelo SIMDCCONR01 em {{ generated_at|date:"d/m/Y H:i" }}.<br>
+    Registro obrigatório no PCMSO — NR-01.
+</div>
+
+</body>
+</html>

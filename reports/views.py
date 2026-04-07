@@ -213,82 +213,187 @@ def generate_form_report(request, form_pk):
 @require_company_admin
 def generate_simdcconr01_report(request, form_pk):
     """
-    Gera o Laudo Pericial Integrado SIMDCCONR01 com Gráficos SVG e Suporte a Assinatura.
+    Gera o Laudo Pericial Integrado SIMDCCONR01 usando o Motor de Texto Determinístico.
+    Substitui a análise por IA com rastreabilidade total.
     """
     company = request.user.company
     form_instance = get_object_or_404(
-        FormInstance, 
-        pk=form_pk, 
-        company=company, 
+        FormInstance,
+        pk=form_pk,
+        company=company,
         template__category='SIMDCCONR01'
     )
-    
-    first_assignment = form_instance.assignments.filter(status='COMPLETED').first()
-    
-    from ai_analysis.engine import analyze_survey_results
-    import json
-    
-    ai_results_raw = "{}"
-    if first_assignment:
-        ai_results_raw = analyze_survey_results(first_assignment)
-    
-    try:
-        ai_results = json.loads(ai_results_raw)
-    except:
-        ai_results = {
-            "diagnostico_psicossocial": "Processado com sucesso.",
-            "dissonancia_clima_cultura": "Alinhamento observado.",
-            "riscos_pgr_gro": "Risco Psicossocial Controlado.",
-            "recomendacoes_acao": "Manter monitoramento."
-        }
 
-    stats = {
-        'total_completed': form_instance.assignments.filter(status='COMPLETED').count(),
-    }
-    
-    imco_stats = {
-        'motivacao_avg': 4.2, 
-        'lideranca_avg': 3.8,
-        'filosofia_avg': 3.5
-    }
-    
-    # Gerar Gráficos SVG para o Laudo
-    matrix_data = {"Baixo": 45, "Médio": 30, "Alto": 15, "Crítico": 10}
-    sector_gravity = {"Financeiro": 52, "TI": 38, "RH": 25, "Vendas": 44}
-    general_gravity = {"Leve": 60, "Moderada": 25, "Grave": 15}
-    
-    chart_matrix = generate_pie_chart_svg(matrix_data, size=150, colors=['#4caf50', '#ffeb3b', '#f44336', '#212121'])
-    chart_sector = generate_pie_chart_svg(sector_gravity, size=150, colors=['#0288d1', '#03a9f4', '#29b6f6', '#4fc3f7'])
-    chart_general = generate_pie_chart_svg(general_gravity, size=150, colors=['#4db6ac', '#80cbc4', '#b2dfdb'])
+    from .engine_text import TextEngine
+    from .utils_charts import generate_radar_chart_svg, generate_heatmap_svg, generate_bar_chart_svg
 
-    # Tenta associar um laudo individual para assinatura
-    diagnostic = None
-    if first_assignment and hasattr(first_assignment, 'diagnostic'):
-        diagnostic = first_assignment.diagnostic
+    engine = TextEngine()
+    laudo_data = engine.generate_organizational_laudo(form_instance)
+
+    # Gerar Gráficos SVG
+    chart_radar = generate_radar_chart_svg(laudo_data['chart_data'].get('radar', {}), size=300)
+    chart_heatmap = generate_heatmap_svg(laudo_data['chart_data'].get('heatmap', {}), width=400)
+    chart_bars = generate_bar_chart_svg(laudo_data['chart_data'].get('likert_distribution', {}), width=400)
+
+    context = {
+        'laudo_data': laudo_data,
+        'form_instance': form_instance,
+        'generated_at': timezone.now(),
+        'chart_radar': chart_radar,
+        'chart_heatmap': chart_heatmap,
+        'chart_bars': chart_bars,
+    }
+
+    html_string = render_to_string('reports/pdf/laudo_organizacional.html', context)
+    from weasyprint import HTML
+    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+    pdf = html.write_pdf()
+
+    # Log de auditoria
+    AuditLog.log(
+        user=request.user,
+        action='EXPORT',
+        description=f'Laudo Pericial Organizacional gerado para "{form_instance.title}"',
+        obj=form_instance,
+        request=request
+    )
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    filename = f"laudo_organizacional_{form_instance.pk}_{timezone.now().strftime('%Y%m%d')}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+
+@login_required
+@require_company_admin
+def download_individual_pdf(request, form_pk, assignment_pk):
+    """
+    Gera PDF de devolutiva individual (Respondente) — 160 itens.
+    Nível 1 da hierarquia de saída.
+    """
+    company = request.user.company
+    form_instance = get_object_or_404(
+        FormInstance,
+        pk=form_pk,
+        company=company,
+        template__category='SIMDCCONR01'
+    )
+    assignment = get_object_or_404(
+        FormAssignment,
+        pk=assignment_pk,
+        form_instance=form_instance,
+        status='COMPLETED'
+    )
+
+    from .engine_text import TextEngine
+    from .utils_charts import generate_radar_chart_svg
+
+    engine = TextEngine()
+    report_data = engine.generate_respondent_report(assignment)
+
+    # Radar chart com dimensões
+    radar_data = {}
+    for dim in report_data.get('dimension_summary', []):
+        if dim['instrumento'] == 'IMCO':
+            radar_data[dim['dimensao']] = dim['media']
+    chart_radar = generate_radar_chart_svg(radar_data, size=280)
 
     context = {
         'company': company,
         'form_instance': form_instance,
-        'assignment': first_assignment,
-        'ai_results': ai_results,
-        'stats': stats,
-        'imco_stats': imco_stats,
-        'fdac_score': 78,
-        'nr01_risk_score': 2.4,
-        'signature_token': "SHA256-SIMDCCONR01-" + timezone.now().strftime('%Y%m%d%H%M%S'),
+        'assignment': assignment,
+        'report_data': report_data,
+        'chart_radar': chart_radar,
         'generated_at': timezone.now(),
-        'chart_matrix': chart_matrix,
-        'chart_sector': chart_sector,
-        'chart_general': chart_general,
-        'diagnostic': diagnostic,
     }
-    
-    html_string = render_to_string('reports/pdf/simdcconr01_report.html', context)
+
+    html_string = render_to_string('reports/pdf/individual_respondente.html', context)
     from weasyprint import HTML
     html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
     pdf = html.write_pdf()
-    
-    return HttpResponse(pdf, content_type='application/pdf')
+
+    AuditLog.log(
+        user=request.user,
+        action='EXPORT',
+        description=f'Devolutiva individual gerada para {assignment.employee.nome}',
+        obj=assignment,
+        request=request
+    )
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    filename = f"devolutiva_{assignment.employee.pk}_{timezone.now().strftime('%Y%m%d')}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+
+@login_required
+@require_company_admin
+def download_pcmso_pdf(request, form_pk, assignment_pk):
+    """
+    Gera PDF do Anexo Individual Obrigatório ao PCMSO.
+    Nível 1.5 — deve ser anexado a ficha admissional, prontuário e PCMSO.
+    """
+    company = request.user.company
+    form_instance = get_object_or_404(
+        FormInstance,
+        pk=form_pk,
+        company=company,
+        template__category='SIMDCCONR01'
+    )
+    assignment = get_object_or_404(
+        FormAssignment,
+        pk=assignment_pk,
+        form_instance=form_instance,
+        status='COMPLETED'
+    )
+
+    from .engine_text import TextEngine
+
+    engine = TextEngine()
+    pcmso_data = engine.generate_pcmso_annex(assignment)
+
+    # Tenta associar laudo individual para assinatura
+    diagnostic = None
+    if hasattr(assignment, 'diagnostic'):
+        diagnostic = assignment.diagnostic
+
+    context = {
+        'company': company,
+        'form_instance': form_instance,
+        'assignment': assignment,
+        'pcmso_data': pcmso_data,
+        'diagnostic': diagnostic,
+        'generated_at': timezone.now(),
+    }
+
+    html_string = render_to_string('reports/pdf/anexo_pcmso.html', context)
+    from weasyprint import HTML
+    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+    pdf = html.write_pdf()
+
+    AuditLog.log(
+        user=request.user,
+        action='EXPORT',
+        description=f'Anexo PCMSO gerado para {assignment.employee.nome}',
+        obj=assignment,
+        request=request
+    )
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    filename = f"pcmso_{assignment.employee.pk}_{timezone.now().strftime('%Y%m%d')}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+
+@login_required
+@require_company_admin
+def download_organizational_pdf(request, form_pk):
+    """
+    Gera PDF do Laudo Pericial Organizacional completo.
+    Nível 3 — inclui SESMT, PGR/GRO, PCMSO, NR-17, NR-12.
+    Alias para generate_simdcconr01_report com template atualizado.
+    """
+    return generate_simdcconr01_report(request, form_pk)
 
 
 @login_required

@@ -531,6 +531,7 @@ def view_diagnostic(request, validation_code):
         return redirect('accounts:dashboard')
         
     from .models import EmployeeDiagnostic
+    from .engine_text import TextEngine
     import uuid
     
     try:
@@ -540,7 +541,12 @@ def view_diagnostic(request, validation_code):
         messages.error(request, 'Codigo invalido.')
         return redirect('accounts:admin_laudos')
         
+    # Gerar dados reais do motor determinístico para o gráfico e referências
+    engine = TextEngine()
+    report_data = engine.generate_respondent_report(diagnostic.assignment)
+    
     return render(request, 'reports/diagnostic_view.html', {
-        'diagnostic': diagnostic
+        'diagnostic': diagnostic,
+        'report_data': report_data
     })
 

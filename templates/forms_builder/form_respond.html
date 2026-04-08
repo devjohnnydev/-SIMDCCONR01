@@ -1,139 +1,282 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Responder Formulario - SaaS NR-01{% endblock %}
+{% block title %}Responder: {{ instance.title }} - SIMDCCONR01{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard-premium.css' %}">
+<style>
+    body {
+        background: radial-gradient(circle at top right, #f8fafc, #e2e8f0);
+        background-attachment: fixed;
+    }
+    .survey-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+    .sticky-survey-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        padding: 1rem 0;
+        transition: all 0.3s ease;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">{{ instance.title }}</h5>
-                    <span class="badge bg-{% if instance.template.category == 'NR01' %}danger{% elif instance.template.category == 'CLIMATE' %}primary{% elif instance.template.category == 'WELLBEING' %}success{% else %}secondary{% endif %}">
-                        {{ instance.template.get_category_display }}
-                    </span>
+<!-- Header de Progresso Fixo -->
+<div class="sticky-survey-header glass-header d-print-none">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8 mx-auto">
+                <div class="d-flex justify-content-between align-items-end mb-2">
+                    <h6 class="text-white mb-0 opacity-75 small text-uppercase fw-bold">{{ instance.title }}</h6>
+                    <span class="text-white fw-bold" id="progress-text">0%</span>
                 </div>
-                <div class="card-body">
-                    {% if instance.is_anonymous %}
-                    <div class="alert alert-info">
-                        <i class="bi bi-incognito"></i>
-                        <strong>Formulario Anonimo</strong>
-                        <br>Suas respostas nao serao vinculadas ao seu nome. Responda com sinceridade.
-                    </div>
-                    {% endif %}
-                    
-                    {% if instance.description %}
-                    <p class="text-muted mb-4">{{ instance.description }}</p>
-                    {% endif %}
-                    
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        {% for question in questions %}
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <label class="form-label fw-bold">
-                                    {{ forloop.counter }}. {{ question.text }}
-                                    {% if question.is_required %}<span class="text-danger">*</span>{% endif %}
-                                </label>
-                                {% if question.help_text %}
-                                <p class="text-muted small">{{ question.help_text }}</p>
-                                {% endif %}
-                                
-                                {% if question.question_type == 'SCALE' %}
-                                <div class="d-flex justify-content-between mt-3">
-                                    {% for i in "12345" %}
-                                    <label class="scale-option">
-                                        <input type="radio" name="question_{{ question.pk }}" value="{{ i }}" {% if question.is_required %}required{% endif %}>
-                                        {{ i }}
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                                <div class="d-flex justify-content-between mt-1">
-                                    <small class="text-muted">Discordo totalmente</small>
-                                    <small class="text-muted">Concordo totalmente</small>
-                                </div>
-                                
-                                {% elif question.question_type == 'SCALE_10' %}
-                                <div class="d-flex flex-wrap gap-2 mt-3">
-                                    {% for i in "12345678910"|make_list %}
-                                    <label class="scale-option" style="width: 35px; height: 35px; font-size: 0.8rem;">
-                                        <input type="radio" name="question_{{ question.pk }}" value="{{ forloop.counter }}" {% if question.is_required %}required{% endif %}>
-                                        {{ forloop.counter }}
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                                
-                                {% elif question.question_type == 'YESNO' %}
-                                <div class="mt-3">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="question_{{ question.pk }}" value="Sim" {% if question.is_required %}required{% endif %}>
-                                        <label class="form-check-label">Sim</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="question_{{ question.pk }}" value="Nao">
-                                        <label class="form-check-label">Nao</label>
-                                    </div>
-                                </div>
-                                
-                                {% elif question.question_type == 'SINGLE' %}
-                                <div class="mt-3">
-                                    {% for option in question.options %}
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="question_{{ question.pk }}" value="{{ option }}" {% if question.is_required %}required{% endif %}>
-                                        <label class="form-check-label">{{ option }}</label>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                
-                                {% elif question.question_type == 'MULTIPLE' %}
-                                <div class="mt-3">
-                                    {% for option in question.options %}
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="question_{{ question.pk }}" value="{{ option }}">
-                                        <label class="form-check-label">{{ option }}</label>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                
-                                {% elif question.question_type == 'TEXT' %}
-                                <textarea class="form-control mt-3" name="question_{{ question.pk }}" rows="3" {% if question.is_required %}required{% endif %}></textarea>
-                                
-                                {% elif question.question_type == 'DATE' %}
-                                <input type="date" class="form-control mt-3" name="question_{{ question.pk }}" {% if question.is_required %}required{% endif %}>
-                                
-                                {% elif question.question_type == 'NUMBER' %}
-                                <input type="number" class="form-control mt-3" name="question_{{ question.pk }}" {% if question.is_required %}required{% endif %}>
-                                
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endfor %}
-                        
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-send"></i> Enviar Respostas
-                            </button>
-                            <a href="{% url 'accounts:employee_dashboard' %}" class="btn btn-outline-secondary">Cancelar</a>
-                        </div>
-                    </form>
+                <div class="survey-progress-container">
+                    <div class="survey-progress-bar" id="survey-bar" role="progressbar" style="width: 0%"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="survey-container" data-total-questions="{{ questions|length }}">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <!-- Introdução -->
+            <div class="glass-card p-4 p-md-5 mb-5 fade-in-up">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-4">
+                        <i class="bi bi-clipboard-check text-primary fs-3"></i>
+                    </div>
+                    <div>
+                        <span class="badge bg-primary mb-1">{{ instance.template.get_category_display }}</span>
+                        <h1 class="h3 fw-bold mb-0">{{ instance.title }}</h1>
+                    </div>
+                </div>
+
+                {% if instance.is_anonymous %}
+                <div class="alert alert-info d-flex align-items-center gap-3 border-0 bg-primary bg-opacity-10 text-primary">
+                    <i class="bi bi-shield-lock-fill fs-4"></i>
+                    <div>
+                        <strong>Pesquisa Anônima</strong><br>
+                        <span class="small">Suas respostas são confidenciais e não serão vinculadas à sua identidade.</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if instance.description %}
+                <div class="description text-muted mt-4">
+                    {{ instance.description|linebreaks }}
+                </div>
+                {% endif %}
+                
+                <div class="mt-4 pt-4 border-top">
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-clock me-1"></i> Tempo estimado: <strong>{{ questions|length|add:"2" }} minutos</strong>
+                    </p>
+                </div>
+            </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+            <!-- Perguntas -->
+            <form method="post" id="survey-form">
+                {% csrf_token %}
+                
+                {% for question in questions %}
+                <div class="glass-card p-4 p-md-5 mb-4 fade-in-up" style="animation-delay: {{ forloop.counter0|add:1|multiply:0.1 }}s">
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="flex-shrink-0 bg-dark bg-opacity-5 rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <span class="small fw-bold">{{ forloop.counter }}</span>
+                        </div>
+                        <h5 class="fw-bold mb-0 pt-1">{{ question.text }} {% if question.is_required %}<span class="text-danger">*</span>{% endif %}</h5>
+                    </div>
+
+                    {% if question.help_text %}
+                    <p class="text-muted small mb-4 ms-5">{{ question.help_text }}</p>
+                    {% endif %}
+                    
+                    <div class="ms-0 ms-md-5">
+                        {% if question.question_type == 'SCALE' %}
+                        <div class="premium-scale-container mt-2">
+                            {% for i in "12345" %}
+                            <label class="premium-scale-option" data-question-id="{{ question.pk }}">
+                                <input type="radio" name="question_{{ question.pk }}" value="{{ i }}" {% if question.is_required %}required{% endif %}>
+                                <span class="fs-5">{{ i }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        <div class="d-flex justify-content-between mt-3 px-1">
+                            <small class="text-muted fw-medium"><i class="bi bi-dash-circle me-1"></i> Discordo Totalmente</small>
+                            <small class="text-muted fw-medium">Concordo Totalmente <i class="bi bi-plus-circle ms-1"></i></small>
+                        </div>
+                        
+                        {% elif question.question_type == 'SCALE_10' %}
+                        <div class="premium-scale-container flex-wrap gap-2 mt-2">
+                            {% for i in "12345678910"|make_list %}
+                            <label class="premium-scale-option" style="flex: 1 0 15%;" data-question-id="{{ question.pk }}">
+                                <input type="radio" name="question_{{ question.pk }}" value="{{ forloop.counter }}" {% if question.is_required %}required{% endif %}>
+                                <span>{{ forloop.counter }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        
+                        {% elif question.question_type == 'YESNO' %}
+                        <div class="d-flex gap-3 mt-2">
+                            <label class="premium-scale-option w-100" data-question-id="{{ question.pk }}">
+                                <input type="radio" name="question_{{ question.pk }}" value="Sim" {% if question.is_required %}required{% endif %}>
+                                <i class="bi bi-check-circle fs-4 mb-1"></i>
+                                <span>Sim</span>
+                            </label>
+                            <label class="premium-scale-option w-100" data-question-id="{{ question.pk }}">
+                                <input type="radio" name="question_{{ question.pk }}" value="Nao">
+                                <i class="bi bi-x-circle fs-4 mb-1"></i>
+                                <span>Não</span>
+                            </label>
+                        </div>
+                        
+                        {% elif question.question_type == 'SINGLE' %}
+                        <div class="d-grid gap-2 mt-2">
+                            {% for option in question.options %}
+                            <label class="premium-scale-option text-start align-items-start px-4 w-100" data-question-id="{{ question.pk }}">
+                                <input type="radio" name="question_{{ question.pk }}" value="{{ option }}" {% if question.is_required %}required{% endif %}>
+                                <span>{{ option }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        
+                        {% elif question.question_type == 'MULTIPLE' %}
+                        <div class="d-grid gap-2 mt-2">
+                            {% for option in question.options %}
+                            <label class="premium-scale-option text-start align-items-start px-4 w-100 checkbox-option">
+                                <input type="checkbox" name="question_{{ question.pk }}" value="{{ option }}">
+                                <span>{{ option }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        
+                        {% elif question.question_type == 'TEXT' %}
+                        <textarea class="form-control glass-input mt-2" name="question_{{ question.pk }}" rows="4" placeholder="Sua resposta aqui..." {% if question.is_required %}required{% endif %}></textarea>
+                        
+                        {% elif question.question_type == 'DATE' %}
+                        <input type="date" class="form-control glass-input mt-2" name="question_{{ question.pk }}" {% if question.is_required %}required{% endif %}>
+                        
+                        {% elif question.question_type == 'NUMBER' %}
+                        <input type="number" class="form-control glass-input mt-2" name="question_{{ question.pk }}" {% if question.is_required %}required{% endif %}>
+                        
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Botões de Ação -->
+                <div class="glass-card p-4 p-md-5 text-center mt-5 fade-in-up">
+                    <p class="text-muted mb-4">Certifique-se de que todas as perguntas obrigatórias foram respondidas corretamente.</p>
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                        <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-lg">
+                            <i class="bi bi-rocket-takeoff me-2"></i> Finalizar Diagnóstico
+                        </button>
+                        <a href="{% url 'accounts:employee_dashboard' %}" class="btn btn-link text-muted">Sair sem salvar</a>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
 {% block extra_js %}
 <script>
-document.querySelectorAll('.scale-option').forEach(function(el) {
-    el.addEventListener('click', function() {
-        this.closest('.d-flex').querySelectorAll('.scale-option').forEach(function(opt) {
-            opt.classList.remove('selected');
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('survey-form');
+        const progressBar = document.getElementById('survey-bar');
+        const progressText = document.getElementById('progress-text');
+
+        // Lógica de seleção Premium
+        document.querySelectorAll('.premium-scale-option').forEach(function(el) {
+            el.addEventListener('click', function() {
+                const input = this.querySelector('input');
+                const isCheckbox = input.type === 'checkbox';
+                
+                if (!isCheckbox) {
+                    // Limpar seleção anterior da mesma questão
+                    const qId = this.dataset.questionId;
+                    document.querySelectorAll(`.premium-scale-option[data-question-id="${qId}"]`).forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                }
+                
+                if (isCheckbox) {
+                    this.classList.toggle('selected');
+                } else {
+                    this.classList.add('selected');
+                }
+                
+                updateProgress();
+            });
         });
-        this.classList.add('selected');
-        this.querySelector('input').checked = true;
+
+        function updateProgress() {
+            // Conta quantos grupos de rádio ou campos de texto estão preenchidos
+            const answered = new Set();
+            
+            // Rádios selecionados
+            form.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+                answered.add(input.name);
+            });
+
+            // Checkboxes (pelo menos um selecionado)
+            form.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+                answered.add(input.name);
+            });
+
+            // Campos de texto/data preenchidos
+            form.querySelectorAll('textarea, input[type="date"], input[type="number"]').forEach(input => {
+                if (input.value.trim() !== "") {
+                    answered.add(input.name);
+                }
+            });
+
+            const total = parseInt(document.querySelector('.survey-container').dataset.totalQuestions) || 1;
+            const percentage = Math.round((answered.size / total) * 100);
+            
+            progressBar.style.width = percentage + '%';
+            progressText.innerText = percentage + '%';
+            
+            // Alterar cor se completado
+            if (percentage === 100) {
+                progressBar.classList.add('bg-success');
+            } else {
+                progressBar.classList.remove('bg-success');
+            }
+        }
+
+        // Listener para inputs de texto
+        form.querySelectorAll('textarea, input[type="date"], input[type="number"]').forEach(input => {
+            input.addEventListener('input', updateProgress);
+        });
+
+        // Efeito de scroll no header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.sticky-survey-header');
+            if (window.scrollY > 50) {
+                header.style.padding = '0.5rem 0';
+                header.style.background = 'rgba(15, 23, 42, 0.95)';
+            } else {
+                header.style.padding = '1rem 0';
+                header.style.background = 'rgba(15, 23, 42, 0.8)';
+            }
+        });
+        
+        // Inicializar progresso
+        updateProgress();
     });
-});
 </script>
 {% endblock %}
 {% endblock %}

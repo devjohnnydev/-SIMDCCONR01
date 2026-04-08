@@ -162,6 +162,111 @@ body {
 .soft-bg-primary { background: var(--primary-soft); }
 .text-premium { color: var(--primary); }
 
+/* Glassmorphism & Premium UI */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.glass-header {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Survey Progress Bar */
+.survey-progress-container {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.survey-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    width: 0%;
+    transition: width 0.4s ease-out;
+}
+
+/* Premium Scale Options */
+.premium-scale-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.premium-scale-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: white;
+    position: relative;
+    font-weight: 600;
+}
+
+.premium-scale-option:hover {
+    border-color: var(--primary);
+    background: var(--primary-muted);
+    transform: translateY(-2px);
+}
+
+.premium-scale-option.selected {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+}
+
+.premium-scale-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Survey Navigation Overlay */
+.survey-nav-overlay {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    gap: 1rem;
+    background: rgba(15, 23, 42, 0.9);
+    padding: 0.75rem 1.5rem;
+    border-radius: 100px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Animations */
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @media (max-width: 992px) {
     .modern-sidebar {
         width: 0;

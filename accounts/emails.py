@@ -9,9 +9,11 @@ def send_company_welcome_contract(company):
     """
     subject = f'Formalização de Contrato SIMDCCONR01 - {company.nome_fantasia}'
     
+    protocolo = f"SIMDC-{company.id}-{company.cnpj[:4]}"
     context = {
         'company': company,
-        'protocolo': f"SIMDC-{company.id}-{company.cnpj[:4]}",
+        'protocolo': protocolo,
+        'verify_url': f"https://safeclima.com.br/accounts/verify/contract/{protocolo}/",
         'support_email': 'suporte@simdcconr01.com.br'
     }
     

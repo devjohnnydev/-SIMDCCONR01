@@ -637,3 +637,43 @@ def view_department_report(request, setor, form_id):
         'data': report.diagnostic_data
     })
 
+def verify_contract_protocol(request, protocol):
+    """
+    Página pública para verificar a autenticidade de um protocolo de contrato.
+    Formato esperado: SIMDC-{company_id}-{cnpj_4_prefix}
+    """
+    try:
+        parts = protocol.split('-')
+        if len(parts) != 3 or parts[0] != 'SIMDC':
+            raise ValueError("Formato de protocolo inválido.")
+        
+        company_id = parts[1]
+        cnpj_prefix = parts[2]
+        
+        company = get_object_or_404(Company, pk=company_id)
+        
+        # Verifica se o CNPJ bate com o prefixo do protocolo para evitar IDs sequenciais aleatórios
+        if not company.cnpj.startswith(cnpj_prefix):
+            raise ValueError("Protocolo não corresponde à empresa.")
+            
+        if not company.data_aceite_contrato:
+            raise ValueError("Contrato ainda não formalizado.")
+
+        context = {
+            'company': company,
+            'protocol': protocol,
+            'status': 'VALID',
+            'valid_since': company.data_aceite_contrato,
+            # Anonimiza dados sensíveis para exibição pública
+            'company_name_masked': f"{company.nome_fantasia[:3]}*** {company.nome_fantasia[-3:]}" if len(company.nome_fantasia) > 6 else "***",
+            'cnpj_masked': f"{company.cnpj[:2]}.***.***/***%-{company.cnpj[-2:]}"
+        }
+        
+    except Exception as e:
+        context = {
+            'status': 'INVALID',
+            'error_message': str(e),
+            'protocol': protocol
+        }
+        
+    return render(request, 'accounts/verify_protocol.html', context)

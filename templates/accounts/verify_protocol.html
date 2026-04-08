@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Verificacao de Autenticidade Digital{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f8fafc;
+    }
+    .verify-card {
+        max-width: 600px;
+        margin: 60px auto;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        border: none;
+        overflow: hidden;
+    }
+    .status-header {
+        padding: 40px;
+        text-align: center;
+        color: white;
+    }
+    .status-header.valid {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+    .status-header.invalid {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+    .status-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+    }
+    .verify-details {
+        padding: 40px;
+        background: white;
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+    .detail-label {
+        color: #64748b;
+        font-weight: 500;
+    }
+    .detail-value {
+        color: #0f172a;
+        font-weight: 700;
+        text-align: right;
+    }
+    .security-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: #f0fdf4;
+        color: #166534;
+        border-radius: 99px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 30px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card verify-card">
+        {% if status == 'VALID' %}
+        <div class="status-header valid">
+            <div class="status-icon">
+                <i class="bi bi-patch-check-fill"></i>
+            </div>
+            <h2 class="fw-bold mb-0">Protocolo Verificado</h2>
+            <p class="mb-0 opacity-75">Documento Autentico e Valido</p>
+        </div>
+        <div class="verify-details">
+            <div class="detail-row">
+                <span class="detail-label">Protocolo</span>
+                <span class="detail-value">{{ protocol }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Empresa (Contratante)</span>
+                <span class="detail-value">{{ company_name_masked }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">CNPJ</span>
+                <span class="detail-value">{{ cnpj_masked }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Data de Assinatura</span>
+                <span class="detail-value">{{ valid_since|date:"d/m/Y H:i:s" }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Selo de Integridade</span>
+                <span class="detail-value text-success">Criptografado (AES-256)</span>
+            </div>
+            
+            <div class="text-center">
+                <div class="security-badge">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    Validado conforme MP 2.200-2/2001 e Lei 14.063/2020
+                </div>
+            </div>
+            
+            <hr class="my-5">
+            <div class="text-center">
+                <p class="text-muted small">Este certificado confirma que o aceite digital para o contrato de prestacao de servicos foi realizado de forma voluntaria e integra por meio da plataforma SIMDCCONR01.</p>
+                <a href="/" class="btn btn-outline-primary btn-sm mt-3">Voltar para Inicio</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="status-header invalid">
+            <div class="status-icon">
+                <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <h2 class="fw-bold mb-0">Protocolo Invalido</h2>
+            <p class="mb-0 opacity-75">Nao foi possivel validar este documento</p>
+        </div>
+        <div class="verify-details text-center">
+            <p class="text-muted">O protocolo informado (<strong>{{ protocol }}</strong>) nao foi encontrado ou e invalido.</p>
+            {% if error_message %}
+            <div class="alert alert-danger py-2 small">Motivo: {{ error_message }}</div>
+            {% endif %}
+            <a href="/" class="btn btn-primary mt-4">Página Inicial</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

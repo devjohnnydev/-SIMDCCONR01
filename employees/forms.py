@@ -13,7 +13,8 @@ class EmployeeForm(forms.ModelForm):
         fields = [
             'nome', 'email', 'cpf', 'setor', 'cargo',
             'turno', 'data_admissao', 'data_nascimento',
-            'matricula', 'gestor', 'status'
+            'data_demissao', 'matricula', 'centro_de_custo',
+            'gestor', 'status'
         ]
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
@@ -24,7 +25,9 @@ class EmployeeForm(forms.ModelForm):
             'turno': forms.Select(attrs={'class': 'form-select'}),
             'data_admissao': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'data_nascimento': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'data_demissao': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'matricula': forms.TextInput(attrs={'class': 'form-control'}),
+            'centro_de_custo': forms.TextInput(attrs={'class': 'form-control'}),
             'gestor': forms.Select(attrs={'class': 'form-select'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
         }

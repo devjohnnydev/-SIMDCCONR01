@@ -58,8 +58,10 @@ class Employee(models.Model):
     
     data_admissao = models.DateField('Data de Admissao')
     data_nascimento = models.DateField('Data de Nascimento', null=True, blank=True)
+    data_demissao = models.DateField('Data de Demissao', null=True, blank=True)
     
     matricula = models.CharField('Matricula', max_length=50, blank=True)
+    centro_de_custo = models.CharField('Centro de Custo', max_length=100, blank=True)
     gestor = models.ForeignKey(
         'self',
         on_delete=models.SET_NULL,

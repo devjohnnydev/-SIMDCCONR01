@@ -16,6 +16,7 @@ from companies.models import Company
 from employees.models import Employee
 from forms_builder.models import FormInstance, FormAssignment, FormAnswer
 from audit.models import AuditLog
+from .emails import send_company_welcome_contract
 
 
 class CustomLoginView(LoginView):
@@ -83,9 +84,14 @@ class CompanySignupView(CreateView):
     
     def form_valid(self, form):
         response = super().form_valid(form)
+        company = self.object
+        
+        # Envia e-mail de formalização contratual
+        send_company_welcome_contract(company)
+        
         messages.success(
             self.request,
-            'Cadastro realizado com sucesso! Aguarde a aprovacao da sua empresa.'
+            'Cadastro realizado com sucesso! Um e-mail de formalização foi enviado para {{ company.responsavel_email }}. Aguarde a aprovacao da sua empresa.'
         )
         return response
 

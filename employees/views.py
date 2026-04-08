@@ -169,34 +169,68 @@ def employee_import(request):
                 for row_num, row in enumerate(reader, start=2):
                     total_rows += 1
                     try:
-                        data_admissao = None
-                        if row.get('data_admissao'):
-                            try:
-                                data_admissao = datetime.strptime(
-                                    row['data_admissao'].strip(),
-                                    '%d/%m/%Y'
-                                ).date()
-                            except ValueError:
-                                data_admissao = datetime.strptime(
-                                    row['data_admissao'].strip(),
-                                    '%Y-%m-%d'
-                                ).date()
-                        
-                        cpf = row.get('cpf', '').strip()
+                        # Helper to get value from multiple possible keys (Portuguese/Internal)
+                        def get_val(keys):
+                            for k in keys:
+                                if row.get(k): return row[k].strip()
+                            return ''
+
+                        nome = get_val(['Nome Completo', 'nome'])
+                        email = get_val(['e-mail corporativo', 'email']).lower()
+                        cpf = get_val(['CPF', 'cpf'])
                         cpf = ''.join(filter(str.isdigit, cpf))
+                        setor = get_val(['Departamento', 'setor'])
+                        cargo = get_val(['Cargo/função', 'cargo'])
+                        centro_de_custo = get_val(['Centro de Custo', 'centro_de_custo'])
+                        matricula = get_val(['Matricula', 'matricula', 'MATRICULA'])
                         
+                        raw_admissao = get_val(['data de admissão', 'data_admissao'])
+                        raw_nascimento = get_val(['data de nascimento', 'data_nascimento'])
+                        raw_demissao = get_val(['data de demissão', 'data_demissao'])
+                        
+                        def parse_date(date_str):
+                            if not date_str: return None
+                            for fmt in ('%d/%m/%Y', '%Y-%m-%d'):
+                                try:
+                                    return datetime.strptime(date_str, fmt).date()
+                                except ValueError:
+                                    continue
+                            return None
+
+                        data_admissao = parse_date(raw_admissao) or datetime.now().date()
+                        data_nascimento = parse_date(raw_nascimento)
+                        data_demissao = parse_date(raw_demissao)
+                        
+                        # Superior Imediato (lookup by email or name if possible)
+                        gestor_val = get_val(['Superior Imediato', 'gestor'])
+                        gestor = None
+                        if gestor_val:
+                            # Try email first, then name
+                            gestor = Employee.objects.filter(company=company, email__iexact=gestor_val).first()
+                            if not gestor:
+                                gestor = Employee.objects.filter(company=company, nome__icontains=gestor_val).first()
+
+                        status_val = get_val(['Status', 'status']).upper()
+                        status = 'ACTIVE'
+                        if 'INATIVO' in status_val or 'OFF' in status_val or 'TERMINATED' in status_val:
+                            status = 'TERMINATED'
+
                         employee, created = Employee.objects.update_or_create(
                             company=company,
-                            email=row['email'].strip().lower(),
+                            email=email,
                             defaults={
-                                'nome': row['nome'].strip(),
+                                'nome': nome,
                                 'cpf': cpf,
-                                'setor': row.get('setor', '').strip(),
-                                'cargo': row.get('cargo', '').strip(),
+                                'setor': setor,
+                                'cargo': cargo,
+                                'centro_de_custo': centro_de_custo,
                                 'turno': row.get('turno', 'FULL').strip().upper(),
-                                'data_admissao': data_admissao or datetime.now().date(),
-                                'matricula': row.get('matricula', '').strip(),
-                                'status': 'ACTIVE'
+                                'data_admissao': data_admissao,
+                                'data_nascimento': data_nascimento,
+                                'data_demissao': data_demissao,
+                                'matricula': matricula,
+                                'gestor': gestor,
+                                'status': status
                             }
                         )
                         success_count += 1
@@ -252,12 +286,12 @@ def employee_export_template(request):
     
     writer = csv.writer(response, delimiter=';')
     writer.writerow([
-        'nome', 'email', 'cpf', 'setor', 'cargo',
-        'turno', 'data_admissao', 'matricula'
+        'Nome Completo', 'e-mail corporativo', 'CPF', 'Departamento', 'Cargo/função',
+        'Centro de Custo', 'Superior Imediato', 'data de nascimento', 'data de admissão', 'matricula', 'turno'
     ])
     writer.writerow([
-        'Joao da Silva', 'joao@empresa.com', '12345678901',
-        'TI', 'Analista', 'FULL', '01/01/2024', '001'
+        'Joao da Silva', 'joao@empresa.com', '12345678901', 'TI', 'Analista',
+        'CC-001', 'gestor@empresa.com', '15/05/1985', '01/01/2024', '001', 'FULL'
     ])
     
     return response

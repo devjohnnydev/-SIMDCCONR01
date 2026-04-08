@@ -54,6 +54,10 @@ class CompanySignupForm(forms.ModelForm):
         label='Confirmar Senha',
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
+    accept_contract = forms.BooleanField(
+        label='Aceito o CONTRATO DE PRESTAÇÃO DE SERVIÇOS TECNOLÓGICOS, CONSULTIVOS E PERICIAIS (SaaS SIMDCCONR01) arquivo anexo.',
+        required=True
+    )
     accept_terms = forms.BooleanField(
         label='Aceito os Termos de Uso e Politica de Privacidade',
         required=True
@@ -64,7 +68,8 @@ class CompanySignupForm(forms.ModelForm):
         fields = [
             'nome_fantasia', 'razao_social', 'cnpj',
             'responsavel_nome', 'responsavel_email', 'telefone',
-            'endereco', 'cidade', 'estado', 'cep'
+            'endereco', 'cidade', 'estado', 'cep',
+            'contratante_nome', 'contratante_documento'
         ]
         widgets = {
             'nome_fantasia': forms.TextInput(attrs={'class': 'form-control'}),
@@ -77,6 +82,8 @@ class CompanySignupForm(forms.ModelForm):
             'cidade': forms.TextInput(attrs={'class': 'form-control'}),
             'estado': forms.TextInput(attrs={'class': 'form-control', 'maxlength': 2}),
             'cep': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '00000000'}),
+            'contratante_nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'contratante_documento': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'CPF'}),
         }
     
     def clean_cnpj(self):
@@ -105,9 +112,13 @@ class CompanySignupForm(forms.ModelForm):
         return cleaned_data
     
     def save(self, commit=True):
+        from django.utils import timezone
         company = super().save(commit=False)
         company.status = 'PENDING'
         
+        if self.cleaned_data.get('accept_contract'):
+            company.data_aceite_contrato = timezone.now()
+            
         if commit:
             company.save()
             

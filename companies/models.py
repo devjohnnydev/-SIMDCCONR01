@@ -43,6 +43,12 @@ class Company(models.Model):
     estado = models.CharField('Estado', max_length=2, blank=True)
     cep = models.CharField('CEP', max_length=8, blank=True)
     
+    # Contrato SaaS SIMDCCONR01
+    contratante_nome = models.CharField('Nome do Contratante', max_length=200, blank=True, null=True)
+    contratante_documento = models.CharField('CPF do Contratante', max_length=20, blank=True, null=True)
+    data_aceite_contrato = models.DateTimeField('Data e Hora de Assinatura', blank=True, null=True)
+    
+    
     logo = models.ImageField('Logo', upload_to='logos/', null=True, blank=True)
     cor_primaria = models.CharField('Cor Primaria', max_length=7, default='#0d6efd')
     cor_secundaria = models.CharField('Cor Secundaria', max_length=7, default='#6c757d')

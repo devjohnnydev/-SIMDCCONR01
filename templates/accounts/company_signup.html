@@ -171,11 +171,13 @@
                         
                         <div class="form-section">
                             <h5 class="section-title">
-                                <i class="bi bi-person"></i>Responsavel pela Empresa
+                                <i class="bi bi-person"></i>Representantes
                             </h5>
                             <div class="row g-3">
                                 <div class="col-md-6">{{ form.responsavel_nome|as_crispy_field }}</div>
                                 <div class="col-md-6">{{ form.responsavel_email|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.contratante_nome|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ form.contratante_documento|as_crispy_field }}</div>
                             </div>
                         </div>
                         
@@ -205,6 +207,12 @@
                         </div>
                         
                         <div class="terms-check mb-4">
+                            <div class="form-check mb-3">
+                                {{ form.accept_contract }}
+                                <label class="form-check-label" for="{{ form.accept_contract.id_for_label }}">
+                                    Botão de aceite do CONTRATO DE PRESTAÇÃO DE SERVIÇOS TÉCNOLÓGICOS, CONSULTIVOS E PERICIAIS (SaaS SIMDCCONR01) <a href="#" class="fw-medium">arquivo anexo</a>.
+                                </label>
+                            </div>
                             <div class="form-check">
                                 {{ form.accept_terms }}
                                 <label class="form-check-label" for="{{ form.accept_terms.id_for_label }}">

@@ -105,7 +105,14 @@ class ContractTermsView(TemplateView):
     """View para exibir os termos do contrato completo."""
     template_name = 'accounts/contract_terms.html'
     
-    template_name = 'accounts/pending_approval.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated and hasattr(self.request.user, 'company'):
+            company = self.request.user.company
+            context['company'] = company
+            if company.data_aceite_contrato:
+                context['protocolo'] = f"SIMDC-{company.id}-{company.cnpj[:4]}"
+        return context
 
 
 @login_required

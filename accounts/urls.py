@@ -13,6 +13,7 @@ urlpatterns = [
     path('signup/', views.CompanySignupView.as_view(), name='signup'),
     path('pending-approval/', views.PendingApprovalView.as_view(), name='pending_approval'),
     path('accept-terms/', views.accept_terms, name='accept_terms'),
+    path('contrato/', views.ContractTermsView.as_view(), name='contract_terms'),
     
     # Recuperação de Senha
     path('password-reset/', auth_views.PasswordResetView.as_view(

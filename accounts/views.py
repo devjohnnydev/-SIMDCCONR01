@@ -98,6 +98,12 @@ class CompanySignupView(CreateView):
 
 class PendingApprovalView(TemplateView):
     """View para exibir mensagem de aguardando aprovacao."""
+    template_name = 'accounts/pending_approval.html'
+
+
+class ContractTermsView(TemplateView):
+    """View para exibir os termos do contrato completo."""
+    template_name = 'accounts/contract_terms.html'
     
     template_name = 'accounts/pending_approval.html'
 

@@ -241,17 +241,13 @@
 
     <div class="signature-section">
         {% if diagnostic.is_signed %}
-            {% if diagnostic.signature_method == 'GOVBR' %}
-                <div class="govbr-seal">
-                    <span class="govbr-text">gov.br</span><br>
-                    <small>Documento assinado digitalmente<br>Token: {{ diagnostic.govbr_token }}</small>
-                </div>
-            {% endif %}
-            
-            <div class="signature-box">
-                <p><strong>{{ diagnostic.signed_by.get_full_name }}</strong></p>
-                <p>CRP: {{ diagnostic.signed_by.professional_crp }}</p>
-                <p><small>Assinado eletronicamente em {{ diagnostic.signature_timestamp|date:"d/m/Y H:i" }}</small></p>
+            <div class="signature-box text-center" style="margin-top: 30px;">
+                {% if diagnostic.signature_method == 'INTERNAL' and diagnostic.signer_profile and diagnostic.signer_profile.signature_image %}
+                    <img src="{{ diagnostic.signer_profile.signature_image.path }}" alt="Assinatura Digital" style="max-height: 80px; display: block; margin: 0 auto 5px auto;">
+                {% endif %}
+                <p style="margin: 0;"><strong>{% if diagnostic.signer_profile %}{{ diagnostic.signer_profile.nome_completo }}{% else %}{{ diagnostic.signed_by.get_full_name }}{% endif %}</strong></p>
+                <p style="margin: 0; font-size: 10pt;">{% if diagnostic.signer_profile %}{{ diagnostic.signer_profile.registro_profissional }}{% elif diagnostic.signed_by.professional_crp %}CRP: {{ diagnostic.signed_by.professional_crp }}{% endif %}</p>
+                <p style="margin: 5px 0 0 0;"><small style="color: #666;">Assinatura Eletrônica ICP-Brasil<br>Data e Hora: {{ diagnostic.signature_timestamp|date:"d/m/Y H:i:s" }}</small></p>
             </div>
         {% else %}
             <div class="signature-box" style="border-top: 1pt dashed #ccc; color: #999;">

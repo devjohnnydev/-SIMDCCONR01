@@ -207,14 +207,6 @@
                                     <small class="d-block text-dark fw-medium" style="font-size: 0.75rem;">Aguardando
                                         Assinatura</small>
 
-                                    <form action="{% url 'accounts:sign_laudo_govbr' diagnostic.id %}" method="post"
-                                        class="mt-3 d-print-none">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm w-100 fw-bold text-white shadow-sm"
-                                            style="background-color: #1351b4; border: 1px solid #1351b4; transition: all 0.2s;">
-                                            <i class="bi bi-person-badge me-2"></i>Assinar com GOV.BR
-                                        </button>
-                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -256,14 +248,20 @@
                                         ELETRÔNICA</span>
                                 </div>
                                 <div class="text-start border-top pt-2 mt-2">
-                                    {% if diagnostic.signature_method == 'GOVBR' %}
-                                    <small class="d-block text-success fw-bold" style="font-size: 0.75rem;"><i
-                                            class="bi bi-check-circle-fill me-1"></i>Autenticado via Gov.br</small>
-                                    <small class="d-block text-dark mt-1" style="font-size: 0.70rem;">Token: {% if diagnostic.govbr_token %}{{ diagnostic.govbr_token }}{% else %}N/A{% endif %}</small>
-                                    {% else %}
+                                    {% if diagnostic.signature_method == 'INTERNAL' and diagnostic.signer_profile and diagnostic.signer_profile.signature_image %}
+                                        <img src="{{ diagnostic.signer_profile.signature_image.url }}" alt="Assinatura" style="max-height: 50px;">
+                                    {% endif %}
+                                    <small class="d-block text-dark mt-1 fw-bold" style="font-size: 0.70rem;">
+                                        {% if diagnostic.signer_profile %}
+                                            {{ diagnostic.signer_profile.nome_completo }}<br>
+                                            {{ diagnostic.signer_profile.registro_profissional }}
+                                        {% else %}
+                                            Assinado pelo Sistema
+                                        {% endif %}
+                                    </small>
                                     <small class="d-block text-dark fw-medium" style="font-size: 0.75rem;">Assinado por:
                                         <strong>Representante Legal</strong></small>
-                                    {% endif %}
+                                    <small class="text-muted d-block mt-2" style="font-size: 0.65rem;">Assinatura Eletrônica ICP-Brasil</small>
                                     <small class="d-block text-muted" style="font-size: 0.70rem;">Data: {{ diagnostic.signature_timestamp|date:"d/m/Y H:i:s" }}</small>
                                 </div>
                                 <div class="mt-2 d-none d-print-block text-center mx-auto">

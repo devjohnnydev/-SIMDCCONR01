@@ -168,25 +168,7 @@
                         <img id="bulk_sig_preview_img" src="" alt="Assinatura" style="max-height:60px;">
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Método de Assinatura</label>
-                    <div class="d-flex gap-2">
-                        <div class="form-check flex-grow-1 border rounded-3 p-3" style="cursor:pointer;">
-                            <input class="form-check-input" type="radio" name="bulk_sig_method" id="method_internal" value="INTERNAL" checked>
-                            <label class="form-check-label fw-semibold" for="method_internal" style="cursor:pointer;">
-                                <i class="bi bi-shield-lock me-1 text-primary"></i>Assinatura Eletrônica
-                                <small class="d-block text-muted fw-normal">Assinatura digital com imagem cadastrada</small>
-                            </label>
-                        </div>
-                        <div class="form-check flex-grow-1 border rounded-3 p-3" style="cursor:pointer;">
-                            <input class="form-check-input" type="radio" name="bulk_sig_method" id="method_govbr" value="GOVBR">
-                            <label class="form-check-label fw-semibold" for="method_govbr" style="cursor:pointer;">
-                                <i class="bi bi-award me-1 text-success"></i>Gov.br
-                                <small class="d-block text-muted fw-normal">Autenticação com selo Gov.br</small>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+
             </div>
             <div class="modal-footer border-0 px-4 pb-4">
                 <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
@@ -224,23 +206,7 @@
                         <img id="ind_sig_preview_img" src="" alt="Assinatura" style="max-height:60px;">
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Método de Assinatura</label>
-                    <div class="d-flex gap-2">
-                        <div class="form-check flex-grow-1 border rounded-3 p-3">
-                            <input class="form-check-input" type="radio" name="ind_sig_method" id="ind_method_internal" value="INTERNAL" checked>
-                            <label class="form-check-label fw-semibold" for="ind_method_internal">
-                                <i class="bi bi-shield-lock me-1 text-primary"></i>Assinatura Eletrônica
-                            </label>
-                        </div>
-                        <div class="form-check flex-grow-1 border rounded-3 p-3">
-                            <input class="form-check-input" type="radio" name="ind_sig_method" id="ind_method_govbr" value="GOVBR">
-                            <label class="form-check-label fw-semibold" for="ind_method_govbr">
-                                <i class="bi bi-award me-1 text-success"></i>Gov.br
-                            </label>
-                        </div>
-                    </div>
-                </div>
+
             </div>
             <div class="modal-footer border-0 px-4 pb-4">
                 <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
@@ -301,9 +267,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('btn-confirm-bulk-sign').addEventListener('click', function () {
         const signerId = document.getElementById('bulk_signer_select').value;
-        const method = document.querySelector('input[name="bulk_sig_method"]:checked').value;
         document.getElementById('bulk_signer_profile_id').value = signerId;
-        document.getElementById('bulk_signature_method').value = method;
+        document.getElementById('bulk_signature_method').value = 'INTERNAL';
         document.getElementById('bulk-sign-form').submit();
     });
 
@@ -332,14 +297,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('btn-confirm-individual-sign').addEventListener('click', function () {
         const signerId = document.getElementById('individual_signer_select').value;
-        const method = document.querySelector('input[name="ind_sig_method"]:checked').value;
-        if (method === 'GOVBR') {
-            document.getElementById('ind_signer_profile_id_govbr').value = signerId;
-            document.getElementById('form-sign-govbr').submit();
-        } else {
-            document.getElementById('ind_signer_profile_id').value = signerId;
-            document.getElementById('form-sign-internal').submit();
-        }
+        document.getElementById('ind_signer_profile_id').value = signerId;
+        document.getElementById('form-sign-internal').submit();
     });
 });
 </script>

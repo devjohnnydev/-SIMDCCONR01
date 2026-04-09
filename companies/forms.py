@@ -57,7 +57,7 @@ class CompanyAdminForm(forms.ModelForm):
             'status': forms.Select(attrs={'class': 'form-control'}),
             'stripe_customer_id': forms.TextInput(attrs={'class': 'form-control'}),
             'stripe_subscription_id': forms.TextInput(attrs={'class': 'form-control'}),
-            'current_period_end': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'current_period_end': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
         }
 
 

@@ -33,28 +33,47 @@ def report_list(request):
 
 def get_dashboard_data(company):
     """Helper function to fetch dashboard metrics for a company."""
-    active_forms = FormInstance.objects.filter(company=company, status='ACTIVE')
+    # Inclui Ativos e Encerrados para que possam ver métricas de pesquisas finalizadas
+    active_forms = FormInstance.objects.filter(
+        company=company, 
+        status__in=['ACTIVE', 'CLOSED']
+    ).order_by('-created_at')
     
     total_employees = company.get_employee_count()
-    active_forms_count = active_forms.count()
+    active_forms_count = active_forms.filter(status='ACTIVE').count()
     
     form_metrics = []
     for form in active_forms:
         total = form.assignments.count()
-        completed = form.assignments.filter(status='COMPLETED').count()
-        rate = round((completed / total * 100), 1) if total > 0 else 0
+        completed_assignments = form.assignments.filter(status='COMPLETED').select_related('employee')
+        pending_assignments = form.assignments.filter(status__in=['PENDING', 'IN_PROGRESS']).select_related('employee')
+        
+        completed_count = completed_assignments.count()
+        rate = round((completed_count / total * 100), 1) if total > 0 else 0
         
         avg_score = FormAnswer.objects.filter(
             assignment__form_instance=form,
             question__question_type__in=['SCALE', 'SCALE_10']
         ).aggregate(avg=Avg('numeric_value'))['avg']
         
+        # Dados de Departamentos (Ranking)
+        dept_scores = list(form.get_department_scores())
+        worst_dept = dept_scores[0] if dept_scores else None
+        
+        # Listas de nomes (respeitando anonimato se houver restrição futura, mas no momento permitindo)
+        responded_list = [a.employee.nome for a in completed_assignments]
+        pending_list = [a.employee.nome for a in pending_assignments]
+        
         form_metrics.append({
             'form': form,
             'total': total,
-            'completed': completed,
+            'completed': completed_count,
             'response_rate': rate,
-            'avg_score': round(avg_score, 2) if avg_score else None
+            'avg_score': round(avg_score, 2) if avg_score else None,
+            'dept_scores': dept_scores,
+            'worst_dept': worst_dept,
+            'responded_list': responded_list,
+            'pending_list': pending_list,
         })
     
     climate_score = FormAnswer.objects.filter(
@@ -70,10 +89,17 @@ def get_dashboard_data(company):
     ).aggregate(avg=Avg('numeric_value'))['avg']
     
     from employees.models import Employee
+    # Funcionários por Setor
     sector_data = Employee.objects.filter(
         company=company,
         status='ACTIVE'
     ).values('setor').annotate(count=Count('id')).order_by('-count')
+    
+    # Funcionários por Centro de Custo
+    cost_center_data = Employee.objects.filter(
+        company=company,
+        status='ACTIVE'
+    ).values('centro_de_custo').annotate(count=Count('id')).order_by('-count')
     
     return {
         'company': company,
@@ -83,6 +109,7 @@ def get_dashboard_data(company):
         'climate_score': round(climate_score, 2) if climate_score else None,
         'wellbeing_score': round(wellbeing_score, 2) if wellbeing_score else None,
         'sector_data': list(sector_data),
+        'cost_center_data': list(cost_center_data),
     }
 
 

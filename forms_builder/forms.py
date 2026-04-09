@@ -23,11 +23,11 @@ class FormInstanceForm(forms.ModelForm):
             'start_date': forms.DateTimeInput(attrs={
                 'class': 'form-control',
                 'type': 'datetime-local'
-            }),
+            }, format='%Y-%m-%dT%H:%M'),
             'end_date': forms.DateTimeInput(attrs={
                 'class': 'form-control',
                 'type': 'datetime-local'
-            }),
+            }, format='%Y-%m-%dT%H:%M'),
         }
     
     target_sectors_text = forms.CharField(

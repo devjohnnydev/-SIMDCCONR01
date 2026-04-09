@@ -278,10 +278,10 @@
 
 <!-- NAV -->
 <nav>
-    <div class="nav-logo">
+    <a href="{% if user.is_authenticated %}{% url 'accounts:dashboard' %}{% else %}/{% endif %}" class="nav-logo" style="text-decoration: none; color: inherit;">
         <div class="dot"></div>
         <span>SIMDCC<em>ONR01</em></span>
-    </div>
+    </a>
     <div class="nav-links">
         <a href="#problema">Por que importa</a>
         <a href="#solucao">Solução</a>

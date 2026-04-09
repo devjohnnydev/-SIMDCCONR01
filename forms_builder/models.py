@@ -209,6 +209,17 @@ class FormInstance(models.Model):
             question__question_type__in=['SCALE', 'SCALE_10']
         ).aggregate(avg=Avg('numeric_value'))['avg']
     
+    def get_department_scores(self):
+        """Calcula a media de respostas por departamento para este formulario."""
+        from django.db.models import Avg
+        return FormAnswer.objects.filter(
+            assignment__form_instance=self,
+            question__question_type__in=['SCALE', 'SCALE_10']
+        ).values('assignment__employee__setor').annotate(
+            avg_score=Avg('numeric_value'),
+            count=models.Count('id')
+        ).order_by('avg_score')
+    
     def publish(self):
         """Publica o formulario e cria atribuicoes para funcionarios."""
         from employees.models import Employee

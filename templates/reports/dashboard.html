@@ -101,49 +101,136 @@
     
     {% if form_metrics %}
     <div class="card mb-4">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Metricas por Formulario</h5>
+            <small class="text-muted">Clique em <i class="bi bi-plus-circle"></i> para expandir detalhes</small>
         </div>
-        <div class="card-body">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table">
-                    <thead>
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
                         <tr>
+                            <th style="width: 40px;"></th>
                             <th>Formulario</th>
                             <th>Categoria</th>
                             <th>Respostas</th>
                             <th>Taxa</th>
                             <th>Media</th>
-                            <th>Acoes</th>
+                            <th class="text-end">Acoes</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for m in form_metrics %}
-                        <tr>
-                            <td>{{ m.form.title }}</td>
-                            <td><span class="badge bg-secondary">{{ m.form.template.get_category_display }}</span></td>
+                        <tr style="cursor: pointer;" onclick="toggleDetails('details-{{ m.form.pk }}')">
+                            <td><i class="bi bi-plus-circle text-primary" id="icon-details-{{ m.form.pk }}"></i></td>
+                            <td>
+                                <strong>{{ m.form.title }}</strong>
+                                {% if m.form.status == 'CLOSED' %}
+                                    <span class="badge bg-secondary ms-1">Encerrado</span>
+                                {% endif %}
+                            </td>
+                            <td><span class="badge bg-light text-dark border">{{ m.form.template.get_category_display }}</span></td>
                             <td>{{ m.completed }}/{{ m.total }}</td>
                             <td>
-                                <div class="progress" style="height: 20px; width: 100px;">
-                                    <div class="progress-bar" style="width: {{ m.response_rate }}%;">{{ m.response_rate }}%</div>
+                                <div class="progress" style="height: 12px; width: 100px; border-radius: 10px;">
+                                    <div class="progress-bar {% if m.response_rate >= 70 %}bg-success{% elif m.response_rate >= 40 %}bg-warning{% else %}bg-danger{% endif %}" style="width: {{ m.response_rate }}%;"></div>
                                 </div>
+                                <small class="text-muted">{{ m.response_rate }}%</small>
                             </td>
                             <td>
                                 {% if m.avg_score %}
-                                <span class="badge bg-{% if m.avg_score >= 4 %}success{% elif m.avg_score >= 3 %}warning{% else %}danger{% endif %}">
+                                <span class="badge bg-{% if m.avg_score >= 4 %}success{% elif m.avg_score >= 3 %}warning{% else %}danger{% endif %} rounded-pill">
                                     {{ m.avg_score|floatformat:1 }}
                                 </span>
                                 {% else %}-{% endif %}
                             </td>
-                            <td>
-                                <a href="{% url 'reports:form_pdf' m.form.pk %}" class="btn btn-sm btn-outline-danger">
-                                    <i class="bi bi-file-pdf"></i> PDF
-                                </a>
-                                {% if m.form.template.category == 'SIMDCCONR01' %}
-                                <a href="{% url 'reports:organizational_pdf' m.form.pk %}" class="btn btn-sm btn-dark" title="Laudo Pericial com rastreabilidade 160/160">
-                                    <i class="bi bi-file-earmark-medical"></i> Laudo
-                                </a>
-                                {% endif %}
+                            <td class="text-end">
+                                <div class="btn-group">
+                                    <a href="{% url 'reports:form_pdf' m.form.pk %}" class="btn btn-sm btn-outline-danger" title="Resultados Brutos">
+                                        <i class="bi bi-file-pdf"></i>
+                                    </a>
+                                    {% if m.form.template.category == 'SIMDCCONR01' %}
+                                    <a href="{% url 'reports:organizational_pdf' m.form.pk %}" class="btn btn-sm btn-dark" title="Laudo Pericial 160/160">
+                                        <i class="bi bi-file-earmark-medical"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Details Row -->
+                        <tr id="details-{{ m.form.pk }}" style="display: none; background-color: #f8fafc;">
+                            <td colspan="7">
+                                <div class="p-3 border-start border-4 border-primary">
+                                    <div class="row g-3">
+                                        <!-- Worst Department -->
+                                        <div class="col-md-4">
+                                            <div class="card h-100 border-0 shadow-sm">
+                                                <div class="card-body">
+                                                    <h6 class="text-danger small fw-bold text-uppercase mb-2"><i class="bi bi-exclamation-triangle-fill"></i> Setor com Menor Media</h6>
+                                                    {% if m.worst_dept %}
+                                                        <h5 class="mb-1">{{ m.worst_dept.assignment__employee__setor }}</h5>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span class="fs-4 fw-bold text-danger">{{ m.worst_dept.avg_score|floatformat:1 }}</span>
+                                                            <small class="text-muted">baseado em {{ m.worst_dept.count }} respostas</small>
+                                                        </div>
+                                                    {% else %}
+                                                        <p class="mb-0 text-muted small italic">Dados insuficientes para calcular médias por setor.</p>
+                                                    {% endif %}
+
+                                                    <hr class="my-3">
+                                                    <h6 class="small fw-bold text-uppercase mb-2">Ranking por Setor</h6>
+                                                    <div style="max-height: 150px; overflow-y: auto;">
+                                                        <table class="table table-sm table-borderless mb-0 small">
+                                                            {% for ds in m.dept_scores %}
+                                                            <tr>
+                                                                <td>{{ ds.assignment__employee__setor }}</td>
+                                                                <td class="text-end"><span class="badge {% if ds.avg_score < 3 %}bg-danger{% elif ds.avg_score < 4 %}bg-warning text-dark{% else %}bg-success{% endif %}">{{ ds.avg_score|floatformat:1 }}</span></td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Responded Status -->
+                                        <div class="col-md-8">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="card h-100 border-0 shadow-sm">
+                                                        <div class="card-header bg-success-soft py-2 border-0">
+                                                            <span class="text-success small fw-bold text-uppercase"><i class="bi bi-check-circle-fill"></i> Quem ja respondeu ({{ m.completed }})</span>
+                                                        </div>
+                                                        <div class="card-body p-0" style="max-height: 250px; overflow-y: auto;">
+                                                            <div class="list-group list-group-flush small">
+                                                                {% for name in m.responded_list %}
+                                                                    <div class="list-group-item py-1 border-0">{{ name }}</div>
+                                                                {% empty %}
+                                                                    <div class="list-group-item text-muted italic">Nenhuma resposta finalizada.</div>
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card h-100 border-0 shadow-sm">
+                                                        <div class="card-header bg-warning-soft py-2 border-0">
+                                                            <span class="text-warning-emphasis small fw-bold text-uppercase"><i class="bi bi-clock-fill"></i> Pendentes ({{ m.pending_list|length }})</span>
+                                                        </div>
+                                                        <div class="card-body p-0" style="max-height: 250px; overflow-y: auto;">
+                                                            <div class="list-group list-group-flush small">
+                                                                {% for name in m.pending_list %}
+                                                                    <div class="list-group-item py-1 border-0">{{ name }}</div>
+                                                                {% empty %}
+                                                                    <div class="list-group-item text-success italic">Protocolo completo! Todos responderam.</div>
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -154,50 +241,99 @@
     </div>
     {% endif %}
     
-    <div class="row g-4">
+    <div class="row g-4 mb-5">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Funcionarios por Setor</h5>
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0"><i class="bi bi-pie-chart text-primary"></i> Funcionarios por Setor</h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="sectorChart" height="200"></canvas>
+                    {% if sector_data %}
+                        <canvas id="sectorChart" height="250"></canvas>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox text-muted fs-1"></i>
+                            <p class="text-muted mt-2">Sem dados de setor cadastrados.</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between">
-                    <h5 class="mb-0"><i class="bi bi-file-pdf"></i> Gerar Relatorio de Periodo</h5>
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0"><i class="bi bi-cash-stack text-success"></i> Funcionarios por Centro de Custo</h5>
                 </div>
                 <div class="card-body">
-                    <form method="get" action="{% url 'reports:period_pdf' %}">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Data Inicio</label>
-                                <input type="date" name="start_date" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Data Fim</label>
-                                <input type="date" name="end_date" class="form-control" required>
-                            </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="bi bi-file-pdf"></i> Gerar PDF do Periodo
-                                </button>
-                            </div>
+                    {% if cost_center_data %}
+                        <canvas id="costCenterChart" height="250"></canvas>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox text-muted fs-1"></i>
+                            <p class="text-muted mt-2">Sem dados de centro de custo.</p>
                         </div>
-                    </form>
+                    {% endif %}
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="card bg-light border-0 shadow-sm mb-5">
+        <div class="card-body p-4">
+            <h5 class="mb-3"><i class="bi bi-file-pdf"></i> Gerar Relatorio Consolidado por Periodo</h5>
+            <p class="text-muted small mb-4">Selecione um intervalo de datas para gerar um comparativo de todos os formulários aplicados no período.</p>
+            <form method="get" action="{% url 'reports:period_pdf' %}">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold">Data Inicio</label>
+                        <input type="date" name="start_date" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold">Data Fim</label>
+                        <input type="date" name="end_date" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="bi bi-file-earmark-pdf"></i> Gerar PDF Consolidado
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 {% block extra_js %}
 <script>
+function toggleDetails(id) {
+    var element = document.getElementById(id);
+    var icon = document.getElementById('icon-' + id);
+    if (element.style.display === 'none') {
+        element.style.display = 'table-row';
+        icon.classList.remove('bi-plus-circle');
+        icon.classList.add('bi-dash-circle');
+    } else {
+        element.style.display = 'none';
+        icon.classList.remove('bi-dash-circle');
+        icon.classList.add('bi-plus-circle');
+    }
+}
+
+// Config Common
+var chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15, font: { size: 11 } } }
+    }
+};
+
+// Colors
+var colors = ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6c757d', '#0dcaf0', '#fd7e14', '#20c997', '#6610f2', '#d63384'];
+
+// Sector Chart
 var sectorData = {{ sector_data|safe }};
-if (sectorData.length > 0) {
+if (sectorData && sectorData.length > 0) {
     var ctx = document.getElementById('sectorChart').getContext('2d');
     new Chart(ctx, {
         type: 'doughnut',
@@ -205,22 +341,38 @@ if (sectorData.length > 0) {
             labels: sectorData.map(function(item) { return item.setor || 'Sem Setor'; }),
             datasets: [{
                 data: sectorData.map(function(item) { return item.count; }),
-                backgroundColor: [
-                    '#0d6efd', '#198754', '#ffc107', '#dc3545', '#6c757d',
-                    '#0dcaf0', '#fd7e14', '#20c997', '#6610f2', '#d63384'
-                ]
+                backgroundColor: colors,
+                borderWidth: 0,
+                cutout: '70%'
             }]
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
+        options: chartOptions
+    });
+}
+
+// Cost Center Chart
+var costCenterData = {{ cost_center_data|safe }};
+if (costCenterData && costCenterData.length > 0) {
+    var ctxCC = document.getElementById('costCenterChart').getContext('2d');
+    new Chart(ctxCC, {
+        type: 'pie',
+        data: {
+            labels: costCenterData.map(function(item) { return item.centro_de_custo || 'Sem Custo'; }),
+            datasets: [{
+                data: costCenterData.map(function(item) { return item.count; }),
+                backgroundColor: colors.slice().reverse(),
+                borderWidth: 2
+            }]
+        },
+        options: chartOptions
     });
 }
 </script>
+<style>
+    .bg-success-soft { background-color: rgba(25, 135, 84, 0.1); }
+    .bg-warning-soft { background-color: rgba(255, 193, 7, 0.1); }
+    .bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); }
+</style>
+{% endblock %}
 {% endblock %}
 {% endblock %}

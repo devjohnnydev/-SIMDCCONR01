@@ -89,19 +89,30 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{% url 'employees:edit' emp.pk %}" class="btn btn-sm btn-outline-primary" title="Editar">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                {% if not emp.user %}
-                                <a href="{% url 'employees:create_user' emp.pk %}" class="btn btn-sm btn-outline-info" title="Criar Acesso">
-                                    <i class="bi bi-key"></i>
-                                </a>
-                                {% endif %}
-                                {% if emp.status == 'ACTIVE' %}
-                                <a href="{% url 'employees:deactivate' emp.pk %}" class="btn btn-sm btn-outline-danger" title="Desativar" onclick="return confirm('Deseja desativar este funcionario?')">
-                                    <i class="bi bi-person-x"></i>
-                                </a>
-                                {% endif %}
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'employees:edit' emp.pk %}" class="btn btn-sm btn-outline-primary" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    
+                                    {% with pending=emp.get_pending_assignment %}
+                                    {% if pending %}
+                                    <a href="{% url 'forms:resend_notification_employee' emp.pk %}" class="btn btn-sm btn-outline-info" title="Reenviar Convite de Pesquisa ({{ pending.form_instance.title }})">
+                                        <i class="bi bi-envelope-check"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    {% if not emp.user %}
+                                    <a href="{% url 'employees:create_user' emp.pk %}" class="btn btn-sm btn-outline-info" title="Criar Acesso">
+                                        <i class="bi bi-key"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if emp.status == 'ACTIVE' %}
+                                    <a href="{% url 'employees:deactivate' emp.pk %}" class="btn btn-sm btn-outline-danger" title="Desativar" onclick="return confirm('Deseja desativar este funcionario?')">
+                                        <i class="bi bi-person-x"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
                             </td>
                         </tr>
                         {% empty %}

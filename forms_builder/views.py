@@ -349,11 +349,21 @@ def form_view_responses(request, assignment_pk):
 
 @login_required
 @require_company_admin
-def resend_form_notification(request, assignment_pk):
+def resend_form_notification(request, assignment_pk=None, employee_id=None):
     """Reenvia o e-mail de notificação de um formulário para o funcionário."""
     from .utils_emails import send_form_publication_notification
     
-    assignment = get_object_or_404(FormAssignment, pk=assignment_pk, form_instance__company=request.user.company)
+    if assignment_pk:
+        assignment = get_object_or_404(FormAssignment, pk=assignment_pk, form_instance__company=request.user.company)
+    elif employee_id:
+        from employees.models import Employee
+        employee = get_object_or_404(Employee, pk=employee_id, company=request.user.company)
+        assignment = employee.get_pending_assignment()
+        if not assignment:
+            messages.warning(request, f'O funcionário {employee.nome} não possui pesquisas pendentes no momento.')
+            return redirect(request.META.get('HTTP_REFERER', 'employees:list'))
+    else:
+        return redirect('forms:instances')
     
     if assignment.status == 'COMPLETED':
         messages.warning(request, 'Este funcionário já concluiu a pesquisa.')

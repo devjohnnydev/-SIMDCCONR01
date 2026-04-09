@@ -114,6 +114,10 @@ class Employee(models.Model):
                     if created:
                         send_form_publication_notification(assignment)
 
+    def get_pending_assignment(self):
+        """Retorna a atribuicao pendente mais recente para este funcionario."""
+        return self.form_assignments.filter(status__in=['PENDING', 'IN_PROGRESS']).order_by('-form_instance__created_at').first()
+
     def __str__(self):
         return f"{self.nome} - {self.cargo} ({self.company.nome_fantasia})"
     

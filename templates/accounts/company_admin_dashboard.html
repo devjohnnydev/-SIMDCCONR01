@@ -87,7 +87,10 @@
                         <h1 class="h2 mb-1">Bem-vindo, {{ user.first_name }}!</h1>
                         <p class="text-muted mb-0">Gerencie sua empresa e acompanhe os indicadores</p>
                     </div>
-                    <span class="badge bg-primary px-3 py-2">{{ company.nome_fantasia }}</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-primary px-3 py-2">{{ company.nome_fantasia }}</span>
+                        <span class="badge bg-light text-muted border small" style="font-size: 0.7rem;">v2.0 LIVE</span>
+                    </div>
                 </div>
             </div>
             
@@ -251,9 +254,9 @@
                                             <small class="text-muted">{{ emp.cargo }} - {{ emp.setor }}</small>
                                         </div>
                                     </div>
-                                    {% if emp.status == 'ATIVO' %}
+                                    {% if emp.status == 'ACTIVE' %}
                                     <span class="badge bg-success">Ativo</span>
-                                    {% elif emp.status == 'INATIVO' %}
+                                    {% elif emp.status == 'INACTIVE' %}
                                     <span class="badge bg-secondary">Inativo</span>
                                     {% elif emp.status == 'FERIAS' %}
                                     <span class="badge bg-info">Ferias</span>

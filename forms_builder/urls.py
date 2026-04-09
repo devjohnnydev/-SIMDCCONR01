@@ -20,4 +20,5 @@ urlpatterns = [
     path('respond/<int:assignment_pk>/', views.form_respond, name='respond'),
     path('responses/<int:assignment_pk>/', views.form_view_responses, name='view_responses'),
     path('resend-notification/<int:assignment_pk>/', views.resend_form_notification, name='resend_notification'),
+    path('resend-notification/employee/<int:employee_id>/', views.resend_form_notification, name='resend_notification_employee'),
 ]

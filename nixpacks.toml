@@ -1,17 +1,15 @@
 [phases.setup]
-nixPkgs = ["python311", "git"]
-aptPkgs = [
-    "libpango-1.0-0",
-    "libpangocairo-1.0-0",
-    "libpangoft2-1.0-0",
-    "libcairo2",
-    "libglib2.0-0",
-    "libharfbuzz0b",
-    "libffi-dev",
-    "libgdk-pixbuf-2.0-0",
-    "shared-mime-info",
-    "fontconfig"
+nixPkgs = [
+    "python311", 
+    "git",
+    "pango",
+    "cairo",
+    "glib",
+    "fontconfig",
+    "harfbuzz",
+    "shared-mime-info"
 ]
+aptPkgs = []
 
 [variables]
 PYTHONUNBUFFERED = "1"

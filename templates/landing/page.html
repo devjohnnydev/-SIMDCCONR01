@@ -88,8 +88,20 @@
         .plan-price { font-size: 3rem; font-weight: 900; margin: 1.5rem 0; }
         .plan-price small { font-size: 1rem; color: var(--text-muted); }
         .plan-features { list-style: none; text-align: left; margin: 2rem 0; }
-        .plan-features li { margin-bottom: 1rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.75rem; }
-        .plan-features i { color: var(--primary); }
+        .plan-features li { 
+            margin-bottom: 1.2rem; 
+            color: var(--text-muted); 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 0.75rem; 
+            line-height: 1.5;
+            font-size: 0.85rem;
+        }
+        .plan-features i { 
+            color: var(--primary); 
+            flex-shrink: 0; 
+            margin-top: 0.2rem;
+        }
 
         footer { padding: 6rem 5% 4rem; background: var(--secondary); color: white; text-align: center; }
         footer .nav-logo { color: white; display: flex; justify-content: center; margin-bottom: 2rem; }

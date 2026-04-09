@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load form_extras %}
 
 {% block title %}Responder: {{ instance.title }} - SIMDCCONR01{% endblock %}
 
@@ -84,9 +85,6 @@
                 </div>
             </div>
                     
-                    <form method="post">
-                        {% csrf_token %}
-                        
             <!-- Perguntas -->
             <form method="post" id="survey-form">
                 {% csrf_token %}
@@ -184,9 +182,9 @@
                         <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-lg">
                             <i class="bi bi-rocket-takeoff me-2"></i> Finalizar Diagnóstico
                         </button>
-                        <a href="{% url 'accounts:employee_dashboard' %}" class="btn btn-link text-muted">Sair sem salvar</a>
-                    </div>
+                    </form>
                 </div>
+            </div>
         </div>
     </div>
 </div>

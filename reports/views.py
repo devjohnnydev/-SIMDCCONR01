@@ -176,9 +176,13 @@ def generate_form_report(request, form_pk):
     
     html_string = render_to_string('reports/pdf/form_report.html', context)
     
-    from weasyprint import HTML
-    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-    pdf = html.write_pdf()
+    try:
+        from weasyprint import HTML
+        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+        pdf = html.write_pdf()
+    except Exception as e:
+        messages.error(request, f"Erro ao gerar PDF: {str(e)}. Verifique as dependências do sistema.")
+        return redirect('reports:report_list')
     
     report = Report.objects.create(
         company=company,
@@ -245,9 +249,13 @@ def generate_simdcconr01_report(request, form_pk):
     }
 
     html_string = render_to_string('reports/pdf/laudo_organizacional.html', context)
-    from weasyprint import HTML
-    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-    pdf = html.write_pdf()
+    try:
+        from weasyprint import HTML
+        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+        pdf = html.write_pdf()
+    except Exception as e:
+        messages.error(request, f"Erro ao gerar PDF: {str(e)}")
+        return redirect('reports:dashboard')
 
     # Log de auditoria
     AuditLog.log(
@@ -308,9 +316,13 @@ def download_individual_pdf(request, form_pk, assignment_pk):
     }
 
     html_string = render_to_string('reports/pdf/individual_respondente.html', context)
-    from weasyprint import HTML
-    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-    pdf = html.write_pdf()
+    try:
+        from weasyprint import HTML
+        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+        pdf = html.write_pdf()
+    except Exception as e:
+        messages.error(request, f"Erro ao gerar devolutiva individual: {str(e)}")
+        return redirect('reports:dashboard')
 
     AuditLog.log(
         user=request.user,
@@ -367,9 +379,13 @@ def download_pcmso_pdf(request, form_pk, assignment_pk):
     }
 
     html_string = render_to_string('reports/pdf/anexo_pcmso.html', context)
-    from weasyprint import HTML
-    html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-    pdf = html.write_pdf()
+    try:
+        from weasyprint import HTML
+        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+        pdf = html.write_pdf()
+    except Exception as e:
+        messages.error(request, f"Erro ao gerar PDF: {str(e)}")
+        return redirect('reports:dashboard')
 
     AuditLog.log(
         user=request.user,

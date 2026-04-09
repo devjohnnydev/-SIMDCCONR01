@@ -152,8 +152,9 @@ def generate_form_report(request, form_pk):
         elif question.question_type in ['SINGLE', 'MULTIPLE']:
             option_counts = {}
             for answer in answers:
-                for opt in answer.selected_options:
-                    option_counts[opt] = option_counts.get(opt, 0) + 1
+                if answer.selected_options:
+                    for opt in answer.selected_options:
+                        option_counts[opt] = option_counts.get(opt, 0) + 1
             result['option_counts'] = option_counts
         
         question_results.append(result)
@@ -182,10 +183,10 @@ def generate_form_report(request, form_pk):
         pdf = html.write_pdf()
     except ImportError as e:
         messages.error(request, f"Erro de sistema: Biblioteca ausente ({str(e)}). O administrador já foi notificado.")
-        return redirect('reports:report_list')
+        return redirect('reports:list')
     except Exception as e:
         messages.error(request, f"Erro ao gerar PDF: {str(e)}")
-        return redirect('reports:report_list')
+        return redirect('reports:list')
     
     report = Report.objects.create(
         company=company,

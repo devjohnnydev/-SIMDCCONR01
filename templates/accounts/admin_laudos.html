@@ -119,12 +119,9 @@
                                         <i class="bi bi-file-text"></i> Ver Parecer
                                     </a>
                                     {% elif not assignment.diagnostic %}
-                                    <form method="POST" action="{% url 'accounts:generate_laudo' assignment.id %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-success fw-bold rounded-pill px-3">
+                                        <button type="submit" formaction="{% url 'accounts:generate_laudo' assignment.id %}" class="btn btn-sm btn-success fw-bold rounded-pill px-3">
                                             <i class="bi bi-cpu"></i> Gerar Parecer
                                         </button>
-                                    </form>
                                     {% endif %}
                                 </td>
                             </tr>

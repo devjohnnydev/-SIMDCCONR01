@@ -262,8 +262,10 @@ def form_respond(request, assignment_pk):
     
     questions = instance.template.questions.all().order_by('order')
     
+    # Notificar início do preenchimento (primeiro acesso)
+    assignment.start()
+    
     if request.method == 'POST':
-        assignment.start()
         
         all_valid = True
         for question in questions:

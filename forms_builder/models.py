@@ -232,6 +232,11 @@ class FormInstance(models.Model):
         
         self.status = 'ACTIVE'
         self.save(update_fields=['status'])
+        
+        # Disparar emails para funcionários
+        from .utils_emails import send_form_publication_notification
+        for assignment in self.assignments.all():
+            send_form_publication_notification(assignment)
 
 
 class FormAssignment(models.Model):
@@ -276,12 +281,20 @@ class FormAssignment(models.Model):
             self.status = 'IN_PROGRESS'
             self.started_at = timezone.now()
             self.save(update_fields=['status', 'started_at'])
+            
+            # Notificar empresa
+            from .utils_emails import send_form_activity_notification
+            send_form_activity_notification(self, activity_type='ENTRY')
     
     def complete(self):
         """Marca como concluido."""
         self.status = 'COMPLETED'
         self.completed_at = timezone.now()
         self.save(update_fields=['status', 'completed_at'])
+        
+        # Notificar empresa
+        from .utils_emails import send_form_activity_notification
+        send_form_activity_notification(self, activity_type='SUBMISSION')
 
 
 class FormAnswer(models.Model):

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px; }
+        .header { background-color: {% if activity_type == 'ENTRY' %}#ffc107{% else %}#198754{% endif %}; color: {% if activity_type == 'ENTRY' %}#333{% else %}white{% endif %}; padding: 15px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { padding: 20px; }
+        .info { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .footer { font-size: 12px; color: #777; text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Notificação de Atividade</h2>
+        </div>
+        <div class="content">
+            <p>Olá, <strong>{{ company.responsavel_nome }}</strong>,</p>
+            <p>Informamos que houve uma nova atividade na pesquisa <strong>{{ form.title }}</strong>:</p>
+            
+            <div class="info">
+                <p><strong>Funcionário:</strong> {{ employee.nome }}</p>
+                <p><strong>Setor:</strong> {{ employee.setor }}</p>
+                <p><strong>Ação:</strong> O funcionário <strong style="color: {% if activity_type == 'ENTRY' %}#856404{% else %}#155724{% endif %};">{{ status_text }}</strong>.</p>
+                <p><strong>Data/Hora:</strong> {% now "d/m/Y H:i:s" %}</p>
+            </div>
+            
+            <p>Você pode acompanhar o progresso completo e os resultados em tempo real através do seu painel administrativo.</p>
+        </div>
+        <div class="footer">
+            <p>Este é um e-mail de monitoramento automático enviado pela plataforma SIMDCCONR01.</p>
+        </div>
+    </div>
+</body>
+</html>

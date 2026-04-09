@@ -90,7 +90,7 @@
                                         </button>
                                         {% endif %}
                                     {% else %}
-                                    <span class="text-muted small">Aguardando IA</span>
+                                    <span class="text-muted small">Aguardando Parecer</span>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -107,7 +107,7 @@
                                         {% endif %}
                                     {% else %}
                                     <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">
-                                        <i class="bi bi-robot me-1"></i>Aguardando IA
+                                        <i class="bi bi-file-earmark-text me-1"></i>Aguardando Parecer
                                     </span>
                                     {% endif %}
                                 </td>
@@ -122,7 +122,7 @@
                                     <form method="POST" action="{% url 'accounts:generate_laudo' assignment.id %}" style="display: inline;">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-sm btn-success fw-bold rounded-pill px-3">
-                                            <i class="bi bi-cpu"></i> Gerar IA
+                                            <i class="bi bi-cpu"></i> Gerar Parecer
                                         </button>
                                     </form>
                                     {% endif %}

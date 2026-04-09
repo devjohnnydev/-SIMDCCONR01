@@ -219,13 +219,13 @@ def admin_laudos(request):
 
 @login_required
 def generate_laudo_action(request, assignment_id):
-    """View acionada pelo botao verde para gerar o laudo via Groq."""
+    """View acionada pelo botao verde para gerar o parecer deterministico."""
     if request.user.role != 'ADMIN_MASTER':
         messages.error(request, 'Acesso restrito.')
         return redirect('accounts:dashboard')
         
     from forms_builder.models import FormAssignment
-    from ai_analysis.engine import generate_employee_diagnostic
+    from reports.models import EmployeeDiagnostic
     
     assignment = get_object_or_404(FormAssignment, pk=assignment_id)
     
@@ -233,19 +233,18 @@ def generate_laudo_action(request, assignment_id):
         messages.warning(request, 'Funcionario ainda nao concluiu o questionario.')
         return redirect('accounts:admin_laudos')
         
-    # Gera ou retorna o existente
-    result = generate_employee_diagnostic(assignment)
+    diagnostic, created = EmployeeDiagnostic.objects.get_or_create(
+        assignment=assignment, 
+        defaults={'diagnostic_data': {}}
+    )
     
-    if isinstance(result, dict) and result.get('status') == 'failed':
-        messages.error(request, f"Erro na IA: {result.get('error')}")
-    else:
-        messages.success(request, f"Laudo de {assignment.employee.nome} gerado com sucesso!")
+    messages.success(request, f"Parecer de {assignment.employee.nome} liberado para assinatura!")
         
     from audit.models import AuditLog
     AuditLog.log(
         user=request.user,
         action='EXPORT',
-        description=f'Gerou (ou acessou) Laudo IA para {assignment.employee.nome}',
+        description=f"Liberou Parecer para assuminatura de {assignment.employee.nome}",
         obj=assignment,
         request=request
     )

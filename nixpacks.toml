@@ -1,14 +1,7 @@
 [phases.setup]
-nixPkgs = ["python311", "git"]
-aptPkgs = [
-  "libpango-1.0-0",
-  "libpangocairo-1.0-0",
-  "libharfbuzz0b",
-  "libcairo2",
-  "libffi-dev",
-  "libgobject-2.0-0",
-  "libglib2.0-0",
-  "libpangoft2-1.0-0",
-  "libjpeg-dev",
-  "libopenjp2-7-dev"
-]
+nixPkgs = ["python311", "git", "glib", "pango", "cairo", "harfbuzz", "gdk-pixbuf", "fontconfig", "libffi", "shared-mime-info"]
+nixLibs = ["glib", "pango", "cairo", "harfbuzz", "gdk-pixbuf", "libffi"]
+
+[variables]
+PYTHONUNBUFFERED = "1"
+LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu"

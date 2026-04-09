@@ -33,5 +33,8 @@ urlpatterns = [
     # Legacy: rota original do laudo integrado (agora usa Motor de Texto)
     path('simdcconr01/<int:form_pk>/pdf/',
          views.generate_simdcconr01_report, name='simdcconr01_pdf'),
+    
+    # Debug & Diagnóstico (Apenas Admin Master)
+    path('debug/system/', views.system_diagnostics, name='system_diagnostics'),
 ]
 

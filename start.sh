@@ -28,6 +28,9 @@ python manage.py migrate --noinput
 # echo "Running fix_missing_options..."
 # python fix_missing_options.py
 
+echo "Ensuring media directory exists..."
+mkdir -p media
+
 echo "Running collectstatic..."
 python manage.py collectstatic --noinput
 

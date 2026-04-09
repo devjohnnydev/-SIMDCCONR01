@@ -64,11 +64,10 @@ urlpatterns = [
     path('api/cnpj/<str:cnpj>/', cnpj_lookup, name='cnpj_lookup'),
 ]
 
-if settings.DEBUG or config('RAILWAY_ENVIRONMENT', default=False):
+if settings.DEBUG or config('RAILWAY_ENVIRONMENT', default=False) or config('RAILWAY_STATIC_URL', default=False):
     from django.views.static import serve
-    import re
     urlpatterns += [
-        path(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), serve, {'document_root': settings.MEDIA_ROOT}),
+        path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
     ]
 
 if settings.DEBUG:

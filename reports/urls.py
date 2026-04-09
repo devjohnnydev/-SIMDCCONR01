@@ -2,7 +2,7 @@
 URLs para relatorios.
 """
 from django.urls import path
-from . import views
+from . import views, debug_views
 
 app_name = 'reports'
 
@@ -35,6 +35,6 @@ urlpatterns = [
          views.generate_simdcconr01_report, name='simdcconr01_pdf'),
     
     # Debug & Diagnóstico (Apenas Admin Master)
-    path('debug/system/', views.system_diagnostics, name='system_diagnostics'),
+    path('debug/system/', debug_views.system_diagnostics, name='system_diagnostics'),
 ]
 

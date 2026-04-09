@@ -181,8 +181,8 @@
                             </td>
                             <td>{{ assignment.completed_at|date:"d/m/Y H:i"|default:"-" }}</td>
                             <td>
-                                {% if assignment.status == 'COMPLETED' and not instance.is_anonymous %}
                                 <div class="btn-group btn-group-sm">
+                                {% if assignment.status == 'COMPLETED' and not instance.is_anonymous %}
                                     <a href="{% url 'forms:view_responses' assignment.pk %}" class="btn btn-outline-primary" title="Ver respostas">
                                         <i class="bi bi-eye"></i>
                                     </a>
@@ -194,8 +194,12 @@
                                         <i class="bi bi-file-earmark-medical"></i> PCMSO
                                     </a>
                                     {% endif %}
-                                </div>
+                                {% elif assignment.status != 'COMPLETED' %}
+                                    <a href="{% url 'forms:resend_notification' assignment.pk %}" class="btn btn-outline-info" title="Reenviar convite de acesso por e-mail">
+                                        <i class="bi bi-envelope-check"></i> Reenviar Convite
+                                    </a>
                                 {% endif %}
+                                </div>
                             </td>
                         </tr>
                         {% empty %}

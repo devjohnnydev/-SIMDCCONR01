@@ -94,6 +94,25 @@ class Employee(models.Model):
             except Exception as e:
                 # Log do erro, mas permite salvar o funcionario
                 print(f"Erro ao sincronizar usuario para funcionario {self.nome}: {str(e)}")
+        
+        # Auto-vinculo a formularios ativos se for um novo funcionario (ou sem usuario anterior)
+        if is_new and self.company:
+            from forms_builder.models import FormInstance, FormAssignment
+            from forms_builder.utils_emails import send_form_publication_notification
+            
+            active_instances = FormInstance.objects.filter(
+                company=self.company,
+                status='ACTIVE'
+            )
+            for instance in active_instances:
+                if instance.is_active: # Valida periodo de datas
+                    assignment, created = FormAssignment.objects.get_or_create(
+                        employee=self,
+                        form_instance=instance,
+                        defaults={'status': 'PENDING'}
+                    )
+                    if created:
+                        send_form_publication_notification(assignment)
 
     def __str__(self):
         return f"{self.nome} - {self.cargo} ({self.company.nome_fantasia})"

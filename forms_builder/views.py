@@ -345,3 +345,23 @@ def form_view_responses(request, assignment_pk):
         'assignment': assignment,
         'answers': answers
     })
+
+
+@login_required
+@require_company_admin
+def resend_form_notification(request, assignment_pk):
+    """Reenvia o e-mail de notificação de um formulário para o funcionário."""
+    from .utils_emails import send_form_publication_notification
+    
+    assignment = get_object_or_404(FormAssignment, pk=assignment_pk, form_instance__company=request.user.company)
+    
+    if assignment.status == 'COMPLETED':
+        messages.warning(request, 'Este funcionário já concluiu a pesquisa.')
+    else:
+        success = send_form_publication_notification(assignment)
+        if success:
+            messages.success(request, f'Convite reenviado com sucesso para {assignment.employee.nome}!')
+        else:
+            messages.error(request, 'Erro ao enviar o e-mail. Verifique o cadastro do funcionário.')
+            
+    return redirect(request.META.get('HTTP_REFERER', 'forms:instances'))

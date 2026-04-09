@@ -171,10 +171,24 @@ def company_admin_dashboard(request):
         }
         form_stats.append(stats)
     
+    from forms_builder.models import FormAssignment
+    
+    total_responded = FormAssignment.objects.filter(
+        form_instance__in=active_forms,
+        status='COMPLETED'
+    ).count()
+    
+    total_pending = FormAssignment.objects.filter(
+        form_instance__in=active_forms,
+        status__in=['PENDING', 'IN_PROGRESS']
+    ).count()
+    
     context = {
         'company': company,
         'total_employees': company.get_employee_count(),
         'active_forms_count': company.get_active_forms_count(),
+        'total_responded': total_responded,
+        'total_pending': total_pending,
         'form_stats': form_stats,
         'recent_employees': Employee.objects.filter(company=company).order_by('-created_at')[:5],
         'announcements': company.announcements.filter(is_active=True)[:5],

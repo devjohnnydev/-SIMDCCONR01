@@ -3,56 +3,8 @@
 {% block title %}Dashboard Admin - SaaS NR-01{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
-            <div class="position-sticky pt-3">
-                <div class="sidebar-header">
-                    <h6>Menu Principal</h6>
-                </div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'accounts:admin_master_dashboard' %}">
-                            <i class="bi bi-grid-1x2-fill"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'companies:list' %}">
-                            <i class="bi bi-building"></i>
-                            <span>Empresas</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'billing:plan_list' %}">
-                            <i class="bi bi-credit-card-2-front"></i>
-                            <span>Planos</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:admin_laudos' %}">
-                            <i class="bi bi-file-earmark-medical"></i>
-                            <span class="fw-bold text-success">Gerador de Laudos IA</span>
-                        </a>
-                    </li>
-                </ul>
-                
-                <div class="sidebar-header mt-4">
-                    <h6>Sistema</h6>
-                </div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/">
-                            <i class="bi bi-sliders"></i>
-                            <span>Admin Django</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-            <div class="page-header">
+<div class="container-fluid py-4">
+    <div class="page-header">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active">Dashboard</li>
@@ -250,7 +202,6 @@
                     </div>
                 </div>
             </div>
-        </main>
     </div>
 </div>
 {% endblock %}

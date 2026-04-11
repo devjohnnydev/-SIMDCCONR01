@@ -3,80 +3,8 @@
 {% block title %}Dashboard - {{ company.nome_fantasia }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
-            <div class="position-sticky pt-3">
-                <div class="sidebar-header">
-                    <h6>Menu Principal</h6>
-                </div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'accounts:company_admin_dashboard' %}">
-                            <i class="bi bi-grid-1x2-fill"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'employees:list' %}">
-                            <i class="bi bi-people-fill"></i>
-                            <span>Funcionarios</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'forms:templates' %}">
-                            <i class="bi bi-file-earmark-text"></i>
-                            <span>Templates</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'forms:instances' %}">
-                            <i class="bi bi-clipboard-check"></i>
-                            <span>Formularios</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reports:dashboard' %}">
-                            <i class="bi bi-bar-chart-line-fill"></i>
-                            <span>Painel de Dados</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:department_reports_list' %}">
-                            <i class="bi bi-building-check"></i>
-                            <span>Laudos por Setor</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'companies:announcements' %}">
-                            <i class="bi bi-megaphone-fill"></i>
-                            <span>Comunicados</span>
-                        </a>
-                    </li>
-                </ul>
-                
-                <div class="sidebar-header mt-4">
-                    <h6>Configuracoes</h6>
-                </div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'billing:current_plan' %}">
-                            <i class="bi bi-credit-card-2-front"></i>
-                            <span>Plano</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'companies:settings' %}">
-                            <i class="bi bi-gear-fill"></i>
-                            <span>Configuracoes</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-            <div class="page-header">
+<div class="container-fluid py-4">
+    <div class="page-header">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active">Dashboard</li>
@@ -320,7 +248,6 @@
                     </div>
                 </div>
             </div>
-        </main>
     </div>
 </div>
 {% endblock %}

@@ -113,16 +113,49 @@
             background-color: var(--bg-light);
         }
         
-        .sidebar {
+        /* Global App Layout */
+        .app-wrapper {
+            display: flex;
             min-height: calc(100vh - 64px);
+            position: relative;
+        }
+        
+        .app-sidebar {
+            width: 260px;
             background: var(--bg-sidebar);
+            height: calc(100vh - 64px);
+            position: fixed;
+            top: 64px; /* Assuming navbar height is ~64px */
+            left: 0;
+            z-index: 1020;
+            overflow-y: auto;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
             padding: 1.5rem 0;
         }
         
-        .sidebar .nav-link {
+        .app-sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        .app-main {
+            flex: 1;
+            margin-left: 260px;
+            min-width: 0;
+            padding-bottom: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .app-main.expanded {
+            margin-left: 0;
+        }
+
+        .app-sidebar .nav-link {
             color: rgba(255, 255, 255, 0.7);
-            padding: 0.75rem 1.5rem;
-            margin: 0.25rem 0.75rem;
+            padding: 0.75rem 1.25rem;
+            margin: 0.25rem 1rem;
             border-radius: 0.5rem;
             font-weight: 500;
             transition: all 0.2s ease;
@@ -131,36 +164,56 @@
             gap: 0.75rem;
         }
         
-        .sidebar .nav-link i {
+        .app-sidebar .nav-link i {
             font-size: 1.125rem;
             width: 1.5rem;
             text-align: center;
         }
         
-        .sidebar .nav-link:hover {
+        .app-sidebar .nav-link:hover {
             color: #fff;
             background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
         }
         
-        .sidebar .nav-link.active {
+        .app-sidebar .nav-link.active {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
             color: #fff;
             box-shadow: var(--shadow-md);
         }
         
-        .sidebar-header {
-            padding: 0 1.5rem 1rem;
+        .app-sidebar-header {
+            padding: 0 1.5rem 0.75rem;
+            margin-top: 1.5rem;
             margin-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        .sidebar-header h6 {
-            color: rgba(255, 255, 255, 0.5);
+        .app-sidebar-header:first-child {
+            margin-top: 0;
+        }
+        
+        .app-sidebar-header h6 {
+            color: rgba(255, 255, 255, 0.4);
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin: 0;
+        }
+
+        .sidebar-toggle-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 0.5rem;
+            transition: color 0.2s;
+        }
+        
+        .sidebar-toggle-btn:hover {
+            color: #fff;
         }
         
         .card {
@@ -486,9 +539,18 @@
             font-size: 1.125rem;
         }
         
-        @media (max-width: 768px) {
-            .sidebar {
-                min-height: auto;
+        @media (max-width: 992px) {
+            .app-sidebar {
+                transform: translateX(-100%);
+            }
+            .app-sidebar.show-mobile {
+                transform: translateX(0);
+            }
+            .app-main {
+                margin-left: 0;
+            }
+            .app-main.expanded {
+                margin-left: 0;
             }
             .metric-value {
                 font-size: 2rem;
@@ -527,9 +589,15 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'accounts:dashboard' %}{% else %}{% url 'landing:home' %}{% endif %}">
+            <div class="d-flex align-items-center">
+                {% if user.is_authenticated and request.resolver_match.app_name != 'landing' %}
+                <button class="sidebar-toggle-btn me-2" id="sidebarToggle" title="Alternar Menu">
+                    <i class="bi bi-list"></i>
+                </button>
+                {% endif %}
+                <a class="navbar-brand d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'accounts:dashboard' %}{% else %}{% url 'landing:home' %}{% endif %}">
                 {% if company_logo %}
                 <img src="{{ company_logo }}" alt="Logo" class="navbar-brand-logo me-2">
                 {% else %}
@@ -590,7 +658,7 @@
     </nav>
 
     {% if messages %}
-    <div class="container-fluid px-4 mt-3">
+    <div class="container-fluid px-4 mt-3 position-relative" style="z-index: 1040;">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
             <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'warning' %}exclamation-triangle{% elif message.tags == 'danger' or message.tags == 'error' %}x-circle{% else %}info-circle{% endif %} me-2"></i>
@@ -601,18 +669,167 @@
     </div>
     {% endif %}
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+    <div class="app-wrapper">
+        {% if user.is_authenticated and request.resolver_match.app_name != 'landing' and 'billing' not in request.path %}
+        <!-- GLOBAL SIDEBAR -->
+        <aside class="app-sidebar" id="appSidebar">
+            <ul class="nav flex-column">
+                {% if request.user.is_admin_master %}
+                    <!-- ADMIN MASTER MENU -->
+                    <div class="app-sidebar-header">
+                        <h6>Gerenciamento Global</h6>
+                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'accounts:admin_dashboard' %}">
+                            <i class="bi bi-speedometer2"></i> Visão Geral
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'companies' in request.resolver_match.app_name and request.resolver_match.url_name != 'settings' %}active{% endif %}" href="{% url 'companies:list' %}">
+                            <i class="bi bi-buildings"></i> Empresas Cadastradas
+                        </a>
+                    </li>
+                    
+                    <div class="app-sidebar-header">
+                        <h6>Catálogo Padrão</h6>
+                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'global_templates' %}active{% endif %}" href="{% url 'forms:global_templates' %}">
+                            <i class="bi bi-file-earmark-text"></i> Modelos Globais
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'billing' in request.path %}active{% endif %}" href="{% url 'billing:plan_list' %}">
+                            <i class="bi bi-tags"></i> Planos de Assinatura
+                        </a>
+                    </li>
 
-    <footer class="py-4 mt-5">
-        <div class="container text-center">
-            <p class="mb-0 text-muted small">&copy; 2026 SaaS NR-01 - Plataforma de Gestao de Riscos Ocupacionais</p>
-        </div>
-    </footer>
+                    <div class="app-sidebar-header">
+                        <h6>Suporte Central</h6>
+                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'support' in request.path %}active{% endif %}" href="{% url 'support:admin_ticket_list' %}">
+                            <i class="bi bi-headset"></i> Chamados de Suporte
+                        </a>
+                    </li>
+
+                {% else %}
+                    <!-- COMPANY ADMIN MENU -->
+                    <div class="app-sidebar-header">
+                        <h6>Menu Principal</h6>
+                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'company_admin_dashboard' %}active{% endif %}" href="{% url 'accounts:company_admin_dashboard' %}">
+                            <i class="bi bi-grid-1x2-fill"></i> System Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'employee' in request.path %}active{% endif %}" href="{% url 'employees:list' %}">
+                            <i class="bi bi-people-fill"></i> Funcionários
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'templates' in request.path %}active{% endif %}" href="{% url 'forms:templates' %}">
+                            <i class="bi bi-file-earmark-text"></i> Templates
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'instances' in request.path %}active{% endif %}" href="{% url 'forms:instances' %}">
+                            <i class="bi bi-clipboard-check"></i> Pesquisas NR-01
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' and 'reports' in request.path %}active{% endif %}" href="{% url 'reports:dashboard' %}">
+                            <i class="bi bi-bar-chart-line-fill"></i> Painel de Dados
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'department_reports_list' %}active{% endif %}" href="{% url 'accounts:department_reports_list' %}">
+                            <i class="bi bi-building-check"></i> Laudos por Setor
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'announcement' in request.path %}active{% endif %}" href="{% url 'companies:announcements' %}">
+                            <i class="bi bi-megaphone-fill"></i> Comunicados
+                        </a>
+                    </li>
+                    
+                    <div class="app-sidebar-header">
+                        <h6>Configurações</h6>
+                    </div>
+                    {% if current_company.has_active_plan %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'billing:pricing' %}">
+                            <i class="bi bi-credit-card-2-front"></i> Faturamento
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'settings' %}active{% endif %}" href="{% url 'companies:settings' %}">
+                            <i class="bi bi-gear-fill"></i> Admin e Branding
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </aside>
+        {% endif %}
+
+        <main class="app-main {% if not user.is_authenticated or request.resolver_match.app_name == 'landing' or 'billing' in request.path %}expanded{% endif %}" id="appMain">
+            {% block content %}{% endblock %}
+            
+            <footer class="py-4 mt-auto">
+                <div class="container text-center">
+                    <p class="mb-0 text-muted small">&copy; 2026 SaaS NR-01 - Plataforma de Gestão de Riscos Ocupacionais</p>
+                </div>
+            </footer>
+        </main>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarBtn = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('appSidebar');
+            const main = document.getElementById('appMain');
+            
+            if (sidebarBtn && sidebar && main) {
+                // Check local storage for preference
+                const isCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+                
+                // Set initial state based on storage only on desktop
+                if (window.innerWidth > 992) {
+                    if (isCollapsed) {
+                        sidebar.classList.add('collapsed');
+                        main.classList.add('expanded');
+                    }
+                }
+                
+                sidebarBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (window.innerWidth > 992) {
+                        // Desktop toggle
+                        sidebar.classList.toggle('collapsed');
+                        main.classList.toggle('expanded');
+                        // Save preference
+                        localStorage.setItem('sidebar_collapsed', sidebar.classList.contains('collapsed'));
+                    } else {
+                        // Mobile toggle
+                        sidebar.classList.toggle('show-mobile');
+                    }
+                });
+                
+                // Close sidebar when clicking outside on mobile
+                document.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 992 && sidebar.classList.contains('show-mobile')) {
+                        if (!sidebar.contains(e.target) && !sidebarBtn.contains(e.target)) {
+                            sidebar.classList.remove('show-mobile');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

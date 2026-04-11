@@ -1,36 +1,94 @@
 {% extends 'base.html' %}
 
-{% block title %}Gerenciar Planos - SaaS NR-01{% endblock %}
+{% block title %}Gerenciar Planos — SaaS NR-01{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-plans-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .admin-plans-header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    .plan-grid .card {
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    .plan-grid .card:hover {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        transform: translateY(-3px);
+    }
+    .order-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.3rem 0.7rem;
+        border-radius: 2rem;
+    }
+    .order-status.paid { background: rgba(16,185,129,0.12); color: #047857; }
+    .order-status.pending { background: rgba(245,158,11,0.12); color: #b45309; }
+    .order-status.failed { background: rgba(239,68,68,0.12); color: #b91c1c; }
+    .order-status.cancelled { background: rgba(100,116,139,0.12); color: #475569; }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
-    <h1 class="h2 mb-4"><i class="bi bi-credit-card"></i> Gerenciar Planos</h1>
-    
-    <div class="alert alert-info">
-        Use o Django Admin para criar, editar e gerenciar planos.
-        <a href="/admin/billing/plan/" class="btn btn-sm btn-primary ms-2">Ir para Admin</a>
+    <div class="admin-plans-header">
+        <h1><i class="bi bi-credit-card me-2"></i>Gerenciar Planos</h1>
+        <a href="/admin/billing/plan/" class="btn btn-primary btn-sm">
+            <i class="bi bi-gear me-1"></i> Editar no Admin
+        </a>
     </div>
-    
-    <div class="row g-4">
+
+    <!-- Plans -->
+    <div class="row g-4 plan-grid mb-5">
         {% for plan in plans %}
         <div class="col-md-4">
-            <div class="card {% if plan.is_featured %}border-warning{% endif %}">
-                <div class="card-header">
+            <div class="card h-100 {% if plan.is_featured %}border-warning{% endif %}">
+                <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="mb-0">{{ plan.name }}</h5>
-                    {% if not plan.is_active %}
-                    <span class="badge bg-secondary">Inativo</span>
-                    {% endif %}
+                    <div>
+                        {% if plan.is_featured %}
+                        <span class="badge bg-warning text-dark">Destaque</span>
+                        {% endif %}
+                        {% if not plan.is_active %}
+                        <span class="badge bg-secondary">Inativo</span>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="card-body">
-                    <h4>R$ {{ plan.price_monthly }}/mes</h4>
-                    <p class="text-muted">{{ plan.description|truncatechars:100 }}</p>
+                    <h4 class="mb-1">R$ {{ plan.price_monthly }}<small class="text-muted">/mês</small></h4>
+                    {% if plan.price_yearly %}
+                    <p class="text-muted small mb-3">R$ {{ plan.price_yearly }}/ano</p>
+                    {% endif %}
                     <hr>
-                    <ul class="list-unstyled small">
-                        <li>{{ plan.max_employees }} funcionarios</li>
-                        <li>{{ plan.max_forms }} formularios</li>
-                        <li>{{ plan.max_reports }} relatorios/mes</li>
-                        <li>Retencao: {{ plan.data_retention_days }} dias</li>
+                    <ul class="list-unstyled small mb-0">
+                        <li class="mb-1"><i class="bi bi-people me-1 text-primary"></i> {{ plan.max_employees }} funcionários</li>
+                        <li class="mb-1"><i class="bi bi-file-earmark-text me-1 text-primary"></i> {{ plan.max_forms }} formulários</li>
+                        <li class="mb-1"><i class="bi bi-bar-chart me-1 text-primary"></i> {{ plan.max_reports }} relatórios/mês</li>
+                        <li class="mb-1"><i class="bi bi-clock me-1 text-primary"></i> Retenção: {{ plan.data_retention_days }} dias</li>
+                        <li class="mb-1">
+                            <i class="bi bi-{% if plan.has_api_access %}check-circle text-success{% else %}x-circle text-muted{% endif %} me-1"></i>
+                            API
+                        </li>
+                        <li>
+                            <i class="bi bi-{% if plan.has_priority_support %}check-circle text-success{% else %}x-circle text-muted{% endif %} me-1"></i>
+                            Suporte Prioritário
+                        </li>
                     </ul>
+                </div>
+                <div class="card-footer bg-white text-muted small">
+                    {{ plan.companies.count }} empresa{{ plan.companies.count|pluralize:"s" }} assinando
                 </div>
             </div>
         </div>
@@ -39,6 +97,53 @@
             <div class="alert alert-warning">Nenhum plano cadastrado.</div>
         </div>
         {% endfor %}
+    </div>
+
+    <!-- Recent Payment Orders -->
+    <h4 class="mb-3"><i class="bi bi-receipt-cutoff me-2"></i>Últimas Ordens de Pagamento</h4>
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Empresa</th>
+                        <th>Plano</th>
+                        <th>Ciclo</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.company.nome_fantasia }}</td>
+                        <td>{{ order.plan.name }}</td>
+                        <td>{% if order.is_yearly %}Anual{% else %}Mensal{% endif %}</td>
+                        <td>R$ {% widthratio order.amount 1 1 %}</td>
+                        <td>
+                            <span class="order-status {{ order.status }}">
+                                {% if order.status == 'paid' %}<i class="bi bi-check-circle-fill"></i>
+                                {% elif order.status == 'pending' %}<i class="bi bi-clock-fill"></i>
+                                {% elif order.status == 'failed' %}<i class="bi bi-x-circle-fill"></i>
+                                {% else %}<i class="bi bi-dash-circle-fill"></i>{% endif %}
+                                {{ order.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox me-1"></i> Nenhuma ordem de pagamento registrada.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}

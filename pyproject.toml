@@ -16,4 +16,5 @@ dependencies = [
     "python-decouple>=3.8",
     "weasyprint>=67.0",
     "whitenoise>=6.11.0",
+    "stripe>=8.0.0",
 ]

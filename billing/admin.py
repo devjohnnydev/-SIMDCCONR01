@@ -2,7 +2,7 @@
 Configuracao do Django Admin para billing.
 """
 from django.contrib import admin
-from .models import Plan, Subscription
+from .models import Plan, Subscription, PaymentOrder
 
 
 @admin.register(Plan)
@@ -40,3 +40,18 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ['company', 'plan', 'status', 'start_date', 'end_date', 'is_yearly']
     list_filter = ['status', 'plan', 'is_yearly']
     search_fields = ['company__nome_fantasia']
+
+
+@admin.register(PaymentOrder)
+class PaymentOrderAdmin(admin.ModelAdmin):
+    """Admin para ordens de pagamento."""
+    
+    list_display = ['id', 'company', 'plan', 'status', 'amount_display', 'is_yearly', 'created_at', 'paid_at']
+    list_filter = ['status', 'plan', 'is_yearly']
+    search_fields = ['company__nome_fantasia', 'stripe_session_id', 'stripe_payment_intent_id']
+    readonly_fields = ['stripe_session_id', 'stripe_payment_intent_id', 'created_at', 'paid_at']
+    ordering = ['-created_at']
+    
+    def amount_display(self, obj):
+        return f"R$ {obj.amount / 100:.2f}"
+    amount_display.short_description = 'Valor'

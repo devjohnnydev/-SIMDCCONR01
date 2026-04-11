@@ -694,8 +694,8 @@
                         <h6>Catálogo Padrão</h6>
                     </div>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'global_templates' %}active{% endif %}" href="{% url 'forms:global_templates' %}">
-                            <i class="bi bi-file-earmark-text"></i> Modelos Globais
+                        <a class="nav-link {% if request.resolver_match.url_name == 'admin_laudos' %}active{% endif %}" href="{% url 'accounts:admin_laudos' %}">
+                            <i class="bi bi-file-earmark-medical"></i> Gerador de Laudos IA
                         </a>
                     </li>
                     <li class="nav-item">
@@ -708,8 +708,8 @@
                         <h6>Suporte Central</h6>
                     </div>
                     <li class="nav-item">
-                        <a class="nav-link {% if 'support' in request.path %}active{% endif %}" href="{% url 'support:admin_ticket_list' %}">
-                            <i class="bi bi-headset"></i> Chamados de Suporte
+                        <a class="nav-link" href="/admin/">
+                            <i class="bi bi-sliders"></i> Admin Django
                         </a>
                     </li>
 

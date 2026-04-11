@@ -23,10 +23,44 @@ logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
+def _activate_plan_for_company(company, plan, is_yearly=False, payment_intent_id=''):
+    """Logica centralizada para ativar um plano para uma empresa."""
+    company.plan = plan
+    company.subscription_status = 'active'
+
+    now = timezone.now()
+    if is_yearly:
+        company.current_period_end = now + timedelta(days=365)
+    else:
+        company.current_period_end = now + timedelta(days=30)
+
+    # IMPORTANTE: nao incluir 'updated_at' pois é auto_now=True
+    company.save(update_fields=[
+        'plan', 'subscription_status', 'current_period_end'
+    ])
+
+    # Cria registro de Subscription (se nao existir para este periodo)
+    Subscription.objects.get_or_create(
+        company=company,
+        plan=plan,
+        status='ACTIVE',
+        defaults={
+            'start_date': now.date(),
+            'end_date': company.current_period_end.date(),
+            'is_yearly': is_yearly,
+        }
+    )
+
+    logger.info(
+        f'Empresa {company.nome_fantasia} (ID:{company.id}) '
+        f'ativou plano {plan.name} (yearly={is_yearly})'
+    )
+
+
 @login_required
 def plan_pricing(request):
     """Pagina de precos e planos — acessivel por COMPANY_ADMIN (com ou sem plano)."""
-    plans = Plan.objects.filter(is_active=True).order_by('order')
+    plans = Plan.objects.filter(is_active=True).order_by('order')[:3]
 
     current_plan = None
     company = None
@@ -179,11 +213,6 @@ def stripe_webhook(request):
     elif event_type == 'payment_intent.succeeded':
         intent = event['data']['object']
         logger.info(f'PaymentIntent succeeded: {intent["id"]}')
-        # Atualiza payment_intent_id se encontrar order correspondente
-        PaymentOrder.objects.filter(
-            stripe_payment_intent_id=intent['id'],
-            status='pending'
-        ).update(status='paid', paid_at=timezone.now())
 
     # --- payment_intent.payment_failed ---
     elif event_type == 'payment_intent.payment_failed':
@@ -202,7 +231,6 @@ def stripe_webhook(request):
 
 def _handle_checkout_completed(session):
     """Processa checkout.session.completed — ativa plano da empresa."""
-    session_id = session.get('id', '')
     metadata = session.get('metadata', {})
 
     company_id = metadata.get('company_id')
@@ -236,55 +264,61 @@ def _handle_checkout_completed(session):
         from companies.models import Company
         company = Company.objects.get(id=company_id)
         plan = Plan.objects.get(id=plan_id)
-
-        company.plan = plan
-        company.subscription_status = 'active'
-
-        # Define periodo
-        now = timezone.now()
-        if is_yearly:
-            company.current_period_end = now + timedelta(days=365)
-        else:
-            company.current_period_end = now + timedelta(days=30)
-
-        company.save(update_fields=[
-            'plan', 'subscription_status', 'current_period_end', 'updated_at'
-        ])
-
-        # Cria registro de Subscription
-        Subscription.objects.create(
-            company=company,
-            plan=plan,
-            status='ACTIVE',
-            start_date=now.date(),
-            end_date=company.current_period_end.date(),
-            is_yearly=is_yearly,
-        )
-
-        logger.info(
-            f'Empresa {company.nome_fantasia} (ID:{company.id}) '
-            f'ativou plano {plan.name} (yearly={is_yearly})'
-        )
-
+        _activate_plan_for_company(company, plan, is_yearly, session.get('payment_intent', ''))
     except Exception as e:
-        logger.error(f'Erro ao ativar plano: {e}')
+        logger.error(f'Erro ao ativar plano via webhook: {e}', exc_info=True)
 
 
 @login_required
 def checkout_success(request):
-    """Pagina de sucesso apos pagamento."""
+    """Pagina de sucesso apos pagamento — com fallback de ativacao."""
     session_id = request.GET.get('session_id', '')
+    company = getattr(request.user, 'company', None)
 
     order = None
-    if session_id:
+    plan = None
+
+    if session_id and company:
+        # Buscar order local
         order = PaymentOrder.objects.filter(
             stripe_session_id=session_id,
-            company=request.user.company
+            company=company
         ).first()
+
+        # FALLBACK: se o webhook nao processou, verifica com a API do Stripe
+        if order and order.status == 'pending':
+            try:
+                stripe_session = stripe.checkout.Session.retrieve(session_id)
+                if stripe_session.payment_status == 'paid':
+                    # Marca order como paga
+                    order.status = 'paid'
+                    order.paid_at = timezone.now()
+                    order.stripe_payment_intent_id = stripe_session.payment_intent or ''
+                    order.save(update_fields=['status', 'paid_at', 'stripe_payment_intent_id'])
+
+                    # Ativa plano se ainda nao ativo
+                    if not company.has_active_plan or company.plan_id != order.plan_id:
+                        _activate_plan_for_company(
+                            company, order.plan,
+                            order.is_yearly,
+                            stripe_session.payment_intent or ''
+                        )
+                        # Recarrega company do banco
+                        company.refresh_from_db()
+
+                    logger.info(f'Plano ativado via fallback success page para empresa {company.id}')
+
+            except stripe.error.StripeError as e:
+                logger.error(f'Erro ao verificar sessao Stripe no fallback: {e}')
+            except Exception as e:
+                logger.error(f'Erro inesperado no fallback success: {e}', exc_info=True)
+
+        if order:
+            plan = order.plan
 
     context = {
         'order': order,
-        'plan': order.plan if order else None,
+        'plan': plan,
     }
     return render(request, 'billing/checkout_success.html', context)
 

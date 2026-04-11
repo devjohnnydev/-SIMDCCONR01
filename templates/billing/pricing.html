@@ -6,8 +6,20 @@
 <style>
     /* ===== PRICING PAGE — PREMIUM DESIGN ===== */
     .pricing-page {
-        background: linear-gradient(180deg, #0f172a 0%, #1e293b 35%, #f8fafc 35.1%);
+        background: #f8fafc;
         min-height: 100vh;
+        position: relative;
+    }
+
+    .pricing-page::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 520px;
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        z-index: 0;
     }
 
     /* Hero */
@@ -16,6 +28,7 @@
         text-align: center;
         position: relative;
         overflow: hidden;
+        z-index: 1;
     }
 
     .pricing-hero::before {
@@ -162,7 +175,7 @@
     /* Plans Grid */
     .plans-container {
         max-width: 1100px;
-        margin: -3rem auto 0;
+        margin: -2rem auto 0;
         padding: 0 1rem 4rem;
         position: relative;
         z-index: 2;

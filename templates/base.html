@@ -113,6 +113,10 @@
             background-color: var(--bg-light);
         }
         
+        .navbar.sticky-top {
+            z-index: 1030 !important;
+        }
+        
         /* Global App Layout */
         .app-wrapper {
             display: flex;
@@ -127,7 +131,7 @@
             position: fixed;
             top: 64px; /* Assuming navbar height is ~64px */
             left: 0;
-            z-index: 1020;
+            z-index: 1020; /* Lower than navbar 1030 */
             overflow-y: auto;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 2px 0 10px rgba(0,0,0,0.05);
@@ -734,7 +738,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if 'instances' in request.path %}active{% endif %}" href="{% url 'forms:instances' %}">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'instances' or request.resolver_match.url_name == 'instance_detail' or request.resolver_match.url_name == 'view_responses' %}active{% endif %}" href="{% url 'forms:instances' %}">
                             <i class="bi bi-clipboard-check"></i> Pesquisas NR-01
                         </a>
                     </li>

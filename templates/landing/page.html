@@ -215,6 +215,28 @@
     .btn-price-outline { border: 2px solid #e2e8f0; color: var(--dark); }
     .btn-price-outline:hover { border-color: var(--secondary); color: var(--secondary); }
 
+    /* New detailed feature styles */
+    .price-features li.feature-detailed { 
+        display: grid; 
+        grid-template-columns: 100px 1fr; 
+        gap: 12px; 
+        align-items: flex-start;
+        font-size: 11px;
+    }
+    .feature-label { font-weight: 800; color: var(--dark); line-height: 1.2; }
+    .feature-text { color: var(--gray); line-height: 1.4; }
+    .price-features .feature-group-title {
+        font-weight: 800;
+        color: var(--dark);
+        margin: 10px 0 5px 0;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-color: var(--secondary);
+    }
+    .price-features li.feature-checked { color: var(--dark); font-weight: 600; font-size: 13px; }
+    .price-features li.feature-checked i { color: var(--secondary); margin-right: 8px; }
+    .price-features li.feature-outline i { color: #94a3b8; }
+
     /* ─── FAQ ─── */
     .faq-section { background: var(--gray-light); }
     .faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
@@ -512,6 +534,7 @@
       <h2 class="section-title">Escolha o plano ideal</h2>
     </div>
     <div class="pricing-grid">
+      <!-- STARTER -->
       <div class="price-card">
         <div class="price-name">Starter</div>
         <div class="price-main">
@@ -519,16 +542,40 @@
           <span class="price-value">{{ config.starter_price|floatformat:0 }}</span>
           <span class="price-period">/mês</span>
         </div>
-        <p class="price-desc">{{ config.starter_description }}</p>
+        <p class="price-desc">Para PMEs até 50 colaboradores</p>
         <ul class="price-features">
-          <li><i class="bi bi-check-circle-fill"></i> Até {{ config.starter_employees }} funcionários</li>
-          <li><i class="bi bi-check-circle-fill"></i> 160 Questões SIMDCCONR01</li>
-          <li><i class="bi bi-check-circle-fill"></i> Dashboard Básico</li>
-          <li><i class="bi bi-check-circle-fill"></i> Laudo PDF</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Até 50 funcionários</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudos personalizados para respondentes</li>
+          
+          <li class="feature-group-title">Para Organizações:</li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico NR01 Disposições Gerais e Gerenciamento de Riscos Ocupacionais:</span>
+            <span class="feature-text">Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</span>
+          </li>
+          <li class="feature-outline feature-detailed">
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR12 Segurança no Trabalho em Maquinas e Equipamentos:</span>
+            <span class="feature-text">Segurança e Ergonomia em Maquinas e Equipamentos.</span>
+          </li>
+          <li class="feature-outline feature-detailed">
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR17 Ergonomia:</span>
+            <span class="feature-text">Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho e Exigências Cognitivas.</span>
+          </li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico para Cultura Organizacional:</span>
+            <span class="feature-text">(Fairness/justiça, Disclosure / transparência, Accountability / responsabilidade, Compliance / conformidade)</span>
+          </li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico para Clima Organizacional:</span>
+            <span class="feature-text">Análise de Motivação(Reconhecimento, Comprometimento, Progresso Profissional), Liderança (Estilo Gerencial, Trabalho em Equipe, Competição no Trabalho), Filosofia de Gestão (Clareza Organizacional, Comunicação, Estruturas, Regras e Conformidade), Gestão de Pessoas (Política Salarial, Salário, Imagem do RH, Perspectiva de Carreira, Treinamento e Desenvolvimento), Natureza do Trabalho (Conteúdo do Trabalho, Volume de Trabalho).</span>
+          </li>
+
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Reaplicação semestral</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudo PDF básico</li>
         </ul>
-        <a href="{% url 'accounts:signup' %}" class="btn-price btn-price-outline">Selecionar Starter</a>
+        <a href="{% url 'accounts:signup' %}" class="btn-price btn-price-outline">Começar Agora</a>
       </div>
 
+      <!-- PROFESSIONAL -->
       <div class="price-card featured">
         <div class="featured-tag">Mais Popular</div>
         <div class="price-name">Professional</div>
@@ -537,30 +584,84 @@
           <span class="price-value">{{ config.pro_price|floatformat:0 }}</span>
           <span class="price-period">/mês</span>
         </div>
-        <p class="price-desc">{{ config.pro_description }}</p>
+        <p class="price-desc">Para empresas de 50 a 300 colaboradores</p>
         <ul class="price-features">
-          <li><i class="bi bi-check-circle-fill"></i> Até {{ config.pro_employees }} funcionários</li>
-          <li><i class="bi bi-check-circle-fill"></i> <strong>IA — Laudo Pericial Completo</strong></li>
-          <li><i class="bi bi-check-circle-fill"></i> Rastreabilidade por CPF</li>
-          <li><i class="bi bi-check-circle-fill"></i> Recomendação PGR/GRO/PCMSO</li>
-          <li><i class="bi bi-check-circle-fill"></i> Reaplicação Semestral</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Até 300 funcionários</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudos personalizados para respondentes</li>
+          
+          <li class="feature-group-title">Para Organizações:</li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico NR01 Disposições Gerais e Gerenciamento de Riscos Ocupacionais:</span>
+            <span class="feature-text">Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</span>
+          </li>
+          <li class="feature-outline feature-detailed">
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR12 Segurança no Trabalho em Maquinas e Equipamentos:</span>
+            <span class="feature-text">Segurança e Ergonomia em Maquinas e Equipamentos.</span>
+          </li>
+          <li class="feature-outline feature-detailed">
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR17 Ergonomia:</span>
+            <span class="feature-text">Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho e Exigências Cognitivas.</span>
+          </li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico para Cultura Organizacional:</span>
+            <span class="feature-text">(Fairness/justiça, Disclosure / transparência, Accountability / responsabilidade, Compliance / conformidade)</span>
+          </li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico para Clima Organizacional:</span>
+            <span class="feature-text">Análise de Motivação(Reconhecimento, Comprometimento, Progresso Profissional), Liderança (Estilo Gerencial, Trabalho em Equipe, Competição no Trabalho), Filosofia de Gestão (Clareza Organizacional, Comunicação, Estruturas, Regras e Conformidade), Gestão de Pessoas (Política Salarial, Salário, Imagem do RH, Perspectiva de Carreira, Treinamento e Desenvolvimento), Natureza do Trabalho (Conteúdo do Trabalho, Volume de Trabalho).</span>
+          </li>
+
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudo Pericial Completo</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Rastreabilidade por CPF</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Rerecomendação de Ajustes PGR/GRO/PCMSO</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Reaplicação Semestral</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Suporte prioritário</li>
         </ul>
-        <a href="{% url 'accounts:signup' %}" class="btn-price btn-price-primary">Selecionar Profissional</a>
+        <a href="{% url 'accounts:signup' %}" class="btn-price btn-price-primary">Começar Agora</a>
       </div>
 
+      <!-- ENTERPRISE -->
       <div class="price-card">
         <div class="price-name">Enterprise</div>
         <div class="price-main">
-          <span class="price-value">Sob Consulta</span>
+          <span class="price-value">Sob consulta</span>
         </div>
-        <p class="price-desc">{{ config.enterprise_description }}</p>
+        <p class="price-desc">Para grupos e conglomerados +300</p>
         <ul class="price-features">
-          <li><i class="bi bi-check-circle-fill"></i> Colaboradores ilimitados</li>
-          <li><i class="bi bi-check-circle-fill"></i> Painel Multi-Empresa</li>
-          <li><i class="bi bi-check-circle-fill"></i> API de Integração</li>
-          <li><i class="bi bi-check-circle-fill"></i> Suporte Dedicado</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Colaboradores ilimitados</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Multi-empresa (CNPJ)</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> API de Integração</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> SLA e suporte dedicado</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudos personalizados para respondentes</li>
+          
+          <li class="feature-group-title">Para Organizações:</li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico NR01 Disposições Gerais e Gerenciamento de Riscos Ocupacionais:</span>
+            <span class="feature-text">Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</span>
+          </li>
+          <li class="feature-outline feature-detailed">
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR12 Segurança no Trabalho em Maquinas e Equipamentos:</span>
+            <span class="feature-text">Segurança e Ergonomia em Maquinas e Equipamentos.</span>
+          </li>
+          <li class="feature-outline feature-detailed">
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR17 Ergonomia:</span>
+            <span class="feature-text">Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho e Exigências Cognitivas.</span>
+          </li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico para Cultura Organizacional:</span>
+            <span class="feature-text">(Fairness/justiça, Disclosure / transparência, Accountability / responsabilidade, Compliance / conformidade)</span>
+          </li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico para Clima Organizacional:</span>
+            <span class="feature-text">Análise de Motivação(Reconhecimento, Comprometimento, Progresso Profissional), Liderança (Estilo Gerencial, Trabalho em Equipe, Competição no Trabalho), Filosofia de Gestão (Clareza Organizacional, Comunicação, Estruturas, Regras e Conformidade), Gestão de Pessoas (Política Salarial, Salário, Imagem do RH, Perspectiva de Carreira, Treinamento e Desenvolvimento), Natureza do Trabalho (Conteúdo do Trabalho, Volume de Trabalho).</span>
+          </li>
+
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudo Pericial Completo</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Rastreabilidade por CPF</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Rerecomendação de Ajustes PGR/GRO/PCMSO</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Suporte prioritário</li>
         </ul>
-        <a href="mailto:{{ config.enterprise_contact }}" class="btn-price btn-price-outline">Falar com Consultor</a>
+        <a href="mailto:{{ config.enterprise_contact }}" class="btn-price btn-price-outline">Falar com Especialista</a>
       </div>
     </div>
   </div>

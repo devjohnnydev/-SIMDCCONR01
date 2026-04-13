@@ -150,14 +150,19 @@ class Company(models.Model):
     def can_add_employee(self):
         """Verifica se pode adicionar mais funcionarios baseado no plano."""
         if not self.plan:
-            return True
+            return False
         return self.get_employee_count() < self.plan.max_employees
     
     def can_add_form(self):
         """Verifica se pode criar mais formularios baseado no plano."""
         if not self.plan:
-            return True
+            return False
         return self.get_active_forms_count() < self.plan.max_forms
+
+    @property
+    def has_active_plan(self):
+        """Verifica se a empresa possui um plano ativo."""
+        return self.plan is not None
 
 
 class Announcement(models.Model):

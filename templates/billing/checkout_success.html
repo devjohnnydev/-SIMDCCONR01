@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+
+{% block title %}Pagamento Confirmado — SaaS NR-01{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-page {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: linear-gradient(180deg, #f0fdf4 0%, #f8fafc 100%);
+    }
+
+    .success-card {
+        background: #fff;
+        border-radius: 1.5rem;
+        padding: 3rem 2.5rem;
+        max-width: 520px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .success-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+    }
+
+    .success-icon {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #10b981, #34d399);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.75rem;
+        animation: successPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .success-icon i {
+        font-size: 2.5rem;
+        color: #fff;
+    }
+
+    @keyframes successPop {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.15); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-card h1 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 0.75rem;
+    }
+
+    .success-card .success-subtitle {
+        font-size: 1rem;
+        color: #64748b;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .plan-summary {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 1rem;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+
+    .plan-summary h5 {
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+    }
+
+    .plan-summary .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem 0;
+        font-size: 0.875rem;
+    }
+
+    .plan-summary .detail-row span:first-child {
+        color: #64748b;
+    }
+
+    .plan-summary .detail-row span:last-child {
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .success-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .btn-dashboard {
+        padding: 0.875rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #6366f1, #818cf8);
+        color: #fff;
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-dashboard:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+        color: #fff;
+    }
+
+    .btn-secondary-link {
+        font-size: 0.875rem;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .btn-secondary-link:hover {
+        color: #6366f1;
+    }
+
+    /* Confetti */
+    .confetti-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+    }
+
+    .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 20px;
+        top: -20px;
+        animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="confetti-container" id="confetti-container"></div>
+
+<div class="success-page">
+    <div class="success-card">
+        <div class="success-icon">
+            <i class="bi bi-check-lg"></i>
+        </div>
+
+        <h1>Pagamento Confirmado!</h1>
+        <p class="success-subtitle">
+            Parabéns! Sua empresa agora tem acesso completo à plataforma.
+            Todos os módulos foram desbloqueados.
+        </p>
+
+        {% if plan %}
+        <div class="plan-summary">
+            <h5><i class="bi bi-box-seam me-2" style="color: #6366f1;"></i> Resumo da Assinatura</h5>
+            <div class="detail-row">
+                <span>Plano</span>
+                <span>{{ plan.name }}</span>
+            </div>
+            <div class="detail-row">
+                <span>Funcionários</span>
+                <span>Até {{ plan.max_employees }}</span>
+            </div>
+            <div class="detail-row">
+                <span>Formulários</span>
+                <span>Até {{ plan.max_forms }}</span>
+            </div>
+            <div class="detail-row">
+                <span>Relatórios</span>
+                <span>{{ plan.max_reports }}/mês</span>
+            </div>
+            {% if order %}
+            <div class="detail-row" style="border-top: 1px solid #e2e8f0; padding-top: 0.75rem; margin-top: 0.5rem;">
+                <span>Status</span>
+                <span style="color: #10b981;"><i class="bi bi-check-circle-fill me-1"></i> {{ order.get_status_display }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="success-actions">
+            <a href="{% url 'accounts:dashboard' %}" class="btn-dashboard">
+                <i class="bi bi-speedometer2"></i> Ir para o Dashboard
+            </a>
+            <a href="{% url 'billing:pricing' %}" class="btn-secondary-link">
+                Ver detalhes do meu plano
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Confetti animation
+    (function() {
+        const container = document.getElementById('confetti-container');
+        const colors = ['#6366f1', '#818cf8', '#10b981', '#34d399', '#f59e0b', '#fbbf24', '#3b82f6', '#ef4444'];
+        const shapes = ['square', 'circle'];
+
+        for (let i = 0; i < 60; i++) {
+            const piece = document.createElement('div');
+            piece.classList.add('confetti-piece');
+
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const shape = shapes[Math.floor(Math.random() * shapes.length)];
+            const left = Math.random() * 100;
+            const duration = 2.5 + Math.random() * 2;
+            const delay = Math.random() * 1.5;
+            const size = 6 + Math.random() * 10;
+
+            piece.style.left = left + '%';
+            piece.style.width = size + 'px';
+            piece.style.height = size * (shape === 'square' ? 1.5 : 1) + 'px';
+            piece.style.backgroundColor = color;
+            piece.style.borderRadius = shape === 'circle' ? '50%' : '2px';
+            piece.style.animationDuration = duration + 's';
+            piece.style.animationDelay = delay + 's';
+
+            container.appendChild(piece);
+        }
+
+        // Remove confetti after animations
+        setTimeout(() => { container.innerHTML = ''; }, 6000);
+    })();
+</script>
+{% endblock %}

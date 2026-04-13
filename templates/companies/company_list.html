@@ -62,27 +62,58 @@
                             </td>
                             <td>{{ company.created_at|date:"d/m/Y" }}</td>
                             <td>
-                                {% if company.status == 'PENDING' %}
-                                <a href="{% url 'companies:approve' company.pk %}" class="btn btn-sm btn-success" onclick="return confirm('Aprovar empresa?')">
-                                    <i class="bi bi-check"></i>
-                                </a>
-                                <a href="{% url 'companies:reject' company.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('Rejeitar empresa?')">
-                                    <i class="bi bi-x"></i>
-                                </a>
-                                {% elif company.status == 'ACTIVE' %}
-                                <a href="{% url 'companies:edit' company.pk %}" class="btn btn-sm btn-primary" title="Editar Plano/Faturamento">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a href="{% url 'reports:admin_dashboard' company.pk %}" class="btn btn-sm btn-info text-white" title="Ver Dashboard">
-                                    <i class="bi bi-speedometer2"></i>
-                                </a>
-                                <a href="{% url 'companies:suspend' company.pk %}" class="btn btn-sm btn-warning" onclick="return confirm('Suspender empresa?')">
-                                    <i class="bi bi-pause"></i>
-                                </a>
-                                <a href="{% url 'companies:delete' company.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('ATENÇÃO: Esta ação é IRREVERSÍVEL. Todos os dados da empresa (usuários, funcionários, relatórios, faturamento) serão EXCLUÍDOS PERMANENTEMENTE. Deseja continuar?')">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                                {% endif %}
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light border dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots-vertical"></i> Ações
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                        {% if company.status == 'PENDING' %}
+                                        <li>
+                                            <a class="dropdown-item text-success fw-medium" href="{% url 'companies:approve' company.pk %}" onclick="return confirm('Aprovar empresa?')">
+                                                <i class="bi bi-check-circle me-2"></i> Aprovar Cadastro
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item text-danger fw-medium" href="{% url 'companies:reject' company.pk %}" onclick="return confirm('Rejeitar empresa?')">
+                                                <i class="bi bi-x-circle me-2"></i> Rejeitar Cadastro
+                                            </a>
+                                        </li>
+                                        {% elif company.status == 'ACTIVE' %}
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'reports:admin_dashboard' company.pk %}">
+                                                <i class="bi bi-speedometer2 me-2 text-info"></i> Ver Dashboard
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'companies:edit' company.pk %}">
+                                                <i class="bi bi-pencil-square me-2 text-primary"></i> Editar / Faturamento
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item text-warning" href="{% url 'companies:suspend' company.pk %}" onclick="return confirm('Suspender empresa? O aceso aos usuários será bloqueado.')">
+                                                <i class="bi bi-pause-circle me-2"></i> Suspender Conta
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item text-danger" href="{% url 'companies:delete' company.pk %}" onclick="return confirm('ATENÇÃO: Esta ação é IRREVERSÍVEL. Todos os dados da empresa (usuários, funcionários, relatórios, faturamento) serão EXCLUÍDOS PERMANENTEMENTE. Deseja continuar?')">
+                                                <i class="bi bi-trash me-2"></i> Excluir Permanentemente
+                                            </a>
+                                        </li>
+                                        {% elif company.status == 'SUSPENDED' %}
+                                        <li>
+                                            <a class="dropdown-item text-success fw-medium" href="{% url 'companies:approve' company.pk %}" onclick="return confirm('Reativar empresa?')">
+                                                <i class="bi bi-play-circle me-2"></i> Reativar Conta
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item text-danger" href="{% url 'companies:delete' company.pk %}" onclick="return confirm('ATENÇÃO: Esta ação é IRREVERSÍVEL. Deseja continuar?')">
+                                                <i class="bi bi-trash me-2"></i> Excluir Permanentemente
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                         {% empty %}

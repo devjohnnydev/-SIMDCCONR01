@@ -176,3 +176,10 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 # Se não preencheu usuário do email (ambiente de desenvolvimento/teste local), redirecionar logs de email pro console
 if not EMAIL_HOST_USER:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# ----------------- STRIPE / PAGAMENTOS -----------------
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
+STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY', default='')
+STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET', default='')
+SITE_URL = config('SITE_URL', default='http://localhost:8000')
+

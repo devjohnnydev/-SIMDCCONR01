@@ -102,3 +102,51 @@ class Subscription(models.Model):
     
     def __str__(self):
         return f"{self.company.nome_fantasia} - {self.plan.name}"
+
+
+class PaymentOrder(models.Model):
+    """Registro de pagamento via Stripe Checkout."""
+
+    STATUS_CHOICES = [
+        ('pending', 'Aguardando Pagamento'),
+        ('paid', 'Pago'),
+        ('failed', 'Falhou'),
+        ('cancelled', 'Cancelado'),
+    ]
+
+    company = models.ForeignKey(
+        'companies.Company',
+        on_delete=models.CASCADE,
+        related_name='payment_orders',
+        verbose_name='Empresa'
+    )
+    plan = models.ForeignKey(
+        Plan,
+        on_delete=models.PROTECT,
+        related_name='payment_orders',
+        verbose_name='Plano'
+    )
+
+    is_yearly = models.BooleanField('Assinatura Anual', default=False)
+    status = models.CharField('Status', max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    amount = models.IntegerField('Valor (centavos)', default=0,
+                                  help_text='Valor em centavos BRL')
+
+    stripe_session_id = models.CharField('Stripe Session ID', max_length=255, blank=True, db_index=True)
+    stripe_payment_intent_id = models.CharField('Stripe Payment Intent ID', max_length=255, blank=True)
+
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    paid_at = models.DateTimeField('Pago em', null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Ordem de Pagamento'
+        verbose_name_plural = 'Ordens de Pagamento'
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['stripe_session_id']),
+        ]
+
+    def __str__(self):
+        return f"Order #{self.id} - {self.company.nome_fantasia} - {self.get_status_display()}"
+

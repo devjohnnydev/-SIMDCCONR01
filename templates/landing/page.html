@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   {% load static %}
+{% load humanize %}
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ config.hero_title1 }} {{ config.hero_title2 }} | SIMDCCONR01</title>
@@ -539,7 +540,7 @@
         <div class="price-name">Starter</div>
         <div class="price-main">
           <span class="price-currency">R$</span>
-          <span class="price-value">{{ config.starter_price|floatformat:0 }}</span>
+          <span class="price-value">{{ config.starter_price|intcomma }}</span>
           <span class="price-period">/mês</span>
         </div>
         <p class="price-desc">Para PMEs até 50 colaboradores</p>
@@ -581,7 +582,7 @@
         <div class="price-name">Professional</div>
         <div class="price-main">
           <span class="price-currency">R$</span>
-          <span class="price-value">{{ config.pro_price|floatformat:0 }}</span>
+          <span class="price-value">{{ config.pro_price|intcomma }}</span>
           <span class="price-period">/mês</span>
         </div>
         <p class="price-desc">Para empresas de 50 a 300 colaboradores</p>

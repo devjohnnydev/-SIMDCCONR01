@@ -603,13 +603,11 @@
                 {% endif %}
                 <a class="navbar-brand d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'accounts:dashboard' %}{% else %}{% url 'landing:home' %}{% endif %}">
                 {% if company_logo %}
-                <img src="{{ company_logo }}" alt="Logo" class="navbar-brand-logo me-2">
+                    <img src="{{ company_logo }}" alt="Logo" class="navbar-brand-logo me-2">
                 {% else %}
-                <div class="d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 0.5rem;">
-                    <i class="bi bi-shield-check"></i>
-                </div>
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="navbar-brand-logo me-2" style="height: 36px; width: auto;">
                 {% endif %}
-                <span>{% if current_company %}{{ current_company.nome_fantasia }}{% else %}SaaS NR-01{% endif %}</span>
+                <span>{% if current_company %}{{ current_company.nome_fantasia }}{% else %}SIMDCCONR01{% endif %}</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -783,7 +781,7 @@
             
             <footer class="py-4 mt-auto">
                 <div class="container text-center">
-                    <p class="mb-0 text-muted small">&copy; 2026 SaaS NR-01 - Plataforma de Gestão de Riscos Ocupacionais</p>
+                    <p class="mb-0 text-muted small">&copy; 2026 SIMDCCONR01 - Plataforma de Gestão de Riscos Ocupacionais</p>
                 </div>
             </footer>
         </main>

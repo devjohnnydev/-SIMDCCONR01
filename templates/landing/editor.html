@@ -115,11 +115,6 @@
     <main class="main">
         <div class="page-header">
             <div><h1>Editor da Landing Page</h1><p>Personalize cores, textos, preços e conteúdo da sua página de vendas.</p></div>
-            <form method="post" enctype="multipart/form-data" id="main-form">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-save">💾 Salvar Todas as Alterações</button>
-            </form>
         </div>
 
         {% if messages %}
@@ -135,8 +130,11 @@
             <a href="/" target="_blank" class="btn btn-teal btn-sm">Ver Landing Page →</a>
         </div>
 
-        <!-- SEÇÃO CORES -->
-        <div id="tab-colors" class="tab-panel active">
+        <form method="post" enctype="multipart/form-data" id="main-config-form">
+            {% csrf_token %}
+
+            <!-- SEÇÃO CORES -->
+            <div id="tab-colors" class="tab-panel active">
             <div class="card">
                 <div class="card-title">🎨 Paleta de Cores</div>
                 <div class="color-row">
@@ -239,8 +237,15 @@
             </div>
         </div>
 
-        <!-- SEÇÃO AVISOS -->
-        <div id="tab-annunce" class="tab-panel">
+        <div style="position: sticky; bottom: 20px; z-index: 100; text-align: right; padding: 0 5%;">
+            <button type="submit" form="main-config-form" class="btn btn-save" style="box-shadow: 0 10px 30px rgba(0,0,0,0.3); padding: 1.2rem 2.5rem; font-size: 1.1rem;">
+                🚀 Salvar Todas as Configurações
+            </button>
+        </div>
+    </form>
+
+    <!-- SEÇÃO AVISOS -->
+    <div id="tab-annunce" class="tab-panel">
             <div class="card">
                 <div class="card-title">📢 Criar Novo Aviso</div>
                 <form method="post" action="{% url 'landing:create_announcement' %}">

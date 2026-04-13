@@ -321,16 +321,38 @@
     @media (max-width: 600px) { .adv-grid { grid-template-columns: 1fr; } }
 
     /* ─── FAQ ─── */
-    .faq-section { background: var(--gray-light); }
-    .faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
-    .faq-item { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; }
-    .faq-question { padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 17px; font-weight: 700; color: var(--dark); transition: all .2s; }
-    .faq-question:hover { color: var(--secondary); }
-    .faq-question i { color: var(--secondary); transition: transform .3s; }
-    .faq-item.open .faq-question i { transform: rotate(180deg); }
-    .faq-answer { max-height: 0; overflow: hidden; transition: max-height .4s cubic-bezier(0.19, 1, 0.22, 1); }
-    .faq-answer p { padding: 0 32px 24px; font-size: 15px; color: var(--gray); line-height: 1.8; }
-    .faq-item.open .faq-answer { max-height: 300px; }
+    .faq-section { background: var(--dark); padding: 120px 5%; color: #fff; text-align: center; }
+    .faq-list { max-width: 900px; margin: 60px auto 0; display: flex; flex-direction: column; gap: 16px; }
+    .faq-item { 
+        background: rgba(255,255,255,0.03); 
+        border: 1px solid rgba(255,255,255,0.1); 
+        border-radius: 20px; 
+        overflow: hidden; 
+        transition: all 0.3s;
+        text-align: left;
+    }
+    .faq-item:hover { border-color: var(--secondary); background: rgba(255,255,255,0.05); }
+    .faq-item.open { background: rgba(255,255,255,0.07); border-color: var(--secondary); }
+    .faq-question { 
+        padding: 28px 32px; font-weight: 800; font-size: 18px; 
+        display: flex; justify-content: space-between; align-items: center; 
+        cursor: pointer; transition: color 0.3s;
+    }
+    .faq-item.open .faq-question { color: #fff; }
+    .faq-question i { 
+        font-size: 20px; color: rgba(255,255,255,0.3); 
+        transition: transform 0.3s; 
+        width: 36px; height: 36px; 
+        background: rgba(255,255,255,0.05); 
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+    .faq-item.open .faq-question i { transform: rotate(180deg); color: var(--secondary); background: rgba(13,148,136,0.2); }
+    .faq-answer { 
+        max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; 
+        padding: 0 32px; 
+    }
+    .faq-item.open .faq-answer { max-height: 500px; padding: 0 32px 32px; }
+    .faq-answer p { color: rgba(255,255,255,0.6); line-height: 1.8; font-size: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
 
     /* ─── CTA FINAL ─── */
     .cta-final { background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%); text-align: center; padding: 120px 5%; position: relative; overflow: hidden; }
@@ -955,21 +977,30 @@
 <section id="faq" class="faq-section">
   <div class="section-inner">
     <div class="section-header">
-      <span class="section-label">FAQ</span>
-      <h2 class="section-title">Dúvidas Frequentes</h2>
+      <span class="section-label" style="color: #5eead4; border: 1px solid rgba(94,234,212,0.3); padding: 4px 16px; border-radius: 100px; font-size: 11px; letter-spacing: 0.1em;">SUPORTE & TRANSPARÊNCIA</span>
+      <h2 class="section-title" style="font-size: 56px; margin-top: 20px;">Perguntas <span style="font-style: italic; color: #5eead4; font-weight: 300;">Frequentes.</span></h2>
+      <p class="section-sub" style="color: rgba(255,255,255,0.6); margin-top: 15px;">Tudo o que você precisa saber sobre o funcionamento e a implementação do SIMDCCONR01 na sua operação.</p>
     </div>
     <div class="faq-list">
       <div class="faq-item">
-        <div class="faq-question" onclick="toggleFaq(this)">O laudo gerado é aceito pelo Ministério do Trabalho? <i class="bi bi-chevron-down"></i></div>
-        <div class="faq-answer"><p>Sim. Todas as ferramentas do sistema foram desenvolvidas seguindo rigorosamente as metodologias científicas validadas e os requisitos técnicos da Portaria MTE 1.419/2024 (NR-01).</p></div>
+        <div class="faq-question" onclick="toggleFaq(this)">Posso cadastrar múltiplas empresas? <i class="bi bi-chevron-down"></i></div>
+        <div class="faq-answer"><p>Sim, cada cliente terá um relatório separado.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-question" onclick="toggleFaq(this)">Como funciona a análise por Inteligência Artificial? <i class="bi bi-chevron-down"></i></div>
-        <div class="faq-answer"><p>Utilizamos modelos avançados (Llama-3) para converter os dados brutos das 160 questões em um parecer técnico detalhado, identificando conexões entre cultura, clima e riscos psicossociais que poderiam passar despercebidos.</p></div>
+        <div class="faq-question" onclick="toggleFaq(this)">O software é seguro? <i class="bi bi-chevron-down"></i></div>
+        <div class="faq-answer"><p>Sim, garante confidencialidade, anonimato e segurança dos dados.</p></div>
       </div>
-       <div class="faq-item">
-        <div class="faq-question" onclick="toggleFaq(this)">Posso cancelar a qualquer momento? <i class="bi bi-chevron-down"></i></div>
-        <div class="faq-answer"><p>Sim. Não há contratos de fidelidade. Você pode utilizar o sistema pelo tempo que desejar e cancelar conforme sua necessidade operacional.</p></div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Consigo acompanhar se as medidas estão sendo implementadas? <i class="bi bi-chevron-down"></i></div>
+        <div class="faq-answer"><p>Sim, o plano de ação automático permite marcação de medidas aplicadas ou pendentes.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Posso reavaliar ao longo do tempo? <i class="bi bi-chevron-down"></i></div>
+        <div class="faq-answer"><p>Sim, você compara períodos para monitorar a evolução.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Posso cancelar quando quiser? <i class="bi bi-chevron-down"></i></div>
+        <div class="faq-answer"><p>Sim, o plano mensal pode ser cancelado a qualquer momento.</p></div>
       </div>
     </div>
   </div>

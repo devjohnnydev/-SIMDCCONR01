@@ -29,11 +29,11 @@ class LandingConfig(models.Model):
     hero_image     = models.ImageField('Imagem de Fundo', upload_to='landing/', null=True, blank=True)
 
     # --- Planos ---
-    starter_price       = models.DecimalField('Preço Starter',        max_digits=8, decimal_places=2, default=297)
+    starter_price       = models.DecimalField('Preço Starter',        max_digits=8, decimal_places=2, default=420)
     starter_employees   = models.IntegerField('Max Func. Starter',    default=50)
     starter_description = models.CharField('Descrição Starter',       max_length=200, default='Para PMEs até 50 colaboradores')
 
-    pro_price       = models.DecimalField('Preço Professional',   max_digits=8, decimal_places=2, default=697)
+    pro_price       = models.DecimalField('Preço Professional',   max_digits=8, decimal_places=2, default=2250)
     pro_employees   = models.IntegerField('Max Func. Professional', default=300)
     pro_description = models.CharField('Descrição Professional',  max_length=200, default='Para empresas de 50 a 300 colaboradores')
 

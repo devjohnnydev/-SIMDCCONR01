@@ -23,6 +23,8 @@ class LandingConfig(models.Model):
     hero_highlight = models.CharField('Título Destaque', max_length=200, default='É lei. É urgente.')
     hero_subtitle  = models.TextField('Subtítulo do Hero',
                                       default='O sistema mais completo do Brasil para diagnóstico de riscos psicossociais, compliance NR-1, NR-17 e NR-12 — com 160 questões validadas e inteligência artificial.')
+    ticker_text    = models.TextField('Texto do Ticker (Faixa Superior)', 
+                                      default='Condição Especial: Desconto Exclusivo nos Planos | Acesso Imediato | SIMDCCONR01 — Líder em Riscos Psicossociais')
     hero_cta_text  = models.CharField('Texto CTA Hero', max_length=100, default='Proteja sua Empresa Agora')
     hero_image     = models.ImageField('Imagem de Fundo', upload_to='landing/', null=True, blank=True)
 

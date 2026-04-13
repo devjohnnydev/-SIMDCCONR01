@@ -16,6 +16,7 @@ class LandingConfigForm(forms.ModelForm):
             'hero_title2':     forms.TextInput(attrs={'class': 'form-control'}),
             'hero_highlight':  forms.TextInput(attrs={'class': 'form-control'}),
             'hero_subtitle':   forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'ticker_text':     forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Use | para separar as mensagens do ticker.'}),
             'hero_cta_text':   forms.TextInput(attrs={'class': 'form-control'}),
             'starter_price':   forms.NumberInput(attrs={'class': 'form-control'}),
             'starter_employees': forms.NumberInput(attrs={'class': 'form-control'}),

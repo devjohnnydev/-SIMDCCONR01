@@ -1,406 +1,674 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIMDCCONR01 - Sistema Informatizado de Medida de Dissonância de Cultura e Clima Organizacional e NR-1/NR-17/NR-12</title>
-    {% load static %}
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
-    <meta name="description" content="SIMDCCONR01: O sistema definitivo para Medida de Dissonância de Cultura, Clima Organizacional e conformidade total com as NRs 01, 12 e 17. Blindagem jurídica e saúde mental estratégica.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        :root {
-            --primary: #10b981; --secondary: #0f172a; --accent: #2563eb;
-            --bg: #ffffff; --bg-alt: #f8fafc; --text: #0f172a; --text-muted: #64748b;
-            --card: #ffffff; --border: #e2e8f0; --nav-bg: rgba(255, 255, 255, 0.85);
-            --hero-gradient: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.1), transparent 70%);
-        }
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ config.hero_title1 }} {{ config.hero_title2 }} | SIMDCCONR01</title>
+  <meta name="description" content="{{ config.meta_description }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        [data-theme="dark"] {
-            --primary: #34d399; --secondary: #1e293b; --accent: #60a5fa;
-            --bg: #0f172a; --bg-alt: #1e293b; --text: #f8fafc; --text-muted: #94a3b8;
-            --card: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1);
-            --nav-bg: rgba(15, 23, 42, 0.85);
-            --hero-gradient: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.2), transparent 70%);
-        }
+    :root {
+      --primary: #0f172a; /* Deep Navy */
+      --secondary: #0d9488; /* Emerald Teal */
+      --accent: #2563eb;
+      --green: #059669;
+      --green-light: #ecfdf5;
+      --blue: #1d4ed8;
+      --yellow: #b45309;
+      --red: #991b1b;
+      --dark: #0f172a;
+      --dark2: #1e293b;
+      --gray: #475569;
+      --gray-light: #f8fafc;
+      --white: #ffffff;
+      --radius: 12px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+    }
 
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; overflow-x: hidden; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; color: var(--dark); background: var(--white); overflow-x: hidden; line-height: 1.6; }
+    h1,h2,h3,h4,h5 { font-family: 'Sora', sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
 
-        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 1rem 5%; background: var(--nav-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-        .nav-logo { display: inline-flex; align-items: center; font-weight: 800; font-size: 1.25rem; color: var(--text); text-decoration: none; }
-        .nav-logo span { color: var(--primary); }
-        .nav-links { display: flex; gap: 2rem; align-items: center; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--primary); }
-        .theme-toggle { background: var(--bg-alt); border: 1px solid var(--border); color: var(--text); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.2s; }
+    /* ─── TICKER ─── */
+    .ticker-wrap { background: var(--primary); overflow: hidden; padding: 12px 0; border-bottom: 2px solid var(--secondary); }
+    .ticker-track { display: flex; gap: 0; animation: ticker 40s linear infinite; white-space: nowrap; }
+    .ticker-track span { font-size: 13px; font-weight: 600; color: #fff; padding: 0 40px; letter-spacing: 0.03em; text-transform: uppercase; }
+    .ticker-track span::before { content: '•'; margin-right: 40px; color: var(--secondary); font-size: 18px; vertical-align: middle; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        .hero { min-height: 95vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 8rem 5% 4rem; background: var(--hero-gradient); position: relative; gap: 4rem; }
-        .hero-content { max-width: 600px; }
-        .hero-badge { display: inline-block; padding: 0.5rem 1.2rem; background: rgba(16, 185, 129, 0.1); color: var(--primary); font-weight: 700; font-size: 0.8rem; border-radius: 99px; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
-        h1 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; line-height: 1.1; letter-spacing: -2px; margin-bottom: 1.5rem; }
-        h1 span { color: var(--primary); }
-        .hero-p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2.5rem; line-height: 1.6; }
-        .hero-img-container { position: relative; }
-        .hero-img { width: 100%; height: 100%; max-height: 550px; object-fit: cover; object-position: top center; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); position: relative; z-index: 2; transition: 0.5s; }
-        .hero-img:hover { transform: scale(1.02); }
-        .hero-shape { position: absolute; top: -10%; right: -10%; width: 50%; height: 50%; background: var(--primary); border-radius: 50%; filter: blur(80px); opacity: 0.15; z-index: 1; }
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 5%;
+    }
+    .nav-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 80px; }
+    .nav-logo { display: flex; align-items: center; gap: 12px; }
+    .nav-logo .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(13,148,136,0.2); }
+    .nav-logo .logo-icon i { font-size: 24px; color: #fff; }
+    .nav-logo span { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 800; color: var(--dark); letter-spacing: -0.5px; }
+    .nav-logo span em { color: var(--secondary); font-style: normal; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; font-weight: 600; color: var(--gray); transition: all .2s; }
+    .nav-links a:hover { color: var(--secondary); }
+    .nav-cta { display: flex; align-items: center; gap: 14px; }
+    .btn-outline { padding: 10px 22px; border: 2px solid var(--secondary); border-radius: 10px; font-size: 14px; font-weight: 700; color: var(--secondary); transition: all .2s; }
+    .btn-outline:hover { background: var(--secondary); color: #fff; transform: translateY(-1px); }
+    .btn-primary { padding: 12px 26px; background: var(--secondary); border-radius: 10px; font-size: 14px; font-weight: 700; color: #fff; transition: all .2s; border: none; cursor: pointer; }
+    .btn-primary:hover { background: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,148,136,0.3); }
 
-        .section { padding: 8rem 5%; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .section-tag { color: var(--primary); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 1rem; display: block; }
-        .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; margin-bottom: 1.5rem; letter-spacing: -1px; }
-        
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
-        
-        .card { background: var(--card); border: 1px solid var(--border); padding: 2.5rem; border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: 0.3s; height: 100%; }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1); }
-        .card-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 1.5rem; display: block; }
-        .card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 1rem; }
-        .card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%);
+      padding: 100px 5% 140px;
+      position: relative; overflow: hidden;
+      color: #fff;
+    }
+    .hero-inner { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; align-items: center; position: relative; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(13,148,136,0.15); border: 1px solid rgba(13,148,136,0.4); border-radius: 100px; padding: 8px 20px; margin-bottom: 32px; }
+    .hero-badge i { color: var(--secondary); }
+    .hero-badge span { font-size: 12px; font-weight: 700; color: #5eead4; text-transform: uppercase; letter-spacing: .1em; }
+    .hero h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 800; line-height: 1.05; margin-bottom: 28px; letter-spacing: -2px; }
+    .hero h1 .accent { color: var(--secondary); }
+    .hero p { font-size: 18px; color: rgba(255,255,255,0.7); line-height: 1.8; margin-bottom: 44px; max-width: 700px; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-hero-primary { padding: 18px 36px; background: var(--secondary); border-radius: 12px; font-size: 16px; font-weight: 800; color: #fff; transition: all .25s; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(13,148,136,0.4); }
+    .btn-hero-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 45px rgba(13,148,136,0.6); }
+    .btn-hero-secondary { padding: 18px 36px; background: transparent; border: 2px solid rgba(255,255,255,0.2); border-radius: 12px; font-size: 16px; font-weight: 700; color: #fff; transition: all .25s; }
+    .btn-hero-secondary:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); }
 
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 4rem; }
-        .stat-box { text-align: center; border-right: 1px solid var(--border); }
-        .stat-box:last-child { border-right: none; }
-        .stat-num { font-size: 2.5rem; font-weight: 900; color: var(--primary); }
-        .stat-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-top: 0.5rem; }
+    /* Hero Visual */
+    .hero-visual { position: relative; }
+    .dashboard-card {
+      background: rgba(255,255,255,.04); backdrop-filter: blur(25px);
+      border: 1px solid rgba(255,255,255,.1); border-radius: 24px;
+      padding: 32px; overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+    }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; }
+    .dash-header span { font-size: 14px; font-weight: 700; color: #5eead4; }
+    .dash-status { display: flex; align-items: center; gap: 8px; background: rgba(16,185,129,.15); border-radius: 100px; padding: 6px 14px; }
+    .dash-status .dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulse 2s infinite; }
+    .dash-status span { font-size: 11px; font-weight: 700; color: #10b981; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .dash-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+    .metric { background: rgba(255,255,255,.04); border-radius: 14px; padding: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+    .metric-val { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: #fff; }
+    .metric-label { font-size: 11px; color: rgba(255,255,255,.5); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+    .dash-bars { display: flex; flex-direction: column; gap: 14px; }
+    .bar-row { display: flex; align-items: center; gap: 12px; }
+    .bar-label { font-size: 12px; color: rgba(255,255,255,.6); width: 85px; flex-shrink: 0; font-weight: 500; }
+    .bar-track { flex: 1; height: 8px; background: rgba(255,255,255,.1); border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--secondary), #10b981); width: 0%; transition: width 1.5s cubic-bezier(0.19, 1, 0.22, 1); }
 
-        .img-grid-section { background: var(--bg-alt); }
-        .modern-img { width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    /* ─── URGENCY BANNER ─── */
+    .urgency {
+      background: linear-gradient(90deg, var(--red) 0%, #7f1d1d 100%);
+      padding: 30px 5%;
+    }
+    .urgency-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+    .urgency-text { display: flex; align-items: flex-start; gap: 16px; }
+    .urgency-text i { font-size: 32px; color: #fff; margin-top: 4px; }
+    .urgency-text h3 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px; line-height: 1.2; }
+    .urgency-text p { font-size: 15px; color: rgba(255,255,255,.9); font-weight: 400; }
+    .urgency-cta a { padding: 14px 32px; background: #fff; border-radius: 10px; font-size: 15px; font-weight: 800; color: var(--red); transition: all .3s; display: inline-block; white-space: nowrap; }
+    .urgency-cta a:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-        .btn { padding: 1rem 2rem; border-radius: 12px; font-weight: 700; text-decoration: none; transition: 0.3s; display: inline-block; cursor: pointer; border: none; }
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4); border:none; }
-        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
-        .btn-outline:hover { background: var(--bg-alt); border-color: var(--primary); }
+    /* ─── SECTION BASE ─── */
+    section { padding: 120px 5%; }
+    .section-inner { max-width: 1300px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 72px; }
+    .section-label { font-size: 13px; font-weight: 800; color: var(--secondary); text-transform: uppercase; letter-spacing: .15em; margin-bottom: 16px; display: block; }
+    .section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; color: var(--dark); line-height: 1.2; letter-spacing: -1.5px; }
+    .section-sub { font-size: 18px; color: var(--gray); line-height: 1.7; max-width: 700px; margin: 20px auto 0; }
 
-        .validator-box { background: var(--bg); border: 2px solid var(--primary); border-radius: 24px; padding: 3rem; text-align: center; max-width: 800px; margin: 0 auto; box-shadow: 0 20px 40px rgba(16, 185, 129, 0.1); }
-        .validator-form { display: flex; gap: 1rem; margin-top: 2rem; }
-        .validator-input { flex: 1; padding: 1rem 1.5rem; border-radius: 12px; border: 2px solid var(--border); font-size: 1rem; background: var(--bg-alt); color: var(--text); }
+    /* ─── FEATURES ─── */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .feature-card {
+      background: var(--white); border: 1px solid #e2e8f0;
+      border-radius: 20px; padding: 40px;
+      transition: all .4s cubic-bezier(0.19, 1, 0.22, 1); position: relative; overflow: hidden;
+      display: flex; flex-direction: column; height: 100%;
+    }
+    .feature-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
+      background: var(--secondary); transform: scaleX(0); transition: transform 0.4s; transform-origin: left;
+    }
+    .feature-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-10px); border-color: transparent; }
+    .feature-card:hover::after { transform: scaleX(1); }
+    .feature-icon { width: 60px; height: 60px; background: var(--gray-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; transition: all .3s; }
+    .feature-icon i { font-size: 28px; color: var(--secondary); }
+    .feature-card:hover .feature-icon { background: var(--secondary); }
+    .feature-card:hover .feature-icon i { color: #fff; }
+    .feature-card h4 { font-size: 20px; font-weight: 800; margin-bottom: 16px; color: var(--dark); }
+    .feature-card p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 
-        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 4rem; }
-        .plan-card { padding: 3rem 2rem; text-align: center; }
-        .plan-price { font-size: 3rem; font-weight: 900; margin: 1.5rem 0; }
-        .plan-price small { font-size: 1rem; color: var(--text-muted); }
-        .plan-features { list-style: none; text-align: left; margin: 2rem 0; }
-        .plan-features li { 
-            margin-bottom: 1.2rem; 
-            color: var(--text-muted); 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 0.75rem; 
-            line-height: 1.5;
-            font-size: 0.85rem;
-        }
-        .plan-features i { 
-            color: var(--primary); 
-            flex-shrink: 0; 
-            margin-top: 0.2rem;
-        }
+    /* ─── DIFFERENTIALS (Dark Grid) ─── */
+    .diff-section { background: var(--dark); color: #fff; }
+    .diff-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .diff-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 32px; transition: all .3s; }
+    .diff-card:hover { background: rgba(13,148,136,.1); border-color: var(--secondary); transform: translateY(-5px); }
+    .diff-card i { font-size: 32px; color: var(--secondary); margin-bottom: 20px; display: block; }
+    .diff-card h4 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .diff-card p { font-size: 14px; color: rgba(255,255,255,.6); line-height: 1.6; }
 
-        footer { padding: 6rem 5% 4rem; background: var(--secondary); color: white; text-align: center; }
-        footer .nav-logo { color: white; display: flex; justify-content: center; margin-bottom: 2rem; }
-        footer p { color: #94a3b8; font-size: 0.9rem; }
-        footer a { color: var(--primary); text-decoration: none; }
+    /* ─── AUDIENCE ─── */
+    .audience-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+    .audience-card { border: 1px solid #e2e8f0; border-radius: 24px; padding: 40px; display: flex; gap: 28px; transition: all .3s; background: #fff; }
+    .audience-card:hover { border-color: var(--secondary); box-shadow: var(--shadow-lg); }
+    .aud-icon { width: 64px; height: 64px; background: var(--green-light); border-radius: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .aud-icon i { font-size: 30px; color: var(--secondary); }
+    .aud-info h4 { font-size: 22px; font-weight: 800; margin-bottom: 12px; color: var(--dark); }
+    .aud-info p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 
-        @media (max-width: 992px) {
-            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 10rem; }
-            .hero-content { margin: 0 auto; }
-            .hero-img-container { order: -1; max-width: 500px; margin: 0 auto; }
-            .grid-2 { grid-template-columns: 1fr; }
-        }
-    </style>
+    /* ─── TESTIMONIALS ─── */
+    .testi-section { background: var(--gray-light); padding-bottom: 140px; }
+    .testi-track-wrap { overflow: hidden; margin-top: 60px; margin-left: -5%; width: 110%; }
+    .testi-track { display: flex; gap: 30px; animation: slide 40s linear infinite; width: max-content; }
+    .testi-track:hover { animation-play-state: paused; }
+    @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .testi-card { background: #fff; border-radius: 24px; padding: 40px; width: 380px; flex-shrink: 0; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
+    .testi-stars { display: flex; gap: 4px; margin-bottom: 20px; color: #fbbf24; }
+    .testi-card blockquote { font-size: 16px; color: var(--gray); line-height: 1.75; margin-bottom: 30px; font-style: italic; font-weight: 500; }
+    .testi-footer { display: flex; align-items: center; gap: 16px; border-top: 1px solid #f1f5f9; padding-top: 20px; }
+    .testi-avatar { width: 48px; height: 48px; border-radius: 12px; background: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .testi-info strong { font-size: 15px; font-weight: 800; color: var(--dark); display: block; }
+    .testi-info span { font-size: 13px; color: var(--gray); font-weight: 500; }
+
+    /* ─── PRICING ─── */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 1200px; margin: 0 auto; }
+    .price-card {
+      background: #fff; border: 2px solid #e2e8f0; border-radius: 28px; padding: 48px 40px;
+      position: relative; transition: all .4s cubic-bezier(0.19, 1, 0.22, 1);
+      display: flex; flex-direction: column;
+    }
+    .price-card.featured {
+      border-color: var(--secondary); background: linear-gradient(135deg, #f0fdf9 0%, #ffffff 100%);
+      transform: scale(1.05); z-index: 10;
+      box-shadow: 0 30px 60px rgba(13,148,136,0.15);
+    }
+    .featured-tag { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); background: var(--secondary); color: #fff; font-size: 12px; font-weight: 800; padding: 6px 20px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.1em; }
+    .price-name { font-size: 14px; font-weight: 800; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; }
+    .price-main { display: flex; align-items: baseline; gap: 6px; margin-bottom: 24px; }
+    .price-currency { font-size: 20px; font-weight: 700; color: var(--dark); }
+    .price-value { font-family: 'Sora', sans-serif; font-size: 52px; font-weight: 800; color: var(--dark); line-height: 1; }
+    .price-period { font-size: 16px; color: var(--gray); font-weight: 500; }
+    .price-desc { font-size: 14px; color: var(--gray); margin-bottom: 32px; line-height: 1.6; }
+    .price-features { list-style: none; margin-bottom: 40px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+    .price-features li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--dark); font-weight: 500; line-height: 1.4; }
+    .price-features li i { color: var(--secondary); font-size: 18px; flex-shrink: 0; }
+    .btn-price { display: block; text-align: center; padding: 18px; border-radius: 12px; font-size: 16px; font-weight: 800; transition: all .3s; }
+    .btn-price-primary { background: var(--secondary); color: #fff; }
+    .btn-price-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(13,148,136,0.25); }
+    .btn-price-outline { border: 2px solid #e2e8f0; color: var(--dark); }
+    .btn-price-outline:hover { border-color: var(--secondary); color: var(--secondary); }
+
+    /* ─── FAQ ─── */
+    .faq-section { background: var(--gray-light); }
+    .faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    .faq-item { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; }
+    .faq-question { padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 17px; font-weight: 700; color: var(--dark); transition: all .2s; }
+    .faq-question:hover { color: var(--secondary); }
+    .faq-question i { color: var(--secondary); transition: transform .3s; }
+    .faq-item.open .faq-question i { transform: rotate(180deg); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height .4s cubic-bezier(0.19, 1, 0.22, 1); }
+    .faq-answer p { padding: 0 32px 24px; font-size: 15px; color: var(--gray); line-height: 1.8; }
+    .faq-item.open .faq-answer { max-height: 300px; }
+
+    /* ─── CTA FINAL ─── */
+    .cta-final { background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%); text-align: center; padding: 120px 5%; position: relative; overflow: hidden; }
+    .cta-final::before { content: ''; position: absolute; inset: 0; opacity: 0.1; background-image: radial-gradient(var(--secondary) 1px, transparent 1px); background-size: 20px 20px; }
+    .cta-final-inner { position: relative; z-index: 10; }
+    .cta-final h2 { font-size: clamp(32px, 4vw, 56px); font-weight: 800; color: #fff; margin-bottom: 24px; letter-spacing: -2px; }
+    .cta-final p { font-size: 20px; color: rgba(255,255,255,0.7); margin-bottom: 48px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .cta-btns { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+
+    /* ─── FOOTER ─── */
+    footer { background: #080c14; padding: 100px 5% 40px; border-top: 1px solid rgba(255,255,255,0.05); color: #fff; }
+    .footer-inner { max-width: 1300px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 80px; margin-bottom: 80px; }
+    .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .footer-desc { font-size: 15px; color: rgba(255,255,255,.5); line-height: 1.8; max-width: 400px; margin-bottom: 32px; }
+    .footer-contact a { font-size: 14px; color: rgba(255,255,255,.6); display: block; margin-bottom: 12px; transition: color .2s; }
+    .footer-contact a:hover { color: var(--secondary); }
+    .footer-col h5 { font-size: 14px; font-weight: 800; color: var(--secondary); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 24px; }
+    .footer-col a { font-size: 15px; color: rgba(255,255,255,.5); display: block; margin-bottom: 14px; transition: color .2s; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,.05); flex-wrap: wrap; gap: 20px; }
+    .footer-bottom p { font-size: 14px; color: rgba(255,255,255,.4); }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a { font-size: 14px; color: rgba(255,255,255,.4); transition: color .2s; }
+    .footer-legal a:hover { color: rgba(255,255,255,.7); }
+
+    /* ─── WHATSAPP FLOAT ─── */
+    .wa-float {
+      position: fixed; bottom: 32px; right: 32px; z-index: 9999;
+      background: #25d366; color: #fff;
+      padding: 16px 28px; border-radius: 100px;
+      font-size: 15px; font-weight: 800;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 10px 30px rgba(37,211,102,.4);
+      transition: all .3s; border: none; cursor: pointer;
+    }
+    .wa-float:hover { transform: translateY(-5px); box-shadow: 0 15px 45px rgba(37,211,102,0.5); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .footer-top { grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 60px; }
+      .hero h1 { font-size: 48px; }
+      .hero p { margin-left: auto; margin-right: auto; }
+      .hero-btns { justify-content: center; }
+      .hero-visual { max-width: 600px; margin: 0 auto; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .diff-grid { grid-template-columns: repeat(2, 1fr); }
+      .audience-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 500px; }
+      .price-card.featured { transform: none; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .urgency-inner { flex-direction: column; text-align: center; }
+      .urgency-text { flex-direction: column; align-items: center; text-align: center; }
+      .features-grid { grid-template-columns: 1fr; }
+      .diff-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 60px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+  </style>
 </head>
 <body>
 
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    {% for item in ticker_items %}<span>{{ item }}</span>{% endfor %}
+    {% for item in ticker_items %}<span>{{ item }}</span>{% endfor %}
+  </div>
+</div>
+
+<!-- NAV -->
 <nav>
-    <a href="/" class="nav-logo">SIMDCCONR01</a>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="logo-icon"><i class="bi bi-shield-check"></i></div>
+      <span>SIMDCCON<em>R01</em></span>
+    </a>
     <div class="nav-links">
-        <a href="#ciencia">Ciência</a>
-        <a href="#roi">Impacto</a>
-        <a href="#conformidade">Conformidade</a>
-        <a href="#planos">Planos</a>
-        <button class="theme-toggle" id="theme-toggle"><i class="bi bi-moon-stars"></i></button>
-        <a href="{% url 'accounts:login' %}" class="btn-nav btn-outline" style="padding: 0.5rem 1rem;">Login</a>
-        <a href="{% url 'accounts:signup' %}" class="btn-primary" style="padding: 0.5rem 1rem;">Começar</a>
+      <a href="#ciencia">Ciência</a>
+      <a href="#impacto">Impacto ROI</a>
+      <a href="#conformidade">Conformidade</a>
+      <a href="#pricing">Planos</a>
+      <a href="#faq">FAQ</a>
     </div>
+    <div class="nav-cta">
+      <a href="{% url 'accounts:login' %}" class="btn-outline">Entrar</a>
+      <a href="{% url 'accounts:signup' %}" class="btn-primary">Criar Conta</a>
+    </div>
+  </div>
 </nav>
 
-<section class="hero" id="home">
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
     <div class="hero-content">
-        <div class="hero-badge">🧠 Autoridade em Saúde Mental e NR-01</div>
-        <h1>A nova era da <span>Segurança do Trabalho</span></h1>
-        <p class="hero-p">Agora, as empresas devem cuidar de questões como clima organizacional, suporte psicológico aos funcionários e políticas contra assédio com a mesma seriedade que tratam a segurança física.<br><br>
-        Segurança de verdade vai além do físico. Falhas operacionais aumentam o estresse, comprometem decisões e impactam diretamente os resultados.<br><br>
-        Com uma abordagem integrada ao PGR (Programa de Gerenciamento de Riscos) e PCMSO (Programa de Controle Médico de Saúde Ocupacional), aliada à emissão de pareceres analíticos cientificamente validados (individuo, departamento e organização) sobre clima e cultura organizacional, assim, sua empresa transforma risco em inteligência estratégica: reduzindo afastamentos, fortalecendo equipes e elevando a performance do negócio.</p>
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Implementar Agora</a>
-            <a href="#ciencia" class="btn btn-outline">Explorar Ciência</a>
+      <div class="hero-badge">
+        <i class="bi bi-patch-check-fill"></i>
+        <span>{{ config.hero_badge|default:'Autoridade em Saúde Mental e NR-01' }}</span>
+      </div>
+      <h1>{{ config.hero_title1 }} <span class="accent">{{ config.hero_title2 }}</span> {{ config.hero_highlight }}</h1>
+      <p>{{ config.hero_subtitle }}</p>
+      <div class="hero-btns">
+        <a href="{% url 'accounts:signup' %}" class="btn-hero-primary">
+          <i class="bi bi-rocket-takeoff-fill"></i>
+          {{ config.hero_cta_text|default:'IMPLEMENTAR AGORA' }}
+        </a>
+        <a href="#ciencia" class="btn-hero-secondary">Explorar Ciência</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="dashboard-card">
+        <div class="dash-header">
+          <span>DASHBOARD SIMDCCONR01</span>
+          <div class="dash-status"><div class="dot"></div><span>SISTEMA ATIVO</span></div>
         </div>
+        <div class="dash-metrics">
+          <div class="metric"><div class="metric-val">160</div><div class="metric-label">Questões Validadas</div></div>
+          <div class="metric"><div class="metric-val">3</div><div class="metric-label">NRs Cobertas</div></div>
+          <div class="metric"><div class="metric-val">26%</div><div class="metric-label">Redução Depressão</div></div>
+          <div class="metric"><div class="metric-val">4.9★</div><div class="metric-label">Feedback IA</div></div>
+        </div>
+        <div class="dash-bars">
+          <div class="bar-row"><span class="bar-label">Mapeamento</span><div class="bar-track"><div class="bar-fill" style="width:98%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">Análise IA</span><div class="bar-track"><div class="bar-fill" style="width:92%"></div></div></div>
+          <div class="bar-row"><span class="bar-label">Laudo PGR</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div></div>
+        </div>
+      </div>
     </div>
-    <div class="hero-img-container">
-        <div class="hero-shape"></div>
-        <video autoplay muted loop playsinline class="hero-img shadow-lg" style="object-fit: cover; background: #000;">
-            <source src="{% static 'video/esgotamento.mp4' %}" type="video/mp4">
-            Seu navegador não suporta vídeos.
-        </video>
-    </div>
+  </div>
 </section>
 
-<section class="section" id="ciencia">
-    <div class="container">
-        <div class="text-center" style="margin-bottom: 4rem;">
-            <span class="section-tag">Fundamentação Científica</span>
-            <h2 class="section-title">50 anos de pesquisa traduzidos em tecnologia</h2>
-            <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6;">
-                Saúde mental não é passivo, é ativo com elevados retornos garantidos pela ciência.
-            </p>
-        </div>
-        <div class="grid-3">
-            <div class="card">
-                <i class="bi bi-journal-medical card-icon"></i>
-                <h3>Estudo de 50 Anos</h3>
-                <p>Foram examinados aspectos como demandas no trabalho, controle, suporte social e insegurança. Os resultados indicam que <strong>26% dos casos de depressão</strong> na população trabalhadora estão ligados a riscos psicossociais, como estresse laboral e bullying.</p>
-            </div>
-            <div class="card">
-                <i class="bi bi-diagram-3 card-icon"></i>
-                <h3>72 Meta-análises</h3>
-                <p>Altas demandas e baixo controle do processo aumentam o risco de <strong>depressão (50%)</strong>, <strong>doenças cardiovasculares (20-40%)</strong> e <strong>dores musculoesqueléticas (30%)</strong>, além de contribuírem para ansiedade e burnout (Niedhammer, Bertrais, 2021).</p>
-            </div>
-            <div class="card">
-                <i class="bi bi-globe-americas card-icon"></i>
-                <h3>Cenário Global (EU-OSHA)</h3>
-                <p>Pesquisa conduzida com 41.458 empresas na Europa revela que <strong>75% delas já reconhecem publicamente algum risco psicossocial</strong>, impulsionando a necessidade urgente de monitoramento e planos de ação como exigido pela nova NR-01.</p>
-            </div>
-        </div>
+<!-- URGENCYBANNER -->
+<div class="urgency">
+  <div class="urgency-inner">
+    <div class="urgency-text">
+      <i class="bi bi-exclamation-octagon"></i>
+      <div>
+        <h3>Adequação Obrigatória NR-01 — Portaria MTE 1.419/2024</h3>
+        <p>A partir de Maio de 2025, o Gerenciamento de Riscos Ocupacionais (GRO) passa a ser obrigatório com avaliação de riscos psicossociais. Não deixe para a última hora.</p>
+      </div>
     </div>
+    <div class="urgency-cta"><a href="#pricing">Ver Opções de Plano</a></div>
+  </div>
+</div>
+
+<!-- CIÊNCIA -->
+<section id="ciencia">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">Fundamentação Científica</span>
+      <h2 class="section-title">Tecnologia baseada em 50 anos de pesquisa</h2>
+      <p class="section-sub">Saúde mental não é passivo, é um ativo com elevados retornos garantidos por metodologias validadas internacionalmente.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="bi bi-journal-check"></i></div>
+        <h4>Estudo de 50 Anos</h4>
+        <p>Examinamos demandas, controle e suporte social. Resultados indicam que <strong>26% dos casos de depressão</strong> corporativa estão ligados a riscos psicossociais não mapeados.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="bi bi-bar-chart-line"></i></div>
+        <h4>72 Meta-análises</h4>
+        <p>Altas demandas e baixo controle aumentam o risco de depressão em 50% e doenças cardiovasculares em até 40%. A prevenção é a melhor blindagem financeira.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="bi bi-globe"></i></div>
+        <h4>Padrão Internacional (OSHA)</h4>
+        <p>Baseado em pesquisas com mais de 41 mil empresas. O monitoramento de riscos psicossociais é hoje o principal KPI de governança e sustentabilidade corporativa.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="section img-grid-section" id="roi">
-    <div class="container">
-        <div class="text-center" style="margin-bottom: 4rem;">
-            <span class="section-tag">Retorno sobre Investimento</span>
-            <h2 class="section-title">Saúde mental é um ativo, não um custo</h2>
-            <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto;">Empresas que investem no bem-estar evitam processos trabalhistas e aumentam o desempenho geral da equipe.</p>
-        </div>
-        
-        <div class="grid-2" style="gap: 2rem; align-items: stretch;">
-            <div class="card">
-                <i class="bi bi-graph-down-arrow card-icon"></i>
-                <h3>Impacto Direto nos Resultados</h3>
-                <p>O Burnout leva a uma queda de <strong>13% no desempenho</strong> geral da equipe (SHRM). Além disso, funcionários esgotados têm <strong>2,6x mais chances</strong> de deixar a empresa, elevando os custos de recrutamento.</p>
-                <div style="margin-top: 2rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 12px; border-left: 4px solid #ef4444;">
-                    <p style="color: #ef4444; font-weight: 700; margin-bottom: 0.2rem;">-40% na Criatividade Coletiva</p>
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">Redução drástica na capacidade inovadora causada pelo esgotamento prolongado (HBR, 2017).</p>
-                </div>
-            </div>
-            
-            <div class="card" style="background: var(--secondary); color: white;">
-                <i class="bi bi-exclamation-triangle card-icon" style="color: #fbbf24;"></i>
-                <h3 style="color: white;">A Reação em Cadeia do Maior Risco</h3>
-                <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 2rem;">O bem-estar corporativo representa uma reação em cadeia: comportamentos tóxicos não tratados trazem grandes despesas através do aumento nas taxas de burnout.</p>
-                
-                <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; margin-bottom: 1rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #fbbf24;">Ambiente Tóxico</span>
-                        <strong style="font-size: 1.5rem; color: white;">8x pior</strong>
-                    </div>
-                    <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">Probabilidade maior de apresentar sintomas de burnout severo.</p>
-                </div>
-
-                <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #ef4444;">Turnover Iminente</span>
-                        <strong style="font-size: 1.5rem; color: white;">6x mais</strong>
-                    </div>
-                    <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">Chances de pedir demissão nos 3 a 6 meses seguintes (McKinsey, 2022).</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="stat-grid">
-            <div class="stat-box"><div class="stat-num">1 em 3</div><div class="stat-label">Trabalhadores com Burnout</div></div>
-            <div class="stat-box"><div class="stat-num">R$ 28 Bi</div><div class="stat-label">Custo em Afastamentos/Ano</div></div>
-            <div class="stat-box"><div class="stat-num">160</div><div class="stat-label">Questões Validadas</div></div>
-            <div class="stat-box"><div class="stat-num">3 NRs</div><div class="stat-label">Cobertas no Sistema</div></div>
-        </div>
+<!-- IMPACTO -->
+<section id="impacto" class="diff-section">
+  <div class="section-inner">
+    <div class="section-header" style="text-align: left;">
+      <span class="section-label" style="color: var(--secondary);">Retorno sobre Investimento (ROI)</span>
+      <h2 class="section-title" style="color: #fff;">Saúde mental é um ativo estratégico</h2>
+      <p class="section-sub" style="color: rgba(255,255,255,0.6); margin-left: 0;">Empresas que investem no bem-estar evitam processos e aumentam o desempenho geral da equipe.</p>
     </div>
+    <div class="diff-grid">
+      <div class="diff-card">
+        <i class="bi bi-graph-down"></i>
+        <h4>Queda de Desempenho</h4>
+        <p>O Burnout causa redução de 13% na produtividade e 40% na criatividade coletiva.</p>
+      </div>
+      <div class="diff-card">
+        <i class="bi bi-cash-stack"></i>
+        <h4>R$ 28 Bi/Ano</h4>
+        <p>Custo estimado em afastamentos previdenciários no Brasil por questões de saúde mental.</p>
+      </div>
+      <div class="diff-card">
+        <i class="bi bi-person-x"></i>
+        <h4>Turnover de 6x</h4>
+        <p>Colaboradores em ambientes tóxicos têm 6x mais chances de pedir demissão nos próximos 6 meses.</p>
+      </div>
+      <div class="diff-card">
+        <i class="bi bi-shield-lock"></i>
+        <h4>Blindagem Jurídica</h4>
+        <p>Evite multas e interdições do MTE provando a gestão ativa dos riscos psicossociais.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="section" id="conformidade">
-    <div class="container">
-        <span class="section-tag">Prova e Segurança</span>
-        <h2 class="section-title">Como garantir e provar a conformidade?</h2>
-        <div class="grid-2">
-            <div>
-                <p style="color: var(--text-muted); margin-bottom: 2rem;">Para garantir que sua organização esteja em conformidade com a NR-1, é essencial possuir documentos e evidências rastreáveis.</p>
-                <ul style="list-style: none;">
-                    <li style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
-                        <span style="background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700;">1</span>
-                        <div><strong style="display: block;">Relatórios Detalhados</strong><span style="color: var(--text-muted); font-size: 0.9rem;">Metodologia utilizada e resultados obtidos com análise de IA.</span></div>
-                    </li>
-                    <li style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
-                        <span style="background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700;">2</span>
-                        <div><strong style="display: block;">Planos de Ação</strong><span style="color: var(--text-muted); font-size: 0.9rem;">Medidas para mitigar riscos identificados e promover bem-estar.</span></div>
-                    </li>
-                    <li style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
-                        <span style="background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700;">3</span>
-                        <div><strong style="display: block;">Registros de Treinamento</strong><span style="color: var(--text-muted); font-size: 0.9rem;">Sensibilização e capacitação exigidas realizadas com lideranças e equipes.</span></div>
-                    </li>
-                    <li style="display: flex; gap: 1rem;">
-                        <span style="background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700;">4</span>
-                        <div><strong style="display: block;">Indicadores Internos</strong><span style="color: var(--text-muted); font-size: 0.9rem;">Painel de monitoramento com taxas de absenteísmo, turnover e afastamentos por questões psicológicas.</span></div>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="card" style="border: 2px solid var(--primary); background: rgba(16, 185, 129, 0.05);">
-                <i class="bi bi-shield-check" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem; display: block;"></i>
-                <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 1rem;">Blindagem Jurídica e Trabalhista</h3>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6;">A nova NR-1 (Portaria MTE 1.419/2024) exige a avaliação ergonômica e psicossocial integrada ao PGR. Nossa tecnologia garante:</p>
-                <div style="background: var(--card); padding: 1rem; border-radius: 12px; margin-bottom: 0.8rem; border-left: 3px solid var(--primary); display: flex; align-items: center; gap: 1rem;">
-                    <i class="bi bi-fingerprint text-primary fs-4"></i>
-                    <span style="font-weight: 600; font-size: 0.9rem;">Rastreabilidade por CPF do Colaborador</span>
-                </div>
-                <div style="background: var(--card); padding: 1rem; border-radius: 12px; margin-bottom: 0.8rem; border-left: 3px solid var(--primary); display: flex; align-items: center; gap: 1rem;">
-                    <i class="bi bi-file-earmark-lock text-primary fs-4"></i>
-                    <span style="font-weight: 600; font-size: 0.9rem;">Laudo Bloqueado com Assinatura (Double Check)</span>
-                </div>
-                <div style="background: var(--card); padding: 1rem; border-radius: 12px; border-left: 3px solid var(--primary); display: flex; align-items: center; gap: 1rem;">
-                    <i class="bi bi-robot text-primary fs-4"></i>
-                    <span style="font-weight: 600; font-size: 0.9rem;">Auditoria Pronta para Fiscalização (MTE)</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="validator-box" style="margin-top: 5rem;">
-            <h3 style="font-size: 1.5rem; font-weight: 800;">Validador de Laudos Periciais</h3>
-            <p style="color: var(--text-muted); margin-top: 0.5rem;">Verifique a autenticidade de qualquer documento emitido pelo sistema.</p>
-            <form action="{% url 'reports:validate' %}" method="get" class="validator-form">
-                <input type="text" name="code" class="validator-input" placeholder="Insira o código do laudo (Ex: 550e8400...)" required>
-                <button type="submit" class="btn btn-primary">Validar Agora</button>
-            </form>
-        </div>
+<!-- CONFORMIDADE -->
+<section id="conformidade">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">Segurança e Prova Técnica</span>
+      <h2 class="section-title">Como garantir e provar a conformidade?</h2>
     </div>
+    <div class="audience-grid">
+      <div class="audience-card">
+        <div class="aud-icon"><i class="bi bi-file-earmark-bar-graph"></i></div>
+        <div class="aud-info">
+          <h4>Relatórios com IA</h4>
+          <p>Análise automatizada através de redes neurais que cruzam as 160 respostas para gerar um diagnóstico preciso e imparcial.</p>
+        </div>
+      </div>
+      <div class="audience-card">
+        <div class="aud-icon"><i class="bi bi-shield-fill-check"></i></div>
+        <div class="aud-info">
+          <h4>Rastreabilidade Total</h4>
+          <p>Histórico ocupacional rastreado por CPF, garantindo veracidade e continuidade exigida pelo PGR e PCMSO.</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 60px; padding: 40px; background: var(--gray-light); border-radius: 24px; border: 1px dashed var(--secondary); text-align: center;">
+      <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 20px;">Validador de Laudos Periciais</h3>
+      <form action="{% url 'reports:validate' %}" method="get" style="display: flex; gap: 12px; max-width: 600px; margin: 0 auto;">
+        <input type="text" name="code" placeholder="Código do laudo (Ex: 550e8400...)" style="flex: 1; padding: 14px 20px; border-radius: 10px; border: 1px solid #cbd5e1; outline: none; font-size: 14px;">
+        <button type="submit" class="btn-primary">Validar Documento</button>
+      </form>
+    </div>
+  </div>
 </section>
 
-<section class="section img-grid-section" id="planos">
-    <div class="container overflow-hidden">
-        <div class="text-center" style="margin-bottom: 4rem;">
-            <span class="section-tag">Pronto para a Nova NR-1?</span>
-            <h2 class="section-title">Escolha o plano ideal para sua empresa</h2>
-        </div>
-        
-        <div class="plans-grid">
-            <div class="card plan-card">
-                <div class="hero-badge">Starter</div>
-                <div class="plan-price">R$ 420<small>/mês</small></div>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Para PMEs até 50 colaboradores</p>
-                <ul class="plan-features">
-                    <li><i class="bi bi-check-circle-fill"></i>Até 50 funcionários</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Laudos personalizados para respondentes</li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Para Organizações:</strong></li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Diagnostico NR01 Disposições Gerais e Gerenciamento de Riscos Ocupacionais:</strong> Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</li>
-                    <li style="padding-left: 1.5rem;"><i class="bi bi-check-circle"></i>NR12 Segurança no Trabalho em Maquinas e Equipamentos: Segurança e Ergonomia em Maquinas e Equipamentos.</li>
-                    <li style="padding-left: 1.5rem;"><i class="bi bi-check-circle"></i>NR17 Ergonomia: Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho e Exigências Cognitivas.</li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Diagnostico para Cultura Organizacional:</strong> (Fairness/justiça, Disclosure / transparência, Accountability / responsabilidade, Compliance / conformidade)</li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Diagnostico para Clima Organizacional:</strong> Analise de Motivação(Reconhecimento, Comprometimento, Progresso Profissional), Liderança (Estilo Gerencial, Trabalho  em Equipe, Competição no Trabalho), Filosofia de Gestão (Clareza Organizacional, Comunicação, Estruturas, Regras e Conformidade), Gestão de Pessoas (Politica Salarial, Salário, Imagem do RH, Perspectiva de Carreira, Treinamento e Desenvolvimento), Natureza do Trabalho (Conteúdo do Trabalho, Volume de Trabalho).</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Reaplicação semestral</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Laudo PDF básico</li>
-                </ul>
-                <a href="{% url 'accounts:signup' %}" class="btn btn-outline" style="width: 100%;">Começar Agora</a>
-            </div>
-
-            <div class="card plan-card" style="border-color: var(--primary); transform: scale(1.05); z-index: 10;">
-                <div class="hero-badge" style="background: var(--primary); color: white;">⭐ Mais Popular</div>
-                <div class="plan-price">R$ 2.250<small>/mês</small></div>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Para empresas de 50 a 300 colaboradores</p>
-                <ul class="plan-features">
-                    <li><i class="bi bi-check-circle-fill"></i>Até 300 funcionários</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Laudos personalizados para respondentes</li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Para Organizações:</strong></li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Diagnostico NR01 Disposições Gerais e Gerenciamento de Riscos Ocupacionais:</strong> Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</li>
-                    <li style="padding-left: 1.5rem;"><i class="bi bi-check-circle"></i>NR12 Segurança no Trabalho em Maquinas e Equipamentos: Segurança e Ergonomia em Maquinas e Equipamentos.</li>
-                    <li style="padding-left: 1.5rem;"><i class="bi bi-check-circle"></i>NR17 Ergonomia: Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho e Exigências Cognitivas.</li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Diagnostico para Cultura Organizacional:</strong> (Fairness/justiça, Disclosure / transparência, Accountability / responsabilidade, Compliance / conformidade)</li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Diagnostico para Clima Organizacional:</strong> Analise de Motivação(Reconhecimento, Comprometimento, Progresso Profissional), Liderança (Estilo Gerencial, Trabalho  em Equipe, Competição no Trabalho), Filosofia de Gestão (Clareza Organizacional, Comunicação, Estruturas, Regras e Conformidade), Gestão de Pessoas (Politica Salarial, Salário, Imagem do RH, Perspectiva de Carreira, Treinamento e Desenvolvimento), Natureza do Trabalho (Conteúdo do Trabalho, Volume de Trabalho).</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Laudo Pericial Completo</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Rastreabilidade por CPF</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Rerecomendação de Ajustes PGR/GRO/PCMSO</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Reaplicação Semestral</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Suporte prioritário</li>
-                </ul>
-                <a href="{% url 'accounts:signup' %}" class="btn btn-primary" style="width: 100%;">Começar Agora</a>
-            </div>
-
-            <div class="card plan-card">
-                <div class="hero-badge">Enterprise</div>
-                <div class="plan-price">Sob consulta</div>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Para grupos e conglomerados +300</p>
-                <ul class="plan-features">
-                    <li><i class="bi bi-check-circle-fill"></i>Colaboradores ilimitados</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Multi-empresa (CNPJ)</li>
-                    <li><i class="bi bi-check-circle-fill"></i>API de integração</li>
-                    <li><i class="bi bi-check-circle-fill"></i>SLA e suporte dedicado</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Laudos personalizados para respondentes</li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Para Organizações:</strong></li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Diagnostico NR01 Disposições Gerais e Gerenciamento de Riscos Ocupacionais:</strong> Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</li>
-                    <li style="padding-left: 1.5rem;"><i class="bi bi-check-circle"></i>NR12 Segurança no Trabalho em Maquinas e Equipamentos: Segurança e Ergonomia em Maquinas e Equipamentos.</li>
-                    <li style="padding-left: 1.5rem;"><i class="bi bi-check-circle"></i>NR17 Ergonomia: Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho e Exigências Cognitivas.</li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Diagnostico para Cultura Organizacional:</strong> (Fairness/justiça, Disclosure / transparência, Accountability / responsabilidade, Compliance / conformidade)</li>
-                    <li><i class="bi bi-check-circle-fill"></i><strong>Diagnostico para Clima Organizacional:</strong> Analise de Motivação(Reconhecimento, Comprometimento, Progresso Profissional), Liderança (Estilo Gerencial, Trabalho  em Equipe, Competição no Trabalho), Filosofia de Gestão (Clareza Organizacional, Comunicação, Estruturas, Regras e Conformidade), Gestão de Pessoas (Politica Salarial, Salário, Imagem do RH, Perspectiva de Carreira, Treinamento e Desenvolvimento), Natureza do Trabalho (Conteúdo do Trabalho, Volume de Trabalho).</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Laudo Pericial Completo</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Rastreabilidade por CPF</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Rerecomendação de Ajustes PGR/GRO/PCMSO</li>
-                    <li><i class="bi bi-check-circle-fill"></i>Suporte prioritário</li>
-                </ul>
-                <a href="mailto:contato@simdcconr01.com.br" class="btn btn-outline" style="width: 100%;">Falar com Especialista</a>
-            </div>
-        </div>
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="testi-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">O mercado comprova</span>
+      <h2 class="section-title">O que dizem os especialistas</h2>
     </div>
+  </div>
+  <div class="testi-track-wrap">
+    <div class="testi-track">
+      {% for t in testimonials %}
+      <div class="testi-card">
+        <div class="testi-stars">{% for i in "12345" %}{% if forloop.counter <= t.rating %}<i class="bi bi-star-fill"></i>{% endif %}{% endfor %}</div>
+        <blockquote>"{{ t.content }}"</blockquote>
+        <div class="testi-footer">
+          <div class="testi-avatar">{{ t.author_name|slice:":1" }}</div>
+          <div class="testi-info"><strong>{{ t.author_name }}</strong><span>{{ t.author_role }} @ {{ t.author_company }}</span></div>
+        </div>
+      </div>
+      {% endfor %}
+      {% for t in testimonials %}
+      <div class="testi-card">
+        <div class="testi-stars">{% for i in "12345" %}{% if forloop.counter <= t.rating %}<i class="bi bi-star-fill"></i>{% endif %}{% endfor %}</div>
+        <blockquote>"{{ t.content }}"</blockquote>
+        <div class="testi-footer">
+          <div class="testi-avatar">{{ t.author_name|slice:":1" }}</div>
+          <div class="testi-info"><strong>{{ t.author_name }}</strong><span>{{ t.author_role }} @ {{ t.author_company }}</span></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">Investimento em Conformidade</span>
+      <h2 class="section-title">Escolha o plano ideal</h2>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">Starter</div>
+        <div class="price-main">
+          <span class="price-currency">R$</span>
+          <span class="price-value">{{ config.starter_price|floatformat:0 }}</span>
+          <span class="price-period">/mês</span>
+        </div>
+        <p class="price-desc">{{ config.starter_description }}</p>
+        <ul class="price-features">
+          <li><i class="bi bi-check-circle-fill"></i> Até {{ config.starter_employees }} funcionários</li>
+          <li><i class="bi bi-check-circle-fill"></i> 160 Questões SIMDCCONR01</li>
+          <li><i class="bi bi-check-circle-fill"></i> Dashboard Básico</li>
+          <li><i class="bi bi-check-circle-fill"></i> Laudo PDF</li>
+        </ul>
+        <a href="{% url 'accounts:signup' %}" class="btn-price btn-price-outline">Selecionar Starter</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="featured-tag">Mais Popular</div>
+        <div class="price-name">Professional</div>
+        <div class="price-main">
+          <span class="price-currency">R$</span>
+          <span class="price-value">{{ config.pro_price|floatformat:0 }}</span>
+          <span class="price-period">/mês</span>
+        </div>
+        <p class="price-desc">{{ config.pro_description }}</p>
+        <ul class="price-features">
+          <li><i class="bi bi-check-circle-fill"></i> Até {{ config.pro_employees }} funcionários</li>
+          <li><i class="bi bi-check-circle-fill"></i> <strong>IA — Laudo Pericial Completo</strong></li>
+          <li><i class="bi bi-check-circle-fill"></i> Rastreabilidade por CPF</li>
+          <li><i class="bi bi-check-circle-fill"></i> Recomendação PGR/GRO/PCMSO</li>
+          <li><i class="bi bi-check-circle-fill"></i> Reaplicação Semestral</li>
+        </ul>
+        <a href="{% url 'accounts:signup' %}" class="btn-price btn-price-primary">Selecionar Profissional</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-name">Enterprise</div>
+        <div class="price-main">
+          <span class="price-value">Sob Consulta</span>
+        </div>
+        <p class="price-desc">{{ config.enterprise_description }}</p>
+        <ul class="price-features">
+          <li><i class="bi bi-check-circle-fill"></i> Colaboradores ilimitados</li>
+          <li><i class="bi bi-check-circle-fill"></i> Painel Multi-Empresa</li>
+          <li><i class="bi bi-check-circle-fill"></i> API de Integração</li>
+          <li><i class="bi bi-check-circle-fill"></i> Suporte Dedicado</li>
+        </ul>
+        <a href="mailto:{{ config.enterprise_contact }}" class="btn-price btn-price-outline">Falar com Consultor</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="faq-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">FAQ</span>
+      <h2 class="section-title">Dúvidas Frequentes</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">O laudo gerado é aceito pelo Ministério do Trabalho? <i class="bi bi-chevron-down"></i></div>
+        <div class="faq-answer"><p>Sim. Todas as ferramentas do sistema foram desenvolvidas seguindo rigorosamente as metodologias científicas validadas e os requisitos técnicos da Portaria MTE 1.419/2024 (NR-01).</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Como funciona a análise por Inteligência Artificial? <i class="bi bi-chevron-down"></i></div>
+        <div class="faq-answer"><p>Utilizamos modelos avançados (Llama-3) para converter os dados brutos das 160 questões em um parecer técnico detalhado, identificando conexões entre cultura, clima e riscos psicossociais que poderiam passar despercebidos.</p></div>
+      </div>
+       <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Posso cancelar a qualquer momento? <i class="bi bi-chevron-down"></i></div>
+        <div class="faq-answer"><p>Sim. Não há contratos de fidelidade. Você pode utilizar o sistema pelo tempo que desejar e cancelar conforme sua necessidade operacional.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="cta-final-inner">
+    <h2>{{ config.cta_title }}</h2>
+    <p>{{ config.cta_subtitle }}</p>
+    <div class="cta-btns">
+      <a href="{% url 'accounts:signup' %}" class="btn-hero-primary">Cadastrar Empresa</a>
+      <a href="mailto:{{ config.contact_email }}" class="btn-hero-secondary">Falar com Especialista</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-    <div class="container">
-        <a href="/" class="nav-logo">SIMDCCONR01</a>
-        <p style="max-width: 600px; margin: 0 auto 2rem;">Sistema de Medida de Dissonância de Cultura e Clima Organizacional. Conforme Portaria MTE 1.419/2024 · NR-1 · NR-17 · NR-12 · LGPD</p>
-        <div style="display: flex; gap: 2rem; justify-content: center; margin-bottom: 3rem;">
-            <a href="{% url 'accounts:login' %}">Entrar na Plataforma</a>
-            <a href="/admin/">Acesso Administrativo</a>
-            <a href="mailto:contato@simdcconr01.com.br">contato@simdcconr01.com.br</a>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">
+           <div class="logo-icon"><i class="bi bi-shield-check"></i></div>
+           <span style="font-size: 20px; font-weight: 800;">SIMDCCON<em>R01</em></span>
         </div>
-        <p>&copy; 2026 SIMDCCONR01. Todos os direitos reservados.</p>
+        <p class="footer-desc">A solução definitiva para automatizar o levantamento de riscos psicossociais, garantindo conformidade técnica e saúde mental estratégica.</p>
+        <div class="footer-contact">
+          <a href="mailto:{{ config.contact_email }}">📧 {{ config.contact_email }}</a>
+          <a href="#">💬 Suporte via WhatsApp</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Normas</h5>
+        <a href="#">Portaria 1.419/2024</a>
+        <a href="#">NR-01 (Geral)</a>
+        <a href="#">NR-17 (Ergonomia)</a>
+        <a href="#">NR-12 (Segurança)</a>
+      </div>
+      <div class="footer-col">
+        <h5>Plataforma</h5>
+        <a href="{% url 'accounts:login' %}">Login</a>
+        <a href="{% url 'accounts:signup' %}">Sign Up</a>
+        <a href="/admin/">Admin Master</a>
+      </div>
     </div>
+    <div class="footer-bottom">
+      <p>© 2026 SIMDCCONR01. Todos os direitos reservados.</p>
+      <div class="footer-legal">
+        <a href="#">Termos e Condições</a>
+        <a href="#">LGPD e Privacidade</a>
+      </div>
+    </div>
+  </div>
 </footer>
 
+<!-- WhatsApp Float -->
+<button class="wa-float">
+  <i class="bi bi-whatsapp"></i>
+  FALAR NO WHATSAPP
+</button>
+
 <script>
-    const toggleBtn = document.getElementById('theme-toggle');
-    const htmlEl = document.documentElement;
-    const icon = toggleBtn.querySelector('i');
+  // FAQ Toggle
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
 
-    function setTheme(theme) {
-        htmlEl.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        if (theme === 'dark') {
-            icon.classList.replace('bi-moon-stars', 'bi-sun');
-        } else {
-            icon.classList.replace('bi-sun', 'bi-moon-stars');
-        }
-    }
-
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-
-    toggleBtn.addEventListener('click', () => {
-        const currentTheme = htmlEl.getAttribute('data-theme');
-        setTheme(currentTheme === 'light' ? 'dark' : 'light');
+  // Anim Bars on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.bar-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width || (Math.random() * 30 + 70) + '%';
+        });
+      }
     });
+  }, { threshold: 0.5 });
+  
+  const visual = document.querySelector('.hero-visual');
+  if(visual) observer.observe(visual);
 </script>
-
 </body>
 </html>

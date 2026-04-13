@@ -10,10 +10,12 @@ from .forms import LandingConfigForm, AnnouncementForm
 def landing_page(request):
     """Página pública da landing page (lê config do banco)."""
     config = LandingConfig.get()
+    ticker_items = [s.strip() for s in config.ticker_text.split('|')] if config.ticker_text else []
     testimonials = Testimonial.objects.filter(is_approved=True).order_by('-created_at')[:6]
     announcements = [a for a in Announcement.objects.filter(is_active=True) if a.is_live]
     return render(request, 'landing/page.html', {
         'config': config,
+        'ticker_items': ticker_items,
         'testimonials': testimonials,
         'announcements': announcements,
     })

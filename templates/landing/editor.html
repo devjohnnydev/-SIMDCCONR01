@@ -100,6 +100,7 @@
         </div>
         <a href="#colors"      class="active" onclick="showTab('colors', this)"><span>🎨</span> Cores</a>
         <a href="#hero"        onclick="showTab('hero', this)"><span>🚀</span> Hero</a>
+        <a href="#ticker"      onclick="showTab('ticker', this)"><span>🎞️</span> Ticker</a>
         <a href="#plans"       onclick="showTab('plans', this)"><span>💳</span> Planos</a>
         <a href="#cta"         onclick="showTab('cta', this)"><span>🎯</span> CTA Final</a>
         <a href="#image"       onclick="showTab('image', this)"><span>🖼️</span> Imagem</a>
@@ -170,6 +171,18 @@
                     <div class="form-group full"><label>Destaque em Gradiente</label>{{ form.hero_highlight }}</div>
                     <div class="form-group full"><label>Subtítulo</label>{{ form.hero_subtitle }}</div>
                     <div class="form-group"><label>Texto do Botão CTA</label>{{ form.hero_cta_text }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO TICKER -->
+        <div id="tab-ticker" class="tab-panel">
+            <div class="card">
+                <div class="card-title">🎞️ Faixa Superior (Ticker)</div>
+                <div class="form-group full">
+                    <label>Conteúdo da Faixa</label>
+                    {{ form.ticker_text }}
+                    <p style="color:var(--muted);font-size:.8rem;margin-top:.5rem">Use o caractere <strong>|</strong> para separar as frases que aparecerão na faixa rolante.</p>
                 </div>
             </div>
         </div>

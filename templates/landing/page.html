@@ -238,6 +238,88 @@
     .price-features li.feature-checked i { color: var(--secondary); margin-right: 8px; }
     .price-features li.feature-outline i { color: #94a3b8; }
 
+    /* ─── ECOSYSTEM (Audiência) ─── */
+    .eco-section { background: var(--dark); padding: 120px 5%; color: #fff; overflow: hidden; }
+    .eco-inner { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: flex-start; }
+    .eco-content h2 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 32px; letter-spacing: -2px; }
+    .eco-content p { font-size: 18px; color: rgba(255,255,255,0.6); line-height: 1.8; margin-bottom: 40px; }
+    .eco-grid { display: flex; flex-direction: column; gap: 20px; }
+    .eco-card { 
+        background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); 
+        border-radius: 20px; padding: 32px; display: flex; gap: 24px; transition: all .4s;
+        cursor: default;
+    }
+    .eco-card:hover { background: rgba(13,148,136,.1); border-color: var(--secondary); transform: translateX(10px); }
+    .eco-icon { width: 56px; height: 56px; background: rgba(255,255,255,.05); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .eco-icon i { font-size: 24px; color: var(--secondary); }
+    .eco-info h4 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .eco-info p { font-size: 14px; color: rgba(255,255,255,.5); line-height: 1.6; margin: 0; }
+
+    /* ─── ADVANTAGES (ESCOLHA DEFINITIVA) ─── */
+    .advantage-section { background: #0f172a; padding: 120px 5%; color: #fff; text-align: center; }
+    .adv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1300px; margin: 60px auto 0; }
+    .adv-card { 
+        background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); 
+        border-radius: 24px; padding: 40px; text-align: left; transition: all .3s;
+    }
+    .adv-card:hover { background: rgba(255,255,255,.07); border-color: var(--secondary); transform: translateY(-5px); }
+    .adv-icon { font-size: 28px; color: var(--secondary); margin-bottom: 24px; display: block; }
+    .adv-card h4 { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
+    .adv-card p { font-size: 14px; color: rgba(255,255,255,.5); line-height: 1.6; }
+    .adv-card.wide { grid-column: span 2; }
+
+    /* ─── WORKFLOW (COMO FUNCIONA) ─── */
+    .workflow-section { background: #fff; padding: 140px 5%; }
+    .step-row { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; margin-bottom: 120px; }
+    .step-row:nth-child(even) { direction: rtl; }
+    .step-row:nth-child(even) .step-content { direction: ltr; }
+    .step-content { position: relative; }
+    .step-num { font-size: 14px; font-weight: 800; color: var(--secondary); margin-bottom: 20px; display: block; }
+    .step-content h3 { font-size: 32px; font-weight: 800; margin-bottom: 20px; letter-spacing: -1px; }
+    .step-content p { font-size: 16px; color: var(--gray); line-height: 1.8; margin-bottom: 32px; }
+    .step-img { border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-lg); transition: transform .5s; }
+    .step-row:hover .step-img { transform: scale(1.02); }
+
+    /* ─── TIMELINE (O QUE FAZ) ─── */
+    .timeline-section { background: var(--gray-light); padding: 140px 5%; }
+    .timeline-container { position: relative; max-width: 1000px; margin: 80px auto 0; padding: 40px 0; }
+    .timeline-line { 
+        position: absolute; left: 50%; top: 0; width: 2px; height: 100%; 
+        background: linear-gradient(to bottom, transparent, #cbd5e1 10%, #cbd5e1 90%, transparent); 
+        transform: translateX(-50%); 
+    }
+    .timeline-item { position: relative; width: 50%; padding: 40px; margin-bottom: 40px; }
+    .timeline-item.right { margin-left: auto; text-align: left; }
+    .timeline-item.left { text-align: right; }
+    .timeline-dot { 
+        position: absolute; top: 50%; width: 44px; height: 44px; background: #fff; 
+        border: 2px solid var(--secondary); border-radius: 50%; z-index: 10;
+        display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--secondary);
+    }
+    .timeline-item.right .timeline-dot { left: -22px; transform: translateY(-50%); }
+    .timeline-item.left .timeline-dot { right: -22px; transform: translateY(-50%); }
+    .timeline-card { background: #fff; border-radius: 20px; padding: 32px; box-shadow: var(--shadow); border: 1px solid #e2e8f0; }
+    .timeline-card h4 { font-size: 20px; font-weight: 800; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 12px; }
+    .timeline-item.left .timeline-card h4 { justify-content: flex-end; }
+    .timeline-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .timeline-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--gray); line-height: 1.5; }
+    .timeline-item.left .timeline-list li { flex-direction: row-reverse; }
+    .timeline-list li i { width: 24px; height: 24px; background: var(--green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary); font-size: 12px; flex-shrink: 0; }
+    
+    @media (max-width: 1024px) {
+        .eco-inner { grid-template-columns: 1fr; gap: 40px; }
+        .adv-grid { grid-template-columns: 1fr 1fr; }
+        .adv-card.wide { grid-column: span 1; }
+        .step-row { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+        .step-row:nth-child(even) { direction: ltr; }
+        .timeline-line { left: 40px; }
+        .timeline-item { width: 100%; padding-left: 80px; text-align: left !important; margin-left: 0 !important; }
+        .timeline-item .timeline-dot { left: 18px !important; }
+        .timeline-item.left .timeline-card h4 { justify-content: flex-start; }
+        .timeline-item.left .timeline-list li { flex-direction: row; }
+    }
+    @media (max-width: 600px) { .adv-grid { grid-template-columns: 1fr; } }
+
     /* ─── FAQ ─── */
     .faq-section { background: var(--gray-light); }
     .faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
@@ -399,6 +481,47 @@
   </div>
 </div>
 
+<!-- ECOSYSTEM (Audiência) -->
+<section class="eco-section" id="audiencia">
+  <div class="eco-inner">
+    <div class="eco-content">
+      <span class="section-label" style="color: #5eead4;">Para quem foi feito</span>
+      <h2>O ecossistema perfeito para quem respira <span style="color: var(--secondary); font-style: italic;">SST.</span></h2>
+      <p>Não importa o tamanho da sua operação. O SIMDCCONR01 foi desenhado sob medida para potencializar os resultados de quem lidera o mercado de Saúde e Segurança do Trabalho no Brasil.</p>
+    </div>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-icon"><i class="bi bi-briefcase"></i></div>
+        <div class="eco-info">
+          <h4>Consultorias de SST</h4>
+          <p>Escale seus atendimentos gerenciando múltiplos CNPJs em um único painel. Entregue relatórios padronizados, rápidos e à prova de auditorias para todos os seus clientes.</p>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-icon"><i class="bi bi-activity"></i></div>
+        <div class="eco-info">
+          <h4>Clínicas de Medicina Ocupacional</h4>
+          <p>Agregue valor aos exames (ASO). Ofereça o mapeamento psicossocial completo exigido pela nova NR-01 como um serviço premium e integrado da sua clínica.</p>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-icon"><i class="bi bi-person-gear"></i></div>
+        <div class="eco-info">
+          <h4>Profissionais Independentes</h4>
+          <p>Engenheiros, Médicos e Técnicos de Segurança: destaquem-se no mercado entregando um serviço 100% digital, eliminando papéis e planilhas.</p>
+        </div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-icon"><i class="bi bi-buildings"></i></div>
+        <div class="eco-info">
+          <h4>Prestadores de Serviços de SST</h4>
+          <p>Padronize a coleta de dados da sua equipe de campo e automatize a geração de planos de ação perfeitamente integrados ao PGR das empresas contratantes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CIÊNCIA -->
 <section id="ciencia">
   <div class="section-inner">
@@ -460,6 +583,54 @@
   </div>
 </section>
 
+<!-- ADVANTAGES (ESCOLHA DEFINITIVA) -->
+<section class="advantage-section" id="vantagens">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">Vantagem Competitiva</span>
+      <h2>Por que o SIMDCCON é a <span style="color: var(--secondary);">escolha definitiva?</span></h2>
+      <p class="section-sub" style="color: rgba(255,255,255,0.6);">Não somos apenas um gerador de questionários. Somos uma plataforma desenhada sob medida para a realidade do profissional de SST brasileiro.</p>
+    </div>
+    <div class="adv-grid">
+      <div class="adv-card">
+        <i class="bi bi-graph-up adv-icon"></i>
+        <h4>Melhor custo do mercado</h4>
+        <p>Economize em cada avaliação sem abrir mão da qualidade técnica e segurança jurídica.</p>
+      </div>
+      <div class="adv-card">
+        <i class="bi bi-chat-quote adv-icon"></i>
+        <h4>Envio simplificado de links</h4>
+        <p>Facilidade máxima para coletar respostas via WhatsApp ou E-mail com um clique.</p>
+      </div>
+      <div class="adv-card">
+        <i class="bi bi-shield-check adv-icon"></i>
+        <h4>Blindagem Jurídica e Conformidade</h4>
+        <p>Relatórios prontos para auditoria, evitando multas e processos trabalhistas onerosos.</p>
+      </div>
+      <div class="adv-card wide">
+        <i class="bi bi-building-gear adv-icon"></i>
+        <h4>Gestão multi-empresas (Multi-CNPJ)</h4>
+        <p>O ambiente perfeito para consultorias e clínicas de SST que gerenciam dezenas de clientes em um só painel administrativo segregado.</p>
+      </div>
+      <div class="adv-card">
+        <i class="bi bi-funnel adv-icon"></i>
+        <h4>Filtros por GHE, GES e Setor</h4>
+        <p>Cruze dados e gere resultados precisos e segmentados para o PGR.</p>
+      </div>
+      <div class="adv-card">
+        <i class="bi bi-file-earmark-image adv-icon"></i>
+        <h4>Anexos e Evidências</h4>
+        <p>Permite anexar fotos e laudos, garantindo rastreabilidade total de cada diagnóstico.</p>
+      </div>
+      <div class="adv-card wide">
+        <i class="bi bi-lightning-charge adv-icon"></i>
+        <h4>Planos de Ação Automatizados</h4>
+        <p>O sistema lê os riscos e já sugere as intervenções com base nas diretrizes oficiais do MTE, economizando horas de escrita técnica.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CONFORMIDADE -->
 <section id="conformidade">
   <div class="section-inner">
@@ -489,6 +660,52 @@
         <input type="text" name="code" placeholder="Código do laudo (Ex: 550e8400...)" style="flex: 1; padding: 14px 20px; border-radius: 10px; border: 1px solid #cbd5e1; outline: none; font-size: 14px;">
         <button type="submit" class="btn-primary">Validar Documento</button>
       </form>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW (COMO FUNCIONA) -->
+<section class="workflow-section" id="funcionamento">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2 class="section-title">Como o <span style="color: var(--secondary);">SIMDCCONR01</span> funciona.</h2>
+      <p class="section-sub">Uma plataforma completa para gerar, monitorar e comprovar a gestão de saúde mental e segurança do trabalho de forma automatizada.</p>
+    </div>
+    
+    <div class="step-row">
+      <div class="step-content">
+        <span class="step-num">01</span>
+        <h3>Modelos e Coleta</h3>
+        <p>Acesse o painel administrativo para baixar o formulário de avaliação manual para impressão ou envie links digitais, garantindo o início imediato da coleta de dados.</p>
+      </div>
+      <div class="step-img"><img src="{% static 'img/step1.png' %}" alt="Coleta de dados"></div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-content">
+        <span class="step-num">02</span>
+        <h3>Dashboard Estratégico</h3>
+        <p>Acompanhe em tempo real métricas cruciais como o total de empresas, avaliações recentes e relatórios salvos, visualizando a distribuição por segmento em gráficos intuitivos.</p>
+      </div>
+      <div class="step-img"><img src="{% static 'img/step2.png' %}" alt="Dashboard"></div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-content">
+        <span class="step-num">03</span>
+        <h3>Avaliação Estruturada</h3>
+        <p>Aplique avaliações métricas organizadas por categorias de risco para mapear detalhadamente todos os fatores psicossociais e organizacionais do ambiente de trabalho.</p>
+      </div>
+      <div class="step-img"><img src="{% static 'img/step3.png' %}" alt="Avaliação"></div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-content">
+        <span class="step-num">04</span>
+        <h3>Inventário de Riscos (PGR)</h3>
+        <p>Gere automaticamente a matriz de risco e obtenha o inventário ocupacional completo, estruturado com probabilidade e severidade para integração imediata ao seu PGR/GRO.</p>
+      </div>
+      <div class="step-img"><img src="{% static 'img/step4.png' %}" alt="Inventário"></div>
     </div>
   </div>
 </section>
@@ -523,6 +740,72 @@
         </div>
       </div>
       {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE (O QUE FAZ) -->
+<section class="timeline-section" id="o-que-faz">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-label">O que o SIMDCCONR01 faz?</span>
+      <h2 class="section-title">Ferramentas profissionais para mapear, documentar e otimizar</h2>
+    </div>
+    
+    <div class="timeline-container">
+      <div class="timeline-line"></div>
+
+      <!-- Item 1 -->
+      <div class="timeline-item left">
+        <div class="timeline-dot">1</div>
+        <div class="timeline-card">
+          <h4><i class="bi bi-database-add"></i> Centralização e Coleta</h4>
+          <ul class="timeline-list">
+            <li>Substitua planilhas, papel e links avulsos. Centralize tudo em um só lugar. <i class="bi bi-check"></i></li>
+            <li>Levantamento automático de fatores de risco com identificação rápida. <i class="bi bi-check"></i></li>
+            <li>Segmentação por setor, GHE, GES ou ambiente de trabalho. <i class="bi bi-check"></i></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="timeline-item right">
+        <div class="timeline-dot">2</div>
+        <div class="timeline-card">
+          <h4><i class="bi bi-gear-wide-connected"></i> Gestão Estratégica</h4>
+          <ul class="timeline-list">
+            <li><i class="bi bi-check"></i> Avaliações em períodos personalizados para monitorar evolução.</li>
+            <li><i class="bi bi-check"></i> Planos de ação e sugestões automáticas baseadas na legislação.</li>
+            <li><i class="bi bi-check"></i> Reavaliações e comparativos de resultados entre ciclos.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="timeline-item left">
+        <div class="timeline-dot">3</div>
+        <div class="timeline-card">
+          <h4><i class="bi bi-shield-check"></i> Segurança Jurídica</h4>
+          <ul class="timeline-list">
+            <li>Garante anonimato dos colaboradores conforme diretrizes da LGPD. <i class="bi bi-check"></i></li>
+            <li>Metodologia validada pelo MTE para evitar custos em auditorias. <i class="bi bi-check"></i></li>
+            <li>Relatórios de Gestão prontos para serem anexados ao PGR/GRO. <i class="bi bi-check"></i></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="timeline-item right">
+        <div class="timeline-dot">4</div>
+        <div class="timeline-card">
+          <h4><i class="bi bi-file-earmark-zip"></i> Integração com PGR</h4>
+          <ul class="timeline-list">
+            <li><i class="bi bi-check"></i> Inventário de Riscos com tabelas prontas sem complicações.</li>
+            <li><i class="bi bi-check"></i> Matriz Automatizada baseada em severidade e probabilidade.</li>
+            <li><i class="bi bi-check"></i> Documentação Técnica completa pronta para fiscalização.</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>

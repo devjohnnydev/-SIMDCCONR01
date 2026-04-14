@@ -14,16 +14,11 @@ def execute(sql):
             print("Skipped/Err:", sql[:100], "->", e)
 
 print("--- FORCING SAFETY COLUMNS ON accounts_user ---")
-# Basic Django/Custom User fields that might be missing if 0001_initial failed or was faked
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS role varchar(20) DEFAULT 'EMPLOYEE';")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS is_staff boolean DEFAULT false;")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true;")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS date_joined timestamp with time zone DEFAULT NOW();")
-
-# Foreign keys MUST be bigint for compatibility with BigAutoField
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS company_id bigint;")
-
-# LGPD and Terms
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS lgpd_individual_accepted boolean DEFAULT false;")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS lgpd_individual_at timestamp with time zone;")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS lgpd_aggregate_accepted boolean DEFAULT false;")
@@ -34,6 +29,48 @@ execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS privacy_accepted boo
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS privacy_accepted_at timestamp with time zone;")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS professional_crp varchar(50) DEFAULT '';")
 execute("ALTER TABLE accounts_user ADD COLUMN IF NOT EXISTS signature_image varchar(100);")
+
+print("\n--- FORCING SAFETY COLUMNS ON companies_company ---")
+# Basic fields that might be missing due to faked migrations
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS logo varchar(100);")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS cor_primaria varchar(7) DEFAULT '#0d6efd';")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS cor_secundaria varchar(7) DEFAULT '#6c757d';")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS status varchar(20) DEFAULT 'PENDING';")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS plan_id bigint;")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS stripe_customer_id varchar(100) DEFAULT '';")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS stripe_subscription_id varchar(100) DEFAULT '';")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS subscription_status varchar(50) DEFAULT 'inactive';")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS current_period_end timestamp with time zone;")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS custom_price_monthly decimal(10,2);")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS custom_price_yearly decimal(10,2);")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS contratante_nome varchar(200);")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS contratante_documento varchar(20);")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS data_aceite_contrato timestamp with time zone;")
+
+print("\n--- FORCING SAFETY TABLE: billing_plan ---")
+execute("""
+    CREATE TABLE IF NOT EXISTS billing_plan (
+        id bigserial PRIMARY KEY,
+        name varchar(100) NOT NULL,
+        description text DEFAULT '',
+        price_monthly decimal(10,2) NOT NULL DEFAULT 0,
+        price_yearly decimal(10,2),
+        max_employees integer DEFAULT 50,
+        max_forms integer DEFAULT 10,
+        max_reports integer DEFAULT 20,
+        data_retention_days integer DEFAULT 365,
+        has_pdf_export boolean DEFAULT true,
+        has_csv_import boolean DEFAULT true,
+        has_api_access boolean DEFAULT false,
+        has_custom_branding boolean DEFAULT true,
+        has_priority_support boolean DEFAULT false,
+        is_active boolean DEFAULT true,
+        is_featured boolean DEFAULT false,
+        "order" integer DEFAULT 0,
+        created_at timestamp with time zone NOT NULL DEFAULT NOW(),
+        updated_at timestamp with time zone NOT NULL DEFAULT NOW()
+    );
+""")
 
 print("\n--- FORCING SAFETY TABLE: audit_auditlog ---")
 execute("""

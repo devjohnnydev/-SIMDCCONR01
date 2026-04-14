@@ -19,8 +19,8 @@ python manage.py migrate --fake reports 0007 --noinput || true
 echo "Running migrate..."
 python manage.py migrate --noinput
 
-# echo "Running fix_db..."
-# python fix_db.py
+echo "Running fix_db..."
+python fix_db.py
 
 # echo "Running setup_initial_data..."
 # python manage.py setup_initial_data

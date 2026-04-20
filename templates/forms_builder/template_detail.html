@@ -1,74 +1,248 @@
 {% extends 'base.html' %}
+{% block title %}{{ template.name }} - Template{% endblock %}
 
-{% block title %}{{ template.name }} - SaaS NR-01{% endblock %}
+{% block extra_css %}
+<style>
+    .cat-badge {
+        display: inline-flex; align-items: center; gap: 0.3rem;
+        padding: 0.2rem 0.5rem; border-radius: 2rem; font-size: 0.65rem; font-weight: 700;
+    }
+    .cat-DIAGNOSTICO { background: rgba(59,130,246,0.12); color: #2563eb; }
+    .cat-DISSONANCIA { background: rgba(100,116,139,0.12); color: #475569; }
+    .cat-RISCOS { background: rgba(245,158,11,0.12); color: #b45309; }
+    .cat-RECOMENDACOES { background: rgba(16,185,129,0.12); color: #047857; }
+    .question-item {
+        border-left: 3px solid transparent;
+        transition: all 0.2s;
+    }
+    .question-item:hover {
+        background: #f8fafc;
+        border-left-color: var(--primary);
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container py-4" style="max-width: 900px;">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'forms:templates' %}">Templates</a></li>
+            <li class="breadcrumb-item active">{{ template.name }}</li>
+        </ol>
+    </nav>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h2">{{ template.name }}</h1>
-            <span class="badge bg-{% if template.category == 'NR01' %}danger{% elif template.category == 'CLIMATE' %}primary{% elif template.category == 'WELLBEING' %}success{% else %}secondary{% endif %}">
+            <h1 class="h2 mb-1">{{ template.name }}</h1>
+            <span class="badge bg-{% if template.category == 'NR01' %}danger{% elif template.category == 'CLIMATE' %}primary{% elif template.category == 'WELLBEING' %}success{% elif template.category == 'SIMDCCONR01' %}dark{% else %}secondary{% endif %}">
                 {{ template.get_category_display }}
             </span>
-            {% if template.is_global %}
-            <span class="badge bg-info">Global</span>
-            {% endif %}
+            {% if template.is_global %}<span class="badge bg-info ms-1">Global</span>{% endif %}
         </div>
-        <a href="{% url 'forms:instance_create' template.pk %}" class="btn btn-primary">
-            <i class="bi bi-plus"></i> Criar Formulario
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{% url 'forms:instance_create' template.pk %}" class="btn btn-primary rounded-pill px-3">
+                <i class="bi bi-play-circle me-1"></i>Usar Template
+            </a>
+            <button class="btn btn-success rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#addQuestionModal">
+                <i class="bi bi-plus-lg me-1"></i>Adicionar Pergunta
+            </button>
+        </div>
     </div>
-    
+
     {% if template.description %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <p class="mb-0">{{ template.description }}</p>
-        </div>
+    <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body"><p class="mb-0 text-muted">{{ template.description }}</p></div>
     </div>
     {% endif %}
-    
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0"><i class="bi bi-list-ol"></i> Perguntas ({{ questions.count }})</h5>
+
+    <!-- Questions List -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white p-3 border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-list-ol me-2 text-primary"></i>Perguntas ({{ questions.count }})</h5>
         </div>
-        <div class="card-body">
+        <div class="card-body p-0">
             <div class="list-group list-group-flush">
                 {% for question in questions %}
-                <div class="list-group-item">
+                <div class="list-group-item question-item px-4 py-3">
                     <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <span class="badge bg-secondary me-2">{{ question.order }}</span>
-                            <strong>{{ question.text }}</strong>
-                            {% if question.is_required %}
-                            <span class="text-danger">*</span>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="badge bg-light text-dark border">{{ question.order }}</span>
+                                <span class="cat-badge cat-{{ question.analysis_category }}">
+                                    {{ question.get_analysis_category_display }}
+                                </span>
+                                <span class="badge bg-light text-muted border">{{ question.get_question_type_display }}</span>
+                                {% if question.is_required %}<span class="text-danger fw-bold">*</span>{% endif %}
+                            </div>
+                            <p class="mb-1 fw-medium">{{ question.text }}</p>
+                            {% if question.help_text %}
+                            <small class="text-muted"><i class="bi bi-info-circle me-1"></i>{{ question.help_text }}</small>
                             {% endif %}
-                            <br>
-                            <small class="text-muted">
-                                Tipo: {{ question.get_question_type_display }}
-                                {% if question.help_text %}
-                                | Ajuda: {{ question.help_text }}
-                                {% endif %}
-                            </small>
                             {% if question.options %}
-                            <br>
-                            <small class="text-muted">
-                                Opcoes: {{ question.options|join:", " }}
-                            </small>
+                            <div class="mt-1">
+                                {% for opt in question.options %}
+                                <span class="badge bg-light text-dark border me-1">{{ opt }}</span>
+                                {% endfor %}
+                            </div>
                             {% endif %}
+                        </div>
+                        <div class="d-flex gap-1 ms-3 flex-shrink-0">
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#editQuestionModal_{{ question.pk }}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <form method="POST" action="{% url 'forms:question_delete' question.pk %}"
+                                onsubmit="return confirm('Excluir esta pergunta?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Modal for each question -->
+                <div class="modal fade" id="editQuestionModal_{{ question.pk }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content rounded-4 border-0 shadow">
+                            <form method="POST" action="{% url 'forms:question_edit' question.pk %}">
+                                {% csrf_token %}
+                                <div class="modal-header border-0 px-4 pt-4">
+                                    <h5 class="modal-title fw-bold">Editar Pergunta #{{ question.order }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body px-4">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Texto *</label>
+                                        <textarea name="text" class="form-control" rows="2" required>{{ question.text }}</textarea>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-6">
+                                            <label class="form-label fw-semibold">Tipo</label>
+                                            <select name="question_type" class="form-select">
+                                                <option value="SCALE" {% if question.question_type == 'SCALE' %}selected{% endif %}>Escala (1-5)</option>
+                                                <option value="SCALE_10" {% if question.question_type == 'SCALE_10' %}selected{% endif %}>Escala (1-10)</option>
+                                                <option value="TEXT" {% if question.question_type == 'TEXT' %}selected{% endif %}>Texto</option>
+                                                <option value="YESNO" {% if question.question_type == 'YESNO' %}selected{% endif %}>Sim/Não</option>
+                                                <option value="SINGLE" {% if question.question_type == 'SINGLE' %}selected{% endif %}>Escolha Única</option>
+                                                <option value="MULTIPLE" {% if question.question_type == 'MULTIPLE' %}selected{% endif %}>Múltipla Escolha</option>
+                                                <option value="NUMBER" {% if question.question_type == 'NUMBER' %}selected{% endif %}>Número</option>
+                                                <option value="DATE" {% if question.question_type == 'DATE' %}selected{% endif %}>Data</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label fw-semibold">Categoria de Análise</label>
+                                            <select name="analysis_category" class="form-select">
+                                                <option value="DIAGNOSTICO" {% if question.analysis_category == 'DIAGNOSTICO' %}selected{% endif %}>Diagnóstico Psicossocial</option>
+                                                <option value="DISSONANCIA" {% if question.analysis_category == 'DISSONANCIA' %}selected{% endif %}>Dissonância de Clima</option>
+                                                <option value="RISCOS" {% if question.analysis_category == 'RISCOS' %}selected{% endif %}>Riscos (PGR/GRO)</option>
+                                                <option value="RECOMENDACOES" {% if question.analysis_category == 'RECOMENDACOES' %}selected{% endif %}>Recomendações</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3 mt-1">
+                                        <div class="col-4">
+                                            <label class="form-label fw-semibold">Ordem</label>
+                                            <input type="number" name="order" class="form-control" value="{{ question.order }}">
+                                        </div>
+                                        <div class="col-8">
+                                            <label class="form-label fw-semibold">Texto de Ajuda</label>
+                                            <input type="text" name="help_text" class="form-control" value="{{ question.help_text }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-check mt-3">
+                                        <input class="form-check-input" type="checkbox" name="is_required" id="req_{{ question.pk }}"
+                                            {% if question.is_required %}checked{% endif %}>
+                                        <label class="form-check-label" for="req_{{ question.pk }}">Obrigatória</label>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label fw-semibold">Opções (uma por linha)</label>
+                                        <textarea name="options" class="form-control" rows="3" placeholder="Opção 1&#10;Opção 2&#10;Opção 3">{% for o in question.options %}{{ o }}{% if not forloop.last %}
+{% endif %}{% endfor %}</textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0 px-4 pb-4">
+                                    <button type="button" class="btn btn-light rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary rounded-pill px-4"><i class="bi bi-check-lg me-1"></i>Salvar</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <p class="text-muted">Nenhuma pergunta cadastrada.</p>
+                <div class="text-center py-5">
+                    <i class="bi bi-clipboard-plus fs-1 text-muted"></i>
+                    <p class="text-muted mt-2">Nenhuma pergunta ainda. Clique em "Adicionar Pergunta" para começar.</p>
+                </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-    
+
     <div class="mt-4">
-        <a href="{% url 'forms:templates' %}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Voltar
+        <a href="{% url 'forms:templates' %}" class="btn btn-outline-secondary rounded-pill">
+            <i class="bi bi-arrow-left me-1"></i>Voltar
         </a>
+    </div>
+</div>
+
+<!-- Add Question Modal -->
+<div class="modal fade" id="addQuestionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form method="POST" action="{% url 'forms:question_add' template.pk %}">
+                {% csrf_token %}
+                <div class="modal-header border-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle me-2 text-success"></i>Nova Pergunta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Texto da Pergunta *</label>
+                        <textarea name="text" class="form-control" rows="2" required placeholder="Digite o texto da pergunta..."></textarea>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Tipo de Resposta</label>
+                            <select name="question_type" class="form-select">
+                                <option value="SCALE">Escala (1-5)</option>
+                                <option value="SCALE_10">Escala (1-10)</option>
+                                <option value="TEXT">Texto Aberto</option>
+                                <option value="YESNO">Sim/Não</option>
+                                <option value="SINGLE">Escolha Única</option>
+                                <option value="MULTIPLE">Múltipla Escolha</option>
+                                <option value="NUMBER">Número</option>
+                                <option value="DATE">Data</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Categoria de Análise *</label>
+                            <select name="analysis_category" class="form-select">
+                                <option value="DIAGNOSTICO">1. Diagnóstico Psicossocial</option>
+                                <option value="DISSONANCIA">2. Dissonância de Clima</option>
+                                <option value="RISCOS">3. Riscos (PGR/GRO)</option>
+                                <option value="RECOMENDACOES">4. Recomendações</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label fw-semibold">Texto de Ajuda (opcional)</label>
+                        <input type="text" name="help_text" class="form-control" placeholder="Dica para o respondente...">
+                    </div>
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" name="is_required" id="addReq" checked>
+                        <label class="form-check-label" for="addReq">Obrigatória</label>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label fw-semibold">Opções (uma por linha, para Escolha Única/Múltipla)</label>
+                        <textarea name="options" class="form-control" rows="3" placeholder="Opção 1&#10;Opção 2&#10;Opção 3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="button" class="btn btn-light rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success rounded-pill px-4"><i class="bi bi-plus-lg me-1"></i>Adicionar</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

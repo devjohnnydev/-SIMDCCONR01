@@ -87,6 +87,13 @@ class FormQuestion(models.Model):
         ('DATE', 'Data'),
         ('NUMBER', 'Numero'),
     ]
+
+    ANALYSIS_CATEGORY_CHOICES = [
+        ('DIAGNOSTICO', 'Diagnóstico Psicossocial'),
+        ('DISSONANCIA', 'Dissonância de Clima e Cultura'),
+        ('RISCOS', 'Riscos Identificados (PGR/GRO)'),
+        ('RECOMENDACOES', 'Recomendações de Ação'),
+    ]
     
     template = models.ForeignKey(
         FormTemplate,
@@ -104,6 +111,14 @@ class FormQuestion(models.Model):
         help_text='Lista de opcoes para multipla escolha'
     )
     
+    analysis_category = models.CharField(
+        'Categoria de Análise',
+        max_length=20,
+        choices=ANALYSIS_CATEGORY_CHOICES,
+        default='DIAGNOSTICO',
+        help_text='Define em qual seção do laudo esta pergunta será agrupada'
+    )
+
     order = models.PositiveIntegerField('Ordem', default=0)
     is_required = models.BooleanField('Obrigatoria', default=True)
     help_text = models.CharField('Texto de Ajuda', max_length=500, blank=True)

@@ -260,7 +260,25 @@ def form_respond(request, assignment_pk):
         messages.warning(request, 'Este formulario nao esta mais disponivel.')
         return redirect('accounts:employee_dashboard')
     
-    questions = instance.template.questions.all().order_by('order')
+    questions = instance.template.questions.all().order_by('analysis_category', 'order')
+
+    # Agrupar perguntas por categoria de análise
+    from collections import OrderedDict
+    CATEGORY_ORDER = ['DIAGNOSTICO', 'DISSONANCIA', 'RISCOS', 'RECOMENDACOES']
+    CATEGORY_META = {
+        'DIAGNOSTICO': {'label': 'Diagnóstico Psicossocial', 'icon': 'bi-activity', 'color': '#3b82f6', 'number': 1},
+        'DISSONANCIA': {'label': 'Dissonância de Clima e Cultura', 'icon': 'bi-people', 'color': '#64748b', 'number': 2},
+        'RISCOS': {'label': 'Riscos Identificados (PGR/GRO)', 'icon': 'bi-exclamation-triangle', 'color': '#f59e0b', 'number': 3},
+        'RECOMENDACOES': {'label': 'Recomendações de Ação', 'icon': 'bi-list-check', 'color': '#10b981', 'number': 4},
+    }
+    grouped_questions = OrderedDict()
+    for cat in CATEGORY_ORDER:
+        cat_questions = [q for q in questions if q.analysis_category == cat]
+        if cat_questions:
+            grouped_questions[cat] = {
+                'meta': CATEGORY_META[cat],
+                'questions': cat_questions,
+            }
     
     # Notificar início do preenchimento (primeiro acesso)
     assignment.start()
@@ -319,6 +337,7 @@ def form_respond(request, assignment_pk):
         'assignment': assignment,
         'instance': instance,
         'questions': questions,
+        'grouped_questions': grouped_questions,
     }
     return render(request, 'forms_builder/form_respond.html', context)
 
@@ -375,3 +394,137 @@ def resend_form_notification(request, assignment_pk=None, employee_id=None):
             messages.error(request, 'Erro ao enviar o e-mail. Verifique o cadastro do funcionário.')
             
     return redirect(request.META.get('HTTP_REFERER', 'forms:instances'))
+
+
+@login_required
+@require_company_admin
+def template_create(request):
+    """Cria um novo template de formulário do zero."""
+    company = request.user.company
+
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        description = request.POST.get('description', '').strip()
+        category = request.POST.get('category', 'CUSTOM')
+
+        if not name:
+            messages.error(request, 'O nome do template é obrigatório.')
+            return redirect('forms:template_create')
+
+        template = FormTemplate.objects.create(
+            name=name,
+            description=description,
+            category=category,
+            company=company,
+            is_global=request.user.role == 'ADMIN_MASTER',
+            is_active=True
+        )
+
+        AuditLog.log(
+            user=request.user,
+            action='CREATE',
+            description=f'Template "{name}" criado',
+            obj=template,
+            request=request
+        )
+
+        messages.success(request, f'Template "{name}" criado com sucesso! Adicione suas perguntas.')
+        return redirect('forms:template_detail', pk=template.pk)
+
+    return render(request, 'forms_builder/template_create.html', {
+        'category_choices': FormTemplate.CATEGORY_CHOICES,
+        'analysis_categories': FormQuestion.ANALYSIS_CATEGORY_CHOICES,
+    })
+
+
+@login_required
+@require_company_admin
+def question_add(request, template_pk):
+    """Adiciona uma nova pergunta a um template."""
+    template = get_object_or_404(FormTemplate, pk=template_pk)
+
+    if not template.is_global and template.company != request.user.company:
+        messages.error(request, 'Acesso não autorizado.')
+        return redirect('forms:templates')
+
+    if request.method == 'POST':
+        text = request.POST.get('text', '').strip()
+        question_type = request.POST.get('question_type', 'SCALE')
+        analysis_category = request.POST.get('analysis_category', 'DIAGNOSTICO')
+        is_required = request.POST.get('is_required') == 'on'
+        help_text = request.POST.get('help_text', '').strip()
+        options_raw = request.POST.get('options', '').strip()
+
+        if not text:
+            messages.error(request, 'O texto da pergunta é obrigatório.')
+            return redirect('forms:template_detail', pk=template_pk)
+
+        # Calcular próxima ordem
+        last_order = template.questions.order_by('-order').values_list('order', flat=True).first() or 0
+
+        options = []
+        if options_raw and question_type in ('MULTIPLE', 'SINGLE'):
+            options = [o.strip() for o in options_raw.split('\n') if o.strip()]
+
+        FormQuestion.objects.create(
+            template=template,
+            text=text,
+            question_type=question_type,
+            analysis_category=analysis_category,
+            options=options,
+            order=last_order + 1,
+            is_required=is_required,
+            help_text=help_text
+        )
+
+        messages.success(request, 'Pergunta adicionada com sucesso!')
+        return redirect('forms:template_detail', pk=template_pk)
+
+    return redirect('forms:template_detail', pk=template_pk)
+
+
+@login_required
+@require_company_admin
+def question_edit(request, question_pk):
+    """Edita uma pergunta existente."""
+    question = get_object_or_404(FormQuestion, pk=question_pk)
+    template = question.template
+
+    if not template.is_global and template.company != request.user.company:
+        messages.error(request, 'Acesso não autorizado.')
+        return redirect('forms:templates')
+
+    if request.method == 'POST':
+        question.text = request.POST.get('text', question.text).strip()
+        question.question_type = request.POST.get('question_type', question.question_type)
+        question.analysis_category = request.POST.get('analysis_category', question.analysis_category)
+        question.is_required = request.POST.get('is_required') == 'on'
+        question.help_text = request.POST.get('help_text', '').strip()
+        question.order = int(request.POST.get('order', question.order))
+
+        options_raw = request.POST.get('options', '').strip()
+        if options_raw and question.question_type in ('MULTIPLE', 'SINGLE'):
+            question.options = [o.strip() for o in options_raw.split('\n') if o.strip()]
+
+        question.save()
+        messages.success(request, 'Pergunta atualizada com sucesso!')
+
+    return redirect('forms:template_detail', pk=template.pk)
+
+
+@login_required
+@require_company_admin
+def question_delete(request, question_pk):
+    """Exclui uma pergunta do template."""
+    question = get_object_or_404(FormQuestion, pk=question_pk)
+    template = question.template
+
+    if not template.is_global and template.company != request.user.company:
+        messages.error(request, 'Acesso não autorizado.')
+        return redirect('forms:templates')
+
+    if request.method == 'POST':
+        question.delete()
+        messages.success(request, 'Pergunta removida com sucesso!')
+
+    return redirect('forms:template_detail', pk=template.pk)

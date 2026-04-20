@@ -37,6 +37,12 @@ class SignerProfile(models.Model):
         blank=True,
         help_text='Upload da imagem com a assinatura manuscrita (PNG transparente recomendado)'
     )
+    signature_base64 = models.TextField(
+        'Assinatura (Base64)',
+        blank=True,
+        default='',
+        help_text='Imagem da assinatura salva como data URI base64 para persistência'
+    )
     is_active = models.BooleanField('Ativo', default=True)
     created_at = models.DateTimeField('Cadastrado em', auto_now_add=True)
 

@@ -180,124 +180,65 @@
                 </div>
             </div>
 
-            <!-- Signature Block -->
+            <!-- Signature Block (Unified — Single Signature) -->
             <div class="card border-0 shadow-sm rounded-4 mt-4 print-signature-block break-inside-avoid">
                 <div class="card-body p-4 p-md-5">
                     <h5 class="fw-bold text-dark border-bottom pb-3 mb-4"><i
-                            class="bi bi-pen me-2 text-primary"></i>Autenticação e Assinaturas</h5>
+                            class="bi bi-pen me-2 text-primary"></i>Assinatura Eletrônica</h5>
 
-                    <div class="row align-items-end justify-content-between text-center mt-5 pt-3">
-                        {% if not diagnostic.is_signed %}
-                        <!-- GOV.BR SIGNATURE (Pendente) -->
-                        <div class="col-md-5 mb-4 mb-md-0 position-relative">
-                            <p class="small text-muted mb-3">Conforme Medida Provisória nº 2.200-2/2001 e Lei nº
-                                14.063/2020</p>
-
-                            <div
-                                class="govbr-signature-box border border-primary border-opacity-50 bg-light rounded-3 p-3 d-inline-block shadow-sm w-100">
-                                <div class="d-flex align-items-center justify-content-center mb-2">
-                                    <div class="bg-white p-1 rounded border shadow-sm me-2">
-                                        <img src="https://www.gov.br/++theme++padrao_govbr/img/govbr-logo-large.png"
-                                            height="24" alt="gov.br" style="filter: grayscale(0%);">
-                                    </div>
-                                    <span class="text-dark fw-bold" style="font-size: 0.85rem;">ASSINATURA
-                                        ELETRÔNICA</span>
-                                </div>
-                                <div class="text-start border-top pt-2 mt-2">
-                                    <small class="d-block text-dark fw-medium" style="font-size: 0.75rem;">Aguardando
-                                        Assinatura</small>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- MANUAL/PROFESSIONAL SIGNATURE (Pendente) -->
-                        <div class="col-md-5 position-relative">
-                            <div class="signature-line border-bottom border-dark border-2 mx-auto mb-2"
-                                style="width: 80%; height: 60px; position:relative;">
-                                <span class="text-muted small fst-italic position-absolute w-100 text-center"
-                                    style="bottom: 5px; left: 0;">Assine aqui (Aguardando)</span>
-                            </div>
-                            <h6 class="fw-bold text-dark mb-0">Profissional Responsável</h6>
-
-                            <form action="{% url 'accounts:sign_laudo_internal' diagnostic.id %}" method="post"
-                                class="mt-3 d-print-none">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-dark btn-sm rounded-pill px-4">
-                                    <i class="bi bi-pen me-2"></i>Assinar pelo Sistema
-                                </button>
-                            </form>
-                        </div>
-
-                        {% else %}
-
-                        <!-- LÓGICA QUANDO ESTÁ ASSINADO -->
-                        <!-- GOV.BR SIGNATURE (Assinado) -->
-                        <div class="col-md-5 mb-4 mb-md-0 position-relative">
-                            <p class="small text-muted mb-3">Conforme Medida Provisória nº 2.200-2/2001 e Lei nº
-                                14.063/2020</p>
-
-                            <div
-                                class="govbr-signature-box border {% if diagnostic.signature_method == 'GOVBR' %}border-success{% else %}border-primary{% endif %} border-opacity-50 bg-light rounded-3 p-3 d-inline-block shadow-sm w-100">
-                                <div class="d-flex align-items-center justify-content-center mb-2">
-                                    <div class="bg-white p-1 rounded border shadow-sm me-2">
-                                        <img src="https://www.gov.br/++theme++padrao_govbr/img/govbr-logo-large.png"
-                                            height="24" alt="gov.br" style="filter: grayscale(0%);">
-                                    </div>
-                                    <span class="text-dark fw-bold" style="font-size: 0.85rem;">ASSINATURA
-                                        ELETRÔNICA</span>
-                                </div>
-                                <div class="text-start border-top pt-2 mt-2">
-                                    {% if diagnostic.signature_method == 'INTERNAL' and diagnostic.signer_profile and diagnostic.signer_profile.signature_image %}
-                                        <img src="{{ diagnostic.signer_profile.signature_image.url }}" alt="Assinatura" style="max-height: 50px;">
-                                    {% endif %}
-                                    <small class="d-block text-dark mt-1 fw-bold" style="font-size: 0.70rem;">
-                                        {% if diagnostic.signer_profile %}
-                                            {{ diagnostic.signer_profile.nome_completo }}<br>
-                                            {{ diagnostic.signer_profile.registro_profissional }}
-                                        {% else %}
-                                            Assinado pelo Sistema
-                                        {% endif %}
-                                    </small>
-                                    <small class="d-block text-dark fw-medium" style="font-size: 0.75rem;">Assinado por:
-                                        <strong>Representante Legal</strong></small>
-                                    <small class="text-muted d-block mt-2" style="font-size: 0.65rem;">Assinatura Eletrônica ICP-Brasil</small>
-                                    <small class="d-block text-muted" style="font-size: 0.70rem;">Data: {{ diagnostic.signature_timestamp|date:"d/m/Y H:i:s" }}</small>
-                                </div>
-                                <div class="mt-2 d-none d-print-block text-center mx-auto">
-                                    <img src="https://chart.googleapis.com/chart?chs=80x80&cht=qr&chl={{ request.build_absolute_uri|default:'https://gov.br/validador' }}"
-                                        alt="QR Code Validação">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- MANUAL/PROFESSIONAL SIGNATURE (Assinado) -->
-                        <div class="col-md-5 position-relative">
-                            <div class="signature-line border-bottom border-dark border-2 mx-auto mb-2"
-                                style="width: 80%; height: 60px; position:relative;">
-                                {% if diagnostic.signer_profile and diagnostic.signer_profile.signature_image %}
-                                <img src="{{ diagnostic.signer_profile.signature_image.url }}" alt="Assinatura"
-                                    style="max-height: 55px; position:absolute; bottom:2px; left:50%; transform:translateX(-50%);">
-                                {% elif diagnostic.signed_by and diagnostic.signed_by.signature_image %}
-                                <img src="{{ diagnostic.signed_by.signature_image.url }}" alt="Assinatura"
-                                    style="max-height: 55px; position:absolute; bottom:2px; left:50%; transform:translateX(-50%);">
-                                {% else %}
-                                <span class="text-success small fw-bold position-absolute w-100 text-center"
-                                    style="bottom: 5px; left: 0;">Assinado Eletronicamente</span>
-                                {% endif %}
-                            </div>
-                            {% if diagnostic.signer_profile %}
-                            <h6 class="fw-bold text-dark mb-0">{{ diagnostic.signer_profile.nome_completo }}</h6>
-                            <small class="text-muted d-block">{{ diagnostic.signer_profile.get_especialidade_display }}</small>
-                            <small class="text-muted d-block mt-1">{{ diagnostic.signer_profile.registro_profissional|default:"Registro N/C" }}</small>
+                    {% if diagnostic.is_signed %}
+                    <!-- ASSINADO -->
+                    <div class="text-center pt-3">
+                        <div class="signature-line border-bottom border-dark border-2 mx-auto mb-3"
+                            style="width: 300px; height: 70px; position:relative;">
+                            {% if diagnostic.signer_profile and diagnostic.signer_profile.signature_base64 %}
+                            <img src="{{ diagnostic.signer_profile.signature_base64 }}" alt="Assinatura"
+                                style="max-height: 65px; position:absolute; bottom:2px; left:50%; transform:translateX(-50%);">
+                            {% elif diagnostic.signer_profile and diagnostic.signer_profile.signature_image %}
+                            <img src="{{ diagnostic.signer_profile.signature_image.url }}" alt="Assinatura"
+                                style="max-height: 65px; position:absolute; bottom:2px; left:50%; transform:translateX(-50%);">
                             {% else %}
-                            <h6 class="fw-bold text-dark mb-0">{% if diagnostic.signed_by.get_full_name %}{{ diagnostic.signed_by.get_full_name }}{% else %}{{ diagnostic.signed_by.email }}{% endif %}</h6>
-                            <small class="text-muted d-block">{% if diagnostic.signed_by.get_role_display %}{{ diagnostic.signed_by.get_role_display }}{% else %}Perito / Especialista em Saúde Ocupacional{% endif %}</small>
-                            <small class="text-muted d-block mt-1">CREA/CRM/CRP: {% if diagnostic.signed_by.professional_crp %}{{ diagnostic.signed_by.professional_crp }}{% else %}___________________{% endif %}</small>
+                            <span class="text-success small fw-bold position-absolute w-100 text-center"
+                                style="bottom: 5px; left: 0;">Assinado Eletronicamente</span>
                             {% endif %}
                         </div>
+
+                        {% if diagnostic.signer_profile %}
+                        <h6 class="fw-bold text-dark mb-0">{{ diagnostic.signer_profile.nome_completo }}</h6>
+                        <small class="text-muted d-block">{{ diagnostic.signer_profile.get_especialidade_display }}</small>
+                        <small class="text-muted d-block">{{ diagnostic.signer_profile.registro_profissional|default:"" }}</small>
+                        {% elif diagnostic.signed_by %}
+                        <h6 class="fw-bold text-dark mb-0">{% if diagnostic.signed_by.get_full_name %}{{ diagnostic.signed_by.get_full_name }}{% else %}{{ diagnostic.signed_by.email }}{% endif %}</h6>
+                        <small class="text-muted d-block">Perito / Especialista em Saúde Ocupacional</small>
                         {% endif %}
+
+                        <div class="mt-3 p-2 bg-success bg-opacity-10 border border-success rounded-3 d-inline-block">
+                            <small class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i>
+                                Documento Assinado Eletronicamente</small><br>
+                            <small class="text-muted" style="font-size: 0.7rem;">{{ diagnostic.signature_timestamp|date:"d/m/Y H:i:s" }}</small>
+                        </div>
                     </div>
+
+                    {% else %}
+                    <!-- PENDENTE -->
+                    <div class="text-center py-4">
+                        <div class="signature-line border-bottom border-dark border-2 mx-auto mb-3"
+                            style="width: 300px; height: 70px; position:relative;">
+                            <span class="text-muted small fst-italic position-absolute w-100 text-center"
+                                style="bottom: 5px; left: 0;">Aguardando Assinatura</span>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-1">Profissional Responsável</h6>
+                        <small class="text-muted d-block mb-3">Pendente de assinatura eletrônica</small>
+
+                        <form action="{% url 'accounts:sign_laudo_internal' diagnostic.id %}" method="post"
+                            class="mt-3 d-print-none">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-dark btn-sm rounded-pill px-4">
+                                <i class="bi bi-pen me-2"></i>Assinar pelo Sistema
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="card-footer bg-light p-3 text-center border-0 rounded-bottom-4">
                     <p class="text-muted small mb-0" style="font-size: 0.75rem;"><i class="bi bi-cpu me-1"></i>Parecer

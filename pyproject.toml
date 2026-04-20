@@ -15,6 +15,7 @@ dependencies = [
     "psycopg2-binary>=2.9.11",
     "python-decouple>=3.8",
     "weasyprint>=67.0",
+    "xhtml2pdf>=0.2.16",
     "whitenoise>=6.11.0",
     "stripe>=8.0.0",
 ]

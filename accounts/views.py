@@ -201,34 +201,61 @@ def company_admin_dashboard(request):
 
 @login_required
 def admin_laudos(request):
-    """View para o Admin Master gerenciar e gerar Laudos Individuais com IA."""
+    """View para o Admin Master gerenciar e gerar Laudos Individuais com IA.
+    Agrupa os assignments por empresa para melhor organização."""
     if request.user.role != 'ADMIN_MASTER':
         messages.error(request, 'Acesso restrito.')
         return redirect('accounts:dashboard')
-        
+
     from forms_builder.models import FormAssignment
     from accounts.models import User
     from reports.models import SignerProfile
-    
+    from collections import OrderedDict
+
     try:
         completed_assignments = FormAssignment.objects.filter(
             status='COMPLETED'
         ).select_related(
-            'employee', 'employee__company', 'form_instance'
-        ).order_by('-completed_at')
-        
+            'employee', 'employee__company', 'form_instance', 'form_instance__template'
+        ).prefetch_related('diagnostic', 'diagnostic__signer_profile').order_by(
+            'employee__company__nome_fantasia', '-completed_at'
+        )
+
+        # Agrupar por empresa
+        companies_dict = OrderedDict()
+        for a in completed_assignments:
+            company = a.employee.company
+            if company.id not in companies_dict:
+                companies_dict[company.id] = {
+                    'company': company,
+                    'assignments': [],
+                    'total': 0,
+                    'signed': 0,
+                    'pending': 0,
+                }
+            companies_dict[company.id]['assignments'].append(a)
+            companies_dict[company.id]['total'] += 1
+            try:
+                diag = a.diagnostic
+                if diag.is_signed:
+                    companies_dict[company.id]['signed'] += 1
+                else:
+                    companies_dict[company.id]['pending'] += 1
+            except Exception:
+                pass  # No diagnostic yet
+
         professionals = User.objects.filter(role='ADMIN_MASTER')
         signatarios = SignerProfile.objects.filter(is_active=True)
-        
+
         return render(request, 'accounts/admin_laudos.html', {
-            'assignments': completed_assignments,
+            'companies_data': list(companies_dict.values()),
             'professionals': professionals,
             'signatarios': signatarios,
         })
     except Exception as e:
         messages.error(request, f'Erro ao carregar laudos: {str(e)}')
         return render(request, 'accounts/admin_laudos.html', {
-            'assignments': [],
+            'companies_data': [],
             'professionals': [],
             'signatarios': [],
         })
@@ -516,7 +543,7 @@ def manage_signatarios(request):
         if not nome:
             messages.error(request, 'O nome do signatário é obrigatório.')
             return redirect('accounts:manage_signatarios')
-        
+
         signer = SignerProfile(
             nome_completo=nome,
             registro_profissional=request.POST.get('registro_profissional', '').strip(),
@@ -525,6 +552,12 @@ def manage_signatarios(request):
             govbr_cpf=request.POST.get('govbr_cpf', '').strip(),
         )
         if 'signature_image' in request.FILES:
+            import base64
+            f = request.FILES['signature_image']
+            data = f.read()
+            b64 = base64.b64encode(data).decode('utf-8')
+            mime = f.content_type or 'image/png'
+            signer.signature_base64 = f'data:{mime};base64,{b64}'
             signer.signature_image = request.FILES['signature_image']
         signer.save()
         messages.success(request, f'Signatário "{nome}" cadastrado com sucesso!')
@@ -572,6 +605,12 @@ def edit_signatario(request, pk):
         signer.email = request.POST.get('email', signer.email).strip()
         signer.govbr_cpf = request.POST.get('govbr_cpf', signer.govbr_cpf).strip()
         if 'signature_image' in request.FILES:
+            import base64
+            f = request.FILES['signature_image']
+            data = f.read()
+            b64 = base64.b64encode(data).decode('utf-8')
+            mime = f.content_type or 'image/png'
+            signer.signature_base64 = f'data:{mime};base64,{b64}'
             signer.signature_image = request.FILES['signature_image']
         signer.save()
         messages.success(request, f'Signatário "{signer.nome_completo}" atualizado com sucesso!')

@@ -1,13 +1,62 @@
 {% extends 'base.html' %}
 {% block title %}Gerenciador de Laudos - SIMDCCONR01{% endblock %}
 
-{% block content %}
-<div class="container py-5">
+{% block extra_css %}
+<style>
+    .company-accordion .accordion-button {
+        background: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem !important;
+        padding: 1.25rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    .company-accordion .accordion-button:not(.collapsed) {
+        background: linear-gradient(135deg, #f8fafc, #eef2ff);
+        color: var(--primary);
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+    }
+    .company-accordion .accordion-item {
+        border: none;
+        margin-bottom: 0.75rem;
+    }
+    .company-accordion .accordion-body {
+        padding: 0;
+        border: 1px solid var(--border-color);
+        border-top: none;
+        border-radius: 0 0 0.75rem 0.75rem;
+    }
+    .company-badge {
+        display: inline-flex; align-items: center; gap: 0.35rem;
+        padding: 0.25rem 0.6rem; border-radius: 2rem;
+        font-size: 0.7rem; font-weight: 700;
+    }
+    .company-badge.signed { background: rgba(16,185,129,0.12); color: #047857; }
+    .company-badge.pending { background: rgba(245,158,11,0.12); color: #b45309; }
+    .company-badge.total { background: rgba(99,102,241,0.12); color: #4338ca; }
+    .laudo-table th {
+        font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.05em; color: var(--text-muted);
+    }
+    .laudo-table td { font-size: 0.875rem; vertical-align: middle; }
+    .laudo-table tbody tr:hover { background: #f8fafc; }
+    .avatar-company {
+        width: 40px; height: 40px; border-radius: 0.75rem;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 1rem; flex-shrink: 0;
+        background: linear-gradient(135deg, #6366f1, #818cf8);
+        color: #fff;
+    }
+</style>
+{% endblock %}
 
+{% block content %}
+<div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
         <div>
             <h2 class="mb-0"><i class="bi bi-file-earmark-medical text-primary me-2"></i>Gerenciador de Laudos e Assinaturas</h2>
-            <p class="text-muted mb-0 mt-1 small">Gerencie os laudos e suas assinaturas eletrônicas.</p>
+            <p class="text-muted mb-0 mt-1 small">Laudos organizados por empresa. Clique em uma empresa para expandir.</p>
         </div>
         <div class="d-flex gap-2">
             <a href="{% url 'accounts:manage_signatarios' %}" class="btn btn-outline-primary rounded-pill px-4">
@@ -19,127 +68,148 @@
         </div>
     </div>
 
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-4">
+    {% if companies_data %}
+    <form id="bulk-sign-form" method="POST" action="{% url 'accounts:bulk_sign_laudos' %}">
+        {% csrf_token %}
+        <input type="hidden" name="signer_profile_id" id="bulk_signer_profile_id">
+        <input type="hidden" name="signature_method" id="bulk_signature_method" value="INTERNAL">
 
-            <form id="bulk-sign-form" method="POST" action="{% url 'accounts:bulk_sign_laudos' %}">
-                {% csrf_token %}
-                <!-- Hidden fields for bulk sign, populated by modal -->
-                <input type="hidden" name="signer_profile_id" id="bulk_signer_profile_id">
-                <input type="hidden" name="signature_method" id="bulk_signature_method" value="INTERNAL">
+        <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded-3 border">
+            <div>
+                <span class="fw-semibold text-dark">Total: {{ companies_data|length }} empresa{{ companies_data|length|pluralize:"s" }}</span>
+            </div>
+            <button type="button" class="btn btn-primary fw-bold shadow-sm rounded-pill px-4" id="btn-open-bulk-modal" disabled
+                data-bs-toggle="modal" data-bs-target="#modalAssinar">
+                <i class="bi bi-pen me-2"></i>Assinar Lote Selecionado
+            </button>
+        </div>
 
-                <div class="d-flex justify-content-between align-items-center mb-4 bg-light p-3 rounded-3 border">
-                    <div>
-                        <h5 class="fw-bold mb-1 text-dark">Laudos Emitidos e Questionários</h5>
-                        <p class="text-muted mb-0 small">Selecione laudos "Aguardando Assinatura" para assinar em lote.</p>
-                    </div>
-                    <button type="button" class="btn btn-primary fw-bold shadow-sm rounded-pill px-4" id="btn-open-bulk-modal" disabled
-                        data-bs-toggle="modal" data-bs-target="#modalAssinar">
-                        <i class="bi bi-pen me-2"></i>Assinar Lote Selecionado
+        <div class="accordion company-accordion" id="companiesAccordion">
+            {% for cd in companies_data %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#company_{{ cd.company.id }}">
+                        <div class="d-flex align-items-center gap-3 w-100 flex-wrap">
+                            <div class="avatar-company">{{ cd.company.nome_fantasia.0 }}</div>
+                            <div class="flex-grow-1">
+                                <span class="fw-bold">{{ cd.company.nome_fantasia }}</span>
+                                <small class="text-muted d-block">{{ cd.company.cnpj }}</small>
+                            </div>
+                            <div class="d-flex gap-2 me-3">
+                                <span class="company-badge total"><i class="bi bi-file-text me-1"></i>{{ cd.total }}</span>
+                                <span class="company-badge signed"><i class="bi bi-check-circle me-1"></i>{{ cd.signed }}</span>
+                                <span class="company-badge pending"><i class="bi bi-clock me-1"></i>{{ cd.pending }}</span>
+                            </div>
+                        </div>
                     </button>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width: 40px;" class="text-center">
-                                    <input class="form-check-input" type="checkbox" id="selectAll">
-                                </th>
-                                <th>Data Conclusão</th>
-                                <th>Funcionário</th>
-                                <th>Empresa</th>
-                                <th>Signatário</th>
-                                <th>Status</th>
-                                <th class="text-end">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for assignment in assignments %}
-                            <tr>
-                                <td class="text-center">
-                                    {% if assignment.diagnostic and not assignment.diagnostic.is_signed %}
-                                    <input class="form-check-input row-checkbox" type="checkbox" name="diagnostic_ids" value="{{ assignment.diagnostic.id }}">
-                                    {% else %}
-                                    <input class="form-check-input" type="checkbox" disabled>
-                                    {% endif %}
-                                </td>
-                                <td>{{ assignment.completed_at|date:"d/m/Y H:i" }}</td>
-                                <td>
-                                    <strong>{{ assignment.employee.nome }}</strong><br>
-                                    <small class="text-muted">{{ assignment.employee.cpf|default:"CPF N/C" }}</small>
-                                </td>
-                                <td>{{ assignment.employee.company.nome_fantasia }}</td>
-                                <td>
-                                    {% if assignment.diagnostic %}
-                                        {% if assignment.diagnostic.is_signed %}
-                                        <div>
-                                            {% if assignment.diagnostic.signer_profile %}
-                                            <span class="fw-semibold text-dark small"><i class="bi bi-person-check-fill text-success me-1"></i>{{ assignment.diagnostic.signer_profile.nome_completo }}</span><br>
-                                            <span class="text-muted" style="font-size:0.75rem;">{{ assignment.diagnostic.signer_profile.registro_profissional }}</span>
+                </h2>
+                <div id="company_{{ cd.company.id }}" class="accordion-collapse collapse" data-bs-parent="#companiesAccordion">
+                    <div class="accordion-body">
+                        <div class="table-responsive">
+                            <table class="table laudo-table mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 40px;" class="text-center">
+                                            <input class="form-check-input select-all-company" type="checkbox"
+                                                data-company="{{ cd.company.id }}">
+                                        </th>
+                                        <th>Conclusão</th>
+                                        <th>Funcionário</th>
+                                        <th>Signatário</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for assignment in cd.assignments %}
+                                    <tr>
+                                        <td class="text-center">
+                                            {% if assignment.diagnostic and not assignment.diagnostic.is_signed %}
+                                            <input class="form-check-input row-checkbox company-{{ cd.company.id }}"
+                                                type="checkbox" name="diagnostic_ids" value="{{ assignment.diagnostic.id }}">
                                             {% else %}
-                                            <span class="text-dark small"><i class="bi bi-person-check me-1"></i>Assinado pelo Sistema</span>
+                                            <input class="form-check-input" type="checkbox" disabled>
                                             {% endif %}
-                                        </div>
-                                        {% else %}
-                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
-                                            data-bs-toggle="modal" data-bs-target="#modalAssinarIndividual"
-                                            data-diagnostic-id="{{ assignment.diagnostic.id }}"
-                                            data-employee="{{ assignment.employee.nome }}">
-                                            <i class="bi bi-pen me-1"></i>Assinar
-                                        </button>
-                                        {% endif %}
-                                    {% else %}
-                                    <span class="text-muted small">Aguardando Parecer</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if assignment.diagnostic %}
-                                        {% if assignment.diagnostic.is_signed %}
-                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">
-                                            <i class="bi bi-check-circle-fill me-1"></i>
-                                            {% if assignment.diagnostic.signature_method == 'GOVBR' %}Assinado Gov.br{% else %}Assinado{% endif %}
-                                        </span>
-                                        {% else %}
-                                        <span class="badge bg-warning bg-opacity-10 text-dark border border-warning">
-                                            <i class="bi bi-clock me-1"></i>Pendente
-                                        </span>
-                                        {% endif %}
-                                    {% else %}
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">
-                                        <i class="bi bi-file-earmark-text me-1"></i>Aguardando Parecer
-                                    </span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-end">
-                                    {% if assignment.diagnostic and assignment.diagnostic.validation_code %}
-                                    <a href="{% url 'reports:view_diagnostic' assignment.diagnostic.validation_code %}"
-                                        class="btn btn-sm {% if assignment.diagnostic.is_signed %}btn-outline-primary{% else %}btn-primary{% endif %} rounded-pill px-3"
-                                        target="_blank">
-                                        <i class="bi bi-file-text"></i> Ver Parecer
-                                    </a>
-                                    {% elif not assignment.diagnostic %}
-                                        <button type="submit" formaction="{% url 'accounts:generate_laudo' assignment.id %}" class="btn btn-sm btn-success fw-bold rounded-pill px-3">
-                                            <i class="bi bi-cpu"></i> Gerar Parecer
-                                        </button>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="7" class="text-center text-muted py-5">
-                                    <i class="bi bi-inbox fs-2 d-block mb-3"></i>
-                                    Nenhum questionário concluído para emissão de laudo.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                        </td>
+                                        <td><small>{{ assignment.completed_at|date:"d/m/Y H:i" }}</small></td>
+                                        <td>
+                                            <strong>{{ assignment.employee.nome }}</strong><br>
+                                            <small class="text-muted">{{ assignment.employee.cpf|default:"CPF N/C" }}</small>
+                                        </td>
+                                        <td>
+                                            {% if assignment.diagnostic %}
+                                                {% if assignment.diagnostic.is_signed %}
+                                                <div>
+                                                    {% if assignment.diagnostic.signer_profile %}
+                                                    <span class="fw-semibold text-dark small"><i class="bi bi-person-check-fill text-success me-1"></i>{{ assignment.diagnostic.signer_profile.nome_completo }}</span><br>
+                                                    <span class="text-muted" style="font-size:0.75rem;">{{ assignment.diagnostic.signer_profile.registro_profissional }}</span>
+                                                    {% else %}
+                                                    <span class="text-dark small"><i class="bi bi-person-check me-1"></i>Assinado pelo Sistema</span>
+                                                    {% endif %}
+                                                </div>
+                                                {% else %}
+                                                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
+                                                    data-bs-toggle="modal" data-bs-target="#modalAssinarIndividual"
+                                                    data-diagnostic-id="{{ assignment.diagnostic.id }}"
+                                                    data-employee="{{ assignment.employee.nome }}">
+                                                    <i class="bi bi-pen me-1"></i>Assinar
+                                                </button>
+                                                {% endif %}
+                                            {% else %}
+                                            <span class="text-muted small">Aguardando Parecer</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if assignment.diagnostic %}
+                                                {% if assignment.diagnostic.is_signed %}
+                                                <span class="badge bg-success bg-opacity-10 text-success border border-success">
+                                                    <i class="bi bi-check-circle-fill me-1"></i>Assinado
+                                                </span>
+                                                {% else %}
+                                                <span class="badge bg-warning bg-opacity-10 text-dark border border-warning">
+                                                    <i class="bi bi-clock me-1"></i>Pendente
+                                                </span>
+                                                {% endif %}
+                                            {% else %}
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">
+                                                <i class="bi bi-file-earmark-text me-1"></i>Aguardando Parecer
+                                            </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end">
+                                            {% if assignment.diagnostic and assignment.diagnostic.validation_code %}
+                                            <a href="{% url 'reports:view_diagnostic' assignment.diagnostic.validation_code %}"
+                                                class="btn btn-sm {% if assignment.diagnostic.is_signed %}btn-outline-primary{% else %}btn-primary{% endif %} rounded-pill px-3"
+                                                target="_blank">
+                                                <i class="bi bi-file-text"></i> Ver
+                                            </a>
+                                            {% elif not assignment.diagnostic %}
+                                                <button type="submit" formaction="{% url 'accounts:generate_laudo' assignment.id %}" class="btn btn-sm btn-success fw-bold rounded-pill px-3">
+                                                    <i class="bi bi-cpu"></i> Gerar
+                                                </button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </form>
-
+            </div>
+            {% endfor %}
+        </div>
+    </form>
+    {% else %}
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i>
+            <h5 class="fw-bold text-dark">Nenhum questionário concluído</h5>
+            <p class="text-muted">Aguardando funcionários concluírem suas pesquisas.</p>
         </div>
     </div>
+    {% endif %}
 </div>
 
 <!-- Modal: Assinar em Lote -->
@@ -156,7 +226,7 @@
                     <select id="bulk_signer_select" class="form-select">
                         <option value="">-- Selecione o signatário --</option>
                         {% for s in signatarios %}
-                        <option value="{{ s.id }}" data-img="{% if s.signature_image %}{{ s.signature_image.url }}{% endif %}">
+                        <option value="{{ s.id }}" data-img="{% if s.signature_base64 %}{{ s.signature_base64 }}{% elif s.signature_image %}{{ s.signature_image.url }}{% endif %}">
                             {{ s.nome_completo }} {% if s.registro_profissional %}({{ s.registro_profissional }}){% endif %}
                         </option>
                         {% endfor %}
@@ -168,7 +238,6 @@
                         <img id="bulk_sig_preview_img" src="" alt="Assinatura" style="max-height:60px;">
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer border-0 px-4 pb-4">
                 <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
@@ -195,7 +264,7 @@
                     <select id="individual_signer_select" class="form-select">
                         <option value="">-- Selecione o signatário --</option>
                         {% for s in signatarios %}
-                        <option value="{{ s.id }}" data-img="{% if s.signature_image %}{{ s.signature_image.url }}{% endif %}">
+                        <option value="{{ s.id }}" data-img="{% if s.signature_base64 %}{{ s.signature_base64 }}{% elif s.signature_image %}{{ s.signature_image.url }}{% endif %}">
                             {{ s.nome_completo }} {% if s.registro_profissional %}({{ s.registro_profissional }}){% endif %}
                         </option>
                         {% endfor %}
@@ -206,7 +275,6 @@
                         <img id="ind_sig_preview_img" src="" alt="Assinatura" style="max-height:60px;">
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer border-0 px-4 pb-4">
                 <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
@@ -223,83 +291,85 @@
     {% csrf_token %}
     <input type="hidden" name="signer_profile_id" id="ind_signer_profile_id">
 </form>
-<form id="form-sign-govbr" method="POST" style="display:none;">
-    {% csrf_token %}
-    <input type="hidden" name="signer_profile_id" id="ind_signer_profile_id_govbr">
-</form>
 
 {% endblock %}
 
 {% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // ---- Bulk selection ----
-    const selectAll = document.getElementById('selectAll');
-    const checkboxes = document.querySelectorAll('.row-checkbox');
+    // ---- Bulk selection (per-company select-all) ----
+    const allCheckboxes = document.querySelectorAll('.row-checkbox');
     const bulkBtn = document.getElementById('btn-open-bulk-modal');
 
     function toggleBulkButton() {
-        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-        bulkBtn.disabled = !anyChecked;
+        const anyChecked = Array.from(allCheckboxes).some(cb => cb.checked);
+        if (bulkBtn) bulkBtn.disabled = !anyChecked;
     }
 
-    if (selectAll) {
+    document.querySelectorAll('.select-all-company').forEach(selectAll => {
         selectAll.addEventListener('change', function () {
-            checkboxes.forEach(cb => cb.checked = this.checked);
+            const companyId = this.dataset.company;
+            document.querySelectorAll(`.company-${companyId}`).forEach(cb => cb.checked = this.checked);
             toggleBulkButton();
         });
-    }
-    checkboxes.forEach(cb => cb.addEventListener('change', toggleBulkButton));
+    });
+
+    allCheckboxes.forEach(cb => cb.addEventListener('change', toggleBulkButton));
 
     // ---- Bulk sign modal ----
-    document.getElementById('bulk_signer_select').addEventListener('change', function () {
-        const opt = this.options[this.selectedIndex];
-        const img = opt.dataset.img;
-        const box = document.getElementById('sig_preview_box');
-        const preview = document.getElementById('bulk_sig_preview_img');
-        if (img) {
-            preview.src = img;
-            box.style.display = 'block';
-        } else {
-            box.style.display = 'none';
-        }
-    });
+    const bulkSelect = document.getElementById('bulk_signer_select');
+    if (bulkSelect) {
+        bulkSelect.addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            const img = opt.dataset.img;
+            const box = document.getElementById('sig_preview_box');
+            const preview = document.getElementById('bulk_sig_preview_img');
+            if (img) { preview.src = img; box.style.display = 'block'; }
+            else { box.style.display = 'none'; }
+        });
+    }
 
-    document.getElementById('btn-confirm-bulk-sign').addEventListener('click', function () {
-        const signerId = document.getElementById('bulk_signer_select').value;
-        document.getElementById('bulk_signer_profile_id').value = signerId;
-        document.getElementById('bulk_signature_method').value = 'INTERNAL';
-        document.getElementById('bulk-sign-form').submit();
-    });
+    const confirmBulk = document.getElementById('btn-confirm-bulk-sign');
+    if (confirmBulk) {
+        confirmBulk.addEventListener('click', function () {
+            const signerId = document.getElementById('bulk_signer_select').value;
+            document.getElementById('bulk_signer_profile_id').value = signerId;
+            document.getElementById('bulk_signature_method').value = 'INTERNAL';
+            document.getElementById('bulk-sign-form').submit();
+        });
+    }
 
     // ---- Individual sign modal ----
     const modalIndividual = document.getElementById('modalAssinarIndividual');
-    modalIndividual.addEventListener('show.bs.modal', function (e) {
-        const btn = e.relatedTarget;
-        document.getElementById('modal_employee_name').textContent = btn.dataset.employee;
-        const diagnosticId = btn.dataset.diagnosticId;
-        document.getElementById('form-sign-internal').action = `/accounts/dashboard/admin/laudos/sign-internal/${diagnosticId}/`;
-        document.getElementById('form-sign-govbr').action = `/accounts/dashboard/admin/laudos/sign-govbr/${diagnosticId}/`;
-    });
+    if (modalIndividual) {
+        modalIndividual.addEventListener('show.bs.modal', function (e) {
+            const btn = e.relatedTarget;
+            document.getElementById('modal_employee_name').textContent = btn.dataset.employee;
+            const diagnosticId = btn.dataset.diagnosticId;
+            document.getElementById('form-sign-internal').action = `/accounts/dashboard/admin/laudos/sign-internal/${diagnosticId}/`;
+        });
+    }
 
-    document.getElementById('individual_signer_select').addEventListener('change', function () {
-        const opt = this.options[this.selectedIndex];
-        const img = opt.dataset.img;
-        const box = document.getElementById('ind_sig_preview_box');
-        const preview = document.getElementById('ind_sig_preview_img');
-        if (img) {
-            preview.src = img;
-            box.style.display = 'block';
-        } else {
-            box.style.display = 'none';
-        }
-    });
+    const indSelect = document.getElementById('individual_signer_select');
+    if (indSelect) {
+        indSelect.addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            const img = opt.dataset.img;
+            const box = document.getElementById('ind_sig_preview_box');
+            const preview = document.getElementById('ind_sig_preview_img');
+            if (img) { preview.src = img; box.style.display = 'block'; }
+            else { box.style.display = 'none'; }
+        });
+    }
 
-    document.getElementById('btn-confirm-individual-sign').addEventListener('click', function () {
-        const signerId = document.getElementById('individual_signer_select').value;
-        document.getElementById('ind_signer_profile_id').value = signerId;
-        document.getElementById('form-sign-internal').submit();
-    });
+    const confirmInd = document.getElementById('btn-confirm-individual-sign');
+    if (confirmInd) {
+        confirmInd.addEventListener('click', function () {
+            const signerId = document.getElementById('individual_signer_select').value;
+            document.getElementById('ind_signer_profile_id').value = signerId;
+            document.getElementById('form-sign-internal').submit();
+        });
+    }
 });
 </script>
 {% endblock %}

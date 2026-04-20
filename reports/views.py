@@ -16,6 +16,7 @@ from django.utils import timezone
 
 from .models import Report, EmployeeDiagnostic
 from .utils_charts import generate_pie_chart_svg
+from .utils_pdf import html_to_pdf
 from forms_builder.models import FormInstance, FormAnswer, FormQuestion, FormAssignment
 from companies.views import require_company_admin, require_admin_master
 from audit.models import AuditLog
@@ -203,16 +204,10 @@ def generate_form_report(request, form_pk):
     }
     
     html_string = render_to_string('reports/pdf/form_report.html', context)
-    
-    try:
-        from weasyprint import HTML
-        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-        pdf = html.write_pdf()
-    except ImportError as e:
-        messages.error(request, f"Erro de sistema: Biblioteca ausente ({str(e)}). O administrador já foi notificado.")
-        return redirect('reports:list')
-    except Exception as e:
-        messages.error(request, f"Erro ao gerar PDF: {str(e)}")
+
+    pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
+    if error:
+        messages.error(request, error)
         return redirect('reports:list')
     
     report = Report.objects.create(
@@ -280,15 +275,9 @@ def generate_simdcconr01_report(request, form_pk):
     }
 
     html_string = render_to_string('reports/pdf/laudo_organizacional.html', context)
-    try:
-        from weasyprint import HTML
-        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-        pdf = html.write_pdf()
-    except ImportError as e:
-        messages.error(request, f"Erro de sistema: Biblioteca ausente ({str(e)}).")
-        return redirect('reports:dashboard')
-    except Exception as e:
-        messages.error(request, f"Erro ao gerar PDF: {str(e)}")
+    pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
+    if error:
+        messages.error(request, error)
         return redirect('reports:dashboard')
 
     # Log de auditoria
@@ -350,15 +339,9 @@ def download_individual_pdf(request, form_pk, assignment_pk):
     }
 
     html_string = render_to_string('reports/pdf/individual_respondente.html', context)
-    try:
-        from weasyprint import HTML
-        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-        pdf = html.write_pdf()
-    except ImportError as e:
-        messages.error(request, f"Erro de sistema: Biblioteca ausente ({str(e)}).")
-        return redirect('reports:dashboard')
-    except Exception as e:
-        messages.error(request, f"Erro ao gerar devolutiva individual: {str(e)}")
+    pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
+    if error:
+        messages.error(request, error)
         return redirect('reports:dashboard')
 
     AuditLog.log(
@@ -416,15 +399,9 @@ def download_pcmso_pdf(request, form_pk, assignment_pk):
     }
 
     html_string = render_to_string('reports/pdf/anexo_pcmso.html', context)
-    try:
-        from weasyprint import HTML
-        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-        pdf = html.write_pdf()
-    except ImportError as e:
-        messages.error(request, f"Erro de sistema: Biblioteca ausente ({str(e)}).")
-        return redirect('reports:dashboard')
-    except Exception as e:
-        messages.error(request, f"Erro ao gerar PDF: {str(e)}")
+    pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
+    if error:
+        messages.error(request, error)
         return redirect('reports:dashboard')
 
     AuditLog.log(
@@ -543,16 +520,10 @@ def generate_period_report(request):
     }
     
     html_string = render_to_string('reports/pdf/period_report.html', context)
-    
-    try:
-        from weasyprint import HTML
-        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
-        pdf = html.write_pdf()
-    except ImportError as e:
-        messages.error(request, f"Erro de sistema: Biblioteca ausente ({str(e)}).")
-        return redirect('reports:dashboard')
-    except Exception as e:
-        messages.error(request, f"Erro ao gerar PDF de período: {str(e)}")
+
+    pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
+    if error:
+        messages.error(request, error)
         return redirect('reports:dashboard')
     
     response = HttpResponse(pdf, content_type='application/pdf')

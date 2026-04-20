@@ -89,11 +89,23 @@
             <form method="post" id="survey-form">
                 {% csrf_token %}
                 
-                {% for question in questions %}
-                <div class="glass-card p-4 p-md-5 mb-4 fade-in-up" style="animation-delay: {{ forloop.counter0|add:1|multiply:0.1 }}s">
+                {% for cat_key, cat_data in grouped_questions.items %}
+                <!-- Section Header: {{ cat_data.meta.label }} -->
+                <div class="glass-card p-3 mb-3 fade-in-up" style="border-left: 4px solid {{ cat_data.meta.color }}; background: rgba(255,255,255,0.95);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm"
+                            style="width: 38px; height: 38px; background: {{ cat_data.meta.color }}; flex-shrink:0;">
+                            <i class="bi {{ cat_data.meta.icon }} fs-5"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0 text-dark">{{ cat_data.meta.number }}. {{ cat_data.meta.label }}</h5>
+                    </div>
+                </div>
+
+                {% for question in cat_data.questions %}
+                <div class="glass-card p-4 p-md-5 mb-4 fade-in-up">
                     <div class="d-flex gap-3 mb-4">
                         <div class="flex-shrink-0 bg-dark bg-opacity-5 rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                            <span class="small fw-bold">{{ forloop.counter }}</span>
+                            <span class="small fw-bold">{{ question.order }}</span>
                         </div>
                         <h5 class="fw-bold mb-0 pt-1">{{ question.text }} {% if question.is_required %}<span class="text-danger">*</span>{% endif %}</h5>
                     </div>
@@ -173,6 +185,7 @@
                         {% endif %}
                     </div>
                 </div>
+                {% endfor %}
                 {% endfor %}
                 
                 <!-- Botões de Ação -->

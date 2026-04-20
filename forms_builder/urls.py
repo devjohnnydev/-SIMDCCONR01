@@ -8,7 +8,11 @@ app_name = 'forms'
 
 urlpatterns = [
     path('templates/', views.template_list, name='templates'),
+    path('templates/create/', views.template_create, name='template_create'),
     path('templates/<int:pk>/', views.template_detail, name='template_detail'),
+    path('templates/<int:template_pk>/question/add/', views.question_add, name='question_add'),
+    path('question/<int:question_pk>/edit/', views.question_edit, name='question_edit'),
+    path('question/<int:question_pk>/delete/', views.question_delete, name='question_delete'),
     
     path('', views.form_instance_list, name='instances'),
     path('create/<int:template_pk>/', views.form_instance_create, name='instance_create'),

@@ -59,7 +59,7 @@
     .nav-logo { display: flex; align-items: center; gap: 12px; }
     .nav-logo .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(13,148,136,0.2); }
     .nav-logo .logo-icon i { font-size: 24px; color: #fff; }
-    .nav-logo span { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 800; color: var(--dark); letter-spacing: -0.5px; }
+    .nav-logo span { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
     .nav-logo span em { color: var(--secondary); font-style: normal; }
     .nav-links { display: flex; align-items: center; gap: 32px; }
     .nav-links a { font-size: 14px; font-weight: 600; color: var(--gray); transition: all .2s; }
@@ -72,18 +72,27 @@
 
     /* ─── HERO ─── */
     .hero {
-      background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%);
+      background: radial-gradient(circle at 20% 20%, rgba(13, 148, 136, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+                  var(--dark);
       padding: 100px 5% 140px;
       position: relative; overflow: hidden;
       color: #fff;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'%3E%3Ccircle cx='2' cy='2' r='1'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
     }
     .hero-inner { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; align-items: center; position: relative; }
     .hero-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(13,148,136,0.15); border: 1px solid rgba(13,148,136,0.4); border-radius: 100px; padding: 8px 20px; margin-bottom: 32px; }
     .hero-badge i { color: var(--secondary); }
     .hero-badge span { font-size: 12px; font-weight: 700; color: #5eead4; text-transform: uppercase; letter-spacing: .1em; }
-    .hero h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 800; line-height: 1.05; margin-bottom: 28px; letter-spacing: -2px; }
+    .hero h1 { font-size: clamp(32px, 4.5vw, 52px); font-weight: 800; line-height: 1.1; margin-bottom: 24px; letter-spacing: -1.5px; }
     .hero h1 .accent { color: var(--secondary); }
-    .hero p { font-size: 18px; color: rgba(255,255,255,0.7); line-height: 1.8; margin-bottom: 44px; max-width: 700px; }
+    .hero p { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.8; margin-bottom: 40px; max-width: 650px; }
     .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
     .btn-hero-primary { padding: 18px 36px; background: var(--secondary); border-radius: 12px; font-size: 16px; font-weight: 800; color: #fff; transition: all .25s; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(13,148,136,0.4); }
     .btn-hero-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 45px rgba(13,148,136,0.6); }
@@ -380,16 +389,13 @@
     .footer-legal a:hover { color: rgba(255,255,255,.7); }
 
     /* ─── WHATSAPP FLOAT ─── */
-    .wa-float {
-      position: fixed; bottom: 32px; right: 32px; z-index: 9999;
-      background: #25d366; color: #fff;
-      padding: 16px 28px; border-radius: 100px;
-      font-size: 15px; font-weight: 800;
-      display: flex; align-items: center; gap: 12px;
-      box-shadow: 0 10px 30px rgba(37,211,102,.4);
-      transition: all .3s; border: none; cursor: pointer;
-    }
     .wa-float:hover { transform: translateY(-5px); box-shadow: 0 15px 45px rgba(37,211,102,0.5); }
+    
+    @media (max-width: 600px) {
+      .wa-float span { display: none; }
+      .wa-float { padding: 16px; border-radius: 50%; bottom: 20px; right: 20px; }
+      .wa-float i { font-size: 24px; margin: 0; }
+    }
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1100px) {
@@ -432,7 +438,8 @@
 <nav>
   <div class="nav-inner">
     <a href="/" class="nav-logo">
-      <img src="{% static 'img/logo.png' %}" alt="SIMDCCONR01" style="height: 50px; width: auto;">
+      <img src="{% static 'img/logo.png' %}" alt="Logo" style="height: 40px; width: auto;">
+      <span>SIMDC<em>CONR01</em></span>
     </a>
     <div class="nav-links">
       <a href="#ciencia">Ciência</a>
@@ -1055,34 +1062,41 @@
   </div>
 </footer>
 
-<!-- WhatsApp Float -->
-<button class="wa-float">
+<a href="https://wa.me/{{ config.whatsapp_number }}" class="wa-float" target="_blank">
   <i class="bi bi-whatsapp"></i>
-  FALAR NO WHATSAPP
-</button>
+  <span>FALAR NO WHATSAPP</span>
+</a>
 
 <script>
-  // FAQ Toggle
-  function toggleFaq(el) {
-    const item = el.parentElement;
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
-  }
+  // FAQ Accordion
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isOpen = item.classList.contains('open');
+      
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
 
   // Anim Bars on scroll
-  const observer = new IntersectionObserver((entries) => {
+  const barObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.querySelectorAll('.bar-fill').forEach(bar => {
-          bar.style.width = bar.dataset.width || (Math.random() * 30 + 70) + '%';
+          const targetWidth = bar.style.width;
+          bar.style.width = '0';
+          setTimeout(() => {
+            bar.style.width = targetWidth;
+          }, 100);
         });
+        barObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0.2 });
   
-  const visual = document.querySelector('.hero-visual');
-  if(visual) observer.observe(visual);
+  const heroVisual = document.querySelector('.hero-visual');
+  if(heroVisual) barObserver.observe(heroVisual);
 </script>
 </body>
 </html>

@@ -1,7 +1,12 @@
 [phases.setup]
 nixPkgs = [
     "python311", 
-    "git"
+    "git",
+    "pango",
+    "cairo",
+    "glib",
+    "pkg-config",
+    "gcc"
 ]
 aptPkgs = [
     "libpango-1.0-0",
@@ -9,7 +14,9 @@ aptPkgs = [
     "libcairo2",
     "libglib2.0-0",
     "libfontconfig1",
-    "libharfbuzz0b"
+    "libharfbuzz0b",
+    "libgdk-pixbuf2.0-0",
+    "shared-mime-info"
 ]
 
 [variables]

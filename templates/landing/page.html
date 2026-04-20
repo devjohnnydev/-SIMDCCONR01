@@ -61,10 +61,10 @@
     .nav-logo .logo-icon i { font-size: 24px; color: #fff; }
     .nav-logo span { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
     .nav-logo span em { color: var(--secondary); font-style: normal; }
-    .nav-links { display: flex; align-items: center; gap: 32px; }
-    .nav-links a { font-size: 14px; font-weight: 600; color: var(--gray); transition: all .2s; }
+    .nav-links { display: flex; align-items: center; gap: clamp(12px, 2vw, 32px); }
+    .nav-links a { font-size: 13px; font-weight: 600; color: var(--gray); transition: all .2s; white-space: nowrap; }
     .nav-links a:hover { color: var(--secondary); }
-    .nav-cta { display: flex; align-items: center; gap: 14px; }
+    .nav-cta { display: flex; align-items: center; gap: 10px; }
     .btn-outline { padding: 10px 22px; border: 2px solid var(--secondary); border-radius: 10px; font-size: 14px; font-weight: 700; color: var(--secondary); transition: all .2s; }
     .btn-outline:hover { background: var(--secondary); color: #fff; transform: translateY(-1px); }
     .btn-primary { padding: 12px 26px; background: var(--secondary); border-radius: 10px; font-size: 14px; font-weight: 700; color: #fff; transition: all .2s; border: none; cursor: pointer; }
@@ -72,10 +72,11 @@
 
     /* ─── HERO ─── */
     .hero {
-      background: radial-gradient(circle at 20% 20%, rgba(13, 148, 136, 0.08) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
-                  var(--dark);
-      padding: 100px 5% 140px;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%),
+                  url("{% static 'img/hero-bg-premium.png' %}");
+      background-size: cover;
+      background-position: center;
+      padding: 140px 5% 180px;
       position: relative; overflow: hidden;
       color: #fff;
     }
@@ -83,10 +84,21 @@
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'%3E%3Ccircle cx='2' cy='2' r='1'/%3E%3C/g%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02' fill-rule='evenodd'%3E%3Ccircle cx='2' cy='2' r='1'/%3E%3C/g%3E%3C/svg%3E");
       pointer-events: none;
+      z-index: 1;
     }
-    .hero-inner { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; align-items: center; position: relative; }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(13, 148, 136, 0.15) 0%, transparent 70%);
+      top: -200px; right: -100px;
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(80px);
+    }
+    .hero-inner { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; align-items: center; position: relative; z-index: 2; }
     .hero-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(13,148,136,0.15); border: 1px solid rgba(13,148,136,0.4); border-radius: 100px; padding: 8px 20px; margin-bottom: 32px; }
     .hero-badge i { color: var(--secondary); }
     .hero-badge span { font-size: 12px; font-weight: 700; color: #5eead4; text-transform: uppercase; letter-spacing: .1em; }
@@ -102,10 +114,13 @@
     /* Hero Visual */
     .hero-visual { position: relative; }
     .dashboard-card {
-      background: rgba(255,255,255,.04); backdrop-filter: blur(25px);
-      border: 1px solid rgba(255,255,255,.1); border-radius: 24px;
+      background: rgba(255, 255, 255, 0.03); 
+      backdrop-filter: blur(30px) saturate(150%);
+      -webkit-backdrop-filter: blur(30px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.12); 
+      border-radius: 28px;
       padding: 32px; overflow: hidden;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
     }
     .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; }
     .dash-header span { font-size: 14px; font-weight: 700; color: #5eead4; }
@@ -389,10 +404,16 @@
     .footer-legal a:hover { color: rgba(255,255,255,.7); }
 
     /* ─── WHATSAPP FLOAT ─── */
-    .wa-float:hover { transform: translateY(-5px); box-shadow: 0 15px 45px rgba(37,211,102,0.5); }
-    
-    @media (max-width: 600px) {
-      .wa-float span { display: none; }
+    .wa-float {
+      position: fixed; bottom: 32px; right: 32px; z-index: 9999;
+      background: #25d366; color: #fff;
+      padding: 16px 28px; border-radius: 100px;
+      font-size: 14px; font-weight: 800;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 10px 30px rgba(37,211,102,.4);
+      transition: all .3s; border: none; text-decoration: none !important;
+    }
+    .wa-float:hover { transform: translateY(-5px); box-shadow: 0 15px 45px rgba(37,211,102,0.5); color: #fff; }
       .wa-float { padding: 16px; border-radius: 50%; bottom: 20px; right: 20px; }
       .wa-float i { font-size: 24px; margin: 0; }
     }
@@ -401,7 +422,12 @@
     @media (max-width: 1100px) {
       .footer-top { grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; }
     }
+    @media (max-width: 1200px) {
+      .nav-links { gap: 16px; }
+      .nav-logo span { display: none; }
+    }
     @media (max-width: 1024px) {
+      .nav-links { display: none; }
       .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 60px; }
       .hero h1 { font-size: 48px; }
       .hero p { margin-left: auto; margin-right: auto; }

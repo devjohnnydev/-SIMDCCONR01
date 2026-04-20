@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.views.generic import CreateView, TemplateView
 from django.urls import reverse_lazy
 from django.db.models import Count, Avg
+from django.utils import timezone
 
 from .forms import LoginForm, CompanySignupForm, TermsAcceptanceForm
 from .models import User
@@ -732,7 +733,8 @@ def admin_financial_dashboard(request):
     # ── MRR / ARR ──
     mrr = Decimal('0.00')
     for c in companies_with_plan:
-        mrr += c.get_price_monthly() or Decimal('0.00')
+        price = c.get_price_monthly()
+        mrr += Decimal(str(price)) if price else Decimal('0.00')
     arr = mrr * 12
 
     # ── Total Recebido (PaymentOrders pagas) ──
@@ -771,7 +773,7 @@ def admin_financial_dashboard(request):
     # ── Pagamentos recentes por semana (para gráfico de barras) ──
     from django.db.models.functions import TruncWeek
     payments_by_week = (
-        PaymentOrder.objects.filter(status='paid', paid_at__gte=thirty_days_ago)
+        PaymentOrder.objects.filter(status='paid', paid_at__gte=thirty_days_ago, paid_at__isnull=False)
         .annotate(week=TruncWeek('paid_at'))
         .values('week')
         .annotate(total=Sum('amount'))

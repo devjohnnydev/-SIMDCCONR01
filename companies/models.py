@@ -161,8 +161,11 @@ class Company(models.Model):
 
     @property
     def has_active_plan(self):
-        """Verifica se a empresa possui um plano ativo."""
-        return self.plan is not None
+        """Verifica se a empresa possui um plano ativo e dentro do período."""
+        return (
+            self.plan is not None
+            and self.subscription_status in ('active', 'trialing')
+        )
 
 
 class Announcement(models.Model):

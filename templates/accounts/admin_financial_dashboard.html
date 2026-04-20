@@ -1,0 +1,708 @@
+{% extends 'base.html' %}
+
+{% block title %}Financeiro — Dashboard Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ─── KPI Cards ─── */
+    .kpi-card {
+        border-radius: 1rem;
+        padding: 1.5rem;
+        background: #fff;
+        border: none;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .kpi-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    }
+    .kpi-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 4px; height: 100%;
+        border-radius: 1rem 0 0 1rem;
+    }
+    .kpi-card.kpi-revenue::before { background: linear-gradient(180deg, #10b981, #059669); }
+    .kpi-card.kpi-arr::before { background: linear-gradient(180deg, #3b82f6, #2563eb); }
+    .kpi-card.kpi-received::before { background: linear-gradient(180deg, #8b5cf6, #7c3aed); }
+    .kpi-card.kpi-with-plan::before { background: linear-gradient(180deg, #06b6d4, #0891b2); }
+    .kpi-card.kpi-no-plan::before { background: linear-gradient(180deg, #f59e0b, #d97706); }
+    .kpi-card.kpi-conversion::before { background: linear-gradient(180deg, #ec4899, #db2777); }
+
+    .kpi-value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+    }
+    .kpi-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+    .kpi-icon {
+        width: 48px; height: 48px;
+        border-radius: 0.75rem;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    /* ─── Charts ─── */
+    .chart-card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .chart-card .card-header {
+        background: #fff;
+        border-bottom: 1px solid var(--border-color);
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    /* ─── Filters ─── */
+    .filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+        padding: 1rem 1.25rem;
+        background: #fff;
+        border-radius: 0.75rem;
+        border: 1px solid var(--border-color);
+    }
+    .filter-bar .form-select, .filter-bar .form-control {
+        max-width: 220px;
+        font-size: 0.875rem;
+    }
+
+    /* ─── Table ─── */
+    .company-table th {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        padding: 0.875rem 1rem;
+        border-bottom: 2px solid var(--border-color);
+        white-space: nowrap;
+    }
+    .company-table td {
+        padding: 0.875rem 1rem;
+        vertical-align: middle;
+        font-size: 0.875rem;
+    }
+    .company-table tr { transition: background 0.15s; cursor: pointer; }
+    .company-table tbody tr:hover { background: #f1f5f9; }
+
+    .sub-badge {
+        display: inline-flex; align-items: center; gap: 0.3rem;
+        padding: 0.25rem 0.6rem; border-radius: 2rem;
+        font-size: 0.7rem; font-weight: 700;
+    }
+    .sub-badge.active { background: rgba(16,185,129,0.12); color: #047857; }
+    .sub-badge.inactive { background: rgba(239,68,68,0.12); color: #b91c1c; }
+    .sub-badge.expiring { background: rgba(245,158,11,0.12); color: #b45309; }
+
+    .days-badge {
+        font-size: 0.75rem; font-weight: 600;
+        padding: 0.2rem 0.5rem; border-radius: 0.375rem;
+    }
+    .days-badge.ok { background: rgba(16,185,129,0.1); color: #047857; }
+    .days-badge.warn { background: rgba(245,158,11,0.1); color: #b45309; }
+    .days-badge.danger { background: rgba(239,68,68,0.1); color: #b91c1c; }
+
+    /* ─── Modal ─── */
+    .modal-content { border: none; border-radius: 1rem; }
+    .modal-header { border-bottom: 1px solid var(--border-color); padding: 1.25rem 1.5rem; }
+    .modal-body { padding: 1.5rem; }
+
+    .usage-bar-container {
+        margin-bottom: 1rem;
+    }
+    .usage-bar-label {
+        display: flex; justify-content: space-between; align-items: center;
+        font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem;
+    }
+    .usage-bar {
+        height: 8px; border-radius: 4px; background: #e2e8f0; overflow: hidden;
+    }
+    .usage-bar-fill {
+        height: 100%; border-radius: 4px; transition: width 0.6s ease;
+    }
+    .usage-bar-fill.ok { background: linear-gradient(90deg, #10b981, #34d399); }
+    .usage-bar-fill.warn { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .usage-bar-fill.danger { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+    .detail-section-title {
+        font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.06em; color: var(--text-muted);
+        margin-top: 1.5rem; margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);
+    }
+    .detail-section-title:first-child { margin-top: 0; }
+
+    .payment-row {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0.5rem 0; border-bottom: 1px solid #f1f5f9;
+        font-size: 0.8rem;
+    }
+    .payment-row:last-child { border-bottom: none; }
+
+    .countdown-ring {
+        width: 100px; height: 100px;
+        position: relative; display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 0.5rem;
+    }
+    .countdown-ring svg { transform: rotate(-90deg); }
+    .countdown-ring .ring-bg { stroke: #e2e8f0; }
+    .countdown-ring .ring-fill { transition: stroke-dashoffset 0.8s ease; }
+    .countdown-text {
+        position: absolute; text-align: center;
+    }
+    .countdown-text .days-num { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+    .countdown-text .days-label { font-size: 0.6rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+        .kpi-value { font-size: 1.35rem; }
+        .filter-bar .form-select, .filter-bar .form-control { max-width: 100%; }
+        .filter-bar { flex-direction: column; align-items: stretch; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="page-header">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:admin_master_dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Financeiro</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h1 class="h2 mb-0"><i class="bi bi-wallet2 me-2 text-primary"></i>Painel Financeiro</h1>
+            <a href="{% url 'billing:plan_list' %}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-tags me-1"></i>Gerenciar Planos
+            </a>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-2">
+            <div class="kpi-card kpi-revenue">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="kpi-label">MRR</p>
+                        <p class="kpi-value text-success">R$ {{ mrr|floatformat:2 }}</p>
+                        <small class="text-muted">Receita Mensal Recorrente</small>
+                    </div>
+                    <div class="kpi-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-2">
+            <div class="kpi-card kpi-arr">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="kpi-label">ARR</p>
+                        <p class="kpi-value text-primary">R$ {{ arr|floatformat:2 }}</p>
+                        <small class="text-muted">Receita Anual Recorrente</small>
+                    </div>
+                    <div class="kpi-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-2">
+            <div class="kpi-card kpi-received">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="kpi-label">Total Recebido</p>
+                        <p class="kpi-value" style="color: #7c3aed;">R$ {{ total_received|floatformat:2 }}</p>
+                        <small class="text-muted">Todos os pagamentos</small>
+                    </div>
+                    <div class="kpi-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-2">
+            <div class="kpi-card kpi-with-plan">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="kpi-label">Com Plano</p>
+                        <p class="kpi-value" style="color: #0891b2;">{{ with_plan_count }}</p>
+                        <small class="text-muted">Empresas com plano ativo</small>
+                    </div>
+                    <div class="kpi-icon" style="background: rgba(6,182,212,0.1); color: #06b6d4;">
+                        <i class="bi bi-building-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-2">
+            <div class="kpi-card kpi-no-plan">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="kpi-label">Sem Plano</p>
+                        <p class="kpi-value text-warning">{{ without_plan_count }}</p>
+                        <small class="text-muted">Risco de churn</small>
+                    </div>
+                    <div class="kpi-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-2">
+            <div class="kpi-card kpi-conversion">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="kpi-label">Conversão</p>
+                        <p class="kpi-value" style="color: #db2777;">{{ conversion_rate }}%</p>
+                        <small class="text-muted">{{ with_plan_count }}/{{ total_active }} empresas</small>
+                    </div>
+                    <div class="kpi-icon" style="background: rgba(236,72,153,0.1); color: #ec4899;">
+                        <i class="bi bi-pie-chart"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-5">
+            <div class="card chart-card h-100">
+                <div class="card-header">
+                    <i class="bi bi-pie-chart-fill me-2 text-primary"></i>Distribuição por Plano
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 280px;">
+                    <canvas id="planDistChart" style="max-height: 260px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="card chart-card h-100">
+                <div class="card-header">
+                    <i class="bi bi-bar-chart-line-fill me-2 text-primary"></i>Pagamentos Recebidos (30 dias)
+                    <span class="float-end badge bg-success">R$ {{ recent_received|floatformat:2 }}</span>
+                </div>
+                <div class="card-body d-flex align-items-center" style="min-height: 280px;">
+                    <canvas id="paymentsChart" style="max-height: 260px; width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <form method="get" class="filter-bar" id="filterForm">
+        <i class="bi bi-funnel text-muted"></i>
+        <select name="plan" class="form-select form-select-sm" onchange="this.form.submit()">
+            <option value="">Todos os Planos</option>
+            <option value="none" {% if filter_plan == 'none' %}selected{% endif %}>Sem Plano</option>
+            {% for plan in plans %}
+            <option value="{{ plan.id }}" {% if filter_plan == plan.id|stringformat:"d" %}selected{% endif %}>{{ plan.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="sub_status" class="form-select form-select-sm" onchange="this.form.submit()">
+            <option value="">Todos os Status</option>
+            <option value="active" {% if filter_status == 'active' %}selected{% endif %}>Assinatura Ativa</option>
+            <option value="inactive" {% if filter_status == 'inactive' %}selected{% endif %}>Sem Assinatura</option>
+            <option value="expiring" {% if filter_status == 'expiring' %}selected{% endif %}>Expirando (7 dias)</option>
+        </select>
+        <input type="text" name="search" class="form-control form-control-sm" placeholder="Buscar empresa ou CNPJ..."
+               value="{{ search }}" />
+        <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-search"></i></button>
+        {% if filter_plan or filter_status or search %}
+        <a href="{% url 'accounts:admin_financial_dashboard' %}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-x-lg"></i> Limpar
+        </a>
+        {% endif %}
+    </form>
+
+    <!-- Companies Table -->
+    <div class="card" style="border: none; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+        <div class="table-responsive">
+            <table class="table company-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Plano</th>
+                        <th>Valor Mensal</th>
+                        <th>Assinatura</th>
+                        <th>Dias Restantes</th>
+                        <th>Uso (Func.)</th>
+                        <th>Último Pgto</th>
+                        <th class="text-end">Detalhes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in companies_data %}
+                    <tr onclick="openCompanyDetail({{ item.company.id }})" title="Clique para ver detalhes">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-sm me-2" style="background: #e2e8f0; color: #475569; flex-shrink:0;">
+                                    {{ item.company.nome_fantasia.0 }}
+                                </div>
+                                <div style="min-width: 0;">
+                                    <p class="mb-0 fw-semibold text-truncate" style="max-width: 200px;">{{ item.company.nome_fantasia }}</p>
+                                    <small class="text-muted">{{ item.company.cnpj }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if item.plan_name %}
+                            <span class="badge bg-primary">{{ item.plan_name }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Sem Plano</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.price_monthly %}
+                            <span class="fw-semibold">R$ {{ item.price_monthly|floatformat:2 }}</span>
+                            {% else %}
+                            <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.sub_active %}
+                            <span class="sub-badge active"><i class="bi bi-check-circle-fill"></i> Ativa</span>
+                            {% else %}
+                            <span class="sub-badge inactive"><i class="bi bi-x-circle-fill"></i> Inativa</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.days_remaining != None %}
+                                {% if item.days_remaining > 30 %}
+                                <span class="days-badge ok">{{ item.days_remaining }} dias</span>
+                                {% elif item.days_remaining > 7 %}
+                                <span class="days-badge warn">{{ item.days_remaining }} dias</span>
+                                {% elif item.days_remaining > 0 %}
+                                <span class="days-badge danger">{{ item.days_remaining }} dias</span>
+                                {% else %}
+                                <span class="days-badge danger"><i class="bi bi-exclamation-circle me-1"></i>Expirado</span>
+                                {% endif %}
+                            {% else %}
+                            <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.max_employees > 0 %}
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="usage-bar" style="width: 60px;">
+                                    <div class="usage-bar-fill {% if item.employee_count >= item.max_employees %}danger{% elif item.employee_count > item.max_employees|add:"-10" %}warn{% else %}ok{% endif %}"
+                                         style="width: {% widthratio item.employee_count item.max_employees 100 %}%;"></div>
+                                </div>
+                                <small class="text-muted fw-semibold">{{ item.employee_count }}/{{ item.max_employees }}</small>
+                            </div>
+                            {% else %}
+                            <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.last_payment %}
+                            <small class="text-muted">{{ item.last_payment.paid_at|date:"d/m/Y" }}</small>
+                            {% else %}
+                            <small class="text-muted">Nenhum</small>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); openCompanyDetail({{ item.company.id }})">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state py-5">
+                                <div class="empty-state-icon"><i class="bi bi-building"></i></div>
+                                <h5>Nenhuma empresa encontrada</h5>
+                                <p>Ajuste os filtros ou a busca para encontrar empresas.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Company Detail Modal -->
+<div class="modal fade" id="companyDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-building me-2"></i><span id="modalCompanyName">Carregando...</span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">Carregando dados financeiros...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Charts ──
+document.addEventListener('DOMContentLoaded', function() {
+    // Doughnut: Plan Distribution
+    const planLabels = {{ plan_labels|safe }};
+    const planCounts = {{ plan_counts|safe }};
+    const colors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899', '#06b6d4'];
+
+    if (planLabels.length > 0) {
+        new Chart(document.getElementById('planDistChart'), {
+            type: 'doughnut',
+            data: {
+                labels: planLabels,
+                datasets: [{
+                    data: planCounts,
+                    backgroundColor: colors.slice(0, planLabels.length),
+                    borderWidth: 0,
+                    hoverOffset: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, font: { size: 12, weight: '600' } } }
+                }
+            }
+        });
+    } else {
+        document.getElementById('planDistChart').parentElement.innerHTML =
+            '<div class="text-center text-muted"><i class="bi bi-pie-chart" style="font-size:2rem;"></i><p class="mt-2">Nenhum plano ativo</p></div>';
+    }
+
+    // Bar: Weekly Payments
+    const weekLabels = {{ week_labels|safe }};
+    const weekValues = {{ week_values|safe }};
+
+    if (weekLabels.length > 0) {
+        new Chart(document.getElementById('paymentsChart'), {
+            type: 'bar',
+            data: {
+                labels: weekLabels.map(l => 'Sem. ' + l),
+                datasets: [{
+                    label: 'Recebido (R$)',
+                    data: weekValues,
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                    borderColor: '#10b981',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    barPercentage: 0.6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, ticks: { callback: v => 'R$ ' + v.toLocaleString('pt-BR') }, grid: { color: '#f1f5f9' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: ctx => 'R$ ' + ctx.parsed.y.toLocaleString('pt-BR', {minimumFractionDigits:2}) } }
+                }
+            }
+        });
+    } else {
+        document.getElementById('paymentsChart').parentElement.innerHTML =
+            '<div class="text-center text-muted w-100"><i class="bi bi-bar-chart" style="font-size:2rem;"></i><p class="mt-2">Nenhum pagamento nos últimos 30 dias</p></div>';
+    }
+});
+
+// ── Company Detail Modal ──
+function openCompanyDetail(companyId) {
+    const modal = new bootstrap.Modal(document.getElementById('companyDetailModal'));
+    const body = document.getElementById('modalBody');
+    const title = document.getElementById('modalCompanyName');
+
+    title.textContent = 'Carregando...';
+    body.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div><p class="mt-2 text-muted">Carregando dados financeiros...</p></div>';
+    modal.show();
+
+    fetch(`/accounts/dashboard/admin/financeiro/empresa/${companyId}/`)
+        .then(r => r.json())
+        .then(data => {
+            title.textContent = data.company.nome_fantasia;
+            body.innerHTML = renderCompanyDetail(data);
+        })
+        .catch(err => {
+            body.innerHTML = '<div class="alert alert-danger">Erro ao carregar dados da empresa.</div>';
+        });
+}
+
+function renderCompanyDetail(d) {
+    const plan = d.plan;
+    const usage = d.usage;
+    const co = d.company;
+
+    // ── Plan & Countdown Ring ──
+    let planSection = '';
+    if (plan.name) {
+        const totalDays = plan.is_yearly ? 365 : 30;
+        const remaining = plan.days_remaining != null ? plan.days_remaining : totalDays;
+        const pct = Math.min(remaining / totalDays * 100, 100);
+        const circumference = 2 * Math.PI * 42;
+        const offset = circumference - (pct / 100) * circumference;
+        let ringColor = '#10b981';
+        if (remaining <= 7) ringColor = '#ef4444';
+        else if (remaining <= 30) ringColor = '#f59e0b';
+
+        planSection = `
+        <div class="row align-items-center mb-3">
+            <div class="col-md-4 text-center">
+                <div class="countdown-ring">
+                    <svg width="100" height="100">
+                        <circle class="ring-bg" cx="50" cy="50" r="42" fill="none" stroke-width="6"/>
+                        <circle class="ring-fill" cx="50" cy="50" r="42" fill="none" stroke-width="6"
+                                stroke="${ringColor}" stroke-linecap="round"
+                                stroke-dasharray="${circumference}"
+                                stroke-dashoffset="${offset}"/>
+                    </svg>
+                    <div class="countdown-text">
+                        <div class="days-num" style="color:${ringColor}">${remaining}</div>
+                        <div class="days-label">dias</div>
+                    </div>
+                </div>
+                <small class="text-muted">Expira em: ${plan.period_end || '—'}</small>
+            </div>
+            <div class="col-md-8">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-primary px-3 py-2" style="font-size:0.85rem;">${plan.name}</span>
+                    <span class="badge ${plan.subscription_status === 'active' ? 'bg-success' : 'bg-danger'}">${plan.subscription_status}</span>
+                    ${plan.is_yearly ? '<span class="badge bg-info">Anual</span>' : '<span class="badge bg-secondary">Mensal</span>'}
+                </div>
+                <p class="mb-1"><strong>Valor Mensal:</strong> R$ ${parseFloat(plan.price_monthly).toLocaleString('pt-BR', {minimumFractionDigits:2})}</p>
+                ${plan.price_yearly ? `<p class="mb-0"><strong>Valor Anual:</strong> R$ ${parseFloat(plan.price_yearly).toLocaleString('pt-BR', {minimumFractionDigits:2})}</p>` : ''}
+            </div>
+        </div>`;
+    } else {
+        planSection = '<div class="alert alert-warning mb-3"><i class="bi bi-exclamation-triangle me-2"></i>Esta empresa <strong>não possui plano ativo</strong>.</div>';
+    }
+
+    // ── Usage Bars ──
+    function usageBar(label, used, max, icon) {
+        if (max === 0) return '';
+        const pct = Math.min(Math.round(used / max * 100), 100);
+        let cls = 'ok';
+        if (pct >= 100) cls = 'danger';
+        else if (pct >= 80) cls = 'warn';
+        return `
+        <div class="usage-bar-container">
+            <div class="usage-bar-label">
+                <span><i class="bi ${icon} me-1"></i>${label}</span>
+                <span class="${cls === 'danger' ? 'text-danger fw-bold' : ''}">${used} / ${max} ${pct >= 100 ? '⚠️ LIMITE' : ''}</span>
+            </div>
+            <div class="usage-bar">
+                <div class="usage-bar-fill ${cls}" style="width: ${pct}%"></div>
+            </div>
+        </div>`;
+    }
+
+    let usageSection = '';
+    if (plan.name) {
+        usageSection = `
+        <div class="detail-section-title"><i class="bi bi-speedometer2 me-2"></i>Uso vs. Limites do Plano</div>
+        ${usageBar('Funcionários', usage.employees, usage.max_employees, 'bi-people-fill')}
+        ${usageBar('Formulários Ativos', usage.forms, usage.max_forms, 'bi-file-earmark-text')}
+        <div class="usage-bar-container">
+            <div class="usage-bar-label">
+                <span><i class="bi bi-bar-chart-line me-1"></i>Relatórios/mês</span>
+                <span>Limite: ${usage.max_reports}</span>
+            </div>
+        </div>`;
+    }
+
+    // ── Company Info ──
+    let infoSection = `
+    <div class="detail-section-title"><i class="bi bi-info-circle me-2"></i>Dados da Empresa</div>
+    <div class="row g-2" style="font-size:0.85rem;">
+        <div class="col-6"><strong>Razão Social:</strong><br>${co.razao_social}</div>
+        <div class="col-6"><strong>CNPJ:</strong><br>${co.cnpj}</div>
+        <div class="col-6"><strong>Responsável:</strong><br>${co.responsavel_nome}</div>
+        <div class="col-6"><strong>Email:</strong><br>${co.responsavel_email}</div>
+        <div class="col-6"><strong>Cadastro:</strong><br>${co.created_at}</div>
+        <div class="col-6"><strong>Status:</strong><br><span class="badge bg-${co.status === 'ACTIVE' ? 'success' : 'warning'}">${co.status_display}</span></div>
+    </div>`;
+
+    // ── Payment History ──
+    let paymentRows = '';
+    if (d.payments.length > 0) {
+        d.payments.forEach(p => {
+            const statusCls = p.status === 'paid' ? 'text-success' : p.status === 'pending' ? 'text-warning' : 'text-danger';
+            const statusIcon = p.status === 'paid' ? 'check-circle-fill' : p.status === 'pending' ? 'clock-fill' : 'x-circle-fill';
+            paymentRows += `
+            <div class="payment-row">
+                <div>
+                    <strong>${p.plan_name}</strong> ${p.is_yearly ? '<small class="text-info">(Anual)</small>' : ''}
+                    <br><small class="text-muted">${p.date}</small>
+                </div>
+                <div class="text-end">
+                    <strong>${p.amount}</strong>
+                    <br><small class="${statusCls}"><i class="bi bi-${statusIcon} me-1"></i>${p.status_display}</small>
+                </div>
+            </div>`;
+        });
+    } else {
+        paymentRows = '<p class="text-muted text-center py-3">Nenhum pagamento registrado.</p>';
+    }
+
+    // ── Subscription History ──
+    let subRows = '';
+    if (d.subscriptions.length > 0) {
+        d.subscriptions.forEach(s => {
+            const sCls = s.status === 'ACTIVE' ? 'bg-success' : s.status === 'EXPIRED' ? 'bg-danger' : 'bg-secondary';
+            subRows += `
+            <div class="payment-row">
+                <div>
+                    <strong>${s.plan_name}</strong> ${s.is_yearly ? '<small class="text-info">(Anual)</small>' : '<small>(Mensal)</small>'}
+                    <br><small class="text-muted">${s.start_date || '—'} → ${s.end_date || '—'}</small>
+                </div>
+                <div><span class="badge ${sCls}">${s.status_display}</span></div>
+            </div>`;
+        });
+    } else {
+        subRows = '<p class="text-muted text-center py-3">Nenhuma assinatura registrada.</p>';
+    }
+
+    return `
+        ${planSection}
+        ${usageSection}
+        ${infoSection}
+        <div class="detail-section-title"><i class="bi bi-receipt me-2"></i>Histórico de Pagamentos</div>
+        ${paymentRows}
+        <div class="detail-section-title"><i class="bi bi-arrow-repeat me-2"></i>Histórico de Assinaturas</div>
+        ${subRows}
+    `;
+}
+</script>
+{% endblock %}

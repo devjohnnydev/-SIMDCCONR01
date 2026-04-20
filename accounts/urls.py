@@ -60,5 +60,9 @@ urlpatterns = [
     path('dashboard/company/department-report/<str:setor>/<int:form_id>/', views.view_department_report, name='view_department_report'),
     path('dashboard/company/department-report/generate/', views.generate_department_report_action, name='generate_department_report'),
     path('verify/contract/<str:protocol>/', views.verify_contract_protocol, name='verify_protocol'),
+
+    # Dashboard Financeiro (Admin Master)
+    path('dashboard/admin/financeiro/', views.admin_financial_dashboard, name='admin_financial_dashboard'),
+    path('dashboard/admin/financeiro/empresa/<int:pk>/', views.admin_financial_company_detail, name='admin_financial_company_detail'),
 ]
 

@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import messages
+from django.http import JsonResponse
 from django.views.generic import CreateView, TemplateView
 from django.urls import reverse_lazy
 from django.db.models import Count, Avg
@@ -697,3 +698,273 @@ def verify_contract_protocol(request, protocol):
         }
         
     return render(request, 'accounts/verify_protocol.html', context)
+
+
+# ─── DASHBOARD FINANCEIRO (ADMIN MASTER) ───
+
+@login_required
+def admin_financial_dashboard(request):
+    """Dashboard financeiro completo — apenas ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador master.')
+        return redirect('accounts:dashboard')
+
+    from billing.models import Plan, Subscription, PaymentOrder
+    from django.db.models import Sum, Count, Q, F
+    from django.db.models.functions import Coalesce
+    from decimal import Decimal
+    import json
+
+    now = timezone.now()
+
+    # ── Empresas ──
+    all_companies = Company.objects.select_related('plan').all()
+    active_companies = all_companies.filter(status='ACTIVE')
+
+    companies_with_plan = active_companies.filter(
+        plan__isnull=False,
+        subscription_status__in=['active', 'trialing']
+    )
+    companies_without_plan = active_companies.filter(
+        Q(plan__isnull=True) | ~Q(subscription_status__in=['active', 'trialing'])
+    )
+
+    # ── MRR / ARR ──
+    mrr = Decimal('0.00')
+    for c in companies_with_plan:
+        mrr += c.get_price_monthly() or Decimal('0.00')
+    arr = mrr * 12
+
+    # ── Total Recebido (PaymentOrders pagas) ──
+    total_received_cents = PaymentOrder.objects.filter(
+        status='paid'
+    ).aggregate(total=Coalesce(Sum('amount'), 0))['total']
+    total_received = Decimal(total_received_cents) / 100
+
+    # ── Pagamentos últimos 30 dias ──
+    from datetime import timedelta
+    thirty_days_ago = now - timedelta(days=30)
+    recent_paid = PaymentOrder.objects.filter(
+        status='paid', paid_at__gte=thirty_days_ago
+    ).aggregate(total=Coalesce(Sum('amount'), 0))['total']
+    recent_received = Decimal(recent_paid) / 100
+
+    # ── Taxa de Conversão ──
+    total_active = active_companies.count()
+    with_plan_count = companies_with_plan.count()
+    without_plan_count = companies_without_plan.count()
+    conversion_rate = round((with_plan_count / total_active * 100), 1) if total_active > 0 else 0
+
+    # ── Distribuição por Plano (para gráfico Doughnut) ──
+    plan_distribution = (
+        Company.objects.filter(
+            plan__isnull=False,
+            subscription_status__in=['active', 'trialing']
+        )
+        .values('plan__name')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+    plan_labels = [p['plan__name'] for p in plan_distribution]
+    plan_counts = [p['count'] for p in plan_distribution]
+
+    # ── Pagamentos recentes por semana (para gráfico de barras) ──
+    from django.db.models.functions import TruncWeek
+    payments_by_week = (
+        PaymentOrder.objects.filter(status='paid', paid_at__gte=thirty_days_ago)
+        .annotate(week=TruncWeek('paid_at'))
+        .values('week')
+        .annotate(total=Sum('amount'))
+        .order_by('week')
+    )
+    week_labels = []
+    week_values = []
+    for pw in payments_by_week:
+        week_labels.append(pw['week'].strftime('%d/%m'))
+        week_values.append(float(Decimal(pw['total']) / 100))
+
+    # ── Tabela de Empresas (com filtros) ──
+    filter_plan = request.GET.get('plan', '')
+    filter_status = request.GET.get('sub_status', '')
+    search = request.GET.get('search', '')
+
+    table_companies = all_companies.filter(status='ACTIVE')
+
+    if filter_plan == 'none':
+        table_companies = table_companies.filter(plan__isnull=True)
+    elif filter_plan:
+        table_companies = table_companies.filter(plan_id=filter_plan)
+
+    if filter_status == 'active':
+        table_companies = table_companies.filter(subscription_status__in=['active', 'trialing'])
+    elif filter_status == 'inactive':
+        table_companies = table_companies.exclude(subscription_status__in=['active', 'trialing'])
+    elif filter_status == 'expiring':
+        seven_days = now + timedelta(days=7)
+        table_companies = table_companies.filter(
+            current_period_end__isnull=False,
+            current_period_end__lte=seven_days,
+            subscription_status__in=['active', 'trialing']
+        )
+
+    if search:
+        from django.db.models import Q as Qf
+        table_companies = table_companies.filter(
+            Qf(nome_fantasia__icontains=search) | Qf(cnpj__icontains=search)
+        )
+
+    table_companies = table_companies.order_by('-created_at')
+
+    # Enriquecer dados por empresa para exibição
+    companies_data = []
+    for c in table_companies:
+        last_payment = PaymentOrder.objects.filter(
+            company=c, status='paid'
+        ).order_by('-paid_at').first()
+
+        days_remaining = None
+        if c.current_period_end:
+            delta = c.current_period_end - now
+            days_remaining = max(delta.days, 0)
+
+        companies_data.append({
+            'company': c,
+            'plan_name': c.plan.name if c.plan else None,
+            'price_monthly': c.get_price_monthly(),
+            'sub_active': c.subscription_status in ['active', 'trialing'],
+            'days_remaining': days_remaining,
+            'last_payment': last_payment,
+            'employee_count': c.get_employee_count(),
+            'form_count': c.get_active_forms_count(),
+            'max_employees': c.plan.max_employees if c.plan else 0,
+            'max_forms': c.plan.max_forms if c.plan else 0,
+        })
+
+    plans = Plan.objects.filter(is_active=True).order_by('order')
+
+    context = {
+        'mrr': mrr,
+        'arr': arr,
+        'total_received': total_received,
+        'recent_received': recent_received,
+        'with_plan_count': with_plan_count,
+        'without_plan_count': without_plan_count,
+        'conversion_rate': conversion_rate,
+        'total_active': total_active,
+        'plan_labels': json.dumps(plan_labels),
+        'plan_counts': json.dumps(plan_counts),
+        'week_labels': json.dumps(week_labels),
+        'week_values': json.dumps(week_values),
+        'companies_data': companies_data,
+        'plans': plans,
+        'filter_plan': filter_plan,
+        'filter_status': filter_status,
+        'search': search,
+    }
+    return render(request, 'accounts/admin_financial_dashboard.html', context)
+
+
+@login_required
+def admin_financial_company_detail(request, pk):
+    """Retorna JSON com detalhes financeiros de uma empresa (para o modal)."""
+    if not request.user.is_admin_master:
+        return JsonResponse({'error': 'Acesso negado'}, status=403)
+
+    from billing.models import PaymentOrder, Subscription
+    from decimal import Decimal
+
+    company = get_object_or_404(Company, pk=pk)
+    now = timezone.now()
+
+    # Uso vs Limites
+    employee_count = company.get_employee_count()
+    form_count = company.get_active_forms_count()
+    max_employees = company.plan.max_employees if company.plan else 0
+    max_forms = company.plan.max_forms if company.plan else 0
+    max_reports = company.plan.max_reports if company.plan else 0
+
+    # Tempo restante
+    days_remaining = None
+    period_end_str = None
+    is_yearly = False
+    if company.current_period_end:
+        delta = company.current_period_end - now
+        days_remaining = max(delta.days, 0)
+        period_end_str = company.current_period_end.strftime('%d/%m/%Y %H:%M')
+
+    # Verificar se assinatura é anual
+    active_sub = Subscription.objects.filter(
+        company=company, status='ACTIVE'
+    ).order_by('-created_at').first()
+    if active_sub:
+        is_yearly = active_sub.is_yearly
+
+    # Histórico de pagamentos
+    payments = PaymentOrder.objects.filter(
+        company=company
+    ).select_related('plan').order_by('-created_at')[:20]
+
+    payments_list = []
+    for p in payments:
+        payments_list.append({
+            'id': p.id,
+            'plan_name': p.plan.name,
+            'amount': f'R$ {Decimal(p.amount) / 100:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.'),
+            'status': p.status,
+            'status_display': p.get_status_display(),
+            'is_yearly': p.is_yearly,
+            'date': p.created_at.strftime('%d/%m/%Y %H:%M'),
+            'paid_at': p.paid_at.strftime('%d/%m/%Y %H:%M') if p.paid_at else None,
+        })
+
+    # Histórico de assinaturas
+    subscriptions = Subscription.objects.filter(
+        company=company
+    ).select_related('plan').order_by('-created_at')[:10]
+
+    subs_list = []
+    for s in subscriptions:
+        subs_list.append({
+            'plan_name': s.plan.name,
+            'status': s.status,
+            'status_display': s.get_status_display(),
+            'start_date': s.start_date.strftime('%d/%m/%Y') if s.start_date else None,
+            'end_date': s.end_date.strftime('%d/%m/%Y') if s.end_date else None,
+            'is_yearly': s.is_yearly,
+        })
+
+    data = {
+        'company': {
+            'id': company.id,
+            'nome_fantasia': company.nome_fantasia,
+            'razao_social': company.razao_social,
+            'cnpj': company.cnpj,
+            'responsavel_nome': company.responsavel_nome,
+            'responsavel_email': company.responsavel_email,
+            'status': company.status,
+            'status_display': company.get_status_display(),
+            'created_at': company.created_at.strftime('%d/%m/%Y'),
+        },
+        'plan': {
+            'name': company.plan.name if company.plan else None,
+            'price_monthly': str(company.get_price_monthly()),
+            'price_yearly': str(company.get_price_yearly() or ''),
+            'subscription_status': company.subscription_status,
+            'is_yearly': is_yearly,
+            'days_remaining': days_remaining,
+            'period_end': period_end_str,
+        },
+        'usage': {
+            'employees': employee_count,
+            'max_employees': max_employees,
+            'employees_pct': round(employee_count / max_employees * 100, 1) if max_employees > 0 else 0,
+            'forms': form_count,
+            'max_forms': max_forms,
+            'forms_pct': round(form_count / max_forms * 100, 1) if max_forms > 0 else 0,
+            'max_reports': max_reports,
+        },
+        'payments': payments_list,
+        'subscriptions': subs_list,
+    }
+
+    return JsonResponse(data)

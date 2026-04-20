@@ -407,15 +407,24 @@
     .wa-float {
       position: fixed; bottom: 32px; right: 32px; z-index: 9999;
       background: #25d366; color: #fff;
-      padding: 16px 28px; border-radius: 100px;
+      padding: 14px 24px; border-radius: 12px;
       font-size: 14px; font-weight: 800;
       display: flex; align-items: center; gap: 12px;
-      box-shadow: 0 10px 30px rgba(37,211,102,.4);
-      transition: all .3s; border: none; text-decoration: none !important;
+      box-shadow: 0 10px 30px rgba(37,211,102,.3);
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all .3s; text-decoration: none !important;
+      letter-spacing: 0.5px;
     }
     .wa-float:hover { transform: translateY(-5px); box-shadow: 0 15px 45px rgba(37,211,102,0.5); color: #fff; }
-      .wa-float { padding: 16px; border-radius: 50%; bottom: 20px; right: 20px; }
-      .wa-float i { font-size: 24px; margin: 0; }
+    
+    @media (max-width: 600px) {
+      .wa-float span { display: none; }
+      .wa-float { 
+        padding: 0; width: 64px; height: 64px; 
+        border-radius: 100%; bottom: 24px; right: 24px; 
+        justify-content: center; 
+      }
+      .wa-float i { font-size: 34px; margin: 0; }
     }
 
     /* ─── RESPONSIVE ─── */

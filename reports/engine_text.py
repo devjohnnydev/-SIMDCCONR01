@@ -98,6 +98,8 @@ class TextEngine:
                 'vetor': meta['vetor'],
                 'dimensao': meta['dimensao'],
                 'pergunta': answer.question.text,
+                'analysis_category': answer.question.analysis_category,
+                'analysis_category_label': answer.question.get_analysis_category_display(),
                 'valor': value,
                 'classificacao': label,
                 'classificacao_key': key,
@@ -132,8 +134,29 @@ class TextEngine:
         overall_avg = sum(all_scores) / len(all_scores) if all_scores else 3.5
         overall_label, overall_key = classify_score(overall_avg)
 
+        categories_meta = {
+            'DIAGNOSTICO': {'label': 'Diagnóstico Psicossocial', 'icon': 'bi-activity', 'color': '#0d6efd', 'number': 1},
+            'DISSONANCIA': {'label': 'Dissonância de Clima e Cultura', 'icon': 'bi-people', 'color': '#6c757d', 'number': 2},
+            'RISCOS': {'label': 'Riscos Identificados (PGR/GRO)', 'icon': 'bi-exclamation-triangle', 'color': '#ffc107', 'number': 3},
+            'RECOMENDACOES': {'label': 'Recomendações de Ação', 'icon': 'bi-list-check', 'color': '#212529', 'number': 4},
+        }
+
+        grouped_items = {}
+        for item in items:
+            cat = item.get('analysis_category', 'DIAGNOSTICO')
+            if cat not in grouped_items:
+                grouped_items[cat] = {
+                    'meta': categories_meta.get(cat, categories_meta['DIAGNOSTICO']),
+                    'items': []
+                }
+            grouped_items[cat]['items'].append(item)
+
+        # Ordenar chaves pelos números das categorias
+        grouped_items = dict(sorted(grouped_items.items(), key=lambda item: item[1]['meta']['number']))
+
         return {
             'items': items,
+            'grouped_items': grouped_items,
             'dimension_summary': dimension_summary,
             'overall_avg': round(overall_avg, 2),
             'overall_classification': overall_label,

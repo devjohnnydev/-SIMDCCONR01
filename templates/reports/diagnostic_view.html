@@ -264,41 +264,59 @@
                     </div>
                 </div>
             </div>
-            <!-- Anexo Técnico: Rastreabilidade Item a Item (R2 - 160/160) -->
+            <!-- Relatório Estruturado -->
             <div class="card border-0 shadow-sm rounded-4 mb-4 break-inside-avoid">
+                <div class="card-header bg-dark text-white p-3 p-md-4 rounded-top-4 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-file-text me-2"></i>Relatório Estruturado</h5>
+                    <span class="badge bg-white text-dark rounded-pill px-3 py-2">Documento Oficial</span>
+                </div>
                 <div class="card-body p-4 p-md-5">
-                    <h5 class="fw-bold text-dark border-bottom pb-3 mb-4"><i
-                            class="bi bi-list-ol me-2 text-primary"></i>6. Anexo Técnico: Rastreabilidade Individual</h5>
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover align-middle border-light" style="font-size: 0.7rem;">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th style="width: 8%">ID</th>
-                                    <th style="width: 40%">Item / Pergunta</th>
-                                    <th style="width: 15%">Constructo</th>
-                                    <th style="width: 15%">Referência (Goulart, 2025)</th>
-                                    <th style="width: 10%">Valor</th>
-                                    <th style="width: 12%">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in report_data.items %}
-                                <tr>
-                                    <td class="fw-bold text-primary">{{ item.id_item }}</td>
-                                    <td class="text-wrap">{{ item.pergunta }}</td>
-                                    <td class="text-muted">{{ item.constructo }}</td>
-                                    <td>{{ item.autor }} ({{ item.ano }})</td>
-                                    <td class="fw-bold">{{ item.valor }}</td>
-                                    <td>
-                                        <span class="badge {% if item.classificacao_key == 'critico' %}bg-danger{% elif item.classificacao_key == 'atencao' %}bg-warning text-dark{% else %}bg-success{% endif %} rounded-pill" style="font-size: 0.6rem;">
-                                            {{ item.classificacao }}
-                                        </span>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    
+                    {% for cat_key, cat_data in report_data.grouped_items.items %}
+                    <div class="mb-5 break-inside-avoid">
+                        <!-- Section Header -->
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm"
+                                style="width: 38px; height: 38px; background: {{ cat_data.meta.color }}; flex-shrink: 0;">
+                                <i class="bi {{ cat_data.meta.icon }} fs-5"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0 text-dark">{{ cat_data.meta.number }}. {{ cat_data.meta.label }}</h5>
+                        </div>
+                        
+                        <!-- Section Content with left border -->
+                        <div class="table-responsive p-3" style="border-left: 4px solid {{ cat_data.meta.color }}; background: #f8f9fa; border-radius: 0 12px 12px 0;">
+                            <table class="table table-sm table-borderless align-middle mb-0" style="font-size: 0.75rem;">
+                                <thead style="border-bottom: 2px solid #e9ecef;">
+                                    <tr>
+                                        <th style="width: 8%" class="text-muted text-uppercase">ID</th>
+                                        <th style="width: 40%" class="text-muted text-uppercase">Item / Pergunta</th>
+                                        <th style="width: 15%" class="text-muted text-uppercase">Constructo</th>
+                                        <th style="width: 15%" class="text-muted text-uppercase">Referência</th>
+                                        <th style="width: 10%" class="text-center text-muted text-uppercase">Valor</th>
+                                        <th style="width: 12%" class="text-muted text-uppercase">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in cat_data.items %}
+                                    <tr style="border-bottom: 1px solid #e9ecef;">
+                                        <td class="fw-bold" style="color: {{ cat_data.meta.color }};">{{ item.id_item }}</td>
+                                        <td class="text-wrap text-dark">{{ item.pergunta }}</td>
+                                        <td class="text-muted">{{ item.constructo }}</td>
+                                        <td class="text-muted">{{ item.autor }} ({{ item.ano }})</td>
+                                        <td class="fw-bold text-center text-dark">{{ item.valor|default:"-" }}</td>
+                                        <td>
+                                            <span class="badge {% if item.classificacao_key == 'critico' %}bg-danger{% elif item.classificacao_key == 'atencao' %}bg-warning text-dark{% else %}bg-success{% endif %} rounded-pill" style="font-size: 0.65rem;">
+                                                {{ item.classificacao }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+                    {% endfor %}
+
                 </div>
             </div>
         </div>

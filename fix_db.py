@@ -134,6 +134,10 @@ execute("""
         created_at timestamp with time zone NOT NULL DEFAULT NOW()
     );
 """)
+execute("ALTER TABLE reports_signerprofile ADD COLUMN IF NOT EXISTS signature_base64 text;")
+
+print("\n--- FORCING SAFETY COLUMNS ON forms_builder_formquestion ---")
+execute("ALTER TABLE forms_builder_formquestion ADD COLUMN IF NOT EXISTS analysis_category varchar(20) DEFAULT 'DIAGNOSTICO';")
 
 print("\n--- FORCING SAFETY TABLE: reports_departmentdiagnostic ---")
 execute("""

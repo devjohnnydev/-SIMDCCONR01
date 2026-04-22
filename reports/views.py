@@ -17,7 +17,7 @@ from django.utils import timezone
 
 from .models import Report, EmployeeDiagnostic
 from .utils_charts import generate_pie_chart_svg, generate_radar_chart_svg
-from .utils_pdf import html_to_pdf
+from .utils_pdf import html_to_pdf, RespondentReportPDF
 from forms_builder.models import FormInstance, FormAnswer, FormQuestion, FormAssignment
 from companies.views import require_company_admin, require_admin_master
 from audit.models import AuditLog
@@ -631,39 +631,37 @@ def download_diagnostic_pdf(request, validation_code):
             'items': cat_data['items']
         })
 
-    # Gerar Gráfico Radar SVG (Backend)
-    radar_data = {}
-    for dim in report_data.get('dimension_summary', []):
-        if dim['instrumento'] == 'IMCO':
-            radar_data[dim['dimensao']] = dim['media']
-    
-    chart_radar = generate_radar_chart_svg(radar_data, size=350)
-
-    context = {
-        'diagnostic': diagnostic,
-        'report_data': report_data,
-        'sections': sections,
-        'chart_radar': chart_radar,
-        'generated_at': timezone.now(),
-        'company': diagnostic.assignment.employee.company,
-    }
-
     try:
-        html_string = render_to_string('reports/pdf/laudo_individual.html', context)
-        pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
+        # Iniciando o Gerador de PDF (Pure Python - FPDF2)
+        pdf = RespondentReportPDF(company=diagnostic.assignment.employee.company, generated_at=timezone.now())
         
-        if error:
-            logger.error(f"Erro ao gerar PDF: {error}")
-            messages.error(request, error)
-            return redirect('reports:view_diagnostic', validation_code=validation_code)
-
-        response = HttpResponse(pdf, content_type='application/pdf')
+        # 1. Informações do Funcionário
+        pdf.draw_info_card(diagnostic.assignment.employee, diagnostic)
+        
+        # 2. Gráfico Radar
+        pdf.draw_radar_chart(report_data.get('dimension_summary', []))
+        
+        # 3. Seções do Relatório (Texto + Tabelas)
+        for section in sections:
+            pdf.render_section(section)
+            
+        # 4. Assinatura
+        pdf.draw_signature(diagnostic)
+        
+        # 5. Bibliografia
+        pdf.draw_bibliography(report_data.get('references', []), str(diagnostic.validation_code))
+        
+        # Gerar bytes
+        pdf_bytes = pdf.output()
+        
+        response = HttpResponse(pdf_bytes, content_type='application/pdf')
         safe_name = slugify(diagnostic.assignment.employee.nome)
         filename = f"laudo_{safe_name}_{timezone.now().strftime('%Y%m%d')}.pdf"
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
+
     except Exception:
         import traceback
-        logger.error(f"Erro crítico na geração do PDF: {traceback.format_exc()}")
+        logger.error(f"Erro crítico na geração do PDF (FPDF2): {traceback.format_exc()}")
         messages.error(request, 'Ocorreu um erro interno ao processar o PDF profissional. Verifique os logs.')
         return redirect('reports:view_diagnostic', validation_code=validation_code)

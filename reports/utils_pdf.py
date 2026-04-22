@@ -20,43 +20,56 @@ class RespondentReportPDF(FPDF):
         super().__init__(*args, **kwargs)
         self.set_auto_page_break(auto=True, margin=15)
         self.alias_nb_pages()
-        self.add_page()
-
+        # Não adicionamos página aqui para garantir que variáveis de instância estejam prontas
+        
     def _t(self, text):
         """Sanitiza texto para encoding Latin-1 (padrão FPDF core fonts)."""
         if not text: return ""
-        # Converte para string se não for, e garante Latin-1 (português ok)
-        return str(text).encode('latin-1', 'replace').decode('latin-1')
+        # Remove caracteres de controle que podem corromper o PDF
+        clean_text = "".join(ch for ch in str(text) if ch.isprintable() or ch in "\n\r\t")
+        return clean_text.encode('latin-1', 'replace').decode('latin-1')
         
     def header(self):
-        # Background Logo / Header
-        if self.page_no() == 1:
-            self.set_font('helvetica', 'B', 16)
-            self.set_text_color(37, 99, 235) # blue-600
-            
-            if self.company and self.company.logo and os.path.exists(self.company.logo.path):
-                self.image(self.company.logo.path, 10, 10, h=12)
-                self.set_x(10)
-            else:
+        # Logo placeholder ou real
+        self.set_font('helvetica', 'B', 16)
+        self.set_text_color(37, 99, 235) # blue-600
+        
+        # Tenta carregar a logo de forma segura
+        logo_path = None
+        if self.company and self.company.logo:
+            try:
+                if os.path.exists(self.company.logo.path):
+                    logo_path = self.company.logo.path
+            except Exception as e:
+                logger.warning(f"Erro ao acessar caminho da logo: {e}")
+
+        if logo_path:
+            try:
+                self.image(logo_path, 10, 10, h=12)
+            except Exception as e:
+                logger.error(f"Erro ao embarcar imagem da logo no PDF: {e}")
                 self.text(10, 18, self._t("SIMDCCONR01"))
-            
-            self.set_font('helvetica', 'B', 12)
-            self.set_text_color(15, 23, 42) # slate-900
-            self.cell(0, 10, self._t('Parecer Técnico Pericial'), align='R', ln=True)
-            self.set_font('helvetica', '', 8)
-            self.set_text_color(100, 116, 139) # slate-500
-            self.cell(0, 5, self._t('DOCUMENTO OFICIAL · RASTREABILIDADE TOTAL'), align='R', ln=True)
-            
-            # Linha azul superior
-            self.set_draw_color(37, 99, 235)
-            self.set_line_width(0.8)
-            self.line(10, 27, 200, 27)
-            self.ln(10)
+        else:
+            self.text(10, 18, self._t("SIMDCCONR01"))
+        
+        self.set_font('helvetica', 'B', 12)
+        self.set_text_color(15, 23, 42) # slate-900
+        self.cell(0, 10, self._t('Parecer Técnico Pericial'), align='R', ln=True)
+        self.set_font('helvetica', '', 8)
+        self.set_text_color(100, 116, 139) # slate-500
+        self.cell(0, 5, self._t('DOCUMENTO OFICIAL · RASTREABILIDADE TOTAL'), align='R', ln=True)
+        
+        # Linha azul superior
+        self.set_draw_color(37, 99, 235)
+        self.set_line_width(0.8)
+        self.line(10, 27, 200, 27)
+        self.ln(10)
 
     def footer(self):
         self.set_y(-15)
         self.set_font('helvetica', 'I', 8)
         self.set_text_color(148, 163, 184)
+        # {nb} será substituído pelo alias_nb_pages
         self.cell(0, 10, self._t(f'Página {self.page_no()} de {{nb}} - Parecer Técnico SIMDCCONR01'), align='C')
 
     def draw_info_card(self, employee, diagnostic):
@@ -117,12 +130,19 @@ class RespondentReportPDF(FPDF):
         max_r = 35
         max_val = 5.0
         
-        data = {dim['dimensao']: dim['media'] for dim in dimension_summary if dim.get('instrumento') == 'IMCO'}
+        # Filtragem de dados
+        data = {}
+        for dim in dimension_summary:
+            if dim.get('instrumento') == 'IMCO':
+                data[dim['dimensao']] = dim.get('media', 0)
+                
         if not data: return
         
         labels = list(data.keys())
         values = list(data.values())
         n = len(labels)
+        
+        if n < 3: return # Não formaria polígono
         
         self.set_draw_color(224, 224, 224)
         self.set_line_width(0.1)
@@ -168,7 +188,7 @@ class RespondentReportPDF(FPDF):
         self.set_font('helvetica', 'B', 11)
         self.cell(0, 10, self._t(f" {section['meta']['number']}. {section['meta']['label']}"), ln=True, fill=True)
         
-        if section['text']:
+        if section.get('text'):
             self.ln(3)
             self.set_fill_color(241, 245, 249)
             self.set_draw_color(37, 99, 235)
@@ -192,24 +212,25 @@ class RespondentReportPDF(FPDF):
         self.set_font('helvetica', '', 8)
         self.set_text_color(15, 23, 42)
         
-        for item in section['items']:
+        for item in section.get('items', []):
             if self.get_y() > 260: self.add_page()
             
             start_y = self.get_y()
-            self.cell(col_widths[0], 10, self._t(item['id_item']), border=1, align='C')
+            self.cell(col_widths[0], 10, self._t(item.get('id_item', '-')), border=1, align='C')
             curr_x = self.get_x()
-            self.multi_cell(col_widths[1], 5, self._t(item['pergunta']), border=1)
+            self.multi_cell(col_widths[1], 5, self._t(item.get('pergunta', '-')), border=1)
             end_y = self.get_y()
             h = end_y - start_y
             
             self.set_y(start_y)
             self.set_x(10 + col_widths[0] + col_widths[1])
-            self.multi_cell(col_widths[2], 5, self._t(f"{item['constructo']}\n{item['autor']} ({item['ano']})"), border=1)
+            ref_txt = f"{item.get('constructo', '')}\n{item.get('autor', '')} ({item.get('ano', '')})"
+            self.multi_cell(col_widths[2], 5, self._t(ref_txt), border=1)
             
             self.set_y(start_y)
             self.set_x(10 + col_widths[0] + col_widths[1] + col_widths[2])
-            self.cell(col_widths[3], h, self._t(item['valor'] or "-"), border=1, align='C')
-            self.cell(col_widths[4], h, self._t(item['classificacao']), border=1, align='C')
+            self.cell(col_widths[3], h, self._t(item.get('valor') or "-"), border=1, align='C')
+            self.cell(col_widths[4], h, self._t(item.get('classificacao', '-')), border=1, align='C')
             self.set_y(max(self.get_y(), end_y))
         
         self.ln(10)
@@ -221,10 +242,18 @@ class RespondentReportPDF(FPDF):
         self.set_draw_color(15, 23, 42)
         self.line(cx - 40, self.get_y() + 15, cx + 40, self.get_y() + 15)
         
+        sig_path = None
         if diagnostic.is_signed and diagnostic.signer_profile:
             sig = diagnostic.signer_profile
-            if sig.signature_image and os.path.exists(sig.signature_image.path):
-                self.image(sig.signature_image.path, cx - 35, self.get_y(), h=12)
+            try:
+                if sig.signature_image and os.path.exists(sig.signature_image.path):
+                    sig_path = sig.signature_image.path
+            except: pass
+
+        if sig_path:
+            try:
+                self.image(sig_path, cx - 35, self.get_y(), h=12)
+            except: pass
         
         self.ln(18)
         self.set_font('helvetica', 'B', 10)
@@ -244,9 +273,12 @@ class RespondentReportPDF(FPDF):
             self.set_text_color(22, 101, 52)
             self.ln(2)
             self.set_font('helvetica', 'B', 8)
-            self.cell(0, 5, self._t(f"AUTENTICADO EM {diagnostic.signature_timestamp.strftime('%d/%m/%Y %H:%M')}"), align='C', ln=True)
+            # Garantindo que timestamp não quebre se for nulo
+            ts = diagnostic.signature_timestamp or timezone.now()
+            self.cell(0, 5, self._t(f"AUTENTICADO EM {ts.strftime('%d/%m/%Y %H:%M')}"), align='C', ln=True)
 
     def draw_bibliography(self, references, validation_code):
+        if not references: return
         self.ln(10)
         self.set_fill_color(248, 250, 252)
         self.set_draw_color(226, 232, 240)

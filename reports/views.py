@@ -635,6 +635,9 @@ def download_diagnostic_pdf(request, validation_code):
         # Iniciando o Gerador de PDF (Pure Python - FPDF2)
         pdf = RespondentReportPDF(company=diagnostic.assignment.employee.company, generated_at=timezone.now())
         
+        # Inicializar página inicial explicitamente antes de desenhar
+        pdf.add_page()
+        
         # 1. Informações do Funcionário
         pdf.draw_info_card(diagnostic.assignment.employee, diagnostic)
         
@@ -651,10 +654,11 @@ def download_diagnostic_pdf(request, validation_code):
         # 5. Bibliografia
         pdf.draw_bibliography(report_data.get('references', []), str(diagnostic.validation_code))
         
-        # Gerar bytes
-        pdf_bytes = pdf.output()
+        # Gerar bytes (fpdf2 retorna bytearray, convertemos para bytes)
+        pdf_content = bytes(pdf.output())
         
-        response = HttpResponse(pdf_bytes, content_type='application/pdf')
+        response = HttpResponse(pdf_content, content_type='application/pdf')
+        response['X-Content-Type-Options'] = 'nosniff'
         safe_name = slugify(diagnostic.assignment.employee.nome)
         filename = f"laudo_{safe_name}_{timezone.now().strftime('%Y%m%d')}.pdf"
         response['Content-Disposition'] = f'attachment; filename="{filename}"'

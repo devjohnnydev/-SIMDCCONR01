@@ -15,7 +15,7 @@ from django.utils import timezone
 # falha na inicializacao do Django quando bibliotecas do sistema nao estao presentes.
 
 from .models import Report, EmployeeDiagnostic
-from .utils_charts import generate_pie_chart_svg
+from .utils_charts import generate_pie_chart_svg, generate_radar_chart_svg
 from .utils_pdf import html_to_pdf
 from forms_builder.models import FormInstance, FormAnswer, FormQuestion, FormAssignment
 from companies.views import require_company_admin, require_admin_master
@@ -584,3 +584,54 @@ def view_diagnostic(request, validation_code):
         'report_data': report_data
     })
 
+@login_required
+def download_diagnostic_pdf(request, validation_code):
+    """
+    Gera PDF profissional do Parecer Técnico Pericial (Individual).
+    """
+    from .models import EmployeeDiagnostic
+    from .engine_text import TextEngine
+    import uuid
+    
+    try:
+        val_uuid = uuid.UUID(validation_code)
+        diagnostic = get_object_or_404(EmployeeDiagnostic, validation_code=val_uuid)
+    except ValueError:
+        messages.error(request, 'Código inválido.')
+        return redirect('accounts:dashboard')
+
+    # Restrição de acesso: ADMIN_MASTER ou o próprio dono da empresa
+    if request.user.role != 'ADMIN_MASTER' and request.user.company != diagnostic.assignment.employee.company:
+        messages.error(request, 'Acesso negado or restrito.')
+        return redirect('accounts:dashboard')
+
+    engine = TextEngine()
+    report_data = engine.generate_respondent_report(diagnostic.assignment)
+    
+    # Gerar Gráfico Radar SVG (Backend)
+    radar_data = {}
+    for dim in report_data.get('dimension_summary', []):
+        if dim['instrumento'] == 'IMCO':
+            radar_data[dim['dimensao']] = dim['media']
+    
+    chart_radar = generate_radar_chart_svg(radar_data, size=350)
+
+    context = {
+        'diagnostic': diagnostic,
+        'report_data': report_data,
+        'chart_radar': chart_radar,
+        'generated_at': timezone.now(),
+        'company': diagnostic.assignment.employee.company,
+    }
+
+    html_string = render_to_string('reports/pdf/laudo_individual.html', context)
+    pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
+    
+    if error:
+        messages.error(request, error)
+        return redirect('reports:view_diagnostic', validation_code=validation_code)
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    filename = f"laudo_{diagnostic.assignment.employee.nome.replace(' ', '_')}_{timezone.now().strftime('%Y%m%d')}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response

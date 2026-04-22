@@ -15,6 +15,7 @@ urlpatterns = [
     path('validar/', views.validate_diagnostic, name='validate'),
     path('validar/<str:validation_code>/', views.validate_diagnostic, name='validate_code'),
     path('laudo/<str:validation_code>/', views.view_diagnostic, name='view_diagnostic'),
+    path('laudo/<str:validation_code>/pdf/', views.download_diagnostic_pdf, name='diagnostic_pdf'),
     path('laudo/<str:validation_code>/sign/', views.sign_report, name='sign_report'),
 
     # Motor de Texto — Gerador Automático (SIMDCCONR01)

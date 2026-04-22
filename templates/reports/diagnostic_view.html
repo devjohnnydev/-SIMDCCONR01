@@ -22,10 +22,13 @@
             <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4 fw-medium">
                 <i class="bi bi-speedometer2 me-2"></i>Dashboard
             </a>
-            <button onclick="window.print()" class="btn btn-outline-dark rounded-pill px-4 fw-medium"><i
-                    class="bi bi-printer me-2"></i>Imprimir / PDF</button>
+            <button onclick="window.print()" class="btn btn-outline-dark rounded-pill px-4 fw-medium d-print-none"><i
+                    class="bi bi-printer me-2"></i>Imprimir Tela</button>
+            <a href="{% url 'reports:diagnostic_pdf' diagnostic.validation_code %}" class="btn btn-primary rounded-pill px-4 fw-medium d-print-none">
+                <i class="bi bi-file-earmark-pdf-fill me-2"></i>Gerar PDF Profissional
+            </a>
             <a href="{% url 'accounts:admin_laudos' %}"
-                class="btn btn-dark rounded-pill shadow-sm px-4 fw-medium">Voltar</a>
+                class="btn btn-dark rounded-pill shadow-sm px-4 fw-medium d-print-none text-white">Voltar</a>
         </div>
     </div>
 

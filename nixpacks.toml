@@ -5,19 +5,17 @@ nixPkgs = [
     "pango",
     "cairo",
     "glib",
+    "gdk-pixbuf",
+    "libffi",
+    "fontconfig",
     "pkg-config",
     "gcc"
 ]
 aptPkgs = [
-    "libpango-1.0-0",
-    "libpangoft2-1.0-0",
-    "libcairo2",
-    "libglib2.0-0",
-    "libfontconfig1",
-    "libharfbuzz0b",
-    "libgdk-pixbuf2.0-0",
-    "shared-mime-info"
+    "shared-mime-info",
+    "libgobject-2.0-0"
 ]
 
 [variables]
 PYTHONUNBUFFERED = "1"
+LD_LIBRARY_PATH = "/usr/lib:/usr/local/lib:/nix/var/nix/profiles/default/lib"

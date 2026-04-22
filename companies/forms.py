@@ -11,7 +11,7 @@ class CompanySettingsForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = [
-            'nome_fantasia', 'razao_social', 'cnpj',
+            'nome_fantasia', 'razao_social', 'cnpj', 'website_url',
             'responsavel_nome', 'responsavel_email', 'telefone',
             'endereco', 'cidade', 'estado', 'cep',
             'logo', 'cor_primaria', 'cor_secundaria'
@@ -20,6 +20,7 @@ class CompanySettingsForm(forms.ModelForm):
             'nome_fantasia': forms.TextInput(attrs={'class': 'form-control'}),
             'razao_social': forms.TextInput(attrs={'class': 'form-control'}),
             'cnpj': forms.TextInput(attrs={'class': 'form-control', 'readonly': True}),
+            'website_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://exemplo.com'}),
             'responsavel_nome': forms.TextInput(attrs={'class': 'form-control'}),
             'responsavel_email': forms.EmailInput(attrs={'class': 'form-control'}),
             'telefone': forms.TextInput(attrs={'class': 'form-control'}),

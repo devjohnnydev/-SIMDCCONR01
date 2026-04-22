@@ -5,6 +5,7 @@ from django.views.decorators.http import require_POST
 
 from .models import LandingConfig, Testimonial, Announcement
 from .forms import LandingConfigForm, AnnouncementForm
+from companies.models import Company
 
 
 def landing_page(request):
@@ -13,11 +14,20 @@ def landing_page(request):
     ticker_items = [s.strip() for s in config.ticker_text.split('|')] if config.ticker_text else []
     testimonials = Testimonial.objects.filter(is_approved=True).order_by('-created_at')[:6]
     announcements = [a for a in Announcement.objects.filter(is_active=True) if a.is_live]
+    
+    # Busca empresas parceiras (ativas, com logo e com link)
+    partner_companies = Company.objects.filter(
+        subscription_status='active',
+        logo__isnull=False,
+        website_url__isnull=False
+    ).exclude(logo='').exclude(website_url='').order_by('?') 
+    
     return render(request, 'landing/page.html', {
         'config': config,
         'ticker_items': ticker_items,
         'testimonials': testimonials,
         'announcements': announcements,
+        'partner_companies': partner_companies,
     })
 
 

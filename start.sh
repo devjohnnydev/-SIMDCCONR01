@@ -3,7 +3,7 @@
 set -e
 
 # Makemigrations should be run locally and committed to Git
-# python manage.py makemigrations --noinput
+python manage.py makemigrations companies --noinput
 
 echo "Checking for existing DB columns (Faking old migrations)..."
 # Consolidate fake migrations into fewer calls if possible

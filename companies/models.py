@@ -54,6 +54,7 @@ class Company(models.Model):
     cor_secundaria = models.CharField('Cor Secundaria', max_length=7, default='#6c757d')
     
     status = models.CharField('Status', max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    website_url = models.URLField('URL do Sistema/Site', max_length=500, blank=True, null=True)
     
     plan = models.ForeignKey(
         'billing.Plan',

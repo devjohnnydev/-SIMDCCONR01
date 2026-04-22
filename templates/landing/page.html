@@ -457,6 +457,87 @@
       .footer-top { grid-template-columns: 1fr; gap: 60px; }
       .footer-bottom { flex-direction: column; text-align: center; }
     }
+
+    /* ─── PARTNER CAROUSEL (STRIPE STYLE) ─── */
+    .partner-section { 
+        padding: 80px 0; 
+        background: #f8fafc; 
+        overflow: hidden;
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .partner-carousel-title {
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 40px;
+    }
+    .partner-carousel {
+        position: relative;
+        display: flex;
+        overflow: hidden;
+        user-select: none;
+        gap: 60px;
+    }
+    .partner-track {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        gap: 60px;
+        min-width: 100%;
+        animation: partner-scroll 40s linear infinite;
+    }
+    @keyframes partner-scroll {
+        from { transform: translateX(0); }
+        to { transform: translateX(calc(-100% - 60px)); }
+    }
+    .partner-carousel:hover .partner-track {
+        animation-play-state: paused;
+    }
+    .partner-item {
+        flex-shrink: 0;
+        height: 50px;
+        width: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s ease;
+        cursor: pointer;
+    }
+    .partner-item img {
+        height: 100%;
+        width: auto;
+        max-width: 180px;
+        object-fit: contain;
+        filter: grayscale(100%);
+        opacity: 0.5;
+        transition: all 0.4s ease;
+    }
+    .partner-carousel:hover .partner-item img {
+        opacity: 0.3;
+    }
+    .partner-item:hover img {
+        filter: grayscale(0%);
+        opacity: 1 !important;
+        transform: scale(1.1);
+    }
+    .partner-carousel:hover .partner-item:not(:hover) img {
+        opacity: 0.2;
+        filter: grayscale(100%) blur(1px);
+    }
+
+    @media (max-width: 768px) {
+        .partner-track { gap: 40px; }
+        .partner-item { height: 35px; }
+        @keyframes partner-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(-100% - 40px)); }
+        }
+    }
   </style>
 </head>
 <body>
@@ -872,6 +953,29 @@
     </div>
   </div>
 </section>
+
+<!-- PARTNER CAROUSEL -->
+{% if partner_companies %}
+<section class="partner-section">
+  <div class="partner-carousel-title">Empresas que confiam no SIMDCCONR01</div>
+  <div class="partner-carousel">
+    <div class="partner-track">
+      {% for company in partner_companies %}
+      <div class="partner-item" onclick="window.open('{{ company.website_url|default:'#' }}', '_blank')">
+        <img src="{{ company.logo.url }}" alt="{{ company.nome_fantasia }}" title="{{ company.nome_fantasia }}">
+      </div>
+      {% endfor %}
+    </div>
+    <div class="partner-track">
+      {% for company in partner_companies %}
+      <div class="partner-item" onclick="window.open('{{ company.website_url|default:'#' }}', '_blank')">
+        <img src="{{ company.logo.url }}" alt="{{ company.nome_fantasia }}" title="{{ company.nome_fantasia }}">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
 <!-- PRICING -->
 <section id="pricing">

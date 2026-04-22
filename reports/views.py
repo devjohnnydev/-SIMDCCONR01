@@ -3,6 +3,7 @@ Views para geracao de relatorios e dashboards.
 """
 import io
 import base64
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -20,6 +21,9 @@ from .utils_pdf import html_to_pdf
 from forms_builder.models import FormInstance, FormAnswer, FormQuestion, FormAssignment
 from companies.views import require_company_admin, require_admin_master
 from audit.models import AuditLog
+
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -591,6 +595,7 @@ def download_diagnostic_pdf(request, validation_code):
     """
     from .models import EmployeeDiagnostic
     from .engine_text import TextEngine
+    from django.utils.text import slugify
     import uuid
     
     try:
@@ -653,7 +658,8 @@ def download_diagnostic_pdf(request, validation_code):
             return redirect('reports:view_diagnostic', validation_code=validation_code)
 
         response = HttpResponse(pdf, content_type='application/pdf')
-        filename = f"laudo_{diagnostic.assignment.employee.nome.replace(' ', '_')}_{timezone.now().strftime('%Y%m%d')}.pdf"
+        safe_name = slugify(diagnostic.assignment.employee.nome)
+        filename = f"laudo_{safe_name}_{timezone.now().strftime('%Y%m%d')}.pdf"
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
     except Exception:

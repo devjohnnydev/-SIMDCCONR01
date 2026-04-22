@@ -8,14 +8,18 @@ nixPkgs = [
     "gdk-pixbuf",
     "libffi",
     "fontconfig",
+    "gobject-introspection",
     "pkg-config",
     "gcc"
 ]
 aptPkgs = [
     "shared-mime-info",
-    "libgobject-2.0-0"
+    "libgobject-2.0-0",
+    "libpangocairo-1.0-0",
+    "libpangoft2-1.0-0",
+    "libfontconfig1"
 ]
 
 [variables]
 PYTHONUNBUFFERED = "1"
-LD_LIBRARY_PATH = "/usr/lib:/usr/local/lib:/nix/var/nix/profiles/default/lib"
+LD_LIBRARY_PATH = "/usr/lib/x86_64-linux-gnu:/usr/lib:/usr/local/lib:/nix/var/nix/profiles/default/lib"

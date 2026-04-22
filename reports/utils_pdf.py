@@ -12,6 +12,14 @@ def html_to_pdf(html_string, base_url=None):
     Converte HTML string em bytes PDF.
     Retorna: (pdf_bytes, error_message)
     """
+    import os
+    # Patch para ambiente Nixpacks/Railway encontrar as bibliotecas sem quebrar o build global
+    lib_path = "/nix/var/nix/profiles/default/lib"
+    if os.path.exists(lib_path):
+        current_ld = os.environ.get('LD_LIBRARY_PATH', '')
+        if lib_path not in current_ld:
+            os.environ['LD_LIBRARY_PATH'] = f"{lib_path}:{current_ld}" if current_ld else lib_path
+
     try:
         from weasyprint import HTML
         if base_url:

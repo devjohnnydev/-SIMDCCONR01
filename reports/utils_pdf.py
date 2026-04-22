@@ -10,6 +10,7 @@ import os
 import math
 import logging
 import io
+import xml.sax.saxutils as saxutils
 from django.utils import timezone
 from django.conf import settings
 
@@ -234,7 +235,10 @@ class RespondentReportRL:
             
             # Texto Qualitativo
             if section.get('text'):
-                story.append(Paragraph(section['text'], self.styles['AnalysisBox']))
+                safe_text = saxutils.escape(section['text'])
+                # Replace newlines with <br/> for ReportLab
+                safe_text = safe_text.replace('\n', '<br/>')
+                story.append(Paragraph(safe_text, self.styles['AnalysisBox']))
                 story.append(Spacer(1, 10))
                 
             # Tabela de Itens
@@ -251,10 +255,13 @@ class RespondentReportRL:
                 elif item.get('classificacao_key') == 'atencao': status_color = COL_WARNING
                 elif item.get('classificacao_key') == 'adequado': status_color = COL_SUCCESS
                 
+                safe_pergunta = saxutils.escape(item.get('pergunta', '-')).replace('\n', '<br/>')
+                safe_ref = saxutils.escape(ref).replace('\n', '<br/>')
+                
                 item_data.append([
                     item.get('id_item', '-'),
-                    Paragraph(item.get('pergunta', '-'), self.styles['Normal']),
-                    Paragraph(ref, self.styles['Normal']),
+                    Paragraph(safe_pergunta, self.styles['Normal']),
+                    Paragraph(safe_ref, self.styles['Normal']),
                     item.get('valor') or "-",
                     Paragraph(f"<b>{status}</b>", self.styles['Normal'])
                 ])
@@ -320,7 +327,8 @@ class RespondentReportRL:
         story.append(Paragraph("5. Bibliografia e Rastreabilidade (Modelo FDAC)", self.styles['Heading3']))
         ref_p = []
         for r in report_data.get('references', [])[:5]:
-            ref_p.append(f"• {r}")
+            safe_r = saxutils.escape(r)
+            ref_p.append(f"• {safe_r}")
         story.append(Paragraph("<br/>".join(ref_p), self.styles['Normal']))
         
         story.append(Spacer(1, 10))

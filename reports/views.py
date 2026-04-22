@@ -644,14 +644,16 @@ def download_diagnostic_pdf(request, validation_code):
         # Gerar o documento
         pdf_gen.build(report_data, sections)
         
-        # Preparar o buffer para leitura
-        buffer.seek(0)
+        # Recuperar bytes do buffer de memória (evita erros de stream em WSGI)
+        pdf_bytes = buffer.getvalue()
+        buffer.close()
         
         safe_name = slugify(diagnostic.assignment.employee.nome)
         filename = f"laudo_{safe_name}_{timezone.now().strftime('%Y%m%d')}.pdf"
         
-        response = FileResponse(buffer, as_attachment=True, filename=filename, content_type='application/pdf')
-        response['X-Content-Type-Options'] = 'nosniff'
+        response = HttpResponse(pdf_bytes, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        # Segurança baseada na especificação HTTP (não adicionar headers intrusivos ao corpo)
         return response
 
     except Exception:

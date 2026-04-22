@@ -6,334 +6,276 @@
         @page {
             size: A4;
             margin: 1.5cm;
-            @bottom-right {
-                content: "Página " counter(page) " de " counter(pages);
-                font-size: 8pt;
-                color: #94a3b8;
-            }
-            @bottom-left {
-                content: "Parecer Técnico Pericial - SIMDCCONR01";
-                font-size: 8pt;
-                color: #94a3b8;
+            @frame footer {
+                -pdf-frame-content: footer-content;
+                bottom: 0.5cm;
+                margin-left: 1.5cm;
+                margin-right: 1.5cm;
+                height: 1cm;
             }
         }
 
         body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-family: Helvetica, Arial, sans-serif;
             color: #1e293b;
             line-height: 1.4;
-            margin: 0;
-            padding: 0;
             font-size: 10pt;
         }
 
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Helper Classes for xhtml2pdf */
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: bold; }
+        .w-100 { width: 100%; }
+        
+        /* Header Table for Layout */
+        .header-table {
+            width: 100%;
             border-bottom: 2pt solid #2563eb;
-            padding-bottom: 10pt;
             margin-bottom: 20pt;
+            padding-bottom: 5pt;
         }
         .header-logo {
-            max-height: 45pt;
-            max-width: 180pt;
-        }
-        .header-title {
-            text-align: right;
+            max-height: 40pt;
         }
         .header-title h1 {
             margin: 0;
-            font-size: 18pt;
+            font-size: 16pt;
             color: #0f172a;
-            font-weight: bold;
         }
         .header-title p {
             margin: 0;
-            font-size: 9pt;
+            font-size: 8pt;
             color: #2563eb;
             text-transform: uppercase;
             font-weight: bold;
-            letter-spacing: 0.5px;
         }
 
-        /* Information Grid */
+        /* Generic Info Card (Table Based) */
         .info-card {
-            background: #f8fafc;
+            background-color: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 8pt;
-            padding: 12pt;
-            margin-bottom: 20pt;
-        }
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
+            padding: 10pt;
+            margin-bottom: 15pt;
         }
         .info-label {
-            font-size: 7.5pt;
+            font-size: 7pt;
             font-weight: bold;
             color: #64748b;
             text-transform: uppercase;
-            display: block;
-            margin-bottom: 1pt;
         }
         .info-value {
-            font-size: 10.5pt;
+            font-size: 10pt;
             font-weight: bold;
             color: #0f172a;
         }
 
-        /* Typography & Layout */
-        h2 { font-size: 15pt; color: #0f172a; margin-top: 0; }
-        h3 { font-size: 12pt; color: #1e293b; margin-top: 25pt; margin-bottom: 10pt; border-bottom: 1px solid #e2e8f0; padding-bottom: 4pt; }
-        
+        /* Section Headings */
         .section-header {
-            margin-top: 25pt;
-            margin-bottom: 12pt;
-            break-after: avoid;
-            display: flex;
-            align-items: center;
-        }
-        .section-number {
-            background: #0f172a;
+            margin-top: 20pt;
+            margin-bottom: 10pt;
+            background-color: #0f172a;
             color: white;
-            width: 20pt;
-            height: 20pt;
-            border-radius: 4pt;
-            text-align: center;
-            line-height: 20pt;
-            font-weight: bold;
-            margin-right: 8pt;
-            display: inline-block;
+            padding: 6pt 10pt;
         }
         .section-title {
-            font-size: 13pt;
+            font-size: 12pt;
             font-weight: bold;
-            color: #0f172a;
-            display: inline-block;
-            vertical-align: middle;
         }
 
-        /* Text & Tables */
+        /* Analysis text block */
         .analysis-text {
-            padding: 12pt;
-            background: #f1f5f9;
+            padding: 10pt;
+            background-color: #f1f5f9;
             border-left: 3pt solid #2563eb;
-            border-radius: 0 6pt 6pt 0;
             text-align: justify;
-            margin-bottom: 12pt;
-            font-size: 10.5pt;
+            margin-bottom: 10pt;
             color: #334155;
         }
 
+        /* Results Table */
         .results-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20pt;
-            font-size: 8.5pt;
+            margin-bottom: 15pt;
         }
         .results-table th {
-            background: #f8fafc;
+            background-color: #f8fafc;
             color: #475569;
-            padding: 6pt;
+            padding: 5pt;
             text-align: left;
             text-transform: uppercase;
-            font-size: 7pt;
-            border-bottom: 2px solid #e2e8f0;
+            font-size: 7.5pt;
+            border-bottom: 1px solid #e2e8f0;
         }
         .results-table td {
-            padding: 6pt;
+            padding: 5pt;
             border-bottom: 1px solid #f1f5f9;
             vertical-align: top;
+            font-size: 8pt;
         }
-        
+
+        /* Status Badges */
         .badge {
-            padding: 2pt 6pt;
-            border-radius: 10pt;
-            font-size: 6.5pt;
+            padding: 2pt 5pt;
+            font-size: 7pt;
             font-weight: bold;
             text-transform: uppercase;
-            display: inline-block;
         }
-        .bg-danger { background: #fee2e2; color: #991b1b; }
-        .bg-warning { background: #fef3c7; color: #92400e; }
-        .bg-success { background: #dcfce7; color: #166534; }
+        .bg-danger { color: #991b1b; }
+        .bg-warning { color: #92400e; }
+        .bg-success { color: #166534; }
 
-        /* Chart */
-        .chart-box {
-            text-align: center;
-            margin: 15pt 0;
-            break-inside: avoid;
-        }
-
-        /* Signature & Footer */
-        .signature-block {
-            margin-top: 40pt;
-            text-align: center;
-            break-inside: avoid;
+        /* Signature area */
+        .signature-table {
+            width: 100%;
+            margin-top: 30pt;
         }
         .sig-line {
-            width: 220pt;
-            border-bottom: 1px solid #0f172a;
-            margin: 0 auto 8pt;
-            height: 50pt;
-            position: relative;
+            border-top: 0.5pt solid #0f172a;
+            width: 180pt;
+            margin: 0 auto;
+            padding-top: 5pt;
         }
-        .sig-img {
-            max-height: 45pt;
-            position: absolute;
-            bottom: 2pt;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .sig-name { font-weight: bold; font-size: 11pt; margin-bottom: 2pt; }
-        .sig-specialty { font-size: 9pt; color: #64748b; margin: 0; }
+        .sig-name { font-weight: bold; font-size: 10pt; }
+        .sig-specialty { font-size: 8pt; color: #64748b; }
 
-        .auth-label {
-            margin-top: 15pt;
-            display: inline-block;
-            padding: 3pt 10pt;
-            background: #f0fdf4;
-            color: #166534;
-            border-radius: 20pt;
-            font-size: 7.5pt;
-            font-weight: bold;
-            border: 1px solid #bbf7d0;
+        /* Summary Table instead of Graph if SVG fails */
+        .summary-table {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20pt;
+        }
+        .summary-table td {
+            padding: 4pt;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         .bibliography {
-            margin-top: 30pt;
-            padding: 12pt;
-            background: #f8fafc;
-            border-radius: 6pt;
-            font-size: 8.5pt;
-            break-inside: avoid;
+            background-color: #f8fafc;
+            padding: 10pt;
+            font-size: 8pt;
+            color: #64748b;
         }
-        .bibliography h5 { margin: 0 0 8pt; border-bottom: 1px solid #e2e8f0; padding-bottom: 4pt; color: #475569; }
-        .bibliography ul { padding-left: 12pt; margin: 0; }
-        .bibliography li { margin-bottom: 3pt; color: #64748b; }
-
-        /* Utility */
-        .page-break { page-break-after: always; }
-        .avoid-break { break-inside: avoid; }
     </style>
 </head>
 <body>
 
     <!-- Header -->
-    <div class="header">
-        <div class="header-logo-container">
-            {% if company.logo and company.logo.path %}
-                <img src="{{ company.logo.path }}" class="header-logo">
-            {% else %}
-                <div style="font-weight: bold; font-size: 20pt; color: #2563eb;">SIMDCCONR01</div>
-            {% endif %}
-        </div>
-        <div class="header-title">
-            <h1>Parecer Técnico Pericial</h1>
-            <p>Documento Oficial · Rastreabilidade Total</p>
-        </div>
+    <table class="header-table">
+        <tr>
+            <td width="50%">
+                {% if company.logo %}
+                    <!-- Nota: xhtml2pdf prefere caminhos locais ou URLs completas -->
+                    <img src="{{ company.logo.path }}" class="header-logo">
+                {% else %}
+                    <span style="font-weight: bold; font-size: 18pt; color: #2563eb;">SIMDCCONR01</span>
+                {% endif %}
+            </td>
+            <td width="50%" class="text-right header-title">
+                <h1>Parecer Técnico Pericial</h1>
+                <p>Documento Oficial · Rastreabilidade Total</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Info Grid -->
+    <table class="info-card w-100">
+        <tr>
+            <td width="70%">
+                <span class="info-label">Funcionário</span><br>
+                <span class="info-value">{{ diagnostic.assignment.employee.nome }}</span>
+            </td>
+            <td width="30%">
+                <span class="info-label">CPF</span><br>
+                <span class="info-value">{{ diagnostic.assignment.employee.cpf|default:"-" }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="info-label">Empresa</span><br>
+                <span class="info-value">{{ company.nome_fantasia }}</span>
+            </td>
+            <td>
+                <span class="info-label">Data de Emissão</span><br>
+                <span class="info-value">{{ generated_at|date:"d/m/Y H:i" }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <span class="info-label">Setor / Função</span><br>
+                <span class="info-value">{{ diagnostic.assignment.employee.setor }} - {{ diagnostic.assignment.employee.cargo }}</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Dimension Summary Table -->
+    <h4 class="text-center" style="margin-top: 15pt; color: #475569;">SÍNTESE DO PERFIL OCUPACIONAL</h4>
+    <table class="summary-table">
+        <tr>
+            <th class="text-center" colspan="2" style="background-color:#f1f5f9; padding:5pt;">Médias por Dimensão</th>
+        </tr>
+        {% for dim in report_data.dimension_summary %}
+        <tr>
+            <td width="80%">{{ dim.dimensao }}</td>
+            <td width="20%" class="text-center font-bold">{{ dim.media|stringformat:".2f" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div style="border-bottom: 1.5pt solid #0f172a; margin-top: 20pt; padding-bottom: 3pt;">
+        <h2 style="margin:0; font-size: 14pt;">Relatório Estruturado</h2>
     </div>
 
-    <!-- General Info -->
-    <div class="info-card">
-        <table class="info-table">
-            <tr>
-                <td style="width: 50%; padding-bottom: 8pt;">
-                    <span class="info-label">Funcionário</span>
-                    <span class="info-value">{{ diagnostic.assignment.employee.nome }}</span>
-                </td>
-                <td style="padding-bottom: 8pt;">
-                    <span class="info-label">CPF</span>
-                    <span class="info-value">{{ diagnostic.assignment.employee.cpf|default:"Não informado" }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding-bottom: 8pt;">
-                    <span class="info-label">Empresa</span>
-                    <span class="info-value">{{ company.nome_fantasia }}</span>
-                </td>
-                <td style="padding-bottom: 8pt;">
-                    <span class="info-label">Data de Emissão</span>
-                    <span class="info-value">{{ generated_at|date:"d/m/Y H:i" }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <span class="info-label">Setor / Função</span>
-                    <span class="info-value">{{ diagnostic.assignment.employee.setor }} — {{ diagnostic.assignment.employee.cargo }}</span>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <!-- Radar Chart Summary -->
-    <div class="chart-box">
-        <h4 style="font-size: 11pt; margin-bottom: 10pt; color: #475569;">SÍNTESE DO PERFIL OCUPACIONAL</h4>
-        {{ chart_radar|safe }}
-    </div>
-
-    <div style="margin-top: 30pt; border-bottom: 2pt solid #0f172a; padding-bottom: 5pt; margin-bottom: 15pt;">
-        <h2 style="margin:0; text-transform: uppercase; letter-spacing: 1px;">Relatório Estruturado</h2>
-    </div>
-
-    <!-- MAIN LOOP: Sections + Tables -->
+    <!-- MAIN LOOP -->
     {% for section in sections %}
-    <div class="avoid-break">
-        <div class="section-header">
-            <span class="section-number">{{ section.meta.number }}</span>
-            <h2 class="section-title">{{ section.meta.label }}</h2>
-        </div>
-
-        <!-- Section Analysis Text -->
-        {% if section.text %}
-        <div class="analysis-text">
-            {{ section.text }}
-        </div>
-        {% endif %}
-
-        <!-- Section Items Table -->
-        <table class="results-table">
-            <thead>
-                <tr>
-                    <th style="width: 12%">ID</th>
-                    <th style="width: 40%">Item / Pergunta</th>
-                    <th style="width: 20%">Referência</th>
-                    <th style="width: 10%; text-align: center;">Valor</th>
-                    <th style="width: 18%">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in section.items %}
-                <tr>
-                    <td style="font-weight: bold; color: #2563eb;">{{ item.id_item }}</td>
-                    <td style="color: #0f172a; font-weight: 500;">{{ item.pergunta }}</td>
-                    <td style="color: #64748b; font-style: italic;">{{ item.constructo }}<br><small>{{ item.autor }} ({{ item.ano }})</small></td>
-                    <td style="text-align: center; font-weight: bold; font-size: 10pt;">{{ item.valor|default:"-" }}</td>
-                    <td>
-                        <span class="badge {% if item.classificacao_key == 'critico' %}bg-danger{% elif item.classificacao_key == 'atencao' %}bg-warning{% else %}bg-success{% endif %}">
-                            {{ item.classificacao }}
-                        </span>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="section-header">
+        <span class="section-title">{{ section.meta.number }}. {{ section.meta.label }}</span>
     </div>
+
+    {% if section.text %}
+    <div class="analysis-text">
+        {{ section.text }}
+    </div>
+    {% endif %}
+
+    <table class="results-table">
+        <thead>
+            <tr>
+                <th width="12%">ID</th>
+                <th width="40%">Item / Pergunta</th>
+                <th width="28%">Referência</th>
+                <th width="10%">Valor</th>
+                <th width="10%">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in section.items %}
+            <tr>
+                <td class="font-bold" style="color: #2563eb;">{{ item.id_item }}</td>
+                <td>{{ item.pergunta }}</td>
+                <td style="color: #64748b;">{{ item.constructo }}<br><small>{{ item.autor }} ({{ item.ano }})</small></td>
+                <td class="text-center font-bold">{{ item.valor|default:"-" }}</td>
+                <td class="text-center">
+                    <span class="badge {% if item.classificacao_key == 'critico' %}bg-danger{% elif item.classificacao_key == 'atencao' %}bg-warning{% else %}bg-success{% endif %}">
+                        {{ item.classificacao }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     {% endfor %}
 
-    <!-- Explicit break before signature if needed -->
-    <div class="page-break"></div>
+    <!-- Page Break for Signature if needed -->
+    <pdf:nextpage />
 
-    <!-- Signature Block -->
-    <div class="signature-block">
+    <div class="text-center" style="margin-top: 50pt;">
         <div class="sig-line">
             {% if diagnostic.is_signed %}
-                {% if diagnostic.signer_profile and diagnostic.signer_profile.signature_base64 %}
-                    <img src="{{ diagnostic.signer_profile.signature_base64 }}" class="sig-img">
-                {% elif diagnostic.signer_profile and diagnostic.signer_profile.signature_image and diagnostic.signer_profile.signature_image.path %}
-                    <img src="{{ diagnostic.signer_profile.signature_image.path }}" class="sig-img">
+                <!-- xhtml2pdf handles images via local paths best -->
+                {% if diagnostic.signer_profile and diagnostic.signer_profile.signature_image %}
+                    <img src="{{ diagnostic.signer_profile.signature_image.path }}" style="max-height: 40pt;">
                 {% endif %}
             {% endif %}
         </div>
@@ -342,39 +284,42 @@
             {% if diagnostic.signer_profile %}
                 {{ diagnostic.signer_profile.nome_completo }}
             {% elif diagnostic.signed_by %}
-                {% if diagnostic.signed_by.get_full_name %}{{ diagnostic.signed_by.get_full_name }}{% else %}{{ diagnostic.signed_by.email }}{% endif %}
+                {{ diagnostic.signed_by.get_full_name|default:diagnostic.signed_by.email }}
             {% else %}
-                <span style="color: #94a3b8; font-style: italic;">Aguardando Assinatura Eletrônica</span>
+                <span style="color: #94a3b8; font-style: italic;">Aguardando Assinatura</span>
             {% endif %}
         </div>
         
         <div class="sig-specialty">
             {% if diagnostic.signer_profile %}
                 {{ diagnostic.signer_profile.get_especialidade_display }} — {{ diagnostic.signer_profile.registro_profissional|default:"N/R" }}
-            {% elif diagnostic.signed_by %}
+            {% else %}
                 Especialista em Saúde Ocupacional
             {% endif %}
         </div>
 
         {% if diagnostic.is_signed %}
-        <div class="auth-label">
-            ✓ Autenticado Digitalmente em {{ diagnostic.signature_timestamp|date:"d/m/Y H:i" }}
-        </div>
+        <p style="color: #166534; font-size: 8pt; font-weight: bold; margin-top: 10pt;">
+            ✓ Autenticado em {{ diagnostic.signature_timestamp|date:"d/m/Y H:i" }}
+        </p>
         {% endif %}
     </div>
 
     <!-- Bibliography -->
-    <div class="bibliography">
-        <h5>5. Bibliografia e Rastreabilidade (Modelo FDAC)</h5>
-        <ul>
+    <div class="bibliography" style="margin-top: 40pt;">
+        <h5 style="margin: 0 0 5pt; color: #475569;">Bibliografia e Rastreabilidade</h5>
+        <ul style="margin: 0; padding-left: 15pt;">
             {% for ref in report_data.references %}
             <li>{{ ref }}</li>
             {% endfor %}
         </ul>
-        <div style="margin-top: 10pt; font-size: 7pt; color: #94a3b8; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 5pt;">
-            Código de Autenticação: {{ diagnostic.validation_code }}<br>
-            Este documento é de caráter técnico e pericial, gerado e verificado pelo sistema SIMDCCONR01.
-        </div>
+        <p class="text-center" style="font-size: 7pt; margin-top: 10pt;">
+            Código: {{ diagnostic.validation_code }} | SIMDCCONR01
+        </p>
+    </div>
+
+    <div id="footer-content" class="text-center" style="font-size: 7pt; color: #94a3b8;">
+        Página <pdf:pagenumber> de <pdf:pagecount> - Parecer Técnico Pericial
     </div>
 
 </body>

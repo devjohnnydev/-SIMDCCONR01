@@ -420,6 +420,63 @@
             background-color: rgba(59, 130, 246, 0.1);
             color: #1d4ed8;
         }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+        
+        .toast-notification {
+            pointer-events: auto;
+            min-width: 320px;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.25rem;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: toast-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
+        }
+
+        @keyframes toast-slide-in {
+            from { transform: translateX(100%) scale(0.9); opacity: 0; }
+            to { transform: translateX(0) scale(1); opacity: 1; }
+        }
+
+        .toast-notification.success { border-left: 5px solid var(--success-color); }
+        .toast-notification.warning { border-left: 5px solid var(--warning-color); }
+        .toast-notification.danger, .toast-notification.error { border-left: 5px solid var(--danger-color); }
+        .toast-notification.info { border-left: 5px solid var(--info-color); }
+
+        .toast-content {
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .text-success { color: var(--success-color) !important; }
+        .text-warning { color: var(--warning-color) !important; }
+        .text-danger { color: var(--danger-color) !important; }
+        .text-info { color: var(--info-color) !important; }
         
         .scale-option {
             display: inline-flex;
@@ -661,12 +718,18 @@
     </nav>
 
     {% if messages %}
-    <div class="container-fluid px-4 mt-3 position-relative" style="z-index: 1040;">
+    <div class="toast-container">
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'warning' %}exclamation-triangle{% elif message.tags == 'danger' or message.tags == 'error' %}x-circle{% else %}info-circle{% endif %} me-2"></i>
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div class="toast-notification {{ message.tags }} alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center">
+                <div class="toast-icon me-3">
+                    <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill text-success{% elif message.tags == 'warning' %}exclamation-triangle-fill text-warning{% elif message.tags == 'danger' or message.tags == 'error' %}x-circle-fill text-danger{% else %}info-circle-fill text-info{% endif %}"></i>
+                </div>
+                <div class="toast-content">
+                    {{ message }}
+                </div>
+            </div>
+            <button type="button" class="btn-close ms-3" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
     </div>
@@ -836,6 +899,17 @@
                     }
                 });
             }
+
+            // Auto-dismissal for toast notifications
+            const toastMessages = document.querySelectorAll('.toast-notification');
+            toastMessages.forEach(function(toast) {
+                setTimeout(function() {
+                    const alertInstance = bootstrap.Alert.getOrCreateInstance(toast);
+                    if (alertInstance) {
+                        alertInstance.close();
+                    }
+                }, 5000); // 5 seconds
+            });
         });
     </script>
     {% block extra_js %}{% endblock %}

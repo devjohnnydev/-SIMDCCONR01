@@ -7,7 +7,7 @@ import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.template.loader import render_to_string
 from django.db.models import Avg, Count, Q
 from django.utils import timezone
@@ -635,8 +635,9 @@ def download_diagnostic_pdf(request, validation_code):
         # Iniciando o Gerador de PDF (Pure Python - FPDF2)
         pdf = RespondentReportPDF(company=diagnostic.assignment.employee.company, generated_at=timezone.now())
         
-        # Inicializar página inicial explicitamente antes de desenhar
+        # Adicionar página e definir título (Metadados)
         pdf.add_page()
+        pdf.set_title(pdf._t(f"Laudo - {diagnostic.assignment.employee.nome}"))
         
         # 1. Informações do Funcionário
         pdf.draw_info_card(diagnostic.assignment.employee, diagnostic)
@@ -654,14 +655,16 @@ def download_diagnostic_pdf(request, validation_code):
         # 5. Bibliografia
         pdf.draw_bibliography(report_data.get('references', []), str(diagnostic.validation_code))
         
-        # Gerar bytes (fpdf2 retorna bytearray, convertemos para bytes)
-        pdf_content = bytes(pdf.output())
+        # Exportar para buffer de memória (IO) para garantir integridade binária
+        import io
+        buffer = io.BytesIO(bytes(pdf.output()))
+        buffer.seek(0)
         
-        response = HttpResponse(pdf_content, content_type='application/pdf')
-        response['X-Content-Type-Options'] = 'nosniff'
         safe_name = slugify(diagnostic.assignment.employee.nome)
         filename = f"laudo_{safe_name}_{timezone.now().strftime('%Y%m%d')}.pdf"
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        response = FileResponse(buffer, as_attachment=True, filename=filename, content_type='application/pdf')
+        response['X-Content-Type-Options'] = 'nosniff'
         return response
 
     except Exception:

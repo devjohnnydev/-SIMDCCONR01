@@ -1,318 +1,345 @@
 """
 ==================================================================================
-UTILS PDF (FPDF2) — Pure Python PDF Generation for SIMDCCONR01
+UTILS PDF (REPORTLAB) — Industrial Standard PDF Generation for SIMDCCONR01
 ==================================================================================
-Este módulo substitui o WeasyPrint/xhtml2pdf para eliminar dependências de C.
-Garante funcionamento 100% estável em ambientes Railway/Replit.
+Este módulo substitui o FPDF2 para garantir total compatibilidade com visualizadores
+de PDF modernos (Chrome/Edge) e eliminar erros de segurança de carregamento.
+==================================================================================
 """
 import os
 import math
 import logging
-from fpdf import FPDF
+import io
 from django.utils import timezone
+from django.conf import settings
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import mm
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image
+from reportlab.pdfgen import canvas
 
 logger = logging.getLogger(__name__)
 
-class RespondentReportPDF(FPDF):
-    def __init__(self, *args, **kwargs):
-        self.company = kwargs.pop('company', None)
-        self.generated_at = kwargs.pop('generated_at', timezone.now())
-        super().__init__(*args, **kwargs)
-        self.set_auto_page_break(auto=True, margin=15)
-        self.alias_nb_pages()
+# Paleta de Cores Premium
+COL_BLUE = colors.HexColor("#2563eb")
+COL_DARK = colors.HexColor("#0f172a")
+COL_SLATE_50 = colors.HexColor("#f8fafc")
+COL_SLATE_100 = colors.HexColor("#f1f5f9")
+COL_SLATE_500 = colors.HexColor("#64748b")
+COL_DANGER = colors.HexColor("#fee2e2")
+COL_WARNING = colors.HexColor("#fef3c7")
+COL_SUCCESS = colors.HexColor("#dcfce7")
+
+class RespondentReportRL:
+    def __init__(self, buffer, company=None, diagnostic=None):
+        self.buffer = buffer
+        self.company = company
+        self.diagnostic = diagnostic
+        self.generated_at = timezone.now()
+        self.styles = getSampleStyleSheet()
+        self._setup_styles()
         
-        # Metadados de segurança
-        self.set_author('Plataforma SIMDCCONR01')
-        self.set_subject('Parecer Técnico Pericial de Diagnóstico')
-        self.set_creator('SIMDCCONR01 - Engine v2')
+    def _setup_styles(self):
+        # Custom Title Style
+        self.styles.add(ParagraphStyle(
+            name='ReportTitle',
+            parent=self.styles['Heading1'],
+            fontSize=18,
+            textColor=COL_DARK,
+            alignment=2, # Right
+            spaceAfter=2
+        ))
         
-    def _t(self, text):
-        """Sanitiza texto para encoding Latin-1 (padrão FPDF core fonts)."""
-        if text is None: return ""
-        # Remove caracteres de controle que podem corromper o PDF
-        clean_text = "".join(ch for ch in str(text) if ch.isprintable() or ch in "\n\r\t")
-        # Substituições comuns de Unicode não suportadas pelo Latin-1
-        replacements = {
-            '\u2014': '-', # em-dash
-            '\u2013': '-', # en-dash
-            '\u2022': '*', # bullet
-            '\u2026': '...', # ellipsis
-            '\xa0': ' ',    # non-breaking space
-        }
-        for k, v in replacements.items():
-            clean_text = clean_text.replace(k, v)
-            
-        return clean_text.encode('latin-1', 'replace').decode('latin-1')
+        self.styles.add(ParagraphStyle(
+            name='ReportSubtitle',
+            fontSize=8,
+            textColor=COL_BLUE,
+            alignment=2,
+            textTransform='uppercase',
+            fontName='Helvetica-Bold'
+        ))
         
-    def header(self):
-        # Logo placeholder ou real
-        self.set_font('helvetica', 'B', 16)
-        self.set_text_color(37, 99, 235) # blue-600
+        self.styles.add(ParagraphStyle(
+            name='SectionHeading',
+            fontSize=11,
+            textColor=colors.whitesmoke,
+            background=COL_DARK,
+            backColor=COL_DARK,
+            borderPadding=5,
+            fontName='Helvetica-Bold',
+            spaceBefore=10,
+            spaceAfter=10
+        ))
         
+        self.styles.add(ParagraphStyle(
+            name='AnalysisBox',
+            parent=self.styles['Normal'],
+            fontSize=10,
+            textColor=COL_DARK,
+            leftIndent=10,
+            rightIndent=10,
+            firstLineIndent=0,
+            alignment=4, # Justify
+            leading=14,
+            borderWidth=0,
+            borderColor=COL_BLUE,
+            borderPadding=(5, 10, 5, 10),
+            backColor=COL_SLATE_100
+        ))
+
+    def _draw_header(self, canvas, doc):
+        canvas.saveState()
+        
+        # Logo
         logo_path = None
         if self.company and self.company.logo:
             try:
                 if os.path.exists(self.company.logo.path):
                     logo_path = self.company.logo.path
             except: pass
-
+            
         if logo_path:
-            try:
-                self.image(logo_path, 10, 10, h=12)
-            except:
-                self.text(10, 18, self._t("SIMDCCONR01"))
+            canvas.drawImage(logo_path, 15*mm, 270*mm, height=12*mm, preserveAspectRatio=True, mask='auto')
         else:
-            self.text(10, 18, self._t("SIMDCCONR01"))
+            canvas.setFont('Helvetica-Bold', 18)
+            canvas.setFillColor(COL_BLUE)
+            canvas.drawString(15*mm, 272*mm, "SIMDCCONR01")
+            
+        # Title Block
+        canvas.setFont('Helvetica-Bold', 14)
+        canvas.setFillColor(COL_DARK)
+        canvas.drawRightString(195*mm, 275*mm, "Parecer Técnico Pericial")
         
-        self.set_font('helvetica', 'B', 12)
-        self.set_text_color(15, 23, 42) # slate-900
-        self.cell(0, 10, self._t('Parecer Técnico Pericial'), align='R', ln=True)
-        self.set_font('helvetica', '', 8)
-        self.set_text_color(100, 116, 139) # slate-500
-        self.cell(0, 5, self._t('DOCUMENTO OFICIAL · RASTREABILIDADE TOTAL'), align='R', ln=True)
+        canvas.setFont('Helvetica-Bold', 7)
+        canvas.setFillColor(COL_BLUE)
+        canvas.drawRightString(195*mm, 271*mm, "DOCUMENTO OFICIAL · RASTREABILIDADE TOTAL")
         
-        # Linha azul superior
-        self.set_draw_color(37, 99, 235)
-        self.set_line_width(0.8)
-        self.line(10, 27, 200, 27)
-        self.ln(10)
+        # Line
+        canvas.setStrokeColor(COL_BLUE)
+        canvas.setLineWidth(0.8)
+        canvas.line(15*mm, 268*mm, 195*mm, 268*mm)
+        
+        # Footer
+        canvas.setFont('Helvetica-Oblique', 8)
+        canvas.setFillColor(COL_SLATE_500)
+        page_num = canvas.getPageNumber()
+        canvas.drawCentredString(105*mm, 10*mm, f"Página {page_num} — Parecer Técnico SIMDCCONR01")
+        
+        canvas.restoreState()
 
-    def footer(self):
-        self.set_y(-15)
-        self.set_font('helvetica', 'I', 8)
-        self.set_text_color(148, 163, 184)
-        # {nb} será substituído pelo alias_nb_pages
-        self.cell(0, 10, self._t(f'Página {self.page_no()} de {{nb}} - Parecer Técnico SIMDCCONR01'), align='C')
-
-    def draw_info_card(self, employee, diagnostic):
-        if self.get_y() > 240: self.add_page()
-        
-        self.set_fill_color(248, 250, 252)
-        self.set_draw_color(226, 232, 240)
-        self.set_line_width(0.2)
-        
-        self.rect(10, self.get_y(), 190, 35, 'DF')
-        y_start = self.get_y() + 5
-        
-        self.set_font('helvetica', 'B', 7)
-        self.set_text_color(100, 116, 139)
-        self.text(15, y_start, self._t("FUNCIONÁRIO"))
-        self.text(140, y_start, self._t("CPF"))
-        
-        self.set_font('helvetica', 'B', 10)
-        self.set_text_color(15, 23, 42)
-        self.text(15, y_start + 5, self._t(employee.nome.upper()))
-        self.text(140, y_start + 5, self._t(employee.cpf or "Não informado"))
-        
-        y_row2 = y_start + 12
-        self.set_font('helvetica', 'B', 7)
-        self.set_text_color(100, 116, 139)
-        self.text(15, y_row2, self._t("EMPRESA"))
-        self.text(140, y_row2, self._t("DATA DE EMISSÃO"))
-        
-        self.set_font('helvetica', 'B', 9)
-        self.set_text_color(15, 23, 42)
-        comp_name = self.company.nome_fantasia if self.company else "S/I"
-        self.text(15, y_row2 + 5, self._t(comp_name.upper()))
-        self.text(140, y_row2 + 5, self.generated_at.strftime('%d/%m/%Y %H:%M'))
-        
-        y_row3 = y_row2 + 12
-        self.set_font('helvetica', 'B', 7)
-        self.set_text_color(100, 116, 139)
-        self.text(15, y_row3, self._t("SETOR / FUNÇÃO"))
-        
-        self.set_font('helvetica', 'B', 9)
-        self.set_text_color(15, 23, 42)
-        self.text(15, y_row3 + 5, self._t(f"{employee.setor} - {employee.cargo}"))
-        
-        self.set_y(y_start + 30)
-        self.ln(10)
-
-    def draw_radar_chart(self, dimension_summary):
-        if self.get_y() > 200: self.add_page()
-        
-        self.set_font('helvetica', 'B', 10)
-        self.set_text_color(71, 85, 105)
-        self.cell(0, 10, self._t("SÍNTESE DO PERFIL OCUPACIONAL"), align='C', ln=True)
-        
-        cx, cy = 105, self.get_y() + 45
-        max_r = 35
-        max_val = 5.0
-        
-        data = {}
-        for dim in dimension_summary:
-            if dim.get('instrumento') == 'IMCO':
-                data[dim['dimensao']] = dim.get('media', 0)
-                
+    def _draw_radar(self, canvas, x, y, dimension_summary):
+        """Desenha o gráfico radar diretamente no canvas."""
+        data = {dim['dimensao']: dim['media'] for dim in dimension_summary if dim.get('instrumento') == 'IMCO'}
         if not data: return
+        
         labels = list(data.keys())
         values = list(data.values())
         n = len(labels)
         if n < 3: return
         
-        self.set_draw_color(224, 224, 224)
-        self.set_line_width(0.1)
+        max_r = 30*mm
+        max_val = 5.0
+        
+        # Grid Circles
+        canvas.setStrokeColor(colors.lightgrey)
+        canvas.setLineWidth(0.1)
         for level in range(1, 6):
             r = max_r * (level / max_val)
-            self.ellipse(cx - r, cy - r, 2*r, 2*r)
+            canvas.circle(x, y, r, stroke=1, fill=0)
             
-        self.set_font('helvetica', '', 6)
+        # Axes & Labels
         angles = [(i * 360 / n) - 90 for i in range(n)]
+        canvas.setFont('Helvetica', 6)
+        canvas.setFillColor(COL_DARK)
+        
         for i, angle_deg in enumerate(angles):
             rad = math.radians(angle_deg)
-            x_end = cx + max_r * math.cos(rad)
-            y_end = cy + max_r * math.sin(rad)
-            self.line(cx, cy, x_end, y_end)
+            # Line
+            canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
+            # Label
+            lx = x + (max_r + 6*mm)*math.cos(rad)
+            ly = y + (max_r + 6*mm)*math.sin(rad)
+            label_txt = labels[i][:15] + ".." if len(labels[i]) > 15 else labels[i]
+            canvas.drawCentredString(lx, ly, label_txt)
             
-            label_dist = max_r + 8
-            label_x = cx + label_dist * math.cos(rad)
-            label_y = cy + label_dist * math.sin(rad)
-            txt = labels[i][:15] + ".." if len(labels[i]) > 15 else labels[i]
-            self.text(label_x - 5, label_y, self._t(txt))
-
+        # Data Polygon
         points = []
         for i, val in enumerate(values):
             r = max_r * (min(val, max_val) / max_val)
             rad = math.radians(angles[i])
-            points.append((cx + r * math.cos(rad), cy + r * math.sin(rad)))
-        
-        self.set_draw_color(37, 99, 235)
-        self.set_line_width(0.5)
-        self.set_fill_color(37, 99, 235)
-        for i in range(len(points)):
-            p1 = points[i]
-            p2 = points[(i + 1) % len(points)]
-            self.line(p1[0], p1[1], p2[0], p2[1])
-            self.circle(p1[0], p1[1], 1, 'F')
+            points.append((x + r*math.cos(rad), y + r*math.sin(rad)))
             
-        self.set_y(cy + 45)
+        p = canvas.beginPath()
+        p.moveTo(points[0][0], points[0][1])
+        for i in range(1, len(points)):
+            p.lineTo(points[i][0], points[i][1])
+        p.close()
+        
+        canvas.setFillColor(COL_BLUE, alpha=0.2)
+        canvas.setStrokeColor(COL_BLUE)
+        canvas.setLineWidth(1)
+        canvas.drawPath(p, stroke=1, fill=1)
+        
+        # Dots
+        canvas.setFillColor(COL_BLUE)
+        for pt in points:
+            canvas.circle(pt[0], pt[1], 1*mm, stroke=0, fill=1)
 
-    def render_section(self, section):
-        if self.get_y() > 220: self.add_page()
+    def build(self, report_data, sections):
+        doc = SimpleDocTemplate(
+            self.buffer,
+            pagesize=A4,
+            rightMargin=15*mm,
+            leftMargin=15*mm,
+            topMargin=35*mm,
+            bottomMargin=20*mm
+        )
         
-        self.set_fill_color(15, 23, 42)
-        self.set_text_color(255, 255, 255)
-        self.set_font('helvetica', 'B', 11)
-        self.cell(0, 10, self._t(f" {section['meta']['number']}. {section['meta']['label']}"), ln=True, fill=True)
+        story = []
         
-        if section.get('text'):
-            self.ln(3)
-            self.set_fill_color(241, 245, 249)
-            self.set_draw_color(37, 99, 235)
-            self.set_line_width(0.5)
-            self.set_font('helvetica', '', 10)
-            self.set_text_color(51, 65, 85)
-            self.multi_cell(0, 6, self._t(section['text']), border='L', fill=True, align='J')
-            self.ln(5)
+        # 1. Info Card (Tabela Estilizada)
+        emp = self.diagnostic.assignment.employee
+        info_data = [
+            [Paragraph(f"<b>FUNCIONÁRIO:</b> {emp.nome.upper()}", self.styles['Normal']),
+             Paragraph(f"<b>CPF:</b> {emp.cpf or '-'}", self.styles['Normal'])],
+            [Paragraph(f"<b>EMPRESA:</b> {self.company.nome_fantasia.upper() if self.company else '-'}", self.styles['Normal']),
+             Paragraph(f"<b>DATA:</b> {self.generated_at.strftime('%d/%m/%Y %H:%M')}", self.styles['Normal'])],
+            [Paragraph(f"<b>SETOR/FUNC:</b> {emp.setor} — {emp.cargo}", self.styles['Normal']), ""]
+        ]
+        info_table = Table(info_data, colWidths=[110*mm, 70*mm])
+        info_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, -1), COL_SLATE_50),
+            ('BORDER', (0, 0), (-1, -1), 0.5, colors.lightgrey),
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.lightgrey),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('SPAN', (0, 2), (1, 2)),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+            ('TOPPADDING', (0, 0), (-1, -1), 4),
+        ]))
+        story.append(info_table)
+        story.append(Spacer(1, 10))
+        
+        # 2. Radar Chart Space
+        # Usamos uma tabela/flowable fantasma para reservar o espaço onde o canvas desenha o radar
+        story.append(Spacer(1, 60*mm))
+        
+        # 3. Relatório Estruturado
+        story.append(Paragraph("Relatório Estruturado", self.styles['Heading2']))
+        
+        for section in sections:
+            # Header
+            story.append(Paragraph(f"{section['meta']['number']}. {section['meta']['label']}", self.styles['SectionHeading']))
+            
+            # Texto Qualitativo
+            if section.get('text'):
+                story.append(Paragraph(section['text'], self.styles['AnalysisBox']))
+                story.append(Spacer(1, 10))
+                
+            # Tabela de Itens
+            item_data = [['ID', 'ITEM / PERGUNTA', 'REF.', 'VAL.', 'STATUS']]
+            col_widths = [15*mm, 85*mm, 35*mm, 15*mm, 30*mm]
+            
+            for item in section.get('items', []):
+                ref = f"{item.get('constructo', '')}\n({item.get('ano', '')})"
+                status = item.get('classificacao', '-')
+                
+                # Cores de Status
+                status_color = colors.transparent
+                if item.get('classificacao_key') == 'critico': status_color = COL_DANGER
+                elif item.get('classificacao_key') == 'atencao': status_color = COL_WARNING
+                elif item.get('classificacao_key') == 'adequado': status_color = COL_SUCCESS
+                
+                item_data.append([
+                    item.get('id_item', '-'),
+                    Paragraph(item.get('pergunta', '-'), self.styles['Normal']),
+                    Paragraph(ref, self.styles['Normal']),
+                    item.get('valor') or "-",
+                    Paragraph(f"<b>{status}</b>", self.styles['Normal'])
+                ])
+                
+            items_table = Table(item_data, colWidths=col_widths, repeatRows=1)
+            items_table_style = [
+                ('BACKGROUND', (0, 0), (-1, 0), COL_SLATE_50),
+                ('TEXTCOLOR', (0, 0), (-1, 0), COL_SLATE_500),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('INNERGRID', (0, 0), (-1, -1), 0.25, COL_SLATE_100),
+                ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
+                ('FONTSIZE', (0, 0), (-1, -1), 8),
+            ]
+            
+            # Colorir celula de status por linha
+            for row_idx in range(1, len(item_data)):
+                # Identificar status_color baseado na lógica acima
+                # (precisamos repetir a lógica de cor aqui para o TableStyle)
+                it = section['items'][row_idx - 1]
+                clr = colors.transparent
+                if it.get('classificacao_key') == 'critico': clr = COL_DANGER
+                elif it.get('classificacao_key') == 'atencao': clr = COL_WARNING
+                elif it.get('classificacao_key') == 'adequado': clr = COL_SUCCESS
+                items_table_style.append(('BACKGROUND', (4, row_idx), (4, row_idx), clr))
+                
+            items_table.setStyle(TableStyle(items_table_style))
+            story.append(items_table)
+            story.append(Spacer(1, 15))
 
-        self.set_font('helvetica', 'B', 7)
-        self.set_fill_color(248, 250, 252)
-        self.set_text_color(71, 85, 105)
+        # 4. Assinatura & Bibliografia
+        story.append(PageBreak())
         
-        col_widths = [15, 85, 45, 15, 30]
-        headers = ['ID', 'ITEM / PERGUNTA', 'REFERÊNCIA', 'VAL.', 'STATUS']
-        
-        for i, h in enumerate(headers):
-            self.cell(col_widths[i], 8, self._t(h), border=1, fill=True, align='C')
-        self.ln()
-        
-        self.set_font('helvetica', '', 8)
-        self.set_text_color(15, 23, 42)
-        
-        for item in section.get('items', []):
-            if self.get_y() > 250: self.add_page()
+        # Assinatura
+        sig_data = [["____________________________________"], ["Aguardando Assinatura Eletrônica"]]
+        if self.diagnostic.is_signed:
+            signer = self.diagnostic.signer_profile
+            sig_img = None
+            if signer and signer.signature_image:
+                try:
+                    if os.path.exists(signer.signature_image.path):
+                        sig_img = Image(signer.signature_image.path, width=40*mm, height=12*mm)
+                except: pass
             
-            start_y = self.get_y()
-            # Multi-cell for item description
-            self.set_x(10 + col_widths[0])
-            self.multi_cell(col_widths[1], 5, self._t(item.get('pergunta', '-')), border=1)
-            end_y_desc = self.get_y()
+            name = signer.nome_completo if signer else "Assinado Digitalmente"
+            spec = f"{signer.get_especialidade_display()} — {signer.registro_profissional}" if signer else ""
+            ts = self.diagnostic.signature_timestamp.strftime('%d/%m/%Y %H:%M')
             
-            # Multi-cell for reference
-            self.set_y(start_y)
-            self.set_x(10 + col_widths[0] + col_widths[1])
-            ref_txt = f"{item.get('constructo', '')} ({item.get('ano', '')})"
-            self.multi_cell(col_widths[2], 5, self._t(ref_txt), border=1)
-            end_y_ref = self.get_y()
-            
-            h = max(end_y_desc, end_y_ref) - start_y
-            
-            # Fill other columns with fixed height
-            self.set_y(start_y)
-            self.set_x(10)
-            self.cell(col_widths[0], h, self._t(item.get('id_item', '-')), border=1, align='C')
-            self.set_x(10 + col_widths[0] + col_widths[1] + col_widths[2])
-            self.cell(col_widths[3], h, self._t(item.get('valor') or "-"), border=1, align='C')
-            self.cell(col_widths[4], h, self._t(item.get('classificacao', '-')), border=1, align='C')
-            
-            self.set_y(start_y + h)
-        
-        self.ln(10)
+            sig_data = [[sig_img if sig_img else ""], [f"<b>{name}</b>"], [spec], [f"Autenticado em {ts}"]]
 
-    def draw_signature(self, diagnostic):
-        if self.get_y() > 200: self.add_page()
-        self.ln(10)
-        cx = 105
-        self.set_draw_color(15, 23, 42)
-        self.line(cx - 40, self.get_y() + 15, cx + 40, self.get_y() + 15)
+        sig_table = Table(sig_data, colWidths=[100*mm])
+        sig_table.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTSIZE', (0, 0), (-1, -1), 9),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
+        ]))
+        story.append(Spacer(1, 30*mm))
+        story.append(sig_table)
         
-        sig_path = None
-        if diagnostic.is_signed and diagnostic.signer_profile:
-            sig = diagnostic.signer_profile
-            try:
-                if sig.signature_image and os.path.exists(sig.signature_image.path):
-                    sig_path = sig.signature_image.path
-            except: pass
+        # Bibliografia
+        story.append(Spacer(1, 20*mm))
+        story.append(Paragraph("5. Bibliografia e Rastreabilidade (Modelo FDAC)", self.styles['Heading3']))
+        ref_p = []
+        for r in report_data.get('references', [])[:5]:
+            ref_p.append(f"• {r}")
+        story.append(Paragraph("<br/>".join(ref_p), self.styles['Normal']))
+        
+        story.append(Spacer(1, 10))
+        story.append(Paragraph(f"<font size='7'>Código de Autenticação: {self.diagnostic.validation_code}</font>", self.styles['Normal']))
 
-        if sig_path:
-            try:
-                self.image(sig_path, cx - 35, self.get_y(), h=12)
-            except: pass
-        
-        self.ln(18)
-        self.set_font('helvetica', 'B', 10)
-        self.set_text_color(15, 23, 42)
-        name = "Aguardando Assinatura"
-        if diagnostic.signer_profile: name = diagnostic.signer_profile.nome_completo
-        elif diagnostic.signed_by: name = diagnostic.signed_by.get_full_name()
-        
-        self.cell(0, 5, self._t(name), align='C', ln=True)
-        self.set_font('helvetica', '', 8)
-        self.set_text_color(100, 116, 139)
-        spec = "Especialista em Saúde Ocupacional"
-        if diagnostic.signer_profile: spec = f"{diagnostic.signer_profile.get_especialidade_display()} - {diagnostic.signer_profile.registro_profissional}"
-        self.cell(0, 5, self._t(spec), align='C', ln=True)
-        
-        if diagnostic.is_signed:
-            self.set_text_color(22, 101, 52)
-            self.ln(2)
-            ts = diagnostic.signature_timestamp or timezone.now()
-            self.set_font('helvetica', 'B', 8)
-            self.cell(0, 5, self._t(f"AUTENTICADO EM {ts.strftime('%d/%m/%Y %H:%M')}"), align='C', ln=True)
+        # Metadata final
+        doc.title = f"Laudo {emp.nome}"
+        doc.author = "SIMDCCONR01"
 
-    def draw_bibliography(self, references, validation_code):
-        if not references: return
-        if self.get_y() > 240: self.add_page()
-        self.ln(5)
-        self.set_fill_color(248, 250, 252)
-        self.set_draw_color(226, 232, 240)
-        self.rect(10, self.get_y(), 190, 35, 'FD')
-        
-        self.set_y(self.get_y() + 2)
-        self.set_x(15)
-        self.set_font('helvetica', 'B', 8)
-        self.set_text_color(71, 85, 105)
-        self.cell(0, 5, self._t("BIBLIOGRAFIA E RASTREABILIDADE (MODELO FDAC)"), ln=True)
-        
-        self.set_font('helvetica', '', 7)
-        self.set_text_color(100, 116, 139)
-        for ref in references[:3]:
-            self.set_x(15)
-            self.cell(0, 4, self._t(f"* {ref[:120]}..."), ln=True)
-            
-        self.ln(2)
-        self.set_font('helvetica', 'B', 7)
-        self.cell(0, 5, self._t(f"Autenticação: {validation_code} | SIMDCCONR01"), align='C', ln=True)
+        # Final Build com o Canvas customizado
+        try:
+            doc.build(story, 
+                onFirstPage=lambda c, d: (self._draw_header(c, d), self._draw_radar(c, 105*mm, 210*mm, report_data.get('dimension_summary', []))),
+                onLaterPages=self._draw_header
+            )
+        except Exception as e:
+            logger.error(f"Erro no build do ReportLab: {e}")
+            raise e
 
 def html_to_pdf(html_string, base_url=None):
-    return None, "Deprecated."
+    """Deprecated."""
+    return None, "Use RespondentReportRL."

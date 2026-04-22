@@ -17,7 +17,7 @@ from django.utils import timezone
 
 from .models import Report, EmployeeDiagnostic
 from .utils_charts import generate_pie_chart_svg, generate_radar_chart_svg
-from .utils_pdf import html_to_pdf, RespondentReportPDF
+from .utils_pdf import html_to_pdf, RespondentReportRL
 from forms_builder.models import FormInstance, FormAnswer, FormQuestion, FormAssignment
 from companies.views import require_company_admin, require_admin_master
 from audit.models import AuditLog
@@ -632,32 +632,19 @@ def download_diagnostic_pdf(request, validation_code):
         })
 
     try:
-        # Iniciando o Gerador de PDF (Pure Python - FPDF2)
-        pdf = RespondentReportPDF(company=diagnostic.assignment.employee.company, generated_at=timezone.now())
-        
-        # Adicionar página e definir título (Metadados)
-        pdf.add_page()
-        pdf.set_title(pdf._t(f"Laudo - {diagnostic.assignment.employee.nome}"))
-        
-        # 1. Informações do Funcionário
-        pdf.draw_info_card(diagnostic.assignment.employee, diagnostic)
-        
-        # 2. Gráfico Radar
-        pdf.draw_radar_chart(report_data.get('dimension_summary', []))
-        
-        # 3. Seções do Relatório (Texto + Tabelas)
-        for section in sections:
-            pdf.render_section(section)
-            
-        # 4. Assinatura
-        pdf.draw_signature(diagnostic)
-        
-        # 5. Bibliografia
-        pdf.draw_bibliography(report_data.get('references', []), str(diagnostic.validation_code))
-        
-        # Exportar para buffer de memória (IO) para garantir integridade binária
         import io
-        buffer = io.BytesIO(bytes(pdf.output()))
+        # Buffer de memória para o ReportLab
+        buffer = io.BytesIO()
+        
+        # Iniciando o Gerador de PDF Industrial (ReportLab)
+        pdf_gen = RespondentReportRL(buffer, 
+                                     company=diagnostic.assignment.employee.company, 
+                                     diagnostic=diagnostic)
+        
+        # Gerar o documento
+        pdf_gen.build(report_data, sections)
+        
+        # Preparar o buffer para leitura
         buffer.seek(0)
         
         safe_name = slugify(diagnostic.assignment.employee.nome)

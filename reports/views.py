@@ -608,6 +608,24 @@ def download_diagnostic_pdf(request, validation_code):
     engine = TextEngine()
     report_data = engine.generate_respondent_report(diagnostic.assignment)
     
+    # Mapeamento de Categorias para Textos da IA (Para o PDF seguir o fluxo Texto + Tabela)
+    # DIAGNOSTICO, DISSONANCIA, RISCOS, RECOMENDACOES
+    category_texts = {
+        'DIAGNOSTICO': diagnostic.diagnostic_data.get('diagnostico_psicossocial', ''),
+        'DISSONANCIA': diagnostic.diagnostic_data.get('dissonancia_clima_cultura', ''),
+        'RISCOS': diagnostic.diagnostic_data.get('riscos_pgr_gro', ''),
+        'RECOMENDACOES': diagnostic.diagnostic_data.get('recomendacoes_acao', ''),
+    }
+
+    # Prepara lista de seções ordenadas para o PDF
+    sections = []
+    for cat_key, cat_data in report_data.get('grouped_items', {}).items():
+        sections.append({
+            'meta': cat_data['meta'],
+            'text': category_texts.get(cat_key, ''),
+            'items': cat_data['items']
+        })
+
     # Gerar Gráfico Radar SVG (Backend)
     radar_data = {}
     for dim in report_data.get('dimension_summary', []):
@@ -619,19 +637,27 @@ def download_diagnostic_pdf(request, validation_code):
     context = {
         'diagnostic': diagnostic,
         'report_data': report_data,
+        'sections': sections,
         'chart_radar': chart_radar,
         'generated_at': timezone.now(),
         'company': diagnostic.assignment.employee.company,
     }
 
-    html_string = render_to_string('reports/pdf/laudo_individual.html', context)
-    pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
-    
-    if error:
-        messages.error(request, error)
-        return redirect('reports:view_diagnostic', validation_code=validation_code)
+    try:
+        html_string = render_to_string('reports/pdf/laudo_individual.html', context)
+        pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
+        
+        if error:
+            logger.error(f"Erro ao gerar PDF: {error}")
+            messages.error(request, error)
+            return redirect('reports:view_diagnostic', validation_code=validation_code)
 
-    response = HttpResponse(pdf, content_type='application/pdf')
-    filename = f"laudo_{diagnostic.assignment.employee.nome.replace(' ', '_')}_{timezone.now().strftime('%Y%m%d')}.pdf"
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    return response
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = f"laudo_{diagnostic.assignment.employee.nome.replace(' ', '_')}_{timezone.now().strftime('%Y%m%d')}.pdf"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    except Exception:
+        import traceback
+        logger.error(f"Erro crítico na geração do PDF: {traceback.format_exc()}")
+        messages.error(request, 'Ocorreu um erro interno ao processar o PDF profissional. Verifique os logs.')
+        return redirect('reports:view_diagnostic', validation_code=validation_code)

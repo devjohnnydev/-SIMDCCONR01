@@ -59,6 +59,12 @@ urlpatterns = [
     path('dashboard/company/department-reports/', views.department_reports_list, name='department_reports_list'),
     path('dashboard/company/department-report/<str:setor>/<int:form_id>/', views.view_department_report, name='view_department_report'),
     path('dashboard/company/department-report/generate/', views.generate_department_report_action, name='generate_department_report'),
+    
+    # Exportação Profissional de Laudo Setorial (PDF)
+    path('dashboard/company/department-report/<str:setor>/<int:form_id>/download-pdf/', 
+         lambda r, setor, form_id: __import__('reports.views').views.download_department_pdf(r, setor, form_id), 
+         name='download_department_report_pdf'),
+
     path('verify/contract/<str:protocol>/', views.verify_contract_protocol, name='verify_protocol'),
 
     # Dashboard Financeiro (Admin Master)

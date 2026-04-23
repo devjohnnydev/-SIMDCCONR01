@@ -507,6 +507,159 @@ class RespondentReportRL:
             raise e
 
 
+class DepartmentReportRL:
+    """Gera laudo profissional para departamentos/setores consolidado."""
+    def __init__(self, buffer, company=None, diagnostic=None):
+        self.buffer = buffer
+        self.company = company
+        self.diagnostic = diagnostic
+        self.generated_at = diagnostic.generated_at if diagnostic else timezone.now()
+        self.styles = getSampleStyleSheet()
+        self._setup_styles()
+        self._logo_image_data = None
+        self._preload_logo()
+
+    def _preload_logo(self):
+        if not self.company or not self.company.logo:
+            return
+        try:
+            with self.company.logo.open('rb') as f:
+                self._logo_image_data = f.read()
+        except:
+            try:
+                if os.path.exists(self.company.logo.path):
+                    with open(self.company.logo.path, 'rb') as f:
+                        self._logo_image_data = f.read()
+            except: pass
+
+    def _setup_styles(self):
+        # Reaproveita estilos do RespondentReportRL ou cria novos se necessário
+        self.styles.add(ParagraphStyle(
+            name='DeptTitle',
+            parent=self.styles['Heading1'],
+            fontSize=16,
+            textColor=COL_DARK,
+            alignment=2,
+            spaceAfter=2
+        ))
+        self.styles.add(ParagraphStyle(
+            name='DeptSubtitle',
+            fontSize=9,
+            textColor=COL_BLUE,
+            alignment=2,
+            textTransform='uppercase',
+            fontName='Helvetica-Bold'
+        ))
+
+    def _draw_header(self, canvas, doc):
+        canvas.saveState()
+        # Branding superior esquerdo
+        logo_drawn = False
+        if self._logo_image_data:
+            try:
+                from reportlab.lib.utils import ImageReader
+                img_reader = ImageReader(io.BytesIO(self._logo_image_data))
+                canvas.drawImage(img_reader, 15*mm, 270*mm, height=12*mm, preserveAspectRatio=True, mask='auto')
+                logo_drawn = True
+            except: pass
+        
+        canvas.setFont('Helvetica-Bold', 12 if logo_drawn else 18)
+        canvas.setFillColor(COL_BLUE)
+        x_pos = 15*mm + (18*mm if logo_drawn else 0)
+        canvas.drawString(x_pos, 272*mm, "SIMDCCONR01")
+
+        # Título superior direito
+        canvas.setFont('Helvetica-Bold', 14)
+        canvas.setFillColor(COL_DARK)
+        canvas.drawRightString(195*mm, 275*mm, "Relatório Socioemocional Setorial")
+        
+        canvas.setFont('Helvetica-Bold', 7)
+        canvas.setFillColor(COL_BLUE)
+        canvas.drawRightString(195*mm, 271*mm, "CONSOLIDADO DE GRUPO · ANALISE ESTATÍSTICA")
+
+        canvas.setStrokeColor(COL_BLUE)
+        canvas.setLineWidth(0.8)
+        canvas.line(15*mm, 268*mm, 195*mm, 268*mm)
+
+        # Footer
+        canvas.setFont('Helvetica-Oblique', 8)
+        canvas.setFillColor(COL_SLATE_500)
+        canvas.drawCentredString(105*mm, 10*mm, f"Página {canvas.getPageNumber()} — Consolidado SIMDCCONR01")
+        canvas.restoreState()
+
+    def build(self, data):
+        doc = SimpleDocTemplate(
+            self.buffer,
+            pagesize=A4,
+            rightMargin=15*mm,
+            leftMargin=15*mm,
+            topMargin=35*mm,
+            bottomMargin=20*mm
+        )
+        story = []
+        
+        # 1. Título
+        story.append(Spacer(1, 5*mm))
+        story.append(Paragraph(f"DIAGNÓSTICO: {self.diagnostic.setor.upper()}", self.styles['DeptTitle']))
+        story.append(Paragraph(f"EMPRESA: {self.company.nome_fantasia.upper()}", self.styles['DeptSubtitle']))
+        story.append(Spacer(1, 8*mm))
+
+        # 2. Métricas de Destaque
+        idx = data.get('indice_bem_estar', 0)
+        metrics_data = [
+            [Paragraph(f"<font color='#64748b' size=8>DEPARTAMENTO</font><br/><b>{self.diagnostic.setor}</b>", self.styles['Normal']),
+             Paragraph(f"<font color='#64748b' size=8>DATA GERAÇÃO</font><br/><b>{self.generated_at.strftime('%d/%m/%Y')}</b>", self.styles['Normal']),
+             Paragraph(f"<font color='white' size=8>BEM-ESTAR DO GRUPO</font><br/><font color='white' size=14><b>{idx}%</b></font>", self.styles['Normal'])]
+        ]
+        metrics_table = Table(metrics_data, colWidths=[60*mm, 60*mm, 60*mm])
+        metrics_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (1, 0), COL_SLATE_50),
+            ('BACKGROUND', (2, 0), (2, 0), COL_BLUE),
+            ('INNERGRID', (0, 0), (-1, -1), 0.5, colors.white),
+            ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ]))
+        story.append(metrics_table)
+        story.append(Spacer(1, 10*mm))
+
+        # 3. Sumário do Clima Geral
+        story.append(Paragraph("1. Sumário do Clima Geral", self.styles['Heading2']))
+        story.append(Paragraph(saxutils.escape(data.get('clima_geral', '')), self.styles['Normal']))
+        story.append(Spacer(1, 8*mm))
+
+        # 4. Pontos Fortes e Alertas
+        story.append(Paragraph("2. Análise Detalhada", self.styles['Heading2']))
+        
+        # Pontos Fortes
+        story.append(Paragraph("<b>Pontos Fortes Identificados:</b>", self.styles['Normal']))
+        for p in data.get('pontos_fortes', []):
+            story.append(Paragraph(f"<font color='green'>\u2713</font> {saxutils.escape(p)}", self.styles['Normal']))
+        story.append(Spacer(1, 4*mm))
+
+        # Áreas de Alerta
+        story.append(Paragraph("<b>Áreas de Alerta / Riscos:</b>", self.styles['Normal']))
+        for a in data.get('areas_alerta', []):
+            story.append(Paragraph(f"<font color='red'>!</font> {saxutils.escape(a)}", self.styles['Normal']))
+        story.append(Spacer(1, 8*mm))
+
+        # 5. Sugestões de Gestão
+        story.append(Paragraph("3. Recomendações Estratégicas para o Gestor", self.styles['Heading2']))
+        for i, s in enumerate(data.get('sugestoes_gestao', []), 1):
+            story.append(Paragraph(f"<b>{i}.</b> {saxutils.escape(s)}", self.styles['Normal']))
+            story.append(Spacer(1, 3*mm))
+
+        # Autenticação
+        story.append(Spacer(1, 15*mm))
+        story.append(Paragraph("________________________________________________", self.styles['Normal']))
+        story.append(Paragraph("<font size=8 color='#64748b'>Documento gerado eletronicamente via Motor de Análise SIMDCCONR01</font>", self.styles['Normal']))
+        story.append(Paragraph(f"<font size=7 color='#94a3b8'>ID: {self.diagnostic.id} | Timestamp: {self.generated_at.isoformat()}</font>", self.styles['Normal']))
+
+        doc.build(story, onFirstPage=self._draw_header, onLaterPages=self._draw_header)
+
+
 def html_to_pdf(html_string, base_url=None):
     """Deprecated."""
-    return None, "Use RespondentReportRL."
+    return None, "Use RespondentReportRL ou DepartmentReportRL."

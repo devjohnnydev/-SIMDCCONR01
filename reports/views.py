@@ -15,6 +15,7 @@ from django.utils import timezone
 # WeasyPrint importado de forma lazily dentro de cada view para evitar
 # falha na inicializacao do Django quando bibliotecas do sistema nao estao presentes.
 
+from django.utils.text import slugify
 from .models import Report, EmployeeDiagnostic
 from .utils_charts import generate_pie_chart_svg, generate_radar_chart_svg
 from .utils_pdf import html_to_pdf, RespondentReportRL
@@ -666,3 +667,42 @@ def download_diagnostic_pdf(request, validation_code):
         logger.error(f"Erro crítico na geração do PDF (FPDF2): {traceback.format_exc()}")
         messages.error(request, 'Ocorreu um erro interno ao processar o PDF profissional. Verifique os logs.')
         return redirect('reports:view_diagnostic', validation_code=validation_code)
+@login_required
+def download_department_pdf(request, setor, form_id):
+    """Gera e retorna o PDF profissional do laudo de departamento."""
+    from .models import DepartmentDiagnostic
+    from .utils_pdf import DepartmentReportRL
+    
+    # 1. Recupera o laudo
+    report = get_object_or_404(
+        DepartmentDiagnostic, 
+        company=request.user.company, 
+        setor=setor, 
+        form_instance_id=form_id
+    )
+    
+    # 2. Verifica permissão
+    if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
+        return HttpResponse("Acesso negado", status=403)
+        
+    try:
+        import io
+        buffer = io.BytesIO()
+        
+        # 3. Gera o PDF usando o novo engine
+        pdf_gen = DepartmentReportRL(buffer, company=report.company, diagnostic=report)
+        pdf_gen.build(report.diagnostic_data)
+        
+        pdf_bytes = buffer.getvalue()
+        buffer.close()
+        
+        safe_setor = slugify(setor)
+        filename = f"laudo_setorial_{safe_setor}_{timezone.now().strftime('%Y%m%d')}.pdf"
+        
+        response = HttpResponse(pdf_bytes, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+        
+    except Exception as e:
+        logger.error(f"Erro ao gerar PDF setorial: {str(e)}")
+        return HttpResponse(f"Erro interno ao gerar PDF: {str(e)}", status=500)

@@ -27,9 +27,17 @@
             <div class="glass-card shadow-lg mb-5 overflow-hidden border-0">
                 <div class="card-header bg-dark text-white p-4 border-0">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="badge bg-primary rounded-pill px-3 py-2 mb-2 shadow-sm">CONSOLIDADO SETORIAL</span>
-                            <h2 class="fw-bold mb-0 text-white" style="letter-spacing: -0.5px;">Laudo Socioemocional: {{ report.setor }}</h2>
+                        <div class="d-flex align-items-center">
+                            {% if request.user.company.logo %}
+                            <img src="{{ request.user.company.logo.url }}" alt="Logo" class="me-3" style="height: 45px; width: auto; object-fit: contain;">
+                            {% endif %}
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="badge bg-primary rounded-pill px-2 py-1" style="font-size: 0.65rem;">CONSOLIDADO SETORIAL</span>
+                                    <span class="text-primary fw-bold" style="font-size: 0.9rem;">SIMDCCONR01</span>
+                                </div>
+                                <h2 class="fw-bold mb-0 text-white" style="letter-spacing: -0.5px; font-size: 1.5rem;">Laudo Socioemocional: {{ report.setor }}</h2>
+                            </div>
                         </div>
                         <div class="d-print-none text-end">
                             <i class="bi bi-shield-check fs-1 text-primary opacity-75"></i>
@@ -41,26 +49,26 @@
                 <div class="card-body p-4 p-md-5">
                     <div class="row g-4 mb-5 text-center">
                         <div class="col-md-3">
-                            <div class="p-3 bg-white rounded-4 border shadow-sm h-100">
-                                <div class="text-muted small fw-bold text-uppercase mb-1">Empresa</div>
+                            <div class="p-3 bg-white rounded-4 border shadow-sm h-100 d-flex flex-column justify-content-center">
+                                <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Empresa</div>
                                 <div class="fw-bold text-dark">{{ report.company.nome_fantasia }}</div>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="p-3 bg-white rounded-4 border shadow-sm h-100">
-                                <div class="text-muted small fw-bold text-uppercase mb-1">Status</div>
-                                <div class="fw-bold text-success"><i class="bi bi-patch-check-fill me-1"></i>Certificado</div>
+                            <div class="p-3 bg-white rounded-4 border shadow-sm h-100 d-flex flex-column justify-content-center">
+                                <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Status de Autenticidade</div>
+                                <div class="fw-bold text-success"><i class="bi bi-patch-check-fill me-1"></i>Verificado IA</div>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="p-3 bg-white rounded-4 border shadow-sm h-100">
-                                <div class="text-muted small fw-bold text-uppercase mb-1">Gerado em</div>
+                            <div class="p-3 bg-white rounded-4 border shadow-sm h-100 d-flex flex-column justify-content-center">
+                                <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Data de Emissão</div>
                                 <div class="fw-bold text-dark">{{ report.generated_at|date:"d/m/Y" }}</div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="p-4 bg-primary text-white rounded-4 shadow h-100 d-flex flex-column justify-content-center">
-                                <div class="small fw-bold text-uppercase mb-1 opacity-75">Bem-estar do Grupo</div>
+                                <div class="small fw-bold text-uppercase mb-1 opacity-75" style="font-size: 0.7rem;">Bem-estar do Grupo</div>
                                 <div class="fs-2 fw-bold">{{ data.indice_bem_estar }}%</div>
                             </div>
                         </div>
@@ -83,7 +91,7 @@
                         <div class="col-md-6">
                             <div class="h-100 p-4 bg-white rounded-4 border border-success border-opacity-25 shadow-sm">
                                 <h5 class="fw-bold text-success mb-4 text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">
-                                    <i class="bi bi-star-fill me-2"></i>Pontos Fortes
+                                    <i class="bi bi-star-fill me-2"></i>Pontos Fortes Identificados
                                 </h5>
                                 <ul class="list-unstyled mb-0">
                                     {% for ponto in data.pontos_fortes %}
@@ -98,7 +106,7 @@
                         <div class="col-md-6">
                             <div class="h-100 p-4 bg-white rounded-4 border border-danger border-opacity-25 shadow-sm">
                                 <h5 class="fw-bold text-danger mb-4 text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">
-                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Áreas de Alerta
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Áreas de Alerta e Riscos
                                 </h5>
                                 <ul class="list-unstyled mb-0">
                                     {% for alerta in data.areas_alerta %}
@@ -116,7 +124,7 @@
                     <div class="mb-5">
                         <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
                             <h4 class="fw-bold text-dark mb-0">
-                                <i class="bi bi-lightning-charge-fill text-warning me-2"></i>Recomendações Estratégicas
+                                <i class="bi bi-lightning-charge-fill text-warning me-2"></i>Recomendações Estratégicas para o Setor
                             </h4>
                         </div>
                         <div class="row g-4">
@@ -139,7 +147,7 @@
                     <div class="mt-5 pt-5 border-top text-center">
                         <div class="mb-4">
                             <div class="badge bg-light text-muted p-2 rounded-pill shadow-sm">
-                                <i class="bi bi-cpu me-1"></i>Motor de Texto Determinístico SIMDCCONR01
+                                <i class="bi bi-cpu me-1"></i>Análise Consolidada SIMDCCONR01
                             </div>
                         </div>
                         <p class="text-muted small mx-auto" style="max-width: 600px;">
@@ -148,9 +156,10 @@
                         </p>
                         
                         <div class="mt-5 d-flex flex-wrap justify-content-center gap-3 d-print-none">
-                            <button onclick="window.print();" class="btn btn-dark rounded-pill px-5 py-2 fw-medium shadow">
-                                <i class="bi bi-printer me-2"></i>Imprimir / Exportar PDF
-                            </button>
+                            <a href="{% url 'accounts:download_department_report_pdf' report.setor report.form_instance.id %}" 
+                               class="btn btn-dark rounded-pill px-5 py-2 fw-medium shadow">
+                                <i class="bi bi-file-earmark-pdf-fill me-2"></i>Baixar PDF Profissional
+                            </a>
                             <a href="{% url 'accounts:department_reports_list' %}" class="btn btn-outline-dark rounded-pill px-4 py-2">
                                 <i class="bi bi-arrow-left me-2"></i>Voltar à Lista
                             </a>

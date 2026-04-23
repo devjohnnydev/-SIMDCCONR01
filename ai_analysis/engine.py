@@ -126,7 +126,7 @@ def generate_department_diagnostic(company, sector_name, form_instance, user=Non
     2. pontos_fortes: O que está funcionando bem no setor.
     3. areas_alerta: Riscos de clima ou esgotamento identificados.
     4. sugestoes_gestao: Acões recomendadas para o gestor do setor.
-    5. indice_bem_estar: Valor de 0 a 100.
+    5. indice_bem_estar: Valor de 0 a 100, onde o valor deve refletir matematicamente a média de positividade das respostas analisadas.
     """
 
     try:

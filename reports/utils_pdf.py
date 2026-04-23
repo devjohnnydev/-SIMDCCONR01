@@ -33,6 +33,20 @@ COL_DANGER = colors.HexColor("#fee2e2")
 COL_WARNING = colors.HexColor("#fef3c7")
 COL_SUCCESS = colors.HexColor("#dcfce7")
 
+from reportlab.platypus import Flowable
+
+class RadarChartFlowable(Flowable):
+    def __init__(self, respondent_report_rl, dimension_summary, width=120*mm, height=80*mm):
+        Flowable.__init__(self)
+        self.width = width
+        self.height = height
+        self.dimension_summary = dimension_summary
+        self.rr = respondent_report_rl
+
+    def draw(self):
+        # Center horizontally within the width provided, and vertically
+        self.rr._draw_radar(self.canv, self.width / 2.0, self.height / 2.0, self.dimension_summary)
+
 class RespondentReportRL:
     def __init__(self, buffer, company=None, diagnostic=None):
         self.buffer = buffer
@@ -189,21 +203,6 @@ class RespondentReportRL:
         canvas.setFillColor(COL_BLUE)
         for pt in points:
             canvas.circle(pt[0], pt[1], 1.2*mm, stroke=0, fill=1)
-
-from reportlab.platypus import Flowable
-
-class RadarChartFlowable(Flowable):
-    def __init__(self, respondent_report_rl, dimension_summary, width=120*mm, height=80*mm):
-        Flowable.__init__(self)
-        self.width = width
-        self.height = height
-        self.dimension_summary = dimension_summary
-        self.rr = respondent_report_rl
-
-    def draw(self):
-        # Center horizontally within the width provided, and vertically
-        self.rr._draw_radar(self.canv, self.width / 2.0, self.height / 2.0, self.dimension_summary)
-
 
     def build(self, report_data, sections):
         doc = SimpleDocTemplate(

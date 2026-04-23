@@ -18,4 +18,7 @@ urlpatterns = [
     path('announcements/', views.announcement_list, name='announcements'),
     path('announcements/create/', views.announcement_create, name='announcement_create'),
     path('announcements/<int:pk>/toggle/', views.announcement_toggle, name='announcement_toggle'),
+    
+    # Logo do Banco de Dados
+    path('logo/<int:pk>/', views.serve_company_logo, name='serve_logo'),
 ]

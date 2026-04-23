@@ -18,12 +18,14 @@ def company_context(request):
     if hasattr(request, 'current_company') and request.current_company:
         company = request.current_company
         context['current_company'] = company
-        try:
-            if company.logo:
+        from django.urls import reverse
+        if company.logo_db:
+            context['company_logo'] = reverse('companies:serve_logo', args=[company.id])
+        elif company.logo:
+            try:
                 context['company_logo'] = company.logo.url
-        except ValueError:
-            # Em alguns casos o arquivo pode não existir no disco gerando erro no .url
-            context['company_logo'] = None
+            except:
+                context['company_logo'] = None
         context['company_primary_color'] = company.cor_primaria
         context['company_secondary_color'] = company.cor_secundaria
     

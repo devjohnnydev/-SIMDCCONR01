@@ -4,7 +4,8 @@ Views para gestao de empresas.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.cache import cache_page
 
 from .models import Company, Announcement
 from .forms import CompanySettingsForm, AnnouncementForm, CompanyAdminForm
@@ -246,3 +247,17 @@ def announcement_toggle(request, pk):
     status = 'ativado' if announcement.is_active else 'desativado'
     messages.success(request, f'Comunicado {status}.')
     return redirect('companies:announcements')
+
+
+def serve_company_logo(request, pk):
+    """Serve o logo da empresa diretamente do banco de dados."""
+    company = get_object_or_404(Company, pk=pk)
+    if not company.logo_db:
+        # Tenta fallback para o arquivo em disco se ainda existir
+        if company.logo:
+            try:
+                return HttpResponse(company.logo.read(), content_type="image/png")
+            except: pass
+        return HttpResponse(status=404)
+    
+    return HttpResponse(company.logo_db, content_type=company.logo_mime_type or "image/png")

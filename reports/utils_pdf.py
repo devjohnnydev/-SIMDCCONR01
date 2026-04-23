@@ -244,14 +244,13 @@ class RespondentReportRL:
             ('RIGHTPADDING', (0, 0), (-1, -1), 10),
         ]))
         story.append(info_table)
-        story.append(Spacer(1, 15*mm))
+        story.append(Spacer(1, 8*mm))
         
         # 3. Radar Chart (now as a flowable, no more random spacing)
         story.append(RadarChartFlowable(self, report_data.get('dimension_summary', []), width=180*mm, height=75*mm))
-        story.append(Spacer(1, 10*mm))
+        story.append(Spacer(1, 6*mm))
         
-        # 4. Relatório Estruturado
-        story.append(PageBreak())
+        # 4. Relatório Estruturado (sem PageBreak — flui continuamente)
         story.append(Paragraph("Relatório Estruturado", self.styles['Heading2']))
         
         for section in sections:
@@ -320,11 +319,56 @@ class RespondentReportRL:
             story.append(items_table)
             story.append(Spacer(1, 15))
 
-        # 4. Assinatura & Bibliografia
-        story.append(PageBreak())
+        # ══════════════════════════════════════════════════════════════
+        # 5. ASSINATURA PROFISSIONAL (Sem PageBreak — flui naturalmente)
+        # ══════════════════════════════════════════════════════════════
+        story.append(Spacer(1, 15*mm))
         
-        # Assinatura (Lógica Refatorada)
-        sig_data = [["____________________________________"], ["Aguardando Assinatura Eletrônica"]]
+        # Estilos para a assinatura
+        sig_name_style = ParagraphStyle(
+            name='SigName',
+            parent=self.styles['Normal'],
+            fontSize=12,
+            fontName='Helvetica-Bold',
+            textColor=COL_DARK,
+            alignment=1,  # Center
+            spaceAfter=2,
+        )
+        sig_spec_style = ParagraphStyle(
+            name='SigSpec',
+            parent=self.styles['Normal'],
+            fontSize=9,
+            fontName='Helvetica',
+            textColor=COL_BLUE,
+            alignment=1,
+            spaceAfter=2,
+        )
+        sig_date_style = ParagraphStyle(
+            name='SigDate',
+            parent=self.styles['Normal'],
+            fontSize=8,
+            fontName='Helvetica-Oblique',
+            textColor=COL_SLATE_500,
+            alignment=1,
+        )
+        sig_badge_style = ParagraphStyle(
+            name='SigBadge',
+            parent=self.styles['Normal'],
+            fontSize=7,
+            fontName='Helvetica-Bold',
+            textColor=colors.HexColor('#16a34a'),
+            alignment=1,
+            spaceBefore=4,
+        )
+        sig_pending_style = ParagraphStyle(
+            name='SigPending',
+            parent=self.styles['Normal'],
+            fontSize=10,
+            fontName='Helvetica-Oblique',
+            textColor=COL_SLATE_500,
+            alignment=1,
+        )
+
         if self.diagnostic.is_signed:
             signer = getattr(self.diagnostic, 'signer_profile', None)
             user_signer = getattr(self.diagnostic, 'signed_by', None)
@@ -358,42 +402,70 @@ class RespondentReportRL:
                 except Exception as e:
                     logger.error(f"Erro image signature (user): {e}")
 
-            # Define Name and Spec
+            # Define Name and Spec (escaped for XML safety)
             if signer:
-                name = signer.nome_completo
-                spec = f"{signer.get_especialidade_display()} — {signer.registro_profissional}"
+                name = saxutils.escape(signer.nome_completo)
+                spec = saxutils.escape(f"{signer.get_especialidade_display()} — {signer.registro_profissional}")
             elif user_signer:
-                name = user_signer.get_full_name()
-                crp = user_signer.professional_crp
-                spec = f"Profissional Especializado{' — ' + crp if crp else ''}"
+                name = saxutils.escape(user_signer.get_full_name() or user_signer.email)
+                crp = getattr(user_signer, 'professional_crp', '')
+                spec = saxutils.escape(f"Profissional Especializado{' — ' + crp if crp else ''}")
             else:
                 name = "Assinado Digitalmente"
                 spec = ""
                 
             ts = self.diagnostic.signature_timestamp.strftime('%d/%m/%Y %H:%M') if self.diagnostic.signature_timestamp else ""
             
-            sig_data = [[sig_img if sig_img else ""], [f"<b>{name}</b>"], [spec], [f"Autenticado em {ts}"]]
+            # Montar tabela de assinatura com Paragraphs (sem HTML cru)
+            sig_rows = []
+            if sig_img:
+                sig_rows.append([sig_img])
+            sig_rows.append([Paragraph("____________________________________", sig_pending_style)])
+            sig_rows.append([Paragraph(name, sig_name_style)])
+            if spec:
+                sig_rows.append([Paragraph(spec, sig_spec_style)])
+            sig_rows.append([Paragraph(f"Autenticado em {ts}", sig_date_style)])
+            sig_rows.append([Paragraph("\u2713 DOCUMENTO ASSINADO ELETRONICAMENTE", sig_badge_style)])
 
-        sig_table = Table(sig_data, colWidths=[100*mm])
+        else:
+            # Pendente
+            sig_rows = [
+                [Paragraph("____________________________________", sig_pending_style)],
+                [Paragraph("Aguardando Assinatura Eletr\u00f4nica", sig_pending_style)],
+            ]
+
+        sig_table = Table(sig_rows, colWidths=[120*mm])
         sig_table.setStyle(TableStyle([
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTSIZE', (0, 0), (-1, -1), 9),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TOPPADDING', (0, 0), (-1, -1), 3),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+            ('LEFTPADDING', (0, 0), (-1, -1), 15),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 15),
+            ('BOX', (0, 0), (-1, -1), 0.8, COL_BLUE),
+            ('BACKGROUND', (0, 0), (-1, -1), COL_SLATE_50),
         ]))
-        story.append(Spacer(1, 30*mm))
-        story.append(sig_table)
         
-        # Bibliografia
-        story.append(Spacer(1, 20*mm))
+        # Centralizar a tabela de assinatura usando uma tabela wrapper
+        wrapper = Table([[sig_table]], colWidths=[180*mm])
+        wrapper.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ]))
+        story.append(wrapper)
+        
+        # ══════════════════════════════════════════════════════════════
+        # 6. BIBLIOGRAFIA E RASTREABILIDADE
+        # ══════════════════════════════════════════════════════════════
+        story.append(Spacer(1, 12*mm))
         story.append(Paragraph("5. Bibliografia e Rastreabilidade (Modelo FDAC)", self.styles['Heading3']))
         ref_p = []
         for r in report_data.get('references', [])[:5]:
             safe_r = saxutils.escape(r)
-            ref_p.append(f"• {safe_r}")
+            ref_p.append(f"\u2022 {safe_r}")
         story.append(Paragraph("<br/>".join(ref_p), self.styles['Normal']))
         
         story.append(Spacer(1, 15))
-        story.append(Paragraph(f"<font size='7' color='#64748b'>Código de Autenticação: {self.diagnostic.validation_code}</font>", self.styles['Normal']))
+        story.append(Paragraph(f"<font size='7' color='#64748b'>C\u00f3digo de Autentica\u00e7\u00e3o: {self.diagnostic.validation_code}</font>", self.styles['Normal']))
 
         # Metadata final
         doc.title = f"Laudo {emp.nome}"

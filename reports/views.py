@@ -583,9 +583,14 @@ def view_diagnostic(request, validation_code):
     engine = TextEngine()
     report_data = engine.generate_respondent_report(diagnostic.assignment)
     
+    # Buscar todos os perfis de signatários ativos para o dropdown de assinatura
+    from .models import SignerProfile
+    signatarios = SignerProfile.objects.filter(is_active=True)
+    
     return render(request, 'reports/diagnostic_view.html', {
         'diagnostic': diagnostic,
-        'report_data': report_data
+        'report_data': report_data,
+        'signatarios': signatarios,
     })
 
 @login_required

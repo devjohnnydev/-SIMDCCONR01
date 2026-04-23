@@ -234,8 +234,28 @@
                         <form action="{% url 'accounts:sign_laudo_internal' diagnostic.id %}" method="post"
                             class="mt-3 d-print-none">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-dark btn-sm rounded-pill px-4">
-                                <i class="bi bi-pen me-2"></i>Assinar pelo Sistema
+                            
+                            <!-- Seleção de Signatário -->
+                            <div class="mx-auto mb-3" style="max-width: 400px;">
+                                <label for="signer_select" class="form-label text-muted small fw-bold text-uppercase d-block mb-2" style="letter-spacing: 0.5px;">
+                                    <i class="bi bi-person-badge me-1"></i>Selecionar Signatário
+                                </label>
+                                <select name="signer_profile_id" id="signer_select" class="form-select form-select-sm rounded-pill shadow-sm border-primary border-opacity-50">
+                                    <option value="">— Usar perfil do usuário logado —</option>
+                                    {% for signer in signatarios %}
+                                    <option value="{{ signer.id }}">
+                                        {{ signer.nome_completo }} — {{ signer.get_especialidade_display }}
+                                        {% if signer.registro_profissional %}({{ signer.registro_profissional }}){% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text text-muted mt-1" style="font-size: 0.7rem;">
+                                    Escolha o profissional responsável pela assinatura deste documento.
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-dark btn-sm rounded-pill px-4 shadow-sm">
+                                <i class="bi bi-pen me-2"></i>Assinar Eletronicamente
                             </button>
                         </form>
                     </div>

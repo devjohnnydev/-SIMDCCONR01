@@ -5,6 +5,8 @@ UTILS PDF (REPORTLAB) — Industrial Standard PDF Generation for SIMDCCONR01
 Este módulo substitui o FPDF2 para garantir total compatibilidade com visualizadores
 de PDF modernos (Chrome/Edge) e eliminar erros de segurança de carregamento.
 ==================================================================================
+v2.1 — Fix: spacing, logo, signature rendering
+==================================================================================
 """
 import os
 import math
@@ -20,6 +22,7 @@ from reportlab.lib.units import mm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image
 from reportlab.pdfgen import canvas
+from reportlab.platypus import Flowable
 
 logger = logging.getLogger(__name__)
 
@@ -32,20 +35,30 @@ COL_SLATE_500 = colors.HexColor("#64748b")
 COL_DANGER = colors.HexColor("#fee2e2")
 COL_WARNING = colors.HexColor("#fef3c7")
 COL_SUCCESS = colors.HexColor("#dcfce7")
+COL_GREEN = colors.HexColor("#16a34a")
 
-from reportlab.platypus import Flowable
 
 class RadarChartFlowable(Flowable):
+    """Flowable que desenha o radar chart. Retorna height=0 se nao houver dados."""
     def __init__(self, respondent_report_rl, dimension_summary, width=120*mm, height=80*mm):
         Flowable.__init__(self)
-        self.width = width
-        self.height = height
         self.dimension_summary = dimension_summary
         self.rr = respondent_report_rl
+        # Verifica se existem dados IMCO com >= 3 dimensoes
+        imco_data = {d['dimensao']: d['media'] for d in dimension_summary if d.get('instrumento') == 'IMCO'}
+        if len(imco_data) >= 3:
+            self.width = width
+            self.height = height
+            self._has_data = True
+        else:
+            self.width = 0
+            self.height = 0
+            self._has_data = False
 
     def draw(self):
-        # Center horizontally within the width provided, and vertically
-        self.rr._draw_radar(self.canv, self.width / 2.0, self.height / 2.0, self.dimension_summary)
+        if self._has_data:
+            self.rr._draw_radar(self.canv, self.width / 2.0, self.height / 2.0, self.dimension_summary)
+
 
 class RespondentReportRL:
     def __init__(self, buffer, company=None, diagnostic=None):
@@ -55,7 +68,30 @@ class RespondentReportRL:
         self.generated_at = timezone.now()
         self.styles = getSampleStyleSheet()
         self._setup_styles()
-        
+        self._logo_image_data = None
+        self._preload_logo()
+
+    def _preload_logo(self):
+        """Pre-carrega o logo da empresa para uso no header (suporta storage local e cloud)."""
+        if not self.company or not self.company.logo:
+            return
+        try:
+            # Tenta abrir via Django storage API (funciona com S3, local, etc)
+            with self.company.logo.open('rb') as f:
+                self._logo_image_data = f.read()
+            logger.info("Logo carregado via storage API")
+        except Exception as e:
+            logger.warning(f"Falha ao carregar logo via storage: {e}")
+            # Fallback: tenta path local
+            try:
+                path = self.company.logo.path
+                if os.path.exists(path):
+                    with open(path, 'rb') as f:
+                        self._logo_image_data = f.read()
+                    logger.info("Logo carregado via path local")
+            except Exception as e2:
+                logger.warning(f"Falha ao carregar logo via path: {e2}")
+
     def _setup_styles(self):
         # Custom Title Style
         self.styles.add(ParagraphStyle(
@@ -66,7 +102,7 @@ class RespondentReportRL:
             alignment=2, # Right
             spaceAfter=2
         ))
-        
+
         self.styles.add(ParagraphStyle(
             name='ReportSubtitle',
             fontSize=8,
@@ -75,7 +111,7 @@ class RespondentReportRL:
             textTransform='uppercase',
             fontName='Helvetica-Bold'
         ))
-        
+
         self.styles.add(ParagraphStyle(
             name='SectionHeading',
             fontSize=11,
@@ -87,7 +123,7 @@ class RespondentReportRL:
             spaceBefore=10,
             spaceAfter=10
         ))
-        
+
         self.styles.add(ParagraphStyle(
             name='AnalysisBox',
             parent=self.styles['Normal'],
@@ -105,70 +141,80 @@ class RespondentReportRL:
         ))
 
     def _draw_header(self, canvas, doc):
+        """Desenha header e footer em TODAS as paginas."""
         canvas.saveState()
-        
-        # Logo
-        logo_path = None
-        if self.company and self.company.logo:
+
+        # ── LOGO (superior esquerdo) ──
+        logo_drawn = False
+        if self._logo_image_data:
             try:
-                if os.path.exists(self.company.logo.path):
-                    logo_path = self.company.logo.path
-            except: pass
-            
-        if logo_path:
-            canvas.drawImage(logo_path, 15*mm, 270*mm, height=12*mm, preserveAspectRatio=True, mask='auto')
+                from reportlab.lib.utils import ImageReader
+                img_reader = ImageReader(io.BytesIO(self._logo_image_data))
+                canvas.drawImage(img_reader, 15*mm, 270*mm, height=12*mm,
+                                 preserveAspectRatio=True, mask='auto')
+                logo_drawn = True
+            except Exception as e:
+                logger.warning(f"Erro ao desenhar logo no header: {e}")
+
+        # SEMPRE mostrar o nome SIMDCCONR01 (ao lado do logo ou sozinho)
+        if logo_drawn:
+            # Logo presente: nome ao lado, menor
+            canvas.setFont('Helvetica-Bold', 12)
+            canvas.setFillColor(COL_BLUE)
+            canvas.drawString(15*mm + 18*mm, 272*mm, "SIMDCCONR01")
         else:
+            # Sem logo: nome grande como fallback
             canvas.setFont('Helvetica-Bold', 18)
             canvas.setFillColor(COL_BLUE)
             canvas.drawString(15*mm, 272*mm, "SIMDCCONR01")
-            
-        # Title Block
+
+        # ── TITULO (superior direito) ──
         canvas.setFont('Helvetica-Bold', 14)
         canvas.setFillColor(COL_DARK)
         canvas.drawRightString(195*mm, 275*mm, "Parecer Técnico Pericial")
-        
+
         canvas.setFont('Helvetica-Bold', 7)
         canvas.setFillColor(COL_BLUE)
         canvas.drawRightString(195*mm, 271*mm, "DOCUMENTO OFICIAL · RASTREABILIDADE TOTAL")
-        
-        # Line
+
+        # ── LINHA SEPARADORA ──
         canvas.setStrokeColor(COL_BLUE)
         canvas.setLineWidth(0.8)
         canvas.line(15*mm, 268*mm, 195*mm, 268*mm)
-        
-        # Footer
+
+        # ── FOOTER ──
         canvas.setFont('Helvetica-Oblique', 8)
         canvas.setFillColor(COL_SLATE_500)
         page_num = canvas.getPageNumber()
         canvas.drawCentredString(105*mm, 10*mm, f"Página {page_num} — Parecer Técnico SIMDCCONR01")
-        
+
         canvas.restoreState()
 
     def _draw_radar(self, canvas, x, y, dimension_summary):
         """Desenha o gráfico radar diretamente no canvas."""
         data = {dim['dimensao']: dim['media'] for dim in dimension_summary if dim.get('instrumento') == 'IMCO'}
         if not data: return
-        
+
         labels = list(data.keys())
         values = list(data.values())
         n = len(labels)
         if n < 3: return
-        
+
         max_r = 30*mm
         max_val = 5.0
-        
+
         # Grid Circles
         canvas.setStrokeColor(colors.lightgrey)
         canvas.setLineWidth(0.1)
         for level in range(1, 6):
             r = max_r * (level / max_val)
             canvas.circle(x, y, r, stroke=1, fill=0)
-            
+
         # Axes & Labels
         angles = [(i * 360 / n) - 90 for i in range(n)]
         canvas.setFont('Helvetica-Bold', 7)
         canvas.setFillColor(COL_DARK)
-        
+
         for i, angle_deg in enumerate(angles):
             rad = math.radians(angle_deg)
             # Line
@@ -180,25 +226,25 @@ class RespondentReportRL:
             ly = y + (max_r + 8*mm)*math.sin(rad)
             label_txt = labels[i][:18] + ".." if len(labels[i]) > 18 else labels[i]
             canvas.drawCentredString(lx, ly, label_txt.upper())
-            
+
         # Data Polygon
         points = []
         for i, val in enumerate(values):
             r = max_r * (min(val, max_val) / max_val)
             rad = math.radians(angles[i])
             points.append((x + r*math.cos(rad), y + r*math.sin(rad)))
-            
+
         p = canvas.beginPath()
         p.moveTo(points[0][0], points[0][1])
         for i in range(1, len(points)):
             p.lineTo(points[i][0], points[i][1])
         p.close()
-        
+
         canvas.setFillColor(COL_BLUE, alpha=0.25)
         canvas.setStrokeColor(COL_BLUE)
         canvas.setLineWidth(1.5)
         canvas.drawPath(p, stroke=1, fill=1)
-        
+
         # Dots
         canvas.setFillColor(COL_BLUE)
         for pt in points:
@@ -213,23 +259,27 @@ class RespondentReportRL:
             topMargin=35*mm,
             bottomMargin=20*mm
         )
-        
+
         story = []
-        
-        # 1. Title
-        story.append(Spacer(1, 5*mm))
+
+        # ═══════════════════════════════════════════════
+        # 1. TITULO
+        # ═══════════════════════════════════════════════
+        story.append(Spacer(1, 3*mm))
         story.append(Paragraph("SÍNTESE DE RESULTADOS", self.styles['ReportTitle']))
         story.append(Paragraph("ANÁLISE DE SAÚDE MENTAL E CLIMA", self.styles['ReportSubtitle']))
-        story.append(Spacer(1, 10*mm))
-        
-        # 2. Info Card (Tabela Estilizada)
+        story.append(Spacer(1, 6*mm))
+
+        # ═══════════════════════════════════════════════
+        # 2. INFO CARD (Tabela Estilizada)
+        # ═══════════════════════════════════════════════
         emp = self.diagnostic.assignment.employee
         info_data = [
-            [Paragraph(f"<font color='#64748b' size=7>FUNCIONÁRIO</font><br/><b>{emp.nome.upper()}</b>", self.styles['Normal']),
-             Paragraph(f"<font color='#64748b' size=7>CPF</font><br/><b>{emp.cpf or 'Não informado'}</b>", self.styles['Normal'])],
-            [Paragraph(f"<font color='#64748b' size=7>EMPRESA</font><br/><b>{self.company.nome_fantasia.upper() if self.company else '-'}</b>", self.styles['Normal']),
+            [Paragraph(f"<font color='#64748b' size=7>FUNCIONÁRIO</font><br/><b>{saxutils.escape(emp.nome.upper())}</b>", self.styles['Normal']),
+             Paragraph(f"<font color='#64748b' size=7>CPF</font><br/><b>{saxutils.escape(emp.cpf or 'Não informado')}</b>", self.styles['Normal'])],
+            [Paragraph(f"<font color='#64748b' size=7>EMPRESA</font><br/><b>{saxutils.escape(self.company.nome_fantasia.upper()) if self.company else '-'}</b>", self.styles['Normal']),
              Paragraph(f"<font color='#64748b' size=7>DATA DA AVALIAÇÃO</font><br/><b>{self.generated_at.strftime('%d/%m/%Y %H:%M')}</b>", self.styles['Normal'])],
-            [Paragraph(f"<font color='#64748b' size=7>SETOR E CARGO</font><br/><b>{emp.setor} — {emp.cargo}</b>", self.styles['Normal']), ""]
+            [Paragraph(f"<font color='#64748b' size=7>SETOR E CARGO</font><br/><b>{saxutils.escape(emp.setor)} — {saxutils.escape(emp.cargo)}</b>", self.styles['Normal']), ""]
         ]
         info_table = Table(info_data, colWidths=[110*mm, 70*mm])
         info_table.setStyle(TableStyle([
@@ -238,58 +288,58 @@ class RespondentReportRL:
             ('INNERGRID', (0, 0), (-1, -1), 0.5, colors.white),
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('SPAN', (0, 2), (1, 2)),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-            ('TOPPADDING', (0, 0), (-1, -1), 8),
-            ('LEFTPADDING', (0, 0), (-1, -1), 10),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+            ('TOPPADDING', (0, 0), (-1, -1), 6),
+            ('LEFTPADDING', (0, 0), (-1, -1), 8),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 8),
         ]))
         story.append(info_table)
-        story.append(Spacer(1, 8*mm))
-        
-        # 3. Radar Chart (now as a flowable, no more random spacing)
-        story.append(RadarChartFlowable(self, report_data.get('dimension_summary', []), width=180*mm, height=75*mm))
-        story.append(Spacer(1, 6*mm))
-        
-        # 4. Relatório Estruturado (sem PageBreak — flui continuamente)
+        story.append(Spacer(1, 4*mm))
+
+        # ═══════════════════════════════════════════════
+        # 3. RADAR CHART (altura dinamica — 0 se sem dados)
+        # ═══════════════════════════════════════════════
+        radar = RadarChartFlowable(self, report_data.get('dimension_summary', []), width=180*mm, height=75*mm)
+        if radar._has_data:
+            story.append(radar)
+            story.append(Spacer(1, 4*mm))
+
+        # ═══════════════════════════════════════════════
+        # 4. RELATÓRIO ESTRUTURADO (sem PageBreak!)
+        # ═══════════════════════════════════════════════
         story.append(Paragraph("Relatório Estruturado", self.styles['Heading2']))
-        
+
         for section in sections:
-            # Header
-            story.append(Paragraph(f"{section['meta']['number']}. {section['meta']['label']}", self.styles['SectionHeading']))
-            
+            # Header da seção
+            section_label = saxutils.escape(f"{section['meta']['number']}. {section['meta']['label']}")
+            story.append(Paragraph(section_label, self.styles['SectionHeading']))
+
             # Texto Qualitativo
             if section.get('text'):
                 safe_text = saxutils.escape(section['text'])
-                # Replace newlines with <br/> for ReportLab
                 safe_text = safe_text.replace('\n', '<br/>')
                 story.append(Paragraph(safe_text, self.styles['AnalysisBox']))
-                story.append(Spacer(1, 10))
-                
+                story.append(Spacer(1, 6))
+
             # Tabela de Itens
             item_data = [['ID', 'ITEM / PERGUNTA', 'REF.', 'VAL.', 'STATUS']]
             col_widths = [15*mm, 85*mm, 35*mm, 15*mm, 30*mm]
-            
+
             for item in section.get('items', []):
                 ref = f"{item.get('constructo', '')}\n({item.get('ano', '')})"
                 status = item.get('classificacao', '-')
-                
-                # Cores de Status
-                status_color = colors.transparent
-                if item.get('classificacao_key') == 'critico': status_color = COL_DANGER
-                elif item.get('classificacao_key') == 'atencao': status_color = COL_WARNING
-                elif item.get('classificacao_key') == 'adequado': status_color = COL_SUCCESS
-                
+
                 safe_pergunta = saxutils.escape(item.get('pergunta', '-')).replace('\n', '<br/>')
                 safe_ref = saxutils.escape(ref).replace('\n', '<br/>')
-                
+
                 item_data.append([
-                    Paragraph(f"<font color='#64748b'>{item.get('id_item', '-')}</font>", self.styles['Normal']),
+                    Paragraph(f"<font color='#64748b'>{saxutils.escape(item.get('id_item', '-'))}</font>", self.styles['Normal']),
                     Paragraph(safe_pergunta, self.styles['Normal']),
                     Paragraph(f"<font size=7 color='#64748b'>{safe_ref}</font>", self.styles['Normal']),
                     Paragraph(str(item.get('valor') or "-"), self.styles['Normal']),
-                    Paragraph(f"<b>{status}</b>", self.styles['Normal'])
+                    Paragraph(f"<b>{saxutils.escape(status)}</b>", self.styles['Normal'])
                 ])
-                
+
             items_table = Table(item_data, colWidths=col_widths, repeatRows=1)
             items_table_style = [
                 ('BACKGROUND', (0, 0), (-1, 0), COL_DARK),
@@ -300,80 +350,41 @@ class RespondentReportRL:
                 ('INNERGRID', (0, 0), (-1, -1), 0.25, COL_SLATE_100),
                 ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
                 ('FONTSIZE', (0, 0), (-1, -1), 8),
-                ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-                ('TOPPADDING', (0, 0), (-1, -1), 6),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+                ('TOPPADDING', (0, 0), (-1, -1), 5),
             ]
-            
+
             # Colorir celula de status por linha
             for row_idx in range(1, len(item_data)):
-                # Identificar status_color baseado na lógica acima
-                # (precisamos repetir a lógica de cor aqui para o TableStyle)
                 it = section['items'][row_idx - 1]
                 clr = colors.transparent
                 if it.get('classificacao_key') == 'critico': clr = COL_DANGER
                 elif it.get('classificacao_key') == 'atencao': clr = COL_WARNING
                 elif it.get('classificacao_key') == 'adequado': clr = COL_SUCCESS
                 items_table_style.append(('BACKGROUND', (4, row_idx), (4, row_idx), clr))
-                
+
             items_table.setStyle(TableStyle(items_table_style))
             story.append(items_table)
-            story.append(Spacer(1, 15))
+            story.append(Spacer(1, 10))
 
-        # ══════════════════════════════════════════════════════════════
-        # 5. ASSINATURA PROFISSIONAL (Sem PageBreak — flui naturalmente)
-        # ══════════════════════════════════════════════════════════════
-        story.append(Spacer(1, 15*mm))
-        
-        # Estilos para a assinatura
-        sig_name_style = ParagraphStyle(
-            name='SigName',
-            parent=self.styles['Normal'],
-            fontSize=12,
-            fontName='Helvetica-Bold',
-            textColor=COL_DARK,
-            alignment=1,  # Center
-            spaceAfter=2,
-        )
-        sig_spec_style = ParagraphStyle(
-            name='SigSpec',
-            parent=self.styles['Normal'],
-            fontSize=9,
-            fontName='Helvetica',
-            textColor=COL_BLUE,
-            alignment=1,
-            spaceAfter=2,
-        )
-        sig_date_style = ParagraphStyle(
-            name='SigDate',
-            parent=self.styles['Normal'],
-            fontSize=8,
-            fontName='Helvetica-Oblique',
-            textColor=COL_SLATE_500,
-            alignment=1,
-        )
-        sig_badge_style = ParagraphStyle(
-            name='SigBadge',
-            parent=self.styles['Normal'],
-            fontSize=7,
-            fontName='Helvetica-Bold',
-            textColor=colors.HexColor('#16a34a'),
-            alignment=1,
-            spaceBefore=4,
-        )
-        sig_pending_style = ParagraphStyle(
-            name='SigPending',
-            parent=self.styles['Normal'],
-            fontSize=10,
-            fontName='Helvetica-Oblique',
-            textColor=COL_SLATE_500,
-            alignment=1,
-        )
+        # ═══════════════════════════════════════════════
+        # 5. ASSINATURA PROFISSIONAL
+        # ═══════════════════════════════════════════════
+        story.append(Spacer(1, 10*mm))
+
+        # Estilos dedicados para assinatura
+        s_line = ParagraphStyle('s_line', parent=self.styles['Normal'], fontSize=10, alignment=1, textColor=COL_SLATE_500)
+        s_name = ParagraphStyle('s_name', parent=self.styles['Normal'], fontSize=13, fontName='Helvetica-Bold', alignment=1, textColor=COL_DARK, spaceBefore=2, spaceAfter=1)
+        s_spec = ParagraphStyle('s_spec', parent=self.styles['Normal'], fontSize=9, fontName='Helvetica', alignment=1, textColor=COL_BLUE, spaceAfter=1)
+        s_date = ParagraphStyle('s_date', parent=self.styles['Normal'], fontSize=8, fontName='Helvetica-Oblique', alignment=1, textColor=COL_SLATE_500)
+        s_badge = ParagraphStyle('s_badge', parent=self.styles['Normal'], fontSize=7, fontName='Helvetica-Bold', alignment=1, textColor=COL_GREEN, spaceBefore=4)
+        s_pending = ParagraphStyle('s_pending', parent=self.styles['Normal'], fontSize=10, fontName='Helvetica-Oblique', alignment=1, textColor=COL_SLATE_500)
 
         if self.diagnostic.is_signed:
             signer = getattr(self.diagnostic, 'signer_profile', None)
             user_signer = getattr(self.diagnostic, 'signed_by', None)
             sig_img = None
-            
+
             # 1. Tentar base64 do SignerProfile
             if signer and getattr(signer, 'signature_base64', None):
                 try:
@@ -385,16 +396,16 @@ class RespondentReportRL:
                     sig_img = Image(io.BytesIO(img_data), width=50*mm, height=15*mm)
                 except Exception as e:
                     logger.error(f"Erro base64 signature: {e}")
-            
-            # 2. Tentar imagem do SignerProfile via .open()
+
+            # 2. Tentar imagem do SignerProfile
             elif signer and getattr(signer, 'signature_image', None):
                 try:
                     with signer.signature_image.open('rb') as f:
                         sig_img = Image(io.BytesIO(f.read()), width=50*mm, height=15*mm)
                 except Exception as e:
                     logger.error(f"Erro image signature (signer): {e}")
-                    
-            # 3. Tentar imagem do User via .open()
+
+            # 3. Tentar imagem do User
             elif user_signer and getattr(user_signer, 'signature_image', None):
                 try:
                     with user_signer.signature_image.open('rb') as f:
@@ -402,85 +413,99 @@ class RespondentReportRL:
                 except Exception as e:
                     logger.error(f"Erro image signature (user): {e}")
 
-            # Define Name and Spec (escaped for XML safety)
+            # Nome e Especialidade (escapados para XML)
             if signer:
                 name = saxutils.escape(signer.nome_completo)
-                spec = saxutils.escape(f"{signer.get_especialidade_display()} — {signer.registro_profissional}")
+                reg = signer.registro_profissional or ''
+                espec = ''
+                try:
+                    espec = signer.get_especialidade_display()
+                except Exception:
+                    espec = str(signer.especialidade)
+                spec = saxutils.escape(f"{espec} — {reg}" if reg else espec)
             elif user_signer:
-                name = saxutils.escape(user_signer.get_full_name() or user_signer.email)
-                crp = getattr(user_signer, 'professional_crp', '')
-                spec = saxutils.escape(f"Profissional Especializado{' — ' + crp if crp else ''}")
+                full = user_signer.get_full_name() or ''
+                name = saxutils.escape(full if full.strip() else user_signer.email)
+                crp = getattr(user_signer, 'professional_crp', '') or ''
+                spec_text = f"Profissional Especializado — {crp}" if crp else "Profissional Especializado"
+                spec = saxutils.escape(spec_text)
             else:
                 name = "Assinado Digitalmente"
                 spec = ""
-                
-            ts = self.diagnostic.signature_timestamp.strftime('%d/%m/%Y %H:%M') if self.diagnostic.signature_timestamp else ""
-            
-            # Montar tabela de assinatura com Paragraphs (sem HTML cru)
+
+            ts = ""
+            if self.diagnostic.signature_timestamp:
+                ts = self.diagnostic.signature_timestamp.strftime('%d/%m/%Y %H:%M')
+
+            # Montar linhas da tabela de assinatura com objetos Paragraph
             sig_rows = []
             if sig_img:
                 sig_rows.append([sig_img])
-            sig_rows.append([Paragraph("____________________________________", sig_pending_style)])
-            sig_rows.append([Paragraph(name, sig_name_style)])
+            sig_rows.append([Paragraph("____________________________________", s_line)])
+            sig_rows.append([Paragraph(name, s_name)])
             if spec:
-                sig_rows.append([Paragraph(spec, sig_spec_style)])
-            sig_rows.append([Paragraph(f"Autenticado em {ts}", sig_date_style)])
-            sig_rows.append([Paragraph("\u2713 DOCUMENTO ASSINADO ELETRONICAMENTE", sig_badge_style)])
-
+                sig_rows.append([Paragraph(spec, s_spec)])
+            sig_rows.append([Paragraph(f"Autenticado em {ts}", s_date)])
+            sig_rows.append([Paragraph("\u2713 DOCUMENTO ASSINADO ELETRONICAMENTE", s_badge)])
         else:
             # Pendente
             sig_rows = [
-                [Paragraph("____________________________________", sig_pending_style)],
-                [Paragraph("Aguardando Assinatura Eletr\u00f4nica", sig_pending_style)],
+                [Paragraph("____________________________________", s_line)],
+                [Paragraph("Aguardando Assinatura Eletr\u00f4nica", s_pending)],
             ]
 
+        # Tabela interna com borda e fundo
         sig_table = Table(sig_rows, colWidths=[120*mm])
         sig_table.setStyle(TableStyle([
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            ('TOPPADDING', (0, 0), (-1, -1), 3),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+            ('TOPPADDING', (0, 0), (-1, -1), 4),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
             ('LEFTPADDING', (0, 0), (-1, -1), 15),
             ('RIGHTPADDING', (0, 0), (-1, -1), 15),
-            ('BOX', (0, 0), (-1, -1), 0.8, COL_BLUE),
+            ('BOX', (0, 0), (-1, -1), 1.0, COL_BLUE),
             ('BACKGROUND', (0, 0), (-1, -1), COL_SLATE_50),
+            ('LINEBELOW', (0, 0), (-1, 0), 0.5, COL_SLATE_100),
         ]))
-        
-        # Centralizar a tabela de assinatura usando uma tabela wrapper
+
+        # Wrapper para centralizar
         wrapper = Table([[sig_table]], colWidths=[180*mm])
         wrapper.setStyle(TableStyle([
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ]))
         story.append(wrapper)
-        
-        # ══════════════════════════════════════════════════════════════
+
+        # ═══════════════════════════════════════════════
         # 6. BIBLIOGRAFIA E RASTREABILIDADE
-        # ══════════════════════════════════════════════════════════════
-        story.append(Spacer(1, 12*mm))
+        # ═══════════════════════════════════════════════
+        story.append(Spacer(1, 10*mm))
         story.append(Paragraph("5. Bibliografia e Rastreabilidade (Modelo FDAC)", self.styles['Heading3']))
         ref_p = []
         for r in report_data.get('references', [])[:5]:
             safe_r = saxutils.escape(r)
             ref_p.append(f"\u2022 {safe_r}")
-        story.append(Paragraph("<br/>".join(ref_p), self.styles['Normal']))
-        
-        story.append(Spacer(1, 15))
-        story.append(Paragraph(f"<font size='7' color='#64748b'>C\u00f3digo de Autentica\u00e7\u00e3o: {self.diagnostic.validation_code}</font>", self.styles['Normal']))
+        if ref_p:
+            story.append(Paragraph("<br/>".join(ref_p), self.styles['Normal']))
 
-        # Metadata final
+        story.append(Spacer(1, 10))
+        vc = saxutils.escape(str(self.diagnostic.validation_code))
+        story.append(Paragraph(f"<font size='7' color='#64748b'>C\u00f3digo de Autentica\u00e7\u00e3o: {vc}</font>", self.styles['Normal']))
+
+        # ═══════════════════════════════════════════════
+        # METADATA E BUILD FINAL
+        # ═══════════════════════════════════════════════
         doc.title = f"Laudo {emp.nome}"
         doc.author = "SIMDCCONR01"
 
-        # Final Build com o Canvas customizado
         try:
-            # We don't draw the radar in onFirstPage anymore, it's a Flowable!
-            doc.build(story, 
+            doc.build(story,
                 onFirstPage=self._draw_header,
                 onLaterPages=self._draw_header
             )
         except Exception as e:
             logger.error(f"Erro no build do ReportLab: {e}")
             raise e
+
 
 def html_to_pdf(html_string, base_url=None):
     """Deprecated."""

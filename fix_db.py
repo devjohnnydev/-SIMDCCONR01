@@ -46,6 +46,7 @@ execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS custom_price_yea
 execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS contratante_nome varchar(200);")
 execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS contratante_documento varchar(20);")
 execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS data_aceite_contrato timestamp with time zone;")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS website_url varchar(500);")
 
 print("\n--- FORCING SAFETY TABLE: billing_plan ---")
 execute("""

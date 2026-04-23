@@ -72,25 +72,18 @@ class RespondentReportRL:
         self._preload_logo()
 
     def _preload_logo(self):
-        """Pre-carrega o logo da empresa para uso no header (suporta storage local e cloud)."""
-        if not self.company or not self.company.logo:
-            return
+        """Carrega o logo do sistema SIMDCCONR01 (static/img/logo.png)."""
         try:
-            # Tenta abrir via Django storage API (funciona com S3, local, etc)
-            with self.company.logo.open('rb') as f:
-                self._logo_image_data = f.read()
-            logger.info("Logo carregado via storage API")
+            # Tenta carregar o logo padrão do sistema em static
+            logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'logo.png')
+            if os.path.exists(logo_path):
+                with open(logo_path, 'rb') as f:
+                    self._logo_image_data = f.read()
+                logger.info("Logo do sistema carregado com sucesso (Respondent)")
+            else:
+                logger.warning(f"Logo do sistema não encontrado: {logo_path}")
         except Exception as e:
-            logger.warning(f"Falha ao carregar logo via storage: {e}")
-            # Fallback: tenta path local
-            try:
-                path = self.company.logo.path
-                if os.path.exists(path):
-                    with open(path, 'rb') as f:
-                        self._logo_image_data = f.read()
-                    logger.info("Logo carregado via path local")
-            except Exception as e2:
-                logger.warning(f"Falha ao carregar logo via path: {e2}")
+            logger.error(f"Erro ao carregar logo do sistema: {e}")
 
     def _setup_styles(self):
         # Custom Title Style
@@ -520,17 +513,18 @@ class DepartmentReportRL:
         self._preload_logo()
 
     def _preload_logo(self):
-        if not self.company or not self.company.logo:
-            return
+        """Carrega o logo do sistema SIMDCCONR01 (static/img/logo.png)."""
         try:
-            with self.company.logo.open('rb') as f:
-                self._logo_image_data = f.read()
-        except:
-            try:
-                if os.path.exists(self.company.logo.path):
-                    with open(self.company.logo.path, 'rb') as f:
-                        self._logo_image_data = f.read()
-            except: pass
+            # Tenta carregar o logo padrão do sistema em static
+            logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'logo.png')
+            if os.path.exists(logo_path):
+                with open(logo_path, 'rb') as f:
+                    self._logo_image_data = f.read()
+                logger.info("Logo do sistema carregado com sucesso")
+            else:
+                logger.warning(f"Logo do sistema não encontrado em: {logo_path}")
+        except Exception as e:
+            logger.error(f"Erro ao carregar logo do sistema: {e}")
 
     def _setup_styles(self):
         # Reaproveita estilos do RespondentReportRL ou cria novos se necessário

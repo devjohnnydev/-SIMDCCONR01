@@ -152,18 +152,20 @@ class RespondentReportRL:
             
         # Axes & Labels
         angles = [(i * 360 / n) - 90 for i in range(n)]
-        canvas.setFont('Helvetica', 6)
+        canvas.setFont('Helvetica-Bold', 7)
         canvas.setFillColor(COL_DARK)
         
         for i, angle_deg in enumerate(angles):
             rad = math.radians(angle_deg)
             # Line
+            canvas.setStrokeColor(COL_SLATE_500)
+            canvas.setLineWidth(0.5)
             canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
             # Label
-            lx = x + (max_r + 6*mm)*math.cos(rad)
-            ly = y + (max_r + 6*mm)*math.sin(rad)
-            label_txt = labels[i][:15] + ".." if len(labels[i]) > 15 else labels[i]
-            canvas.drawCentredString(lx, ly, label_txt)
+            lx = x + (max_r + 8*mm)*math.cos(rad)
+            ly = y + (max_r + 8*mm)*math.sin(rad)
+            label_txt = labels[i][:18] + ".." if len(labels[i]) > 18 else labels[i]
+            canvas.drawCentredString(lx, ly, label_txt.upper())
             
         # Data Polygon
         points = []
@@ -178,15 +180,30 @@ class RespondentReportRL:
             p.lineTo(points[i][0], points[i][1])
         p.close()
         
-        canvas.setFillColor(COL_BLUE, alpha=0.2)
+        canvas.setFillColor(COL_BLUE, alpha=0.25)
         canvas.setStrokeColor(COL_BLUE)
-        canvas.setLineWidth(1)
+        canvas.setLineWidth(1.5)
         canvas.drawPath(p, stroke=1, fill=1)
         
         # Dots
         canvas.setFillColor(COL_BLUE)
         for pt in points:
-            canvas.circle(pt[0], pt[1], 1*mm, stroke=0, fill=1)
+            canvas.circle(pt[0], pt[1], 1.2*mm, stroke=0, fill=1)
+
+from reportlab.platypus import Flowable
+
+class RadarChartFlowable(Flowable):
+    def __init__(self, respondent_report_rl, dimension_summary, width=120*mm, height=80*mm):
+        Flowable.__init__(self)
+        self.width = width
+        self.height = height
+        self.dimension_summary = dimension_summary
+        self.rr = respondent_report_rl
+
+    def draw(self):
+        # Center horizontally within the width provided, and vertically
+        self.rr._draw_radar(self.canv, self.width / 2.0, self.height / 2.0, self.dimension_summary)
+
 
     def build(self, report_data, sections):
         doc = SimpleDocTemplate(
@@ -200,33 +217,42 @@ class RespondentReportRL:
         
         story = []
         
-        # 1. Info Card (Tabela Estilizada)
+        # 1. Title
+        story.append(Spacer(1, 5*mm))
+        story.append(Paragraph("SÍNTESE DE RESULTADOS", self.styles['ReportTitle']))
+        story.append(Paragraph("ANÁLISE DE SAÚDE MENTAL E CLIMA", self.styles['ReportSubtitle']))
+        story.append(Spacer(1, 10*mm))
+        
+        # 2. Info Card (Tabela Estilizada)
         emp = self.diagnostic.assignment.employee
         info_data = [
-            [Paragraph(f"<b>FUNCIONÁRIO:</b> {emp.nome.upper()}", self.styles['Normal']),
-             Paragraph(f"<b>CPF:</b> {emp.cpf or '-'}", self.styles['Normal'])],
-            [Paragraph(f"<b>EMPRESA:</b> {self.company.nome_fantasia.upper() if self.company else '-'}", self.styles['Normal']),
-             Paragraph(f"<b>DATA:</b> {self.generated_at.strftime('%d/%m/%Y %H:%M')}", self.styles['Normal'])],
-            [Paragraph(f"<b>SETOR/FUNC:</b> {emp.setor} — {emp.cargo}", self.styles['Normal']), ""]
+            [Paragraph(f"<font color='#64748b' size=7>FUNCIONÁRIO</font><br/><b>{emp.nome.upper()}</b>", self.styles['Normal']),
+             Paragraph(f"<font color='#64748b' size=7>CPF</font><br/><b>{emp.cpf or 'Não informado'}</b>", self.styles['Normal'])],
+            [Paragraph(f"<font color='#64748b' size=7>EMPRESA</font><br/><b>{self.company.nome_fantasia.upper() if self.company else '-'}</b>", self.styles['Normal']),
+             Paragraph(f"<font color='#64748b' size=7>DATA DA AVALIAÇÃO</font><br/><b>{self.generated_at.strftime('%d/%m/%Y %H:%M')}</b>", self.styles['Normal'])],
+            [Paragraph(f"<font color='#64748b' size=7>SETOR E CARGO</font><br/><b>{emp.setor} — {emp.cargo}</b>", self.styles['Normal']), ""]
         ]
         info_table = Table(info_data, colWidths=[110*mm, 70*mm])
         info_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, -1), COL_SLATE_50),
-            ('BORDER', (0, 0), (-1, -1), 0.5, colors.lightgrey),
-            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.lightgrey),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('BORDER', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
+            ('INNERGRID', (0, 0), (-1, -1), 0.5, colors.white),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('SPAN', (0, 2), (1, 2)),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
-            ('TOPPADDING', (0, 0), (-1, -1), 4),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('LEFTPADDING', (0, 0), (-1, -1), 10),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 10),
         ]))
         story.append(info_table)
-        story.append(Spacer(1, 10))
+        story.append(Spacer(1, 15*mm))
         
-        # 2. Radar Chart Space
-        # Usamos uma tabela/flowable fantasma para reservar o espaço onde o canvas desenha o radar
-        story.append(Spacer(1, 60*mm))
+        # 3. Radar Chart (now as a flowable, no more random spacing)
+        story.append(RadarChartFlowable(self, report_data.get('dimension_summary', []), width=180*mm, height=75*mm))
+        story.append(Spacer(1, 10*mm))
         
-        # 3. Relatório Estruturado
+        # 4. Relatório Estruturado
+        story.append(PageBreak())
         story.append(Paragraph("Relatório Estruturado", self.styles['Heading2']))
         
         for section in sections:
@@ -259,23 +285,25 @@ class RespondentReportRL:
                 safe_ref = saxutils.escape(ref).replace('\n', '<br/>')
                 
                 item_data.append([
-                    item.get('id_item', '-'),
+                    Paragraph(f"<font color='#64748b'>{item.get('id_item', '-')}</font>", self.styles['Normal']),
                     Paragraph(safe_pergunta, self.styles['Normal']),
-                    Paragraph(safe_ref, self.styles['Normal']),
-                    item.get('valor') or "-",
+                    Paragraph(f"<font size=7 color='#64748b'>{safe_ref}</font>", self.styles['Normal']),
+                    Paragraph(str(item.get('valor') or "-"), self.styles['Normal']),
                     Paragraph(f"<b>{status}</b>", self.styles['Normal'])
                 ])
                 
             items_table = Table(item_data, colWidths=col_widths, repeatRows=1)
             items_table_style = [
-                ('BACKGROUND', (0, 0), (-1, 0), COL_SLATE_50),
-                ('TEXTCOLOR', (0, 0), (-1, 0), COL_SLATE_500),
+                ('BACKGROUND', (0, 0), (-1, 0), COL_DARK),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
                 ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
                 ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
                 ('INNERGRID', (0, 0), (-1, -1), 0.25, COL_SLATE_100),
                 ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
                 ('FONTSIZE', (0, 0), (-1, -1), 8),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+                ('TOPPADDING', (0, 0), (-1, -1), 6),
             ]
             
             # Colorir celula de status por linha
@@ -296,20 +324,54 @@ class RespondentReportRL:
         # 4. Assinatura & Bibliografia
         story.append(PageBreak())
         
-        # Assinatura
+        # Assinatura (Lógica Refatorada)
         sig_data = [["____________________________________"], ["Aguardando Assinatura Eletrônica"]]
         if self.diagnostic.is_signed:
-            signer = self.diagnostic.signer_profile
+            signer = getattr(self.diagnostic, 'signer_profile', None)
+            user_signer = getattr(self.diagnostic, 'signed_by', None)
             sig_img = None
-            if signer and signer.signature_image:
-                try:
-                    if os.path.exists(signer.signature_image.path):
-                        sig_img = Image(signer.signature_image.path, width=40*mm, height=12*mm)
-                except: pass
             
-            name = signer.nome_completo if signer else "Assinado Digitalmente"
-            spec = f"{signer.get_especialidade_display()} — {signer.registro_profissional}" if signer else ""
-            ts = self.diagnostic.signature_timestamp.strftime('%d/%m/%Y %H:%M')
+            # 1. Tentar base64 do SignerProfile
+            if signer and getattr(signer, 'signature_base64', None):
+                try:
+                    import base64
+                    b64_str = signer.signature_base64
+                    if "," in b64_str:
+                        b64_str = b64_str.split(",")[1]
+                    img_data = base64.b64decode(b64_str)
+                    sig_img = Image(io.BytesIO(img_data), width=50*mm, height=15*mm)
+                except Exception as e:
+                    logger.error(f"Erro base64 signature: {e}")
+            
+            # 2. Tentar imagem do SignerProfile via .open()
+            elif signer and getattr(signer, 'signature_image', None):
+                try:
+                    with signer.signature_image.open('rb') as f:
+                        sig_img = Image(io.BytesIO(f.read()), width=50*mm, height=15*mm)
+                except Exception as e:
+                    logger.error(f"Erro image signature (signer): {e}")
+                    
+            # 3. Tentar imagem do User via .open()
+            elif user_signer and getattr(user_signer, 'signature_image', None):
+                try:
+                    with user_signer.signature_image.open('rb') as f:
+                        sig_img = Image(io.BytesIO(f.read()), width=50*mm, height=15*mm)
+                except Exception as e:
+                    logger.error(f"Erro image signature (user): {e}")
+
+            # Define Name and Spec
+            if signer:
+                name = signer.nome_completo
+                spec = f"{signer.get_especialidade_display()} — {signer.registro_profissional}"
+            elif user_signer:
+                name = user_signer.get_full_name()
+                crp = user_signer.professional_crp
+                spec = f"Profissional Especializado{' — ' + crp if crp else ''}"
+            else:
+                name = "Assinado Digitalmente"
+                spec = ""
+                
+            ts = self.diagnostic.signature_timestamp.strftime('%d/%m/%Y %H:%M') if self.diagnostic.signature_timestamp else ""
             
             sig_data = [[sig_img if sig_img else ""], [f"<b>{name}</b>"], [spec], [f"Autenticado em {ts}"]]
 
@@ -331,8 +393,8 @@ class RespondentReportRL:
             ref_p.append(f"• {safe_r}")
         story.append(Paragraph("<br/>".join(ref_p), self.styles['Normal']))
         
-        story.append(Spacer(1, 10))
-        story.append(Paragraph(f"<font size='7'>Código de Autenticação: {self.diagnostic.validation_code}</font>", self.styles['Normal']))
+        story.append(Spacer(1, 15))
+        story.append(Paragraph(f"<font size='7' color='#64748b'>Código de Autenticação: {self.diagnostic.validation_code}</font>", self.styles['Normal']))
 
         # Metadata final
         doc.title = f"Laudo {emp.nome}"
@@ -340,8 +402,9 @@ class RespondentReportRL:
 
         # Final Build com o Canvas customizado
         try:
+            # We don't draw the radar in onFirstPage anymore, it's a Flowable!
             doc.build(story, 
-                onFirstPage=lambda c, d: (self._draw_header(c, d), self._draw_radar(c, 105*mm, 210*mm, report_data.get('dimension_summary', []))),
+                onFirstPage=self._draw_header,
                 onLaterPages=self._draw_header
             )
         except Exception as e:

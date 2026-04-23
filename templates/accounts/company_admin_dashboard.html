@@ -127,9 +127,9 @@
                                     </td>
                                     <td>{{ stat.completed }}/{{ stat.total }}</td>
                                     <td>
-                                        <div class="d-flex align-items-center gap-2">
+{% load l10n %}
                                             <div class="progress flex-grow-1" style="height: 8px; min-width: 100px;">
-                                                <div class="progress-bar" role="progressbar" style="width: {{ stat.response_rate }}%; background: var(--success-color);"></div>
+                                                <div class="progress-bar" role="progressbar" style="width: {{ stat.response_rate|unlocalize }}%; background: var(--success-color);"></div>
                                             </div>
                                             <span class="small fw-medium">{{ stat.response_rate }}%</span>
                                         </div>

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load l10n %}
 
 {% block title %}Formularios - SaaS NR-01{% endblock %}
 
@@ -63,7 +64,7 @@
                     {% if instance.status == 'ACTIVE' %}
                     <div class="mt-2">
                         <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-success" style="width: {{ instance.get_response_rate }}%;">
+                            <div class="progress-bar bg-success" style="width: {{ instance.get_response_rate|unlocalize }}%;">
                                 {{ instance.get_response_rate }}%
                             </div>
                         </div>

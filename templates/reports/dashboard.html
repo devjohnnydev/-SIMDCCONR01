@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load l10n %}
 
 {% block title %}Dashboard de Relatorios - SaaS NR-01{% endblock %}
 
@@ -133,7 +134,7 @@
                             <td>{{ m.completed }}/{{ m.total }}</td>
                             <td>
                                 <div class="progress" style="height: 12px; width: 100px; border-radius: 10px;">
-                                    <div class="progress-bar {% if m.response_rate >= 70 %}bg-success{% elif m.response_rate >= 40 %}bg-warning{% else %}bg-danger{% endif %}" style="width: {{ m.response_rate }}%;"></div>
+                                    <div class="progress-bar {% if m.response_rate >= 70 %}bg-success{% elif m.response_rate >= 40 %}bg-warning{% else %}bg-danger{% endif %}" style="width: {{ m.response_rate|unlocalize }}%;"></div>
                                 </div>
                                 <small class="text-muted">{{ m.response_rate }}%</small>
                             </td>

@@ -1,1 +1,1 @@
-web: python fix_db.py && python manage.py makemigrations companies landing --noinput && python manage.py migrate --noinput && python manage.py setup_initial_data && gunicorn saas_nr01.wsgi:application --bind 0.0.0.0:$PORT
+web: python fix_db.py && python manage.py migrate landing 0005 --fake --noinput || true && python manage.py migrate --noinput && python manage.py setup_initial_data && gunicorn saas_nr01.wsgi:application --bind 0.0.0.0:$PORT

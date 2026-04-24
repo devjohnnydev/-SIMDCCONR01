@@ -49,7 +49,7 @@ def landing_editor(request):
         if form.is_valid():
             form.save()
             messages.success(request, '✅ Landing page atualizada com sucesso!')
-            return redirect('landing:editor')
+            return redirect('landing:landing_editor')
     else:
         form = LandingConfigForm(instance=config)
 
@@ -72,7 +72,7 @@ def approve_testimonial(request, pk):
     t.is_approved = True
     t.save()
     messages.success(request, f'Depoimento de {t.author_name} aprovado!')
-    return redirect('landing:editor')
+    return redirect(request.META.get('HTTP_REFERER', 'landing:manage_testimonials'))
 
 
 @login_required
@@ -83,7 +83,7 @@ def reject_testimonial(request, pk):
     t = get_object_or_404(Testimonial, pk=pk)
     t.delete()
     messages.info(request, 'Depoimento removido.')
-    return redirect('landing:editor')
+    return redirect(request.META.get('HTTP_REFERER', 'landing:manage_testimonials'))
 
 
 @login_required
@@ -97,7 +97,7 @@ def create_announcement(request):
             ann.created_by = request.user
             ann.save()
             messages.success(request, '📢 Aviso criado com sucesso!')
-    return redirect('landing:editor')
+    return redirect(request.META.get('HTTP_REFERER', 'landing:manage_testimonials'))
 
 
 @login_required
@@ -108,7 +108,7 @@ def toggle_announcement(request, pk):
     ann = get_object_or_404(Announcement, pk=pk)
     ann.is_active = not ann.is_active
     ann.save()
-    return redirect('landing:editor')
+    return redirect(request.META.get('HTTP_REFERER', 'landing:manage_testimonials'))
 
 
 @login_required
@@ -118,7 +118,7 @@ def delete_announcement(request, pk):
         return redirect('accounts:dashboard')
     get_object_or_404(Announcement, pk=pk).delete()
     messages.info(request, 'Aviso removido.')
-    return redirect('landing:editor')
+    return redirect(request.META.get('HTTP_REFERER', 'landing:manage_testimonials'))
 @require_POST
 def submit_testimonial(request):
     """Recebe um depoimento enviado publicamente."""

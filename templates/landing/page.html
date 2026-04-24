@@ -199,18 +199,39 @@
     .aud-info p { font-size: 15px; color: var(--gray); line-height: 1.7; }
 
     /* ─── TESTIMONIALS ─── */
-    .testi-section { background: #fff; padding: 140px 5%; }
-    .testi-track-wrap { overflow: hidden; margin-top: 60px; margin-left: -5%; width: 110%; }
-    .testi-track { display: flex; gap: 30px; animation: slide 40s linear infinite; width: max-content; }
+    .testi-section { background: #f8fafc; padding: 140px 5%; position: relative; overflow: hidden; }
+    .testi-section::before {
+        content: '"'; position: absolute; top: 100px; left: 10%; 
+        font-size: 200px; font-family: serif; color: rgba(13,148,136,0.05); 
+        line-height: 1; pointer-events: none;
+    }
+    .testi-track-wrap { overflow: hidden; margin-top: 80px; margin-left: -5%; width: 110%; cursor: grab; }
+    .testi-track-wrap:active { cursor: grabbing; }
+    .testi-track { display: flex; gap: 40px; animation: slide 60s linear infinite; width: max-content; padding: 20px 0; }
     .testi-track:hover { animation-play-state: paused; }
     @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    .testi-card { background: #fff; border-radius: 24px; padding: 40px; width: 380px; flex-shrink: 0; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
-    .testi-stars { display: flex; gap: 4px; margin-bottom: 20px; color: #fbbf24; }
-    .testi-card blockquote { font-size: 16px; color: var(--gray); line-height: 1.75; margin-bottom: 30px; font-style: italic; font-weight: 500; }
-    .testi-footer { display: flex; align-items: center; gap: 16px; border-top: 1px solid #f1f5f9; padding-top: 20px; }
-    .testi-avatar { width: 48px; height: 48px; border-radius: 12px; background: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; flex-shrink: 0; }
-    .testi-info strong { font-size: 15px; font-weight: 800; color: var(--dark); display: block; }
-    .testi-info span { font-size: 13px; color: var(--gray); font-weight: 500; }
+    .testi-card { 
+        background: #fff; border-radius: 32px; padding: 48px; width: 420px; 
+        flex-shrink: 0; box-shadow: 0 10px 40px rgba(0,0,0,0.04); 
+        border: 1px solid rgba(0,0,0,0.03); transition: all 0.4s ease;
+        position: relative;
+    }
+    .testi-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 60px rgba(0,0,0,0.08); border-color: var(--secondary); }
+    .testi-stars { display: flex; gap: 6px; margin-bottom: 24px; color: #fbbf24; font-size: 14px; }
+    .testi-card blockquote { 
+        font-size: 18px; color: #334155; line-height: 1.8; margin-bottom: 40px; 
+        font-style: italic; font-weight: 500; position: relative; z-index: 1;
+    }
+    .testi-footer { display: flex; align-items: center; gap: 20px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
+    .testi-avatar { 
+        width: 56px; height: 56px; border-radius: 16px; 
+        background: linear-gradient(135deg, var(--secondary), #0f766e); 
+        display: flex; align-items: center; justify-content: center; 
+        font-size: 20px; font-weight: 800; color: #fff; flex-shrink: 0;
+        box-shadow: 0 8px 20px rgba(13,148,136,0.3);
+    }
+    .testi-info strong { font-size: 16px; font-weight: 800; color: var(--dark); display: block; margin-bottom: 4px; }
+    .testi-info span { font-size: 13px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
     /* ─── PRICING ─── */
     .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 1200px; margin: 0 auto; }
@@ -426,6 +447,39 @@
       }
       .wa-float i { font-size: 34px; margin: 0; }
     }
+
+    /* ─── TESTIMONIAL MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
+      backdrop-filter: blur(10px); z-index: 10000;
+      display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-content {
+      background: #fff; border-radius: 28px; width: 100%; max-width: 550px;
+      padding: 48px; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      animation: modalEnter 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    @keyframes modalEnter { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-close { position: absolute; top: 24px; right: 24px; background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .modal-close:hover { background: #e2e8f0; transform: rotate(90deg); }
+    .modal-header h3 { font-size: 28px; font-weight: 800; color: var(--dark); margin-bottom: 8px; letter-spacing: -1px; }
+    .modal-header p { color: var(--gray); font-size: 15px; margin-bottom: 32px; }
+    .testimonial-form label { display: block; font-size: 12px; font-weight: 800; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .testimonial-form input, .testimonial-form textarea {
+      width: 100%; padding: 16px 20px; border-radius: 12px; border: 1px solid #e2e8f0;
+      font-size: 15px; margin-bottom: 20px; transition: all 0.2s; outline: none;
+    }
+    .testimonial-form input:focus, .testimonial-form textarea:focus { border-color: var(--secondary); box-shadow: 0 0 0 4px rgba(13,148,136,0.1); }
+    .btn-submit-testimonial { width: 100%; padding: 18px; border-radius: 12px; background: var(--secondary); color: #fff; border: none; font-weight: 800; font-size: 16px; cursor: pointer; transition: all 0.3s; }
+    .btn-submit-testimonial:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(13,148,136,0.25); }
+
+    .btn-hero-outline {
+      padding: 18px 32px; border-radius: 14px; font-size: 16px; font-weight: 800;
+      display: inline-flex; align-items: center; gap: 12px;
+      transition: all 0.3s; cursor: pointer;
+      background: transparent; border: 2px solid rgba(255,255,255,0.2); color: #fff;
+    }
+    .btn-hero-outline:hover { background: rgba(255,255,255,0.05); border-color: #fff; transform: translateY(-2px); }
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1100px) {
@@ -1159,6 +1213,9 @@
     <div class="cta-btns">
       <a href="{% url 'accounts:signup' %}" class="btn-hero-primary">Cadastrar Empresa</a>
       <a href="mailto:{{ config.contact_email }}" class="btn-hero-secondary">Falar com Especialista</a>
+      <button type="button" class="btn-hero-outline" onclick="openTestimonialModal()">
+        <i class="bi bi-chat-heart"></i> Deixe seu Depoimento
+      </button>
     </div>
   </div>
 </section>
@@ -1236,6 +1293,90 @@
   
   const heroVisual = document.querySelector('.hero-visual');
   if(heroVisual) barObserver.observe(heroVisual);
+
+  // Testimonial Modal
+  function openTestimonialModal() {
+    document.getElementById('testimonialModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeTestimonialModal() {
+    document.getElementById('testimonialModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+
+  function submitTestimonial(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const btn = form.querySelector('button');
+    const originalText = btn.innerText;
+
+    btn.disabled = true;
+    btn.innerText = 'Enviando...';
+
+    fetch("{% url 'landing:submit_testimonial' %}", {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        form.reset();
+        closeTestimonialModal();
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Erro ao enviar depoimento. Tente novamente.');
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.innerText = originalText;
+    });
+  }
 </script>
+
+<div class="modal-overlay" id="testimonialModal" onclick="if(event.target == this) closeTestimonialModal()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeTestimonialModal()"><i class="bi bi-x-lg"></i></button>
+    <div class="modal-header">
+      <h3>Conte sua Experiência</h3>
+      <p>Seu feedback é fundamental para evoluirmos o SIMDCCONR01.</p>
+    </div>
+    <form class="testimonial-form" onsubmit="submitTestimonial(event)">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-12">
+          <label>Seu Nome Completo</label>
+          <input type="text" name="author_name" required placeholder="Como deseja ser identificado">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label>Seu Cargo / Profissão</label>
+          <input type="text" name="author_role" placeholder="Ex: Eng. de Segurança">
+        </div>
+        <div class="col-md-6">
+          <label>Empresa</label>
+          <input type="text" name="author_company" placeholder="Nome da sua empresa">
+        </div>
+      </div>
+      <label>Seu Depoimento</label>
+      <textarea name="content" required rows="4" placeholder="O que você mais gosta no sistema? Como ele ajudou sua operação?"></textarea>
+      
+      <input type="hidden" name="rating" value="5">
+      <button type="submit" class="btn-submit-testimonial">
+        <i class="bi bi-send-fill me-2"></i> Enviar Depoimento para Análise
+      </button>
+    </form>
+  </div>
+</div>
 </body>
 </html>

@@ -118,3 +118,32 @@ def delete_announcement(request, pk):
     get_object_or_404(Announcement, pk=pk).delete()
     messages.info(request, 'Aviso removido.')
     return redirect('landing:editor')
+@require_POST
+def submit_testimonial(request):
+    """Recebe um depoimento enviado publicamente."""
+    author_name = request.POST.get('author_name', '').strip()
+    author_role = request.POST.get('author_role', '').strip()
+    author_company = request.POST.get('author_company', '').strip()
+    content = request.POST.get('content', '').strip()
+    rating = request.POST.get('rating', 5)
+
+    if not author_name or not content:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'message': 'Nome e depoimento são obrigatórios.'})
+        messages.error(request, 'Nome e depoimento são obrigatórios.')
+        return redirect('landing:home')
+
+    Testimonial.objects.create(
+        author_name=author_name,
+        author_role=author_role,
+        author_company=author_company,
+        content=content,
+        rating=int(rating),
+        is_approved=False  # Sempre inativo ate aprovação
+    )
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'message': 'Depoimento enviado com sucesso! Aguarde a moderação.'})
+    
+    messages.success(request, 'Obrigado pelo seu depoimento! Ele será analisado pela nossa equipe antes de ser publicado.')
+    return redirect('landing:home')

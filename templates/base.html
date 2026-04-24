@@ -736,7 +736,8 @@
     {% endif %}
 
     <div class="app-wrapper">
-        {% if user.is_authenticated and not user.is_employee and request.resolver_match.app_name != 'landing' and 'billing' not in request.path %}
+        {% if user.is_authenticated and not user.is_employee and 'billing' not in request.path %}
+            {% if request.resolver_match.app_name != 'landing' or user.is_admin_master %}
         <!-- GLOBAL SIDEBAR -->
         <aside class="app-sidebar" id="appSidebar">
             <ul class="nav flex-column">
@@ -778,11 +779,6 @@
                     <div class="app-sidebar-header">
                         <h6>Marketing & Site</h6>
                     </div>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'editor' %}active{% endif %}" href="{% url 'landing:editor' %}">
-                            <i class="bi bi-window-sidebar"></i> Editor da Landing
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'manage_testimonials' %}active{% endif %}" href="{% url 'landing:manage_testimonials' %}">
                             <i class="bi bi-chat-heart"></i> Depoimentos
@@ -857,9 +853,10 @@
                 {% endif %}
             </ul>
         </aside>
+            {% endif %}
         {% endif %}
 
-        <main class="app-main {% if not user.is_authenticated or user.is_employee or request.resolver_match.app_name == 'landing' or 'billing' in request.path %}expanded{% endif %}" id="appMain">
+        <main class="app-main {% if not user.is_authenticated or user.is_employee or 'billing' in request.path or request.resolver_match.app_name == 'landing' and not user.is_admin_master %}expanded{% endif %}" id="appMain">
             {% block content %}{% endblock %}
             
             <footer class="py-4 mt-auto">

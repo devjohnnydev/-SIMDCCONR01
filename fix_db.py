@@ -154,4 +154,15 @@ execute("""
     );
 """)
 
+print("\n--- FORCING LOGO STORAGE COLUMNS (Railway Persistence) ---")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS logo_db bytea;")
+execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS logo_mime_type varchar(100);")
+
+execute("ALTER TABLE landing_landingconfig ADD COLUMN IF NOT EXISTS hero_image_db bytea;")
+execute("ALTER TABLE landing_landingconfig ADD COLUMN IF NOT EXISTS hero_image_mime varchar(100);")
+execute("ALTER TABLE landing_landingconfig ADD COLUMN IF NOT EXISTS whatsapp_number varchar(20) DEFAULT '5511964291090';")
+
+execute("ALTER TABLE landing_testimonial ADD COLUMN IF NOT EXISTS avatar_db bytea;")
+execute("ALTER TABLE landing_testimonial ADD COLUMN IF NOT EXISTS avatar_mime varchar(100);")
+
 print("\nSafety check complete.")

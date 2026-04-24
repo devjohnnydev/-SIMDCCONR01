@@ -41,6 +41,7 @@ class Migration(migrations.Migration):
                 ('cta_title', models.CharField(default='Sua empresa está pronta para a nova NR-1?', max_length=200, verbose_name='Título CTA Final')),
                 ('cta_subtitle', models.TextField(default='Evite multas, proteja sua equipe e mantenha o PGR atualizado. Comece hoje com o sistema mais completo do Brasil.', verbose_name='Subtítulo CTA Final')),
                 ('contact_email', models.EmailField(default='contato@simdcconr01.com.br', max_length=254, verbose_name='Email de Contato')),
+                ('whatsapp_number', models.CharField(default='5511964291090', max_length=20, verbose_name='WhatsApp (apenas números)')),
                 ('meta_description', models.TextField(default='O sistema mais completo do Brasil para diagnóstico de riscos psicossociais, compliance NR-1, NR-17 e NR-12.', max_length=300, verbose_name='Meta Description SEO')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Atualizado em')),
             ],

@@ -27,6 +27,8 @@ class LandingConfig(models.Model):
                                       default='Condição Especial: Desconto Exclusivo nos Planos | Acesso Imediato | SIMDCCONR01 — Líder em Riscos Psicossociais')
     hero_cta_text  = models.CharField('Texto CTA Hero', max_length=100, default='Proteja sua Empresa Agora')
     hero_image     = models.ImageField('Imagem de Fundo', upload_to='landing/', null=True, blank=True)
+    hero_image_db  = models.BinaryField('Imagem Hero em Banco', null=True, blank=True)
+    hero_image_mime = models.CharField('MIME Type Hero', max_length=100, blank=True, null=True)
 
     # --- Planos ---
     starter_price       = models.DecimalField('Preço Starter',        max_digits=8, decimal_places=2, default=420)
@@ -56,6 +58,21 @@ class LandingConfig(models.Model):
     class Meta:
         verbose_name = 'Configuração da Landing Page'
 
+    def save(self, *args, **kwargs):
+        """Salva imagem no banco."""
+        if self.hero_image:
+            try:
+                if hasattr(self.hero_image, 'file'):
+                    import mimetypes
+                    try: self.hero_image.seek(0)
+                    except: pass
+                    self.hero_image_db = self.hero_image.read()
+                    self.hero_image_mime = mimetypes.guess_type(self.hero_image.name)[0] or 'image/png'
+                    try: self.hero_image.seek(0)
+                    except: pass
+            except: pass
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return 'Configuração da Landing Page'
 
@@ -80,8 +97,24 @@ class Testimonial(models.Model):
     content        = models.TextField('Depoimento')
     rating         = models.IntegerField('Nota (1-5)',  default=5)
     avatar         = models.ImageField('Foto',          upload_to='testimonials/', null=True, blank=True)
+    avatar_db      = models.BinaryField('Avatar em Banco', null=True, blank=True)
+    avatar_mime    = models.CharField('MIME Type Avatar', max_length=100, blank=True, null=True)
     is_approved    = models.BooleanField('Aprovado',    default=False)
     created_at     = models.DateTimeField('Enviado em', auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.avatar:
+            try:
+                if hasattr(self.avatar, 'file'):
+                    import mimetypes
+                    try: self.avatar.seek(0)
+                    except: pass
+                    self.avatar_db = self.avatar.read()
+                    self.avatar_mime = mimetypes.guess_type(self.avatar.name)[0] or 'image/png'
+                    try: self.avatar.seek(0)
+                    except: pass
+            except: pass
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Depoimento'

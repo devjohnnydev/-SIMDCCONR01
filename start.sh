@@ -3,7 +3,8 @@
 set -e
 
 # Makemigrations should be run locally and committed to Git
-python manage.py makemigrations companies --noinput
+# Adicionado 'landing' e 'companies' para garantir que os campos de Logo DB sejam criados
+python manage.py makemigrations companies landing --noinput
 
 echo "Checking for existing DB columns (Faking old migrations)..."
 # Consolidate fake migrations into fewer calls if possible

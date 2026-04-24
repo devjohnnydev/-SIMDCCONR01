@@ -51,9 +51,10 @@
                         
                         <h5 class="mb-3">Personalizacao Visual</h5>
                         {{ form.logo|as_crispy_field }}
-                        {% if company.logo %}
+                        {% if company.logo_db or company.logo %}
                         <div class="mb-3">
-                            <img src="{{ company.logo.url }}" alt="Logo atual" style="max-height: 80px;">
+                            <p class="small text-muted mb-1">Logo atual (salva no Banco de Dados):</p>
+                            <img src="{% url 'companies:serve_logo' company.id %}" alt="Logo atual" style="max-height: 80px; border: 1px solid #eee; padding: 5px; border-radius: 8px;">
                         </div>
                         {% endif %}
                         <div class="row">
@@ -75,8 +76,8 @@
                 </div>
                 <div class="card-body">
                     <div class="p-3" style="background-color: {{ company.cor_primaria }}; color: white; border-radius: 5px;">
-                        {% if company.logo %}
-                        <img src="{{ company.logo.url }}" alt="Logo" style="max-height: 40px;">
+                        {% if company.logo_db or company.logo %}
+                        <img src="{% url 'companies:serve_logo' company.id %}" alt="Logo" style="max-height: 40px;">
                         {% endif %}
                         <span class="ms-2">{{ company.nome_fantasia }}</span>
                     </div>

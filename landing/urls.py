@@ -13,4 +13,6 @@ urlpatterns = [
     path('announcement/<int:pk>/delete/', views.delete_announcement,  name='delete_announcement'),
     path('testimonial/submit/',           views.submit_testimonial,   name='submit_testimonial'),
     path('testimonials/manage/',          views.manage_testimonials,  name='manage_testimonials'),
+    path('hero-image/',                   views.serve_hero_image,     name='serve_hero_image'),
+    path('testimonial-avatar/<int:pk>/', views.serve_testimonial_avatar, name='serve_testimonial_avatar'),
 ]

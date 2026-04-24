@@ -102,17 +102,23 @@ class Company(models.Model):
 
     def save(self, *args, **kwargs):
         """Sobrescreve save para persistir logo no banco de dados."""
+        # Se recebemos um arquivo novo via upload
         if self.logo:
             try:
-                # Se for um upload novo (tem atributo file) ou mudou
-                # Para simplificar, sempre atualizamos se o campo logo estiver preenchido
-                import mimetypes
-                self.logo_db = self.logo.read()
-                self.logo_mime_type = mimetypes.guess_type(self.logo.name)[0] or 'image/png'
-                # Reinicia ponteiro para o Django salvar no disco tambem (se puder)
-                self.logo.seek(0)
+                # Verifica se o arquivo realmente existe ou é um novo upload (InMemoryUploadedFile ou TemporaryUploadedFile)
+                if hasattr(self.logo, 'file'):
+                    import mimetypes
+                    # Se o arquivo está aberto, volta pro início
+                    try: self.logo.seek(0)
+                    except: pass
+                    
+                    self.logo_db = self.logo.read()
+                    self.logo_mime_type = mimetypes.guess_type(self.logo.name)[0] or 'image/png'
+                    # Reinicia ponteiro para o Django salvar no disco também (embora no Railway suma depois)
+                    try: self.logo.seek(0)
+                    except: pass
             except Exception as e:
-                print(f"Erro ao salvar logo no banco: {e}")
+                print(f"Erro ao persistir logo no banco: {e}")
         
         super().save(*args, **kwargs)
     

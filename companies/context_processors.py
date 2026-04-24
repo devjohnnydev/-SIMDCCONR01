@@ -21,11 +21,11 @@ def company_context(request):
         from django.urls import reverse
         if company.logo_db:
             context['company_logo'] = reverse('companies:serve_logo', args=[company.id])
-        elif company.logo:
-            try:
-                context['company_logo'] = company.logo.url
-            except:
-                context['company_logo'] = None
+        # NUNCA usar .logo.url pois no Railway os arquivos somem do disco
+        # O serve_logo ja tenta ler do disco se o DB estiver vazio (fallback interno)
+        else:
+            context['company_logo'] = reverse('companies:serve_logo', args=[company.id])
+        
         context['company_primary_color'] = company.cor_primaria
         context['company_secondary_color'] = company.cor_secundaria
     

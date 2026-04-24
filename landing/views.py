@@ -166,3 +166,19 @@ def manage_testimonials(request):
         'pending_testimonials': pending,
         'approved_testimonials': approved,
     })
+
+
+def serve_hero_image(request):
+    """Serve a imagem hero do banco."""
+    config = LandingConfig.get()
+    if not config.hero_image_db:
+        return HttpResponse(status=404)
+    return HttpResponse(config.hero_image_db, content_type=config.hero_image_mime or "image/png")
+
+
+def serve_testimonial_avatar(request, pk):
+    """Serve o avatar do depoimento do banco."""
+    t = get_object_or_404(Testimonial, pk=pk)
+    if not t.avatar_db:
+        return HttpResponse(status=404)
+    return HttpResponse(t.avatar_db, content_type=t.avatar_mime or "image/png")

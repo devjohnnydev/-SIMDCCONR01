@@ -85,7 +85,7 @@ def form_instance_create(request, template_pk):
         return redirect('forms:templates')
     
     if request.method == 'POST':
-        form = FormInstanceForm(request.POST, company=company)
+        form = FormInstanceForm(request.POST, company=company, user_role=request.user.role)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.template = template
@@ -104,7 +104,7 @@ def form_instance_create(request, template_pk):
             messages.success(request, 'Formulario criado com sucesso!')
             return redirect('forms:instance_detail', pk=instance.pk)
     else:
-        form = FormInstanceForm(company=company, initial={
+        form = FormInstanceForm(company=company, user_role=request.user.role, initial={
             'title': f"{template.name} - {timezone.now().strftime('%d/%m/%Y')}"
         })
     

@@ -28,6 +28,7 @@
                             <div class="col-md-6">{{ form.end_date|as_crispy_field }}</div>
                         </div>
                         
+                        {% if user.role == 'ADMIN_MASTER' %}
                         <div class="form-check mb-3">
                             {{ form.is_anonymous }}
                             <label class="form-check-label" for="{{ form.is_anonymous.id_for_label }}">
@@ -35,6 +36,12 @@
                                 <br><small class="text-muted">Respostas nao serao vinculadas aos funcionarios</small>
                             </label>
                         </div>
+                        {% else %}
+                            {# Campo oculto ja que e forcado no backend #}
+                            <div class="alert alert-info py-2 mb-3 small">
+                                <i class="bi bi-incognito me-1"></i> Esta pesquisa é <strong>Anônima</strong> por padrão.
+                            </div>
+                        {% endif %}
                         
                         <hr class="my-4">
                         

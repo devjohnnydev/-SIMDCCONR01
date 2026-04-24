@@ -52,8 +52,16 @@ class FormInstanceForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         company = kwargs.pop('company', None)
+        user_role = kwargs.pop('user_role', None)
         super().__init__(*args, **kwargs)
         self.company = company
+        self.user_role = user_role
+        
+        # Se nao for ADMIN_MASTER, o formulario DEVE ser anonimo
+        if user_role != 'ADMIN_MASTER':
+            self.fields['is_anonymous'].initial = True
+            self.fields['is_anonymous'].widget.attrs['disabled'] = True
+            self.fields['is_anonymous'].required = False
         
         if self.instance.pk:
             if self.instance.target_sectors:
@@ -64,6 +72,10 @@ class FormInstanceForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         
+        # Forçar anônimo se não for admin master, mesmo que o campo tenha sido alterado no post
+        if self.user_role != 'ADMIN_MASTER':
+            cleaned_data['is_anonymous'] = True
+            
         start_date = cleaned_data.get('start_date')
         end_date = cleaned_data.get('end_date')
         

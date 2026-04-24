@@ -29,6 +29,7 @@ class LandingConfigForm(forms.ModelForm):
             'cta_title':       forms.TextInput(attrs={'class': 'form-control'}),
             'cta_subtitle':    forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'contact_email':   forms.EmailInput(attrs={'class': 'form-control'}),
+            'whatsapp_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: 5511999999999'}),
             'meta_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }
 

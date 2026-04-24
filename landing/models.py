@@ -47,6 +47,7 @@ class LandingConfig(models.Model):
 
     # --- Contato / SEO ---
     contact_email    = models.EmailField('Email de Contato', default='contato@simdcconr01.com.br')
+    whatsapp_number  = models.CharField('WhatsApp (apenas números)', max_length=20, default='5511964291090')
     meta_description = models.TextField('Meta Description SEO', max_length=300,
                                         default='O sistema mais completo do Brasil para diagnóstico de riscos psicossociais, compliance NR-1, NR-17 e NR-12.')
 

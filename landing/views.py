@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
@@ -147,3 +148,21 @@ def submit_testimonial(request):
     
     messages.success(request, 'Obrigado pelo seu depoimento! Ele será analisado pela nossa equipe antes de ser publicado.')
     return redirect('landing:home')
+@login_required
+def manage_testimonials(request):
+    """Tela dedicada para o Admin Master gerenciar depoimentos."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso negado.')
+        return redirect('accounts:dashboard')
+    
+    pending = Testimonial.objects.filter(is_approved=False).order_of_arrival = '-created_at'
+    approved = Testimonial.objects.filter(is_approved=True).order_of_arrival = '-created_at'
+    
+    # Correction: .order_by instead of .order_of_arrival (brain fart)
+    pending = Testimonial.objects.filter(is_approved=False).order_by('-created_at')
+    approved = Testimonial.objects.filter(is_approved=True).order_by('-created_at')
+
+    return render(request, 'landing/testimonials_admin.html', {
+        'pending_testimonials': pending,
+        'approved_testimonials': approved,
+    })

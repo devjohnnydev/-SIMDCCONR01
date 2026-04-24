@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gerenciar Depoimentos — Admin Master{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'accounts:admin_master_dashboard' %}">Master</a></li>
+                    <li class="breadcrumb-item active">Depoimentos</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0">Gerenciar Depoimentos</h1>
+            <p class="text-muted">Aprovar ou remover depoimentos enviados pelos usuários na Landing Page.</p>
+        </div>
+        <div>
+            <a href="{% url 'landing:editor' %}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-pencil-square me-2"></i> Editor da Landing Page
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- AGUARDANDO APROVAÇÃO -->
+        <div class="col-12 mb-4">
+            <div class="card border-warning shadow-sm">
+                <div class="card-header bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-warning-emphasis"><i class="bi bi-hourglass-split me-2"></i>Aguardando Aprovação ({{ pending_testimonials.count }})</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if pending_testimonials %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Autor / Cargo</th>
+                                    <th>Empresa</th>
+                                    <th>Depoimento</th>
+                                    <th>Data</th>
+                                    <th class="text-end">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in pending_testimonials %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm me-3">{{ t.author_name.0 }}</div>
+                                            <div>
+                                                <div class="fw-bold">{{ t.author_name }}</div>
+                                                <div class="small text-muted">{{ t.author_role|default:"---" }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ t.author_company|default:"---" }}</td>
+                                    <td style="max-width: 300px;">
+                                        <div class="text-truncate" title="{{ t.content }}">"{{ t.content }}"</div>
+                                    </td>
+                                    <td class="small">{{ t.created_at|date:"d/m/Y H:i" }}</td>
+                                    <td class="text-end">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <form method="post" action="{% url 'landing:approve_testimonial' t.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-success btn-sm px-3">
+                                                    <i class="bi bi-check-circle me-1"></i> Aprovar
+                                                </button>
+                                            </form>
+                                            <form method="post" action="{% url 'landing:reject_testimonial' t.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('Tem certeza que deseja apagar este depoimento?')">
+                                                    <i class="bi bi-trash me-1"></i> Rejeitar
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state py-5">
+                        <div class="empty-state-icon"><i class="bi bi-chat-left-dots"></i></div>
+                        <h5>Nenhum depoimento pendente</h5>
+                        <p>Tudo em dia por aqui.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PUBLICADOS -->
+        <div class="col-12">
+            <div class="card border-success shadow-sm">
+                <div class="card-header bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-success"><i class="bi bi-check2-all me-2"></i>Depoimentos Publicados ({{ approved_testimonials.count }})</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if approved_testimonials %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Autor</th>
+                                    <th>Cargo / Empresa</th>
+                                    <th>Depoimento</th>
+                                    <th class="text-end">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in approved_testimonials %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm me-3 bg-success">{{ t.author_name.0 }}</div>
+                                            <div class="fw-bold">{{ t.author_name }}</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="small fw-bold text-dark">{{ t.author_role|default:"" }}</div>
+                                        <div class="small text-muted">{{ t.author_company|default:"" }}</div>
+                                    </td>
+                                    <td style="max-width: 400px;">
+                                        <div class="text-muted small">"{{ t.content }}"</div>
+                                    </td>
+                                    <td class="text-end">
+                                        <form method="post" action="{% url 'landing:reject_testimonial' t.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Deseja remover este depoimento do site?')">
+                                                Remover do Site
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-state py-5 text-center">
+                        <p class="text-muted">Nenhum depoimento aprovado ainda.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

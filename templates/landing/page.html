@@ -211,27 +211,35 @@
     .testi-track:hover { animation-play-state: paused; }
     @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     .testi-card { 
-        background: #fff; border-radius: 32px; padding: 48px; width: 420px; 
+        background: rgba(255, 255, 255, 0.8); 
+        backdrop-filter: blur(10px);
+        border-radius: 32px; padding: 48px; width: 420px; 
         flex-shrink: 0; box-shadow: 0 10px 40px rgba(0,0,0,0.04); 
-        border: 1px solid rgba(0,0,0,0.03); transition: all 0.4s ease;
+        border: 1px solid rgba(255, 255, 255, 0.5); transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         position: relative;
     }
-    .testi-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 60px rgba(0,0,0,0.08); border-color: var(--secondary); }
+    .testi-card:hover { 
+        transform: translateY(-15px) scale(1.03); 
+        box-shadow: 0 30px 60px rgba(13,148,136,0.15); 
+        border-color: var(--secondary);
+        background: #fff;
+    }
     .testi-stars { display: flex; gap: 6px; margin-bottom: 24px; color: #fbbf24; font-size: 14px; }
     .testi-card blockquote { 
-        font-size: 18px; color: #334155; line-height: 1.8; margin-bottom: 40px; 
+        font-size: 18px; color: #1e293b; line-height: 1.8; margin-bottom: 40px; 
         font-style: italic; font-weight: 500; position: relative; z-index: 1;
     }
     .testi-footer { display: flex; align-items: center; gap: 20px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
     .testi-avatar { 
-        width: 56px; height: 56px; border-radius: 16px; 
-        background: linear-gradient(135deg, var(--secondary), #0f766e); 
+        width: 60px; height: 60px; border-radius: 20px; 
+        background: linear-gradient(135deg, var(--secondary), #0d9488); 
         display: flex; align-items: center; justify-content: center; 
-        font-size: 20px; font-weight: 800; color: #fff; flex-shrink: 0;
+        font-size: 22px; font-weight: 800; color: #fff; flex-shrink: 0;
         box-shadow: 0 8px 20px rgba(13,148,136,0.3);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .testi-info strong { font-size: 16px; font-weight: 800; color: var(--dark); display: block; margin-bottom: 4px; }
-    .testi-info span { font-size: 13px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .testi-info strong { font-size: 17px; font-weight: 800; color: var(--dark); display: block; margin-bottom: 4px; }
+    .testi-info span { font-size: 13px; color: var(--secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
     /* ─── PRICING ─── */
     .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 1200px; margin: 0 auto; }

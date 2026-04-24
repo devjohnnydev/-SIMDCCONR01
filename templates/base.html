@@ -776,6 +776,20 @@
                     </li>
 
                     <div class="app-sidebar-header">
+                        <h6>Marketing & Site</h6>
+                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'editor' %}active{% endif %}" href="{% url 'landing:editor' %}">
+                            <i class="bi bi-window-sidebar"></i> Editor da Landing
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'manage_testimonials' %}active{% endif %}" href="{% url 'landing:manage_testimonials' %}">
+                            <i class="bi bi-chat-heart"></i> Depoimentos
+                        </a>
+                    </li>
+
+                    <div class="app-sidebar-header">
                         <h6>Suporte Central</h6>
                     </div>
                     <li class="nav-item">

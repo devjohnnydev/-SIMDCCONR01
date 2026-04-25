@@ -154,10 +154,8 @@ class RespondentReportRL:
 
         # SEMPRE mostrar o nome SIMDCCONR01 (ao lado do logo ou sozinho)
         if logo_drawn:
-            # Logo presente: nome ao lado, menor
-            canvas.setFont('Helvetica-Bold', 12)
-            canvas.setFillColor(COL_BLUE)
-            canvas.drawString(15*mm + logo_width + 4*mm, 272*mm, "SIMDCCONR01")
+            # Logo presente: não desenha texto redundante, o logo já contém a tipografia
+            pass
         else:
             # Sem logo: nome grande como fallback
             canvas.setFont('Helvetica-Bold', 18)
@@ -563,10 +561,10 @@ class DepartmentReportRL:
                 logo_drawn = True
             except: pass
         
-        canvas.setFont('Helvetica-Bold', 12 if logo_drawn else 18)
+        canvas.setFont('Helvetica-Bold', 18)
         canvas.setFillColor(COL_BLUE)
-        x_pos = 15*mm + (logo_width + 4*mm if logo_drawn else 0)
-        canvas.drawString(x_pos, 272*mm, "SIMDCCONR01")
+        if not logo_drawn:
+            canvas.drawString(15*mm, 272*mm, "SIMDCCONR01")
 
         # Título superior direito
         canvas.setFont('Helvetica-Bold', 14)

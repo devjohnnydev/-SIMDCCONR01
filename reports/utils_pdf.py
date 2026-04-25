@@ -139,10 +139,13 @@ class RespondentReportRL:
 
         # ── LOGO (superior esquerdo) ──
         logo_drawn = False
+        logo_width = 0
         if self._logo_image_data:
             try:
                 from reportlab.lib.utils import ImageReader
                 img_reader = ImageReader(io.BytesIO(self._logo_image_data))
+                img_w, img_h = img_reader.getSize()
+                logo_width = (12*mm / img_h) * img_w
                 canvas.drawImage(img_reader, 15*mm, 270*mm, height=12*mm,
                                  preserveAspectRatio=True, mask='auto')
                 logo_drawn = True
@@ -154,7 +157,7 @@ class RespondentReportRL:
             # Logo presente: nome ao lado, menor
             canvas.setFont('Helvetica-Bold', 12)
             canvas.setFillColor(COL_BLUE)
-            canvas.drawString(15*mm + 18*mm, 272*mm, "SIMDCCONR01")
+            canvas.drawString(15*mm + logo_width + 4*mm, 272*mm, "SIMDCCONR01")
         else:
             # Sem logo: nome grande como fallback
             canvas.setFont('Helvetica-Bold', 18)
@@ -549,17 +552,20 @@ class DepartmentReportRL:
         canvas.saveState()
         # Branding superior esquerdo
         logo_drawn = False
+        logo_width = 0
         if self._logo_image_data:
             try:
                 from reportlab.lib.utils import ImageReader
                 img_reader = ImageReader(io.BytesIO(self._logo_image_data))
+                img_w, img_h = img_reader.getSize()
+                logo_width = (12*mm / img_h) * img_w
                 canvas.drawImage(img_reader, 15*mm, 270*mm, height=12*mm, preserveAspectRatio=True, mask='auto')
                 logo_drawn = True
             except: pass
         
         canvas.setFont('Helvetica-Bold', 12 if logo_drawn else 18)
         canvas.setFillColor(COL_BLUE)
-        x_pos = 15*mm + (18*mm if logo_drawn else 0)
+        x_pos = 15*mm + (logo_width + 4*mm if logo_drawn else 0)
         canvas.drawString(x_pos, 272*mm, "SIMDCCONR01")
 
         # Título superior direito

@@ -771,8 +771,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if 'billing' in request.path %}active{% endif %}" href="{% url 'billing:plan_list' %}">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'plan_list' %}active{% endif %}" href="{% url 'billing:plan_list' %}">
                             <i class="bi bi-tags"></i> Planos de Assinatura
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'custom-requests' in request.path %}active{% endif %}" href="{% url 'billing:admin_custom_requests' %}">
+                            <i class="bi bi-ui-radios"></i> Planos Personalizados
                         </a>
                     </li>
 

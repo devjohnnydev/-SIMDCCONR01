@@ -18,6 +18,7 @@ python manage.py migrate --fake accounts 0005 --noinput || true
 python manage.py migrate --fake reports 0005 --noinput || true
 python manage.py migrate --fake reports 0006 --noinput || true
 python manage.py migrate --fake reports 0007 --noinput || true
+python manage.py migrate --fake billing 0005 --noinput || true
 
 echo "Running migrate..."
 python manage.py migrate --noinput

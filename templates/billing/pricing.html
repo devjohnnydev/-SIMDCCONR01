@@ -763,6 +763,114 @@
         </div>
     </div>
 
+    <!-- Custom Plan Banner -->
+    <div class="container mt-5 mb-5 position-relative z-2" style="max-width: 1100px;">
+        {% if not custom_request %}
+            <div class="glass-card p-5 rounded-4 text-center border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(59,130,246,0.05)); border: 1px dashed rgba(99,102,241,0.3) !important;">
+                <h3 class="fw-bold mb-2 text-dark">Sua empresa precisa de limites diferentes?</h3>
+                <p class="text-muted mb-4 fs-6">Crie um plano totalmente personalizado para a sua operação. Você escolhe os limites exatos de funcionários, relatórios e recursos que precisa e nós enviamos um orçamento sob medida para você.</p>
+                <button class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#customPlanModal" style="background: linear-gradient(135deg, #1e293b, #0f172a); border:none;">
+                    <i class="bi bi-sliders me-2"></i> Montar Plano Sob Medida
+                </button>
+            </div>
+        {% elif custom_request.status == 'pending' %}
+            <div class="glass-card p-5 rounded-4 text-center border-0 bg-white shadow-sm">
+                <div class="d-inline-flex align-items-center justify-content-center bg-warning bg-opacity-10 text-warning rounded-circle mb-3" style="width:70px; height:70px;">
+                    <i class="bi bi-hourglass-split fs-1"></i>
+                </div>
+                <h3 class="fw-bold mb-2 text-dark">Sua solicitação está em análise</h3>
+                <p class="text-muted mb-4 fs-6">Estamos calculando o melhor valor para o seu plano personalizado. O Administrador Master já foi notificado e você será avisado assim que o valor for definido.</p>
+                <form action="{% url 'billing:cancel_custom_plan' custom_request.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger rounded-pill px-4 fw-bold">
+                        <i class="bi bi-x-circle me-1"></i> Cancelar Solicitação
+                    </button>
+                </form>
+            </div>
+        {% elif custom_request.status == 'proposed' %}
+            <div class="glass-card p-0 rounded-4 overflow-hidden border-0 shadow-lg" style="border: 2px solid #6366f1 !important; transform: scale(1.02);">
+                <div class="row g-0">
+                    <div class="col-md-7 p-5 bg-white">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-3 me-3 shadow-sm" style="width:60px; height:60px; background: linear-gradient(135deg, #6366f1, #818cf8) !important;">
+                                <i class="bi bi-star-fill fs-2"></i>
+                            </div>
+                            <div>
+                                <span class="badge bg-primary bg-opacity-10 text-primary mb-1">PROPOSTA APROVADA</span>
+                                <h3 class="fw-bold text-dark mb-0">Plano Exclusivo: {{ company.nome_fantasia }}</h3>
+                            </div>
+                        </div>
+                        
+                        <p class="text-muted mb-4">Analisamos sua solicitação e montamos este pacote exclusivo para atender perfeitamente a operação da sua empresa com o melhor custo-benefício.</p>
+                        
+                        <div class="row mb-4">
+                            <div class="col-sm-6 mb-3">
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2 text-dark fw-medium"><i class="bi bi-check-circle-fill text-success me-2"></i>Até {{ custom_request.max_employees }} funcionários</li>
+                                    <li class="mb-2 text-dark fw-medium"><i class="bi bi-check-circle-fill text-success me-2"></i>Até {{ custom_request.max_forms }} formulários ativos</li>
+                                    <li class="text-dark fw-medium"><i class="bi bi-check-circle-fill text-success me-2"></i>{{ custom_request.max_reports }} relatórios gerados/mês</li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2 text-dark fw-medium"><i class="bi bi-check-circle-fill text-success me-2"></i>Retenção: {{ custom_request.data_retention_days }} dias</li>
+                                    <li class="mb-2 text-dark fw-medium"><i class="bi bi-{% if custom_request.has_pdf_export %}check-circle-fill text-success{% else %}x-circle text-muted{% endif %} me-2"></i>Exportação PDF</li>
+                                    <li class="text-dark fw-medium"><i class="bi bi-{% if custom_request.has_api_access %}check-circle-fill text-success{% else %}x-circle text-muted{% endif %} me-2"></i>Acesso API</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        {% if custom_request.admin_message %}
+                        <div class="alert alert-primary bg-primary bg-opacity-10 border-0 text-dark mb-0 rounded-3">
+                            <strong><i class="bi bi-chat-left-text-fill me-2 text-primary"></i> Mensagem do Consultor:</strong><br>
+                            <span class="fst-italic">{{ custom_request.admin_message }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mt-4 pt-3 border-top d-flex align-items-center gap-3">
+                            <button class="btn btn-outline-secondary rounded-pill px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#customPlanModal">
+                                <i class="bi bi-pencil me-1"></i> Fazer Contraproposta
+                            </button>
+                            <form action="{% url 'billing:cancel_custom_plan' custom_request.id %}" method="post" class="m-0">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link text-danger text-decoration-none fw-bold">Recusar Oferta</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-5 p-5 d-flex flex-column justify-content-center text-center" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-left: 1px solid #e2e8f0;">
+                        <div class="mb-5">
+                            <div class="price-monthly" {% if custom_request.proposed_price_yearly %}style="display:block;"{% endif %}>
+                                <div class="text-muted small fw-bold text-uppercase mb-2">Investimento Mensal</div>
+                                <div class="fw-bold text-dark mb-0" style="font-size: 3.5rem; line-height: 1; letter-spacing: -2px;">
+                                    <span class="fs-3 text-muted align-top me-1">R$</span>{{ custom_request.proposed_price_monthly|floatformat:0 }}
+                                </div>
+                            </div>
+                            
+                            {% if custom_request.proposed_price_yearly %}
+                            <div class="price-yearly" style="display:none;">
+                                <div class="text-muted small fw-bold text-uppercase mb-2">Investimento Anual</div>
+                                <div class="fw-bold text-dark mb-0" style="font-size: 3.5rem; line-height: 1; letter-spacing: -2px;">
+                                    <span class="fs-3 text-muted align-top me-1">R$</span>{{ custom_request.proposed_price_yearly|floatformat:0 }}
+                                </div>
+                                <div class="badge bg-success rounded-pill px-3 py-2 mt-3 fs-6"><i class="bi bi-tag-fill me-1"></i> Preço Especial Anual</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <form method="post" action="{% url 'billing:checkout_custom_plan' custom_request.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="billing_cycle" value="monthly" class="billing-cycle-input">
+                            <button type="submit" class="btn btn-primary w-100 btn-lg rounded-pill shadow fw-bold" style="background: linear-gradient(135deg, #6366f1, #818cf8); border:none; padding: 1.2rem;">
+                                <i class="bi bi-credit-card-fill me-2"></i> Assinar Plano Exclusivo
+                            </button>
+                        </form>
+                        <p class="text-muted small mt-3 mb-0"><i class="bi bi-shield-lock-fill me-1"></i> Pagamento seguro processado via Stripe</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
     {% if current_plan and limits %}
     <!-- Usage Section -->
     <div class="usage-section">
@@ -854,6 +962,108 @@
         </details>
     </div>
 </div>
+
+<!-- Modal Custom Plan Builder -->
+<div class="modal fade" id="customPlanModal" tabindex="-1" aria-labelledby="customPlanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <div class="modal-header border-0 bg-light p-4 rounded-top-4 pb-3">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                        <i class="bi bi-sliders fs-4"></i>
+                    </div>
+                    <div>
+                        <h4 class="modal-title fw-bold text-dark mb-0" id="customPlanModalLabel">Monte seu Plano Sob Medida</h4>
+                        <p class="text-muted mb-0 small">Escolha os limites ideais para sua operação</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form action="{% url 'billing:request_custom_plan' %}" method="post">
+                {% csrf_token %}
+                <div class="modal-body p-4 pt-2">
+                    <div class="row g-4">
+                        <div class="col-md-12">
+                            <h6 class="fw-bold text-uppercase text-muted small mb-3">Limites Principais</h6>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold d-flex justify-content-between">
+                                Funcionários
+                                <span class="text-primary badge bg-primary bg-opacity-10 px-2 rounded-pill" id="val_employees">{{ custom_request.max_employees|default:50 }}</span>
+                            </label>
+                            <input type="range" class="form-range custom-range" name="max_employees" id="range_employees" min="10" max="2000" step="10" value="{{ custom_request.max_employees|default:50 }}" oninput="document.getElementById('val_employees').innerText = this.value">
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold d-flex justify-content-between">
+                                Formulários Ativos
+                                <span class="text-primary badge bg-primary bg-opacity-10 px-2 rounded-pill" id="val_forms">{{ custom_request.max_forms|default:10 }}</span>
+                            </label>
+                            <input type="range" class="form-range custom-range" name="max_forms" id="range_forms" min="1" max="100" step="1" value="{{ custom_request.max_forms|default:10 }}" oninput="document.getElementById('val_forms').innerText = this.value">
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold d-flex justify-content-between">
+                                Relatórios/mês
+                                <span class="text-primary badge bg-primary bg-opacity-10 px-2 rounded-pill" id="val_reports">{{ custom_request.max_reports|default:20 }}</span>
+                            </label>
+                            <input type="range" class="form-range custom-range" name="max_reports" id="range_reports" min="5" max="1000" step="5" value="{{ custom_request.max_reports|default:20 }}" oninput="document.getElementById('val_reports').innerText = this.value">
+                        </div>
+
+                        <div class="col-md-12 mt-4 pt-3 border-top">
+                            <h6 class="fw-bold text-uppercase text-muted small mb-3">Recursos Extras & Retenção</h6>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Retenção de Dados (Dias)</label>
+                            <select class="form-select border-0 bg-light rounded-3 p-2" name="data_retention_days">
+                                <option value="365" {% if custom_request.data_retention_days == 365 %}selected{% endif %}>1 Ano (365 dias)</option>
+                                <option value="1825" {% if custom_request.data_retention_days == 1825 %}selected{% endif %}>5 Anos (1825 dias)</option>
+                                <option value="3650" {% if custom_request.data_retention_days == 3650 %}selected{% endif %}>10 Anos (3650 dias)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3 d-flex flex-column justify-content-center pt-3">
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" name="has_pdf_export" id="flexSwitchPDF" checked>
+                                <label class="form-check-label ms-2" for="flexSwitchPDF"><i class="bi bi-file-earmark-pdf-fill text-danger me-1"></i> Exportação em PDF</label>
+                            </div>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" name="has_api_access" id="flexSwitchAPI" {% if custom_request.has_api_access %}checked{% endif %}>
+                                <label class="form-check-label ms-2" for="flexSwitchAPI"><i class="bi bi-code-slash text-primary me-1"></i> Acesso via API</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mt-2">
+                            <label class="form-label fw-bold">Mensagem Adicional <span class="text-muted fw-normal">(Opcional)</span></label>
+                            <textarea class="form-control bg-light border-0 rounded-3 p-3" name="user_message" rows="2" placeholder="Ex: Precisamos de uma integração customizada ou maior volume de APIs...">{{ custom_request.user_message }}</textarea>
+                            <div class="form-text mt-2"><i class="bi bi-info-circle me-1"></i>Nossa equipe receberá esta solicitação e enviará uma proposta de valor na sua tela em até 24 horas.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-2">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold text-muted" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" style="background: linear-gradient(135deg, #6366f1, #818cf8); border:none;">
+                        <i class="bi bi-send-fill me-1"></i> Enviar Solicitação para Análise
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Custom Range Slider styling inside modal */
+.custom-range::-webkit-slider-thumb {
+    background: #6366f1;
+}
+.custom-range::-moz-range-thumb {
+    background: #6366f1;
+}
+</style>
+
 {% endblock %}
 
 {% block extra_js %}

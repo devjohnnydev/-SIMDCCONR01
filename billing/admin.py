@@ -2,7 +2,7 @@
 Configuracao do Django Admin para billing.
 """
 from django.contrib import admin
-from .models import Plan, Subscription, PaymentOrder
+from .models import Plan, Subscription, PaymentOrder, CustomPlanRequest
 
 
 @admin.register(Plan)
@@ -55,3 +55,34 @@ class PaymentOrderAdmin(admin.ModelAdmin):
     def amount_display(self, obj):
         return f"R$ {obj.amount / 100:.2f}"
     amount_display.short_description = 'Valor'
+
+
+@admin.register(CustomPlanRequest)
+class CustomPlanRequestAdmin(admin.ModelAdmin):
+    """Admin para solicitacoes de planos personalizados."""
+    
+    list_display = ['company', 'status', 'created_at', 'proposed_price_monthly']
+    list_filter = ['status', 'has_pdf_export', 'has_api_access']
+    search_fields = ['company__nome_fantasia']
+    ordering = ['-created_at']
+    readonly_fields = ['created_at', 'updated_at']
+
+    fieldsets = (
+        ('Empresa e Status', {
+            'fields': ('company', 'status')
+        }),
+        ('Recursos Solicitados', {
+            'fields': ('max_employees', 'max_forms', 'max_reports', 'data_retention_days', 
+                       'has_pdf_export', 'has_csv_import', 'has_api_access', 'has_custom_branding', 'has_priority_support')
+        }),
+        ('Proposta Admin', {
+            'fields': ('proposed_price_monthly', 'proposed_price_yearly', 'admin_message')
+        }),
+        ('Comunicacao Empresa', {
+            'fields': ('user_message',)
+        }),
+        ('Metadados', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )

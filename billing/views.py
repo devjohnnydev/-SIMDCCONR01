@@ -13,8 +13,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from datetime import timedelta
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
-from .models import Plan, Subscription, PaymentOrder
+from .models import Plan, Subscription, PaymentOrder, CustomPlanRequest
 from companies.views import require_company_admin, require_admin_master
 
 logger = logging.getLogger(__name__)
@@ -66,10 +69,16 @@ def plan_pricing(request):
     company = None
     usage = {}
     limits = None
+    custom_request = None
 
     if hasattr(request.user, 'company') and request.user.company:
         company = request.user.company
         current_plan = company.plan
+        
+        custom_request = CustomPlanRequest.objects.filter(
+            company=company,
+            status__in=['pending', 'proposed']
+        ).first()
 
         if current_plan:
             usage = {
@@ -95,6 +104,7 @@ def plan_pricing(request):
         'limits': limits,
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
         'has_no_plan': company and not current_plan,
+        'custom_request': custom_request,
     }
 
     return render(request, 'billing/pricing.html', context)
@@ -339,3 +349,209 @@ def plan_list(request):
         'plans': plans,
         'orders': orders,
     })
+
+
+@login_required
+@require_company_admin
+@require_POST
+def request_custom_plan(request):
+    """Cria ou atualiza uma solicitação de plano personalizado."""
+    company = request.user.company
+    
+    # Cancela requests anteriores pendentes/propostos
+    CustomPlanRequest.objects.filter(company=company, status__in=['pending', 'proposed']).update(status='rejected')
+    
+    CustomPlanRequest.objects.create(
+        company=company,
+        status='pending',
+        max_employees=int(request.POST.get('max_employees', 50)),
+        max_reports=int(request.POST.get('max_reports', 20)),
+        max_forms=int(request.POST.get('max_forms', 10)),
+        data_retention_days=int(request.POST.get('data_retention_days', 365)),
+        has_pdf_export=request.POST.get('has_pdf_export') == 'on',
+        has_csv_import=request.POST.get('has_csv_import') == 'on',
+        has_api_access=request.POST.get('has_api_access') == 'on',
+        has_priority_support=request.POST.get('has_priority_support') == 'on',
+        has_custom_branding=request.POST.get('has_custom_branding') == 'on',
+        user_message=request.POST.get('user_message', '')
+    )
+    
+    # Notificar Admin Master (disparo assincrono seria ideal, mas síncrono resolve)
+    try:
+        subject = f"Nova Solicitação de Plano: {company.nome_fantasia}"
+        message = f"A empresa {company.nome_fantasia} enviou uma nova solicitação de plano personalizado.\nAcesse o painel para analisar."
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [settings.ADMIN_EMAIL] if hasattr(settings, 'ADMIN_EMAIL') else ['admin@saasnr01.com'],
+            fail_silently=True,
+        )
+    except Exception as e:
+        logger.error(f"Erro ao notificar admin sobre plano customizado: {e}")
+    
+    messages.success(request, 'Solicitação de plano personalizado enviada! Analisaremos e retornaremos com uma proposta em breve.')
+    return redirect('billing:pricing')
+
+
+@login_required
+@require_company_admin
+@require_POST
+def checkout_custom_plan(request, request_id):
+    """Inicia checkout para um plano personalizado aprovado pelo admin."""
+    company = request.user.company
+    custom_req = get_object_or_404(CustomPlanRequest, id=request_id, company=company, status='proposed')
+    
+    is_yearly = request.POST.get('billing_cycle') == 'yearly'
+    
+    if is_yearly and not custom_req.proposed_price_yearly:
+        messages.error(request, 'O faturamento anual não está disponível para esta proposta.')
+        return redirect('billing:pricing')
+        
+    # Cria o Plan hidden para poder usar todo o ecossistema existente
+    plan_name = f"Plano Exclusivo - {company.nome_fantasia}"
+    plan = Plan.objects.create(
+        name=plan_name,
+        description=f"Plano sob medida com {custom_req.max_employees} funcionários e {custom_req.max_reports} relatórios/mês.",
+        price_monthly=custom_req.proposed_price_monthly,
+        price_yearly=custom_req.proposed_price_yearly,
+        max_employees=custom_req.max_employees,
+        max_forms=custom_req.max_forms,
+        max_reports=custom_req.max_reports,
+        data_retention_days=custom_req.data_retention_days,
+        has_pdf_export=custom_req.has_pdf_export,
+        has_csv_import=custom_req.has_csv_import,
+        has_api_access=custom_req.has_api_access,
+        has_custom_branding=custom_req.has_custom_branding,
+        has_priority_support=custom_req.has_priority_support,
+        is_active=False, # Oculto
+        is_featured=False
+    )
+    
+    custom_req.status = 'accepted'
+    custom_req.save()
+    
+    # Reutiliza a logica de checkout
+    # Vamos mockar o POST do request para redirecionar para a view de checkout
+    amount = int(plan.price_yearly * 100) if is_yearly else int(plan.price_monthly * 100)
+    period_label = 'Anual' if is_yearly else 'Mensal'
+    
+    order = PaymentOrder.objects.create(
+        company=company,
+        plan=plan,
+        is_yearly=is_yearly,
+        amount=amount,
+        status='pending',
+    )
+    
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card', 'boleto'],
+            mode='payment',
+            line_items=[{
+                'price_data': {
+                    'currency': 'brl',
+                    'product_data': {
+                        'name': f'{plan.name} — {period_label}',
+                        'description': plan.description,
+                    },
+                    'unit_amount': amount,
+                },
+                'quantity': 1,
+            }],
+            metadata={
+                'company_id': str(company.id),
+                'order_id': str(order.id),
+                'plan_id': str(plan.id),
+                'is_yearly': '1' if is_yearly else '0',
+            },
+            customer_email=company.responsavel_email,
+            success_url=f'{settings.SITE_URL}/billing/success/?session_id={{CHECKOUT_SESSION_ID}}',
+            cancel_url=f'{settings.SITE_URL}/billing/cancel/',
+        )
+        order.stripe_session_id = checkout_session.id
+        order.save(update_fields=['stripe_session_id'])
+        return redirect(checkout_session.url)
+    except Exception as e:
+        logger.error(f'Erro no checkout do custom plan: {e}')
+        messages.error(request, 'Erro ao processar pagamento.')
+        return redirect('billing:pricing')
+
+
+@login_required
+@require_company_admin
+@require_POST
+def cancel_custom_plan(request, request_id):
+    """Cancela a proposta/solicitacao."""
+    company = request.user.company
+    custom_req = get_object_or_404(CustomPlanRequest, id=request_id, company=company)
+    custom_req.status = 'rejected'
+    custom_req.save()
+    messages.info(request, 'Solicitação cancelada.')
+    return redirect('billing:pricing')
+
+
+@login_required
+@require_admin_master
+def admin_custom_requests(request):
+    """Admin Master visualiza todas as solicitacoes pendentes/propostas."""
+    reqs = CustomPlanRequest.objects.all().order_by('-created_at')
+    return render(request, 'billing/admin_custom_requests.html', {'requests': reqs})
+
+
+@login_required
+@require_admin_master
+def admin_custom_request_detail(request, request_id):
+    """Admin Master analisa e precifica uma solicitacao."""
+    custom_req = get_object_or_404(CustomPlanRequest, id=request_id)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'approve':
+            try:
+                monthly = float(request.POST.get('proposed_price_monthly'))
+                yearly = request.POST.get('proposed_price_yearly')
+                
+                custom_req.proposed_price_monthly = monthly
+                if yearly:
+                    custom_req.proposed_price_yearly = float(yearly)
+                    
+                custom_req.admin_message = request.POST.get('admin_message', '')
+                
+                # O Admin pode ter ajustado os limites tambem
+                custom_req.max_employees = int(request.POST.get('max_employees', custom_req.max_employees))
+                custom_req.max_reports = int(request.POST.get('max_reports', custom_req.max_reports))
+                custom_req.max_forms = int(request.POST.get('max_forms', custom_req.max_forms))
+                
+                custom_req.status = 'proposed'
+                custom_req.save()
+                
+                # Notificar a empresa
+                try:
+                    subject = "Seu Plano Exclusivo foi aprovado e precificado!"
+                    message = f"Olá, a sua solicitação de plano sob medida foi analisada e nossa proposta de valor já está disponível.\nAcesse a tela de Assinatura no sistema para conferir e assinar o plano exclusivo para sua empresa."
+                    send_mail(
+                        subject,
+                        message,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [custom_req.company.responsavel_email],
+                        fail_silently=True,
+                    )
+                except Exception as e:
+                    logger.error(f"Erro ao notificar empresa sobre proposta de plano: {e}")
+                    
+                messages.success(request, f'Proposta enviada para {custom_req.company.nome_fantasia}!')
+            except ValueError:
+                messages.error(request, 'Valores inválidos fornecidos.')
+                
+        elif action == 'reject':
+            custom_req.status = 'rejected'
+            custom_req.admin_message = request.POST.get('admin_message', '')
+            custom_req.save()
+            messages.info(request, 'Solicitação rejeitada.')
+            
+        return redirect('billing:admin_custom_requests')
+        
+    return render(request, 'billing/admin_custom_request_detail.html', {'req': custom_req})
+

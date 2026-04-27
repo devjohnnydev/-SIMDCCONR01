@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load l10n %}
+
+{% block title %}Análise de Plano: {{ req.company.nome_fantasia }} — Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 mb-0 text-gray-800">Análise de Solicitação</h2>
+        <a href="{% url 'billing:admin_custom_requests' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Voltar
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Esquerda: Dados da Solicitacao -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-white border-bottom p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">Pedido da Empresa</h5>
+                        {% if req.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">Pendente</span>
+                        {% elif req.status == 'proposed' %}
+                        <span class="badge bg-info">Proposta Enviada</span>
+                        {% elif req.status == 'accepted' %}
+                        <span class="badge bg-success">Assinado</span>
+                        {% elif req.status == 'rejected' %}
+                        <span class="badge bg-danger">Recusado/Cancelado</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-4 pb-4 border-bottom">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1">{{ req.company.nome_fantasia }}</h4>
+                            <p class="text-muted mb-0">{{ req.company.responsavel_email }} | CNPJ: {{ req.company.cnpj|default:"Não informado" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-sm-4">
+                            <div class="p-3 bg-light rounded-3 text-center border">
+                                <div class="text-muted small fw-bold text-uppercase mb-1">Funcionários</div>
+                                <div class="fs-4 fw-bold text-dark">{{ req.max_employees }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="p-3 bg-light rounded-3 text-center border">
+                                <div class="text-muted small fw-bold text-uppercase mb-1">Formulários</div>
+                                <div class="fs-4 fw-bold text-dark">{{ req.max_forms }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="p-3 bg-light rounded-3 text-center border">
+                                <div class="text-muted small fw-bold text-uppercase mb-1">Relatórios/Mês</div>
+                                <div class="fs-4 fw-bold text-dark">{{ req.max_reports }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3">Recursos Extras & Retenção</h6>
+                    <ul class="list-group list-group-flush border rounded-3 mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span>Retenção de Dados</span>
+                            <span class="fw-bold">{{ req.data_retention_days }} dias</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span>Exportação PDF</span>
+                            {% if req.has_pdf_export %}<i class="bi bi-check-circle-fill text-success fs-5"></i>{% else %}<i class="bi bi-x-circle text-muted fs-5"></i>{% endif %}
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span>Importação CSV</span>
+                            {% if req.has_csv_import %}<i class="bi bi-check-circle-fill text-success fs-5"></i>{% else %}<i class="bi bi-x-circle text-muted fs-5"></i>{% endif %}
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span>Acesso API</span>
+                            {% if req.has_api_access %}<i class="bi bi-check-circle-fill text-success fs-5"></i>{% else %}<i class="bi bi-x-circle text-muted fs-5"></i>{% endif %}
+                        </li>
+                    </ul>
+
+                    {% if req.user_message %}
+                    <div class="alert alert-secondary border-0 mb-0">
+                        <h6 class="alert-heading fw-bold"><i class="bi bi-chat-quote-fill me-2 text-secondary"></i>Mensagem da Empresa:</h6>
+                        <p class="mb-0">{{ req.user_message }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Direita: Formulário de Precificação -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-lg rounded-4" style="border-top: 4px solid #6366f1 !important;">
+                <div class="card-header bg-white border-bottom p-4">
+                    <h5 class="mb-0 fw-bold">Definir Proposta</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="alert alert-info border-0 bg-info bg-opacity-10 text-dark small mb-4">
+                            Você pode precificar esta solicitação. Se quiser fazer uma contraproposta alterando os limites solicitados pela empresa, modifique-os abaixo.
+                        </div>
+
+                        <!-- Opcional: Alterar Limites -->
+                        <div class="row g-2 mb-4 pb-3 border-bottom">
+                            <div class="col-4">
+                                <label class="form-label small fw-bold">Funcionários</label>
+                                <input type="number" class="form-control form-control-sm" name="max_employees" value="{{ req.max_employees }}" {% if req.status in 'accepted,rejected' %}readonly{% endif %}>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label small fw-bold">Formulários</label>
+                                <input type="number" class="form-control form-control-sm" name="max_forms" value="{{ req.max_forms }}" {% if req.status in 'accepted,rejected' %}readonly{% endif %}>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label small fw-bold">Relatórios</label>
+                                <input type="number" class="form-control form-control-sm" name="max_reports" value="{{ req.max_reports }}" {% if req.status in 'accepted,rejected' %}readonly{% endif %}>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Valor Mensal (R$)</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text border-end-0 bg-white text-muted">R$</span>
+                                <input type="number" step="0.01" class="form-control border-start-0 ps-0 fw-bold" name="proposed_price_monthly" value="{{ req.proposed_price_monthly|unlocalize }}" required placeholder="0.00" {% if req.status in 'accepted,rejected' %}readonly{% endif %}>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Valor Anual (R$) <span class="text-muted fw-normal small">(Opcional)</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted">R$</span>
+                                <input type="number" step="0.01" class="form-control" name="proposed_price_yearly" value="{{ req.proposed_price_yearly|unlocalize }}" placeholder="0.00" {% if req.status in 'accepted,rejected' %}readonly{% endif %}>
+                            </div>
+                            <div class="form-text">Deixe em branco se este plano for apenas mensal.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Sua Mensagem / Justificativa</label>
+                            <textarea class="form-control" name="admin_message" rows="3" placeholder="Mensagem para o cliente..." {% if req.status in 'accepted,rejected' %}readonly{% endif %}>{{ req.admin_message }}</textarea>
+                        </div>
+
+                        {% if req.status not in 'accepted,rejected' %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="action" value="approve" class="btn btn-primary btn-lg rounded-pill fw-bold">
+                                <i class="bi bi-send-fill me-1"></i> Enviar Proposta de Preço
+                            </button>
+                            <button type="submit" name="action" value="reject" class="btn btn-outline-danger rounded-pill fw-bold mt-2" onclick="return confirm('Deseja realmente recusar e cancelar esta solicitação?')">
+                                <i class="bi bi-x-circle me-1"></i> Recusar Solicitação
+                            </button>
+                        </div>
+                        {% else %}
+                            <div class="alert alert-secondary border-0 text-center mb-0">
+                                Esta solicitação está <strong>{% if req.status == 'accepted' %}Assinada{% else %}Cancelada/Recusada{% endif %}</strong> e não pode mais ser alterada.
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

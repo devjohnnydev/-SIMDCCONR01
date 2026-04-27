@@ -150,3 +150,53 @@ class PaymentOrder(models.Model):
     def __str__(self):
         return f"Order #{self.id} - {self.company.nome_fantasia} - {self.get_status_display()}"
 
+
+class CustomPlanRequest(models.Model):
+    """Solicitações de planos personalizados pelas empresas."""
+
+    STATUS_CHOICES = [
+        ('pending', 'Pendente de Análise'),
+        ('proposed', 'Proposta Enviada'),
+        ('accepted', 'Aceita / Assinada'),
+        ('rejected', 'Recusada / Cancelada'),
+    ]
+
+    company = models.ForeignKey(
+        'companies.Company',
+        on_delete=models.CASCADE,
+        related_name='custom_plan_requests',
+        verbose_name='Empresa'
+    )
+    
+    status = models.CharField('Status', max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    # Features desejadas
+    max_employees = models.IntegerField('Limite de Funcionários', default=50)
+    max_forms = models.IntegerField('Limite de Formulários Ativos', default=10)
+    max_reports = models.IntegerField('Relatórios por Mês', default=20)
+    data_retention_days = models.IntegerField('Retenção de Dados (dias)', default=365)
+    
+    has_pdf_export = models.BooleanField('Exportação PDF', default=True)
+    has_csv_import = models.BooleanField('Importação CSV', default=True)
+    has_api_access = models.BooleanField('Acesso API', default=False)
+    has_custom_branding = models.BooleanField('Personalização Visual', default=True)
+    has_priority_support = models.BooleanField('Suporte Prioritário', default=False)
+
+    # Valores propostos pelo admin
+    proposed_price_monthly = models.DecimalField('Preço Mensal Proposto', max_digits=10, decimal_places=2, null=True, blank=True)
+    proposed_price_yearly = models.DecimalField('Preço Anual Proposto', max_digits=10, decimal_places=2, null=True, blank=True)
+    
+    admin_message = models.TextField('Mensagem do Admin', blank=True)
+    user_message = models.TextField('Mensagem da Empresa', blank=True, help_text="Usado em contrapropostas ou justificativas")
+
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Solicitação de Plano Personalizado'
+        verbose_name_plural = 'Solicitações de Planos Personalizados'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Solicitação - {self.company.nome_fantasia} ({self.get_status_display()})"
+

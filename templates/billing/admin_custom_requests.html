@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}Solicitações de Planos — Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 mb-0 text-gray-800">Planos Personalizados</h2>
+            <p class="text-muted mb-0">Gerencie as solicitações de empresas para planos sob medida</p>
+        </div>
+        <a href="{% url 'billing:plan_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Voltar para Planos
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-bottom p-4">
+            <h5 class="mb-0 fw-bold">Todas as Solicitações</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Empresa</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Limites (Func/Rel/Form)</th>
+                            <th>Valor Proposto</th>
+                            <th class="text-end pe-4">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in requests %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold">{{ req.company.nome_fantasia }}</div>
+                                <div class="small text-muted">{{ req.company.cnpj|default:"-" }}</div>
+                            </td>
+                            <td>{{ req.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if req.status == 'pending' %}
+                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i> Pendente</span>
+                                {% elif req.status == 'proposed' %}
+                                <span class="badge bg-info"><i class="bi bi-envelope-paper me-1"></i> Proposta Enviada</span>
+                                {% elif req.status == 'accepted' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Assinado</span>
+                                {% elif req.status == 'rejected' %}
+                                <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i> Recusado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border me-1">{{ req.max_employees }} <i class="bi bi-people"></i></span>
+                                <span class="badge bg-light text-dark border me-1">{{ req.max_reports }} <i class="bi bi-file-earmark-text"></i></span>
+                                <span class="badge bg-light text-dark border">{{ req.max_forms }} <i class="bi bi-ui-checks"></i></span>
+                            </td>
+                            <td>
+                                {% if req.proposed_price_monthly %}
+                                    <strong class="text-success">R$ {{ req.proposed_price_monthly }}</strong>/mês
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+                                <a href="{% url 'billing:admin_custom_request_detail' req.id %}" class="btn btn-sm btn-primary rounded-pill px-3">
+                                    {% if req.status == 'pending' %}
+                                        Analisar <i class="bi bi-arrow-right ms-1"></i>
+                                    {% else %}
+                                        Ver Detalhes
+                                    {% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary opacity-50"></i>
+                                Nenhuma solicitação encontrada.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

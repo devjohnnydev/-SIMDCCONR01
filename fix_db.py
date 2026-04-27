@@ -165,4 +165,29 @@ execute("ALTER TABLE landing_landingconfig ADD COLUMN IF NOT EXISTS whatsapp_num
 execute("ALTER TABLE landing_testimonial ADD COLUMN IF NOT EXISTS avatar_db bytea;")
 execute("ALTER TABLE landing_testimonial ADD COLUMN IF NOT EXISTS avatar_mime varchar(100);")
 
+print("\n--- FORCING SAFETY TABLE: billing_customplanrequest ---")
+execute("""
+    CREATE TABLE IF NOT EXISTS billing_customplanrequest (
+        id bigserial PRIMARY KEY,
+        company_id bigint NOT NULL REFERENCES companies_company(id) DEFERRABLE INITIALLY DEFERRED,
+        status varchar(20) NOT NULL DEFAULT 'pending',
+        max_employees integer NOT NULL DEFAULT 50,
+        max_forms integer NOT NULL DEFAULT 10,
+        max_reports integer NOT NULL DEFAULT 20,
+        data_retention_days integer NOT NULL DEFAULT 365,
+        has_pdf_export boolean NOT NULL DEFAULT true,
+        has_csv_import boolean NOT NULL DEFAULT true,
+        has_api_access boolean NOT NULL DEFAULT false,
+        has_custom_branding boolean NOT NULL DEFAULT true,
+        has_priority_support boolean NOT NULL DEFAULT false,
+        proposed_price_monthly numeric(10, 2),
+        proposed_price_yearly numeric(10, 2),
+        admin_message text NOT NULL DEFAULT '',
+        user_message text NOT NULL DEFAULT '',
+        created_at timestamp with time zone NOT NULL,
+        updated_at timestamp with time zone NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS billing_customplanrequest_company_id_idx ON billing_customplanrequest (company_id);
+""")
+
 print("\nSafety check complete.")

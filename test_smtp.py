@@ -8,13 +8,13 @@ def test_smtp():
     user = 'safeclima@nexttrust.com.br'
     password = 'Jb@36873021806'
     
-    sender = 'SafeClima NR-01 <safeclima@nexttrust.com.br>'
+    sender = 'SIMDCCONR01 NR-01 <safeclima@nexttrust.com.br>'
     recipient = 'johnnybraga2@gmail.com'
     
     msg = MIMEMultipart()
     msg['From'] = sender
     msg['To'] = recipient
-    msg['Subject'] = 'Teste de SMTP Locaweb - SafeClima'
+    msg['Subject'] = 'Teste de SMTP Locaweb - SIMDCCONR01'
     
     body = "Este é um teste direto de conexão SMTP para verificar se o e-mail está funcionando."
     msg.attach(MIMEText(body, 'plain'))

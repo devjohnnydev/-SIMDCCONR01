@@ -13,7 +13,7 @@ def send_company_welcome_contract(company):
     context = {
         'company': company,
         'protocolo': protocolo,
-        'verify_url': f"https://safeclima.com.br/accounts/verify/contract/{protocolo}/",
+        'verify_url': f"{settings.SITE_URL}/accounts/verify/contract/{protocolo}/",
         'support_email': 'suporte@simdcconr01.com.br'
     }
     

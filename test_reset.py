@@ -1,7 +1,7 @@
 import requests
 
 def test_password_reset():
-    url = "https://safeclima.com.br/accounts/password-reset/"
+    url = "https://simdcconr01.com.br/accounts/password-reset/"
     session = requests.Session()
     
     try:
@@ -28,7 +28,7 @@ def test_password_reset():
         print("Obteve token CSRF com sucesso")
         
         # Add CSRF token to cookies so the server accepts it
-        session.cookies.set('csrftoken', csrf_token, domain='safeclima.com.br')
+        session.cookies.set('csrftoken', csrf_token, domain='simdcconr01.com.br')
         
         # Step 2: Post the email to trigger the password reset
         data = {

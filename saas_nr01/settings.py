@@ -135,8 +135,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.app',
     'https://*.up.railway.app',
     'https://web-production-4c50c.up.railway.app',
-    'https://safeclima.com.br',
-    'https://www.safeclima.com.br',
+    'https://simdcconr01.com.br',
+    'https://www.simdcconr01.com.br',
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -182,5 +182,5 @@ if not EMAIL_HOST_USER:
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
 STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY', default='')
 STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET', default='')
-SITE_URL = config('SITE_URL', default='http://localhost:8000')
+SITE_URL = config('SITE_URL', default='https://simdcconr01.com.br')
 

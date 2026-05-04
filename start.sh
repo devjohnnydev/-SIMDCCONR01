@@ -21,7 +21,7 @@ python manage.py migrate --fake reports 0007 --noinput || true
 python manage.py migrate --fake billing 0005 --noinput || true
 
 echo "Running migrate..."
-python manage.py migrate --noinput
+python manage.py migrate --noinput --fake-initial
 
 # echo "Running setup_initial_data..."
 # python manage.py setup_initial_data

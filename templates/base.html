@@ -757,8 +757,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'admin_financial_dashboard' %}active{% endif %}" href="{% url 'accounts:admin_financial_dashboard' %}">
-                            <i class="bi bi-wallet2"></i> Financeiro
+                        <a class="nav-link {% if 'financeiro' in request.path %}active{% endif %}" href="{% url 'billing:financial_dashboard' %}">
+                            <i class="bi bi-wallet2"></i> Financeiro Executivo
                         </a>
                     </li>
                     
@@ -787,6 +787,41 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'manage_testimonials' %}active{% endif %}" href="{% url 'landing:manage_testimonials' %}">
                             <i class="bi bi-chat-heart"></i> Depoimentos
+                        </a>
+                    </li>
+
+                    <div class="app-sidebar-header">
+                        <h6>Compliance NR</h6>
+                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'risks' in request.path %}active{% endif %}" href="{% url 'risk_management:dashboard' %}">
+                            <i class="bi bi-shield-exclamation"></i> Gestão de Riscos (GRO)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'evolution' in request.path and 'todas-empresas' not in request.path %}active{% endif %}" href="{% url 'evolution:dashboard' %}">
+                            <i class="bi bi-graph-up-arrow"></i> Evolução da Empresa
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'todas-empresas' in request.path %}active{% endif %}" href="{% url 'evolution:all_companies' %}">
+                            <i class="bi bi-buildings"></i> Evolução Global
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'ia' in request.path %}active{% endif %}" href="{% url 'predictive_ai:dashboard' %}">
+                            <i class="bi bi-robot"></i> IA Preditiva
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'documents' in request.path %}active{% endif %}" href="{% url 'documents:list' %}">
+                            <i class="bi bi-folder2-open"></i> Documentos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'alerts' in request.path %}active{% endif %}" href="{% url 'alerts:list' %}">
+                            <i class="bi bi-bell"></i> Alertas
+                            <span class="badge bg-danger ms-auto" id="alertBadgeSidebar"></span>
                         </a>
                     </li>
 
@@ -840,6 +875,36 @@
                         </a>
                     </li>
                     
+                    <div class="app-sidebar-header">
+                        <h6>Compliance NR</h6>
+                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'risks' in request.path %}active{% endif %}" href="{% url 'risk_management:dashboard' %}">
+                            <i class="bi bi-shield-exclamation"></i> Gestão de Riscos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'evolution' in request.path %}active{% endif %}" href="{% url 'evolution:dashboard' %}">
+                            <i class="bi bi-graph-up-arrow"></i> Evolução e Inteligência
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'ia' in request.path %}active{% endif %}" href="{% url 'predictive_ai:dashboard' %}">
+                            <i class="bi bi-robot"></i> IA Preditiva
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'documents' in request.path %}active{% endif %}" href="{% url 'documents:list' %}">
+                            <i class="bi bi-folder2-open"></i> Documentos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'alerts' in request.path %}active{% endif %}" href="{% url 'alerts:list' %}">
+                            <i class="bi bi-bell"></i> Alertas
+                            <span class="badge bg-danger ms-auto" id="alertBadgeCompany"></span>
+                        </a>
+                    </li>
+
                     <div class="app-sidebar-header">
                         <h6>Configurações</h6>
                     </div>
@@ -926,6 +991,28 @@
                     }
                 }, 5000); // 5 seconds
             });
+
+            // Alert badge polling — atualiza a cada 60s
+            {% if user.is_authenticated %}
+            function updateAlertBadge() {
+                fetch('{% url "alerts:unread_count" %}')
+                    .then(r => r.json())
+                    .then(data => {
+                        const badges = document.querySelectorAll('#alertBadgeSidebar, #alertBadgeCompany');
+                        badges.forEach(b => {
+                            if (data.count > 0) {
+                                b.textContent = data.count;
+                                b.style.display = '';
+                            } else {
+                                b.style.display = 'none';
+                            }
+                        });
+                    })
+                    .catch(() => {});
+            }
+            updateAlertBadge();
+            setInterval(updateAlertBadge, 60000);
+            {% endif %}
         });
     </script>
     {% block extra_js %}{% endblock %}

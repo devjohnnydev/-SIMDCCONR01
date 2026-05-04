@@ -9,7 +9,7 @@ from .models import Plan, Subscription, PaymentOrder, CustomPlanRequest
 class PlanAdmin(admin.ModelAdmin):
     """Admin para planos."""
     
-    list_display = ['name', 'price_monthly', 'max_employees', 'max_forms', 'is_active', 'is_featured', 'order']
+    list_display = ['name', 'pricing_mode', 'price_monthly', 'base_price', 'per_employee_price', 'max_employees', 'is_active', 'is_featured', 'order']
     list_filter = ['is_active', 'is_featured']
     search_fields = ['name', 'description']
     ordering = ['order']
@@ -18,8 +18,14 @@ class PlanAdmin(admin.ModelAdmin):
         ('Informacoes Basicas', {
             'fields': ('name', 'description', 'order')
         }),
-        ('Precos', {
-            'fields': ('price_monthly', 'price_yearly')
+        ('Pricing Fixo', {
+            'fields': ('price_monthly', 'price_yearly', 'price_semestral')
+        }),
+        ('Pricing Dinâmico', {
+            'fields': ('pricing_mode', 'base_price', 'per_employee_price',
+                       'min_employees_discount', 'discount_pct_small', 'discount_pct_corporate',
+                       'default_billing_cycle'),
+            'description': 'Configurações para cálculo automático baseado em funcionários.'
         }),
         ('Limites', {
             'fields': ('max_employees', 'max_forms', 'max_reports', 'data_retention_days')
@@ -37,8 +43,8 @@ class PlanAdmin(admin.ModelAdmin):
 class SubscriptionAdmin(admin.ModelAdmin):
     """Admin para assinaturas."""
     
-    list_display = ['company', 'plan', 'status', 'start_date', 'end_date', 'is_yearly']
-    list_filter = ['status', 'plan', 'is_yearly']
+    list_display = ['company', 'plan', 'status', 'billing_cycle', 'calculated_price', 'start_date', 'end_date']
+    list_filter = ['status', 'plan', 'billing_cycle']
     search_fields = ['company__nome_fantasia']
 
 

@@ -285,6 +285,13 @@ def generate_simdcconr01_report(request, form_pk):
         messages.error(request, error)
         return redirect('reports:dashboard')
 
+    # Criar snapshot de evolução automático
+    try:
+        from evolution.services import create_snapshot_from_report
+        create_snapshot_from_report(form_instance, laudo_data, user=request.user)
+    except Exception as e:
+        logger.warning(f'Erro ao criar snapshot de evolução: {e}')
+
     # Log de auditoria
     AuditLog.log(
         user=request.user,

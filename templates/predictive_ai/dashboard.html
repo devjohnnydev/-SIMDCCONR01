@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}IA Preditiva — SIMDCCONR01{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="page-header mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">IA Preditiva</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h1 class="h2 mb-0"><i class="bi bi-robot me-2 text-primary"></i>Inteligência Preditiva</h1>
+            <div class="d-flex gap-2">
+                {% if request.user.is_admin_master %}
+                <form method="post" action="{% url 'predictive_ai:run_analysis' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-play-circle me-1"></i>Executar Análise
+                    </button>
+                </form>
+                {% endif %}
+                <a href="{% url 'predictive_ai:suggestion_list' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-lightbulb me-1"></i>Banco de Sugestões
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if companies_list %}
+    <div class="mb-3">
+        <select class="form-select form-select-sm w-auto" onchange="window.location='?company='+this.value">
+            <option value="">Selecione uma empresa</option>
+            {% for c in companies_list %}
+            <option value="{{ c.pk }}" {% if c.pk == company.pk %}selected{% endif %}>{{ c.nome_fantasia }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-bar-chart-line fs-2 text-primary"></i>
+                    <h3 class="fw-bold mt-2 mb-0">{{ total_alerts }}</h3>
+                    <small class="text-muted">Alertas Preditivos</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-exclamation-circle fs-2 text-warning"></i>
+                    <h3 class="fw-bold mt-2 mb-0">{{ unacknowledged }}</h3>
+                    <small class="text-muted">Não Reconhecidos</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-building-down fs-2 text-danger"></i>
+                    <h3 class="fw-bold mt-2 mb-0">{{ sector_alerts|length }}</h3>
+                    <small class="text-muted">Setores em Declínio</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-fire fs-2 text-danger"></i>
+                    <h3 class="fw-bold mt-2 mb-0">{{ risk_alerts|length }}</h3>
+                    <small class="text-muted">Riscos Crescentes</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts List -->
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-cpu me-2 text-primary"></i>Alertas Preditivos Gerados</h5>
+        </div>
+        <div class="card-body p-0">
+            {% for alert in alerts %}
+            <div class="border-bottom p-3 {% if not alert.is_acknowledged %}bg-warning bg-opacity-10{% endif %}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            {% if alert.confidence == 'HIGH' %}
+                            <span class="badge bg-danger">Alta Confiança</span>
+                            {% elif alert.confidence == 'MEDIUM' %}
+                            <span class="badge bg-warning text-dark">Média Confiança</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Baixa Confiança</span>
+                            {% endif %}
+                            <span class="badge bg-primary bg-opacity-10 text-primary">{{ alert.get_trend_type_display }}</span>
+                            {% if alert.setor %}
+                            <span class="badge bg-info bg-opacity-10 text-info">{{ alert.setor }}</span>
+                            {% endif %}
+                        </div>
+                        <h6 class="fw-bold mb-1">{{ alert.titulo }}</h6>
+                        <p class="text-muted small mb-1">{{ alert.descricao }}</p>
+                        <div class="alert alert-info py-2 px-3 small mb-1">
+                            <i class="bi bi-lightbulb me-1"></i><strong>Recomendação:</strong> {{ alert.recomendacao }}
+                        </div>
+                        {% if alert.score_atual and alert.score_projetado %}
+                        <small class="text-muted">
+                            Score Atual: <strong>{{ alert.score_atual }}</strong> →
+                            Projetado: <strong class="text-danger">{{ alert.score_projetado }}</strong>
+                        </small>
+                        {% endif %}
+                    </div>
+                    <div class="text-end ms-3">
+                        <small class="text-muted d-block mb-2">{{ alert.created_at|date:"d/m/Y H:i" }}</small>
+                        {% if not alert.is_acknowledged %}
+                        <a href="{% url 'predictive_ai:acknowledge' alert.pk %}" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-check2"></i> Reconhecer
+                        </a>
+                        {% else %}
+                        <span class="badge bg-success"><i class="bi bi-check2-circle"></i> Reconhecido</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-5">
+                <i class="bi bi-robot fs-1 text-muted d-block mb-2"></i>
+                <h5>Nenhum alerta preditivo</h5>
+                <p class="text-muted">O motor de IA ainda não detectou tendências. Execute uma análise ou aguarde a verificação automática.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

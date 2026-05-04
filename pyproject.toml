@@ -17,4 +17,6 @@ dependencies = [
     "reportlab>=4.2.5",
     "whitenoise>=6.11.0",
     "stripe>=8.0.0",
+    "celery>=5.4.0",
+    "redis>=5.0.0",
 ]

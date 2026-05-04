@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Sugestões NR — SIMDCCONR01{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="page-header mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'predictive_ai:dashboard' %}">IA Preditiva</a></li>
+                <li class="breadcrumb-item active">Banco de Sugestões</li>
+            </ol>
+        </nav>
+        <h1 class="h2 mb-0"><i class="bi bi-lightbulb me-2 text-warning"></i>Banco de Sugestões NR</h1>
+    </div>
+
+    <!-- Filtro por tipo -->
+    <div class="d-flex gap-2 mb-4 flex-wrap">
+        <a href="{% url 'predictive_ai:suggestion_list' %}"
+           class="btn btn-sm {% if not filter_tipo %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            Todos
+        </a>
+        {% for code, label in risk_types %}
+        <a href="?tipo={{ code }}"
+           class="btn btn-sm {% if filter_tipo == code %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            {{ label }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="row g-3">
+        {% for suggestion in suggestions %}
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-primary">{{ suggestion.get_tipo_risco_display }}</span>
+                        <span class="badge bg-info text-dark">{{ suggestion.norma_referencia }}</span>
+                        <span class="badge bg-secondary">{{ suggestion.get_categoria_display }}</span>
+                        {% if suggestion.nivel_risco_minimo == 'INTOLERAVEL' %}
+                        <span class="badge bg-danger">≥ Intolerável</span>
+                        {% elif suggestion.nivel_risco_minimo == 'SUBSTANCIAL' %}
+                        <span class="badge bg-warning text-dark">≥ Substancial</span>
+                        {% else %}
+                        <span class="badge bg-success">≥ {{ suggestion.get_nivel_risco_minimo_display }}</span>
+                        {% endif %}
+                    </div>
+                    <h6 class="fw-bold">{{ suggestion.titulo }}</h6>
+                    <p class="text-muted small mb-2">{{ suggestion.descricao }}</p>
+                    {% if suggestion.fundamentacao %}
+                    <div class="alert alert-secondary py-2 px-3 small mb-0">
+                        <i class="bi bi-book me-1"></i><strong>Fundamentação:</strong> {{ suggestion.fundamentacao }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-lightbulb fs-1 text-muted d-block mb-2"></i>
+            <h5>Nenhuma sugestão cadastrada</h5>
+            <p class="text-muted">Execute o comando <code>python manage.py seed_suggestions</code> para popular o banco.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

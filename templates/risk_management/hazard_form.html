@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Editar{% else %}Novo{% endif %} Perigo — GRO{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'risk_management:dashboard' %}">GRO</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'risk_management:hazard_list' %}">Perigos</a></li>
+                <li class="breadcrumb-item active">{% if editing %}Editar{% else %}Novo{% endif %}</li>
+            </ol>
+        </nav>
+        <h1><i class="bi bi-{% if editing %}pencil-square{% else %}plus-circle{% endif %} me-2"></i>{% if editing %}Editar Perigo{% else %}Registrar Novo Perigo{% endif %}</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Setor / Departamento *</label>
+                                <input type="text" name="setor" class="form-control" list="setores-list"
+                                       value="{% if editing %}{{ hazard.setor }}{% endif %}" required>
+                                <datalist id="setores-list">
+                                    {% for s in setores %}<option value="{{ s }}">{% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Função / Cargo *</label>
+                                <input type="text" name="funcao" class="form-control" list="funcoes-list"
+                                       value="{% if editing %}{{ hazard.funcao }}{% endif %}" required>
+                                <datalist id="funcoes-list">
+                                    {% for f in funcoes %}<option value="{{ f }}">{% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Atividade *</label>
+                                <input type="text" name="atividade" class="form-control"
+                                       value="{% if editing %}{{ hazard.atividade }}{% endif %}" required
+                                       placeholder="Ex: Operação de máquinas de grande porte">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Descrição do Perigo *</label>
+                                <textarea name="descricao_perigo" class="form-control" rows="3" required
+                                          placeholder="Descreva o perigo identificado de forma clara e objetiva">{% if editing %}{{ hazard.descricao_perigo }}{% endif %}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fonte Geradora</label>
+                                <input type="text" name="fonte_geradora" class="form-control"
+                                       value="{% if editing %}{{ hazard.fonte_geradora }}{% endif %}"
+                                       placeholder="Ex: Máquina de corte, estresse ocupacional">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Tipo de Risco *</label>
+                                <select name="tipo_risco" class="form-select" required>
+                                    {% for code, label in risk_types %}
+                                    <option value="{{ code }}" {% if editing and hazard.tipo_risco == code %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Norma de Referência</label>
+                                <select name="norma_referencia" class="form-select">
+                                    {% for code, label in norm_choices %}
+                                    <option value="{{ code }}" {% if editing and hazard.norma_referencia == code %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% if editing %}
+                            <div class="col-md-4">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-select">
+                                    {% for code, label in status_choices %}
+                                    <option value="{{ code }}" {% if hazard.status == code %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i> {% if editing %}Salvar Alterações{% else %}Registrar Perigo{% endif %}
+                            </button>
+                            <a href="{% url 'risk_management:hazard_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header"><i class="bi bi-info-circle me-2"></i>Orientação NR-1</div>
+                <div class="card-body">
+                    <p class="small text-muted">Conforme a NR-1, a identificação de perigos deve considerar:</p>
+                    <ul class="small text-muted">
+                        <li>Perigos associados ao ambiente, processos e atividades</li>
+                        <li>Fonte geradora e circunstâncias de exposição</li>
+                        <li>Todas as categorias de risco: físico, químico, biológico, ergonômico e psicossocial</li>
+                        <li>Norma regulamentadora de referência</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

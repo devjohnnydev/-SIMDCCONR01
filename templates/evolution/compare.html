@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Comparação de Laudos{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb"><ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'evolution:dashboard' %}">Evolução</a></li>
+            <li class="breadcrumb-item active">Comparação</li>
+        </ol></nav>
+        <h1><i class="bi bi-arrow-left-right me-2"></i>Comparação de Laudos</h1>
+        <p class="text-muted">{{ snap_b.snapshot_date|date:"d/m/Y" }} vs {{ snap_a.snapshot_date|date:"d/m/Y" }}</p>
+    </div>
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card"><div class="card-header text-center bg-light"><strong>📋 {{ snap_b.snapshot_date|date:"d/m/Y" }} (Anterior)</strong></div>
+                <div class="card-body text-center">
+                    <div class="metric-value">{{ snap_b.overall_score }}</div>
+                    <span class="badge bg-primary">{{ snap_b.overall_classification }}</span>
+                    <div class="small text-muted mt-2">{{ snap_b.total_respondentes }} respondentes</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card"><div class="card-header text-center bg-light"><strong>📋 {{ snap_a.snapshot_date|date:"d/m/Y" }} (Atual)</strong></div>
+                <div class="card-body text-center">
+                    <div class="metric-value">{{ snap_a.overall_score }}</div>
+                    <span class="badge bg-primary">{{ snap_a.overall_classification }}</span>
+                    <div class="small text-muted mt-2">{{ snap_a.total_respondentes }} respondentes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if comparison %}
+    <div class="card">
+        <div class="card-header"><strong>Evolução por Dimensão</strong></div>
+        <div class="table-responsive"><table class="table table-hover">
+            <thead><tr><th>Dimensão</th><th class="text-center">Anterior</th><th class="text-center">Atual</th><th class="text-center">Variação</th><th class="text-center">Tendência</th></tr></thead>
+            <tbody>
+            {% for dim, data in comparison.items %}
+            <tr>
+                <td><strong>{{ dim }}</strong></td>
+                <td class="text-center">{{ data.previous|floatformat:2 }}</td>
+                <td class="text-center">{{ data.current|floatformat:2 }}</td>
+                <td class="text-center"><span class="badge {% if data.trend == 'improved' %}bg-success{% elif data.trend == 'declined' %}bg-danger{% else %}bg-secondary{% endif %}">{{ data.diff|floatformat:2 }}</span></td>
+                <td class="text-center fs-4">{{ data.icon }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -45,6 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
         ('ADMIN_MASTER', 'Administrador Master'),
         ('COMPANY_ADMIN', 'Administrador da Empresa'),
+        ('MEDICO', 'Médico do Trabalho'),
+        ('TECNICO_SEG', 'Técnico de Segurança'),
         ('EMPLOYEE', 'Funcionario'),
     ]
     
@@ -77,6 +79,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     # Professional Credentials (Psychologists / Admins)
     professional_crp = models.CharField('Registro CRP', max_length=50, blank=True)
+    professional_crm = models.CharField('Registro CRM', max_length=50, blank=True, help_text='Para Médicos do Trabalho')
+    professional_crea = models.CharField('Registro CREA/CFT', max_length=50, blank=True, help_text='Para Técnicos de Segurança')
+    professional_specialty = models.CharField('Especialidade', max_length=150, blank=True)
     signature_image = models.ImageField('Assinatura Digital', upload_to='signatures/', null=True, blank=True)
     
     date_joined = models.DateTimeField('Data de Cadastro', default=timezone.now)
@@ -116,7 +121,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_employee(self):
         """Verifica se e EMPLOYEE."""
         return self.role == 'EMPLOYEE'
-    
+
+    @property
+    def is_medico(self):
+        """Verifica se é MEDICO do trabalho."""
+        return self.role == 'MEDICO'
+
+    @property
+    def is_tecnico_seg(self):
+        """Verifica se é TECNICO de segurança."""
+        return self.role == 'TECNICO_SEG'
+
+    @property
+    def is_professional(self):
+        """Verifica se é profissional técnico (Médico ou Técnico de Segurança)."""
+        return self.role in ('MEDICO', 'TECNICO_SEG')
+
+    @property
+    def can_view_reports(self):
+        """Verifica se tem acesso a visualizar relatórios."""
+        return self.role in ('ADMIN_MASTER', 'COMPANY_ADMIN', 'MEDICO', 'TECNICO_SEG')
+
     def accept_terms(self):
         """Registra aceite dos termos de uso."""
         self.terms_accepted = True

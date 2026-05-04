@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Financeiro — SIMDCCONR01{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="page-header mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Financeiro</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="h2 mb-0"><i class="bi bi-graph-up-arrow me-2 text-success"></i>Dashboard Financeiro</h1>
+            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2">
+                <i class="bi bi-clock me-1"></i>Atualizado agora
+            </span>
+        </div>
+    </div>
+
+    <!-- KPI Cards Row 1 -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #10b981 !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small mb-1">MRR (Receita Mensal)</p>
+                            <h3 class="fw-bold text-success mb-0">R$ {{ mrr }}</h3>
+                            <small class="text-muted">{{ total_active_subs }} assinatura{{ total_active_subs|pluralize:"s" }} ativa{{ total_active_subs|pluralize:"s" }}</small>
+                        </div>
+                        <div class="rounded-3 p-2" style="background: rgba(16,185,129,0.1);">
+                            <i class="bi bi-currency-dollar fs-4 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #6366f1 !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small mb-1">Ticket Médio</p>
+                            <h3 class="fw-bold mb-0" style="color: #6366f1;">R$ {{ ticket_medio }}</h3>
+                            <small class="text-muted">por assinatura/mês</small>
+                        </div>
+                        <div class="rounded-3 p-2" style="background: rgba(99,102,241,0.1);">
+                            <i class="bi bi-receipt fs-4" style="color: #6366f1;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #f59e0b !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small mb-1">Previsão Semestral</p>
+                            <h3 class="fw-bold mb-0" style="color: #f59e0b;">R$ {{ previsao_semestral }}</h3>
+                            <small class="text-muted">projeção a 6 meses</small>
+                        </div>
+                        <div class="rounded-3 p-2" style="background: rgba(245,158,11,0.1);">
+                            <i class="bi bi-graph-up fs-4" style="color: #f59e0b;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid #ef4444 !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small mb-1">Inadimplência</p>
+                            <h3 class="fw-bold text-danger mb-0">R$ {{ total_inadimplencia }}</h3>
+                            <small class="text-muted">{{ inadimplencia_count }} pagamento{{ inadimplencia_count|pluralize:"s" }} vencido{{ inadimplencia_count|pluralize:"s" }}</small>
+                        </div>
+                        <div class="rounded-3 p-2" style="background: rgba(239,68,68,0.1);">
+                            <i class="bi bi-exclamation-triangle fs-4 text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Cards Row 2 -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-arrow-up-circle fs-2 text-success"></i>
+                    <h4 class="fw-bold mt-2 mb-0">{{ new_subs_30d }}</h4>
+                    <small class="text-muted">Novas Assinaturas (30d)</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-arrow-down-circle fs-2 text-danger"></i>
+                    <h4 class="fw-bold mt-2 mb-0">{{ churn_30d }}</h4>
+                    <small class="text-muted">Cancelamentos (30d)</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-cash-stack fs-2 text-primary"></i>
+                    <h4 class="fw-bold mt-2 mb-0">R$ {{ receita_30d }}</h4>
+                    <small class="text-muted">Receita Realizada (30d)</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-exclamation fs-2 text-warning"></i>
+                    <h4 class="fw-bold mt-2 mb-0">{{ companies_sem_plano }}</h4>
+                    <small class="text-muted">Empresas sem Plano</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue by Company -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-building me-2 text-primary"></i>Receita por Empresa</h5>
+                    <span class="badge bg-primary">Top 10</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Plano</th>
+                                    <th>Ciclo</th>
+                                    <th class="text-end">Mensal</th>
+                                    <th class="text-end">Total</th>
+                                    <th class="text-center">Func.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in revenue_by_company %}
+                                <tr>
+                                    <td class="fw-medium">{{ item.company_name }}</td>
+                                    <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ item.plan_name }}</span></td>
+                                    <td><span class="badge bg-secondary">{{ item.cycle }}</span></td>
+                                    <td class="text-end">R$ {{ item.monthly_value }}</td>
+                                    <td class="text-end fw-bold">R$ {{ item.total_value }}</td>
+                                    <td class="text-center">{{ item.employees }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                        Nenhuma assinatura ativa encontrada.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-pie-chart me-2 text-info"></i>Resumo</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart" height="250"></canvas>
+                    <hr class="my-3">
+                    <div class="d-flex justify-content-between py-2 border-bottom">
+                        <span class="text-muted">ARR (Anual)</span>
+                        <span class="fw-bold text-success">R$ {{ arr }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-2 border-bottom">
+                        <span class="text-muted">MRR (Mensal)</span>
+                        <span class="fw-bold">R$ {{ mrr }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-2">
+                        <span class="text-muted">Previsão 6m</span>
+                        <span class="fw-bold" style="color: #f59e0b;">R$ {{ previsao_semestral }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const revenueData = JSON.parse('{{ revenue_by_company_json|escapejs }}');
+    const labels = revenueData.map(r => r.company_name.substring(0, 15));
+    const values = revenueData.map(r => parseFloat(r.monthly_value));
+    const colors = ['#10b981','#6366f1','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#14b8a6','#f97316','#84cc16'];
+
+    if (labels.length > 0) {
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: colors.slice(0, values.length),
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 12, usePointStyle: true, font: { size: 11 } } }
+                },
+                cutout: '65%'
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% block title %}Evolução e Inteligência — {{ company.nome_fantasia }}{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb"><ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Evolução e Inteligência</li>
+            </ol></nav>
+            <h1><i class="bi bi-graph-up-arrow me-2"></i>Evolução e Inteligência</h1>
+            <p class="text-muted">Comparação histórica automática — Melhorou 🔼 Piorou 🔽 Estável ➖</p>
+        </div>
+        {% if companies_list %}
+        <div>
+            <form method="get" class="d-flex gap-2">
+                <select name="company" class="form-select" onchange="this.form.submit()">
+                    {% for c in companies_list %}
+                    <option value="{{ c.pk }}" {% if c.pk == company.pk %}selected{% endif %}>{{ c.nome_fantasia }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Score de Risco -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="card card-dashboard border-{% if current_risk and current_risk.faixa == 'ALTO' %}danger{% elif current_risk and current_risk.faixa == 'MEDIO' %}warning{% else %}success{% endif %}">
+                <div class="card-body text-center">
+                    <div class="metric-label mb-2">Score de Risco Atual</div>
+                    {% if current_risk %}
+                    <div class="metric-value {% if current_risk.faixa == 'ALTO' %}text-danger{% elif current_risk.faixa == 'MEDIO' %}text-warning{% else %}text-success{% endif %}">
+                        {{ current_risk.score }}
+                    </div>
+                    <span class="badge {% if current_risk.faixa == 'ALTO' %}bg-danger{% elif current_risk.faixa == 'MEDIO' %}bg-warning{% else %}bg-success{% endif %} mt-1">
+                        {{ current_risk.get_faixa_display }}
+                    </span>
+                    {% else %}
+                    <div class="metric-value text-muted">—</div>
+                    <small class="text-muted">Sem dados ainda</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card card-dashboard border-primary">
+                <div class="card-body text-center">
+                    <div class="metric-label mb-2">Score Geral (Likert)</div>
+                    {% if current_snapshot %}
+                    <div class="metric-value text-primary">{{ current_snapshot.overall_score }}</div>
+                    <span class="badge bg-primary mt-1">{{ current_snapshot.overall_classification }}</span>
+                    {% else %}
+                    <div class="metric-value text-muted">—</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card card-dashboard border-info">
+                <div class="card-body text-center">
+                    <div class="metric-label mb-2">Respondentes (Último)</div>
+                    {% if current_snapshot %}
+                    <div class="metric-value text-info">{{ current_snapshot.total_respondentes }}</div>
+                    <small class="text-muted">{{ current_snapshot.total_itens_analisados }} itens</small>
+                    {% else %}
+                    <div class="metric-value text-muted">—</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Gráfico de Evolução Temporal -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header"><i class="bi bi-bar-chart-line me-2"></i><strong>Evolução Temporal — Score Geral</strong></div>
+                <div class="card-body">
+                    {% if chart_labels != '[]' %}
+                    <canvas id="evolutionChart" height="250"></canvas>
+                    {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="bi bi-graph-up"></i></div>
+                        <h5>Sem dados históricos</h5>
+                        <p>Gere laudos organizacionais para criar pontos de comparação.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Score de Risco por Tipo -->
+            <div class="card mt-4">
+                <div class="card-header"><i class="bi bi-speedometer2 me-2"></i><strong>Score de Risco — Timeline</strong></div>
+                <div class="card-body">
+                    {% if risk_labels != '[]' %}
+                    <canvas id="riskChart" height="200"></canvas>
+                    {% else %}
+                    <div class="text-center text-muted py-4">Sem histórico de score de risco.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparação por Dimensão -->
+        <div class="col-lg-4">
+            {% if comparison %}
+            <div class="card mb-4">
+                <div class="card-header"><i class="bi bi-arrow-left-right me-2"></i><strong>Comparação — Tendências</strong></div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for dim, data in comparison.items %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="fw-bold">{{ dim }}</small><br>
+                                <small class="text-muted">{{ data.previous }} → {{ data.current }}</small>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge {% if data.trend == 'improved' %}bg-success{% elif data.trend == 'declined' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                    {{ data.icon }} {{ data.diff|floatformat:2 }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Evolução por Setor -->
+            {% if sector_comparison %}
+            <div class="card mb-4">
+                <div class="card-header"><i class="bi bi-building me-2"></i><strong>Evolução por Setor</strong></div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for setor, data in sector_comparison.items %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong class="small">{{ setor }}</strong><br>
+                                <small class="text-muted">Score: {{ data.current|floatformat:2 }}</small>
+                            </div>
+                            <span class="badge {% if data.trend == 'improved' %}bg-success{% elif data.trend == 'declined' %}bg-danger{% elif data.trend == 'new' %}bg-info{% else %}bg-secondary{% endif %}">
+                                {{ data.icon }}
+                                {% if data.previous %}{{ data.diff|floatformat:2 }}{% endif %}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Dimensões Detalhadas -->
+            {% if dims_data %}
+            <div class="card">
+                <div class="card-header"><i class="bi bi-layers me-2"></i><strong>Dimensões</strong></div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush" style="max-height:400px;overflow-y:auto;">
+                        {% for key, data in dims_data.items %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="fw-bold">{{ data.instrumento }} | {{ data.dimensao }}</small>
+                                <span class="badge {% if data.classification == 'Crítico' %}bg-danger{% elif data.classification == 'Atenção' %}bg-warning{% elif data.classification == 'Adequado' %}bg-primary{% else %}bg-success{% endif %}">
+                                    {{ data.current|floatformat:2 }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if snapshots %}
+            <div class="card mt-4">
+                <div class="card-header"><i class="bi bi-clock-history me-2"></i><strong>Histórico de Snapshots</strong></div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for snap in snapshots %}
+                        <div class="list-group-item d-flex justify-content-between">
+                            <small>{{ snap.snapshot_date|date:"d/m/Y" }}</small>
+                            <small class="fw-bold">{{ snap.overall_score }} — {{ snap.overall_classification }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Evolution Chart
+    const evoCtx = document.getElementById('evolutionChart');
+    if (evoCtx) {
+        new Chart(evoCtx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_labels|safe }},
+                datasets: [{
+                    label: 'Score Geral',
+                    data: {{ chart_scores|safe }},
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37,99,235,0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#2563eb'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { min: 1, max: 5, title: { display: true, text: 'Score Likert' } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    // Risk Score Chart
+    const riskCtx = document.getElementById('riskChart');
+    if (riskCtx) {
+        new Chart(riskCtx, {
+            type: 'line',
+            data: {
+                labels: {{ risk_labels|safe }},
+                datasets: [{
+                    label: 'Score de Risco',
+                    data: {{ risk_values|safe }},
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239,68,68,0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    borderWidth: 3,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        min: 0, max: 100,
+                        title: { display: true, text: 'Score (0-100)' },
+                        ticks: {
+                            callback: function(val) {
+                                if (val <= 30) return val + ' (Baixo)';
+                                if (val <= 70) return val + ' (Médio)';
+                                return val + ' (Alto)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

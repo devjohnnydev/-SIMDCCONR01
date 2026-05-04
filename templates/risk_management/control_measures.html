@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Medidas de Controle{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb"><ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'risk_management:dashboard' %}">GRO</a></li>
+            <li class="breadcrumb-item active">Medidas de Controle</li>
+        </ol></nav>
+        <h1><i class="bi bi-shield-check me-2"></i>Medidas de Controle</h1>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-exclamation-triangle me-2"></i>Perigo: {{ assessment.hazard.descricao_perigo|truncatewords:15 }}</div>
+        <div class="card-body">
+            <div class="d-flex gap-3 flex-wrap">
+                <span class="badge bg-secondary">{{ assessment.hazard.get_tipo_risco_display }}</span>
+                <span class="badge {% if assessment.nivel_risco == 'INTOLERAVEL' %}bg-danger{% elif assessment.nivel_risco == 'SUBSTANCIAL' %}bg-warning{% else %}bg-primary{% endif %}">
+                    Risco: {{ assessment.get_nivel_risco_display }} ({{ assessment.score }})
+                </span>
+                <span class="text-muted small">{{ assessment.hazard.setor }} / {{ assessment.hazard.funcao }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header"><strong>Adicionar Medida</strong></div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Controle *</label>
+                            <select name="tipo" class="form-select" required>
+                                {% for code, label in hierarchy_choices %}
+                                <option value="{{ code }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Hierarquia: Eliminação > Substituição > Engenharia > Administrativa > EPI</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Descrição da Medida *</label>
+                            <textarea name="descricao" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Responsável *</label>
+                            <input type="text" name="responsavel" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Prazo</label>
+                            <input type="date" name="prazo" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-plus-lg me-1"></i> Adicionar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header"><strong>Medidas Registradas ({{ controls|length }})</strong></div>
+                <div class="card-body p-0">
+                    {% for c in controls %}
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <div class="d-flex gap-2 align-items-center mb-1">
+                                <span class="badge bg-primary">{{ c.get_tipo_display }}</span>
+                                {% if c.implementada %}
+                                <span class="badge bg-success"><i class="bi bi-check"></i> Implementada</span>
+                                {% endif %}
+                            </div>
+                            <p class="mb-1">{{ c.descricao }}</p>
+                            <small class="text-muted">Responsável: {{ c.responsavel }} {% if c.prazo %}| Prazo: {{ c.prazo|date:"d/m/Y" }}{% endif %}</small>
+                        </div>
+                        <form method="post" action="{% url 'risk_management:toggle_control' c.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm {% if c.implementada %}btn-outline-secondary{% else %}btn-outline-success{% endif %}" title="{% if c.implementada %}Desmarcar{% else %}Marcar implementada{% endif %}">
+                                <i class="bi bi-{% if c.implementada %}arrow-counterclockwise{% else %}check-lg{% endif %}"></i>
+                            </button>
+                        </form>
+                    </div>
+                    {% empty %}
+                    <div class="p-4 text-center text-muted">Nenhuma medida de controle registrada.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

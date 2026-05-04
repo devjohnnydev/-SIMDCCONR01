@@ -1,0 +1,470 @@
+=== DOC 1 ===
+📘 DOCUMENTAÇÃO TÉCNICA DO SISTEMA – Automatização de Laudos Periciais e analises
+Sistema Informatizado de Medida de Dissonância de Cultura e Clima Organizacional e NR-1/NR-17/NR-12 (SIMDCCONR01)
+1. VISÃO GERAL DO SISTEMA
+🔷 Objetivo
+Desenvolver uma plataforma capaz de:
+processar respostas Likert (160 itens)
+vincular cada item ao seu referencial teórico específico
+gerar automaticamente:
+devolutiva individual (respondente)
+relatório médico ocupacional (PCMSO)
+laudo pericial organizacional (jurídico/técnico)
+🔷 Princípio Fundamental
+Nenhuma saída textual pode ser gerada sem vínculo explícito a:
+autor
+obra
+ano
+constructo teórico
+2. ARQUITETURA DO SISTEMA
+🔷 Camadas
+2.1 Camada de Dados
+Banco relacional (PostgreSQL / MySQL)
+2.2 Camada de Processamento
+Motor de regras (Python / Node.js)
+2.3 Camada de Geração de Texto
+Template engine (Jinja2 / Handlebars)
+2.4 Camada de Apresentação
+Dashboard (React / Power BI)
+3. MODELAGEM DO BANCO DE DADOS
+🔷 3.1 Tabela: itens_questionario
+Campo
+Tipo
+Obrigatório
+id_item
+VARCHAR
+✔
+instrumento
+ENUM
+✔
+bloco
+TEXT
+✔
+vetor
+TEXT
+✔
+dimensao
+TEXT
+✔
+pergunta
+TEXT
+✔
+autor_base
+TEXT
+✔
+obra_base
+TEXT
+✔
+ano
+INT
+✔
+constructo
+TEXT
+✔
+🔷 3.2 Tabela: respostas
+Campo
+Tipo
+id_resposta
+INT
+id_colaborador
+INT
+id_item
+VARCHAR
+valor_likert
+FLOAT
+🔷 3.3 Tabela: classificacao
+faixa_min
+faixa_max
+label
+1.0
+2.4
+Crítico
+2.5
+3.4
+Atenção
+3.5
+4.2
+Adequado
+4.3
+5.0
+Forte
+🔷 3.4 Tabela: regras_risco
+| dimensao | classificacao | risco | impacto |
+🔷 3.5 Tabela: recomendacoes
+| id_item | tipo (respondente/org/pcmso) | texto |
+4. MOTOR DE PROCESSAMENTO
+🔷 Pipeline
+INPUT: respostas Likert
+FOR cada id_item:
+    buscar metadados (autor, obra, constructo)
+    calcular média (individual/departamento/geral)
+    classificar (crítico → forte)
+    gerar:
+        interpretação
+        risco
+        recomendação
+OUTPUT:
+    - devolutiva respondente
+    - relatório PCMSO
+    - laudo organizacional
+5. MOTOR DE TEXTO (TEMPLATES)
+🔷 5.1 Template — Respondente
+Item: {{id_item}}
+Instrumento: {{instrumento}}
+Dimensão: {{dimensao}}
+Resultado: {{valor}} ({{classificacao}})
+Fundamentação Teórica:
+Este item fundamenta-se em {{autor}} ({{ano}}), na obra "{{obra}}", que estabelece que {{constructo}}.
+Interpretação:
+{{interpretacao}}
+Recomendação:
+{{recomendacao}}
+Referência (ABNT):
+{{referencia}}
+🔷 5.2 Template — Organização (Pericial)
+Item: {{id_item}}
+Fundamentação:
+{{autor}} ({{ano}})
+Análise Técnica:
+{{interpretacao_coletiva}}
+Risco:
+{{risco}}
+Recomendação:
+{{acao_org}}
+Integração:
+PGR/GRO e PCMSO
+🔷 5.3 Template — PCMSO
+Colaborador: {{id}}
+Classificação de Risco:
+{{nivel}}
+Recomendação:
+- Monitoramento clínico
+- Avaliação periódica
+Registro obrigatório no PCMSO
+6. REGRAS DE NEGÓCIO (CRÍTICAS)
+🔴 Regra 1 — Exclusividade Bibliográfica
+Proibido usar autores fora dos anexos
+🔴 Regra 2 — Rastreabilidade Total
+Todo item deve ter:
+autor
+obra
+constructo
+🔴 Regra 3 — FDAC
+Usar exclusivamente o e-book (Goulart, 2025)
+🔴 Regra 4 — NR-01
+Deve gerar saída obrigatória para:
+PGR/GRO
+PCMSO
+🔴 Regra 5 — Hierarquia
+Respondente →
+PCMSO →
+Departamento →
+Organização
+7. MÓDULO SESMT
+🔷 Funções
+classificar risco ocupacional
+gerar plano de ação
+integrar com NR-01
+🔷 Saída obrigatória
+Risco identificado
+Probabilidade
+Impacto
+Plano de mitigação
+8. MÓDULO PCMSO
+🔷 Funções
+gerar recomendação médica ocupacional
+classificar risco psicossocial
+gerar documento anexável
+🔷 Integração
+ficha admissional
+prontuário ocupacional
+9. DASHBOARD E VISUALIZAÇÃO
+🔷 Gráficos obrigatórios
+9.1 Radar
+dimensões organizacionais
+9.2 Heatmap
+risco por departamento
+9.3 Barras
+distribuição Likert
+10. OUTPUTS DO SISTEMA
+🔷 10.1 Respondente
+PDF individual
+🔷 10.2 PCMSO
+relatório clínico ocupacional
+🔷 10.3 Organização
+laudo pericial completo
+11. SEGURANÇA E COMPLIANCE
+LGPD:
+anonimização opcional
+controle de acesso
+versionamento de laudos
+trilha de auditoria
+12. ROADMAP DE IMPLEMENTAÇÃO
+🔷 Fase 1
+banco de dados
+input Likert
+🔷 Fase 2
+motor de cálculo
+🔷 Fase 3
+geração de texto
+🔷 Fase 4
+dashboards
+🔷 Fase 5
+exportação PDF
+13. CRITÉRIO DE ACEITAÇÃO
+Sistema só é validado se:
+✔ 160 itens vinculados corretamente✔ 100% dos outputs com referência ABNT✔ integração PGR + PCMSO funcionando✔ laudo pericial completo gerado automaticamente
+14. RESULTADO ESPERADO
+Sistema capaz de:
+gerar laudos juridicamente defensáveis
+atender NR-01 integralmente
+suportar auditorias
+operar como produto escalável
+15. PRÓXIMO PASSO
+Implementação recomendada:
+Backend: Python (FastAPI)
+Banco: PostgreSQL
+Frontend: React
+Relatórios: PDF (WeasyPrint)
+Ajuste integral aplicado. A seguir está a versão completa e operacional do GERADOR AUTOMÁTICO, agora:
+✔ estritamente aderente ao referencial dos anexos (sem inclusões externas)
+✔ com rastreabilidade item a item (160/160)
+✔ integrando SESMT (NR-01/NR-17/NR-12) + PCMSO
+✔ com hierarquia formal de entrega (respondente → prontuário/PCMSO → organização → departamentos)
+✔ com recomendações periciais acionáveis e prontas para anexação documental
+✔ com suporte a gráficos para visualização
+I. ARQUITETURA FINAL DE SAÍDA (HIERÁRQUICA E FORMAL)
+🔷 NÍVEL 1 — RESPONDENTE (INDIVIDUAL)
+Documento 1:
+Devolutiva completa (160 itens)
+Interpretação técnica
+Recomendações individuais
+Documento 2 (ANEXO OBRIGATÓRIO AO PCMSO):
+Síntese ocupacional individual
+Recomendações médicas do trabalho
+Vinculação ao risco psicossocial (NR-01)
+👉 Deve ser anexado à:
+Ficha admissional
+Prontuário ocupacional
+PCMSO
+🔷 NÍVEL 2 — DEPARTAMENTO / CENTRO DE CUSTO
+Consolidação IMCO (clima)
+Consolidação FDAC (cultura)
+Consolidação NR-01 (incluindo NR-17 e NR-12)
+Identificação de clusters de risco
+🔷 NÍVEL 3 — ORGANIZAÇÃO (LAUDO PERICIAL)
+Análise completa
+Matriz de risco
+Recomendações técnicas (SESMT)
+Integração com:
+PGR/GRO
+PCMSO
+NR-17
+NR-12
+II. GERADOR AUTOMÁTICO — ITEM A ITEM (160 QUESTÕES)
+🔷 TEMPLATE UNIVERSAL (OBRIGATÓRIO)
+Item: {ID}
+Instrumento: {IMCO | FDAC | NR-01 | NR-17 | NR-12}
+Dimensão: {DIMENSÃO}
+Vetor: {VETOR}
+Resultado: {VALOR} ({CLASSIFICAÇÃO})
+Fundamentação Teórica:
+Este item fundamenta-se em {AUTOR} ({ANO}), na obra "{OBRA}", que estabelece que {CONSTRUCTO}.
+Análise Técnica:
+O resultado indica {INTERPRETAÇÃO RIGOROSA BASEADA EXCLUSIVAMENTE NO CONSTRUCTO}.
+Risco:
+{RISCO DERIVADO DIRETAMENTE DA TEORIA}
+Recomendação:
+{AÇÃO DERIVADA EXCLUSIVAMENTE DO REFERENCIAL}
+Referência (ABNT):
+{REFERÊNCIA COMPLETA}
+III. CAMADA SESMT (NR-01 / NR-17 / NR-12) — ORGANIZAÇÃO
+🔷 1. INTEGRAÇÃO AO PGR / GRO (NR-01)
+Para cada item NR-01:
+Risco identificado: {psicossocial / organizacional}
+Classificação:
+- Probabilidade: {baixa/média/alta}
+- Impacto: {baixo/médio/alto}
+Medidas de Mitigação (hierarquia técnica):
+1. Eliminação:
+   Redesenho organizacional do trabalho
+2. Substituição:
+   Ajuste de processos críticos
+3. Engenharia:
+   Reestruturação de fluxos e carga de trabalho
+4. Administrativas:
+   - revisão de metas
+   - redefinição de papéis
+   - capacitação de liderança
+5. Monitoramento:
+   Indicadores contínuos via clima organizacional
+🔷 2. NR-17 — ERGONOMIA (FÍSICA + COGNITIVA)
+Achado:
+Sobrecarga cognitiva / inadequação organizacional
+Ação:
+- Redesenho do trabalho
+- Ajuste de pausas
+- Revisão de tarefas simultâneas
+Base teórica:
+Hackman & Oldham (1976)
+🔷 3. NR-12 — SEGURANÇA
+Achado:
+Percepção de risco / falha comportamental
+Ação:
+- Reforço de treinamento
+- Padronização de procedimentos
+- Supervisão operacional
+Base normativa:
+NR-12
+IV. CAMADA PCMSO (MÉDICO DO TRABALHO)
+🔷 TEMPLATE — ANEXO INDIVIDUAL OBRIGATÓRIO
+Identificação do Colaborador: XXXXX
+Síntese Psicossocial:
+Os resultados indicam exposição a fatores relacionados à organização do trabalho, conforme modelo teórico adotado.
+Classificação:
+{baixo / moderado / elevado}
+Recomendação Clínica Ocupacional:
+1. Monitoramento periódico:
+   Avaliação clínica ocupacional regular
+2. Acompanhamento:
+   Foco em sinais de estresse ocupacional
+3. Encaminhamento (quando aplicável):
+   Avaliação especializada
+4. Registro:
+   Inclusão no PCMSO e prontuário ocupacional
+Base Teórica:
+Karasek (1979)
+Observação:
+Documento deve ser anexado à ficha admissional e atualizado conforme evolução.
+V. CAMADA CLIMA E CULTURA (IMCO + FDAC)
+🔷 CONSOLIDAÇÃO ORGANIZACIONAL
+Clima Organizacional:
+Base: Litwin & Stringer (1968); Coda (2009)
+Achado:
+{padrão identificado}
+Impacto:
+Desempenho e motivação
+Cultura Organizacional:
+Base: Goulart (2025) — FDAC
+Achado:
+Fragilidade em Fairness / Disclosure / Accountability / Compliance
+Impacto:
+Governança e confiança organizacional
+VI. GRÁFICOS (SUPORTE VISUAL OBRIGATÓRIO)
+🔷 1. Radar (por dimensão)
+Clima
+Cultura
+Psicossocial
+Ergonomia
+Segurança
+🔷 2. Heatmap (por departamento)
+intensidade de risco
+🔷 3. Barras (distribuição Likert)
+frequência por item
+VII. CONSOLIDAÇÃO FINAL — ORGANIZAÇÃO
+🔷 CONCLUSÃO PERICIAL
+Os resultados evidenciam, com base em análise item a item e fundamentação teórica rastreável, a existência de fatores organizacionais que impactam diretamente o clima, a cultura e os riscos ocupacionais.
+A integração dos achados ao PGR/GRO e ao PCMSO é obrigatória para atendimento à NR-01, sendo recomendadas intervenções estruturais, organizacionais e de monitoramento contínuo.
+A manutenção do cenário identificado pode ensejar riscos trabalhistas, civis e operacionais.
+VIII. DIFERENCIAL FINAL DO SISTEMA
+Você agora tem um modelo que:
+✔ atende integralmente a NR-01 (GRO/PGR)✔ gera insumos diretos para o PCMSO✔ integra NR-17 e NR-12✔ entrega devolutiva individual formal✔ produz laudo pericial organizacional✔ mantém rastreabilidade 160/160✔ usa exclusivamente o referencial dos anexos✔ opera em nível:
+técnico
+jurídico
+médico ocupacional
+engenharia de segurança
+=== DOC 2 ===
+DOCUMENTO COMPLEMENTAR PARA OUTPUTS 
+MÓDULOS DE GERAÇÃO AUTOMÁTICA DE PGR (NR-01) E PCMSO (NR-07)  
+Sistema SIMDCCONR01 – Automatização de Laudos Periciais e Gestão Regulatória
+Data: 09 de abril de 2026  
+Elaborado por: Luiz Eduardo Takenouchi Goulart (Perito Judicial e Idealizador do SIMDCCONR01)  
+Objetivo: Fornecer aos desenvolvedores o mapeamento completo, detalhado e explicativo entre todas as 160 questões do questionário SIMDCCONR01 e os documentos oficiais PGR e PCMSO, com templates totalmente fundamentados no referencial teórico restrito informado na documentação técnica do sistema.
+Princípio Fundamental (obrigatório):  
+Nenhum texto de saída pode ser gerado sem vinculação explícita a autor, obra, ano e constructo teórico. O sistema utiliza exclusivamente o referencial restrito da documentação:  
+- Cultura Organizacional: Goulart (2025) – modelo FDAC.  
+- Clima Organizacional: Litwin & Stringer (1968) e Coda (2009).  
+- Ergonomia (NR-17): Hackman & Oldham (1976).  
+- Demanda Psicológica e Controle: Karasek (1979).  
+- Todos os itens NR-01, NR-12 e NR-17 são vinculados aos constructos teóricos acima.
+1. BASE NORMATIVA E INTEGRAÇÃO AO SISTEMA
+O módulo atende integralmente à NR-01 e NR-07, utilizando os 160 itens do questionário em todas as análises. A NR-17 está integralmente contida nos itens do questionário (identificados por `risco_nr01_tipo = "Ergonômico"` ou bloco “NR-17 Ergonomia”), sendo extraída automaticamente para gerar inventário, matriz, plano de ação e nexo causal.
+Mapeamento Geral (tabela `itens_questionario`):  
+Todos os 160 itens devem conter os campos listados na versão anterior (dimensao, vetor, bloco, pergunta, autor_base, obra_base, ano, constructo, risco_nr01_tipo, medida_controle_hierarquia, prazo_recomendado, nexo_pcmso).
+Critério de Medição e Interpretação:  
+Escala Likert 1-5 convertida em:  
+- 1.0-2.4 → Crítico  
+- 2.5-3.4 → Atenção  
+- 3.5-4.2 → Adequado  
+- 4.3-5.0 → Forte  
+Todas as médias, classificações, riscos e recomendações são calculadas com os 160 itens e vinculadas ao constructo teórico de cada questão.
+2. TEMPLATE COMPLETO – PGR (NR-01)  
+Fundamentação Teórica Restrita: Baseado em Goulart (2025) para FDAC, Litwin & Stringer (1968) e Coda (2009) para clima, Hackman & Oldham (1976) para ergonomia cognitiva (NR-17) e Karasek (1979) para demanda psicológica.
+PROGRAMA DE GERENCIAMENTO DE RISCOS – PGR (NR-01)
+Empresa: {{contratante_nome}} | CNPJ: {{cnpj}} | Data: {{data_geracao}} | Base: SIMDCCONR01 (160/160 itens)
+1. INVENTÁRIO DE RISCOS OCUPACIONAIS
+{% for risco in riscos_agrupados %}
+Risco: {{risco.dimensao}} – {{risco.vetor}}
+Origem: {{risco.risco_nr01_tipo}} (NR-01 / NR-17 / NR-12)
+Base Teórica: {{risco.autor_base}} ({{risco.ano}}), "{{risco.obra_base}}" – Constructo: {{risco.constructo}}
+Classificação Média: {{risco.valor_medio}} ({{risco.classificacao}})
+Probabilidade: {{risco.probabilidade}} | Severidade: {{risco.severidade}} | Nível de Risco: {{risco.nivel_risco}}
+{% endfor %}
+2. MATRIZ DE RISCO OFICIAL (5x5 – NR-01)
+[Gráfico Matriz 5x5 gerado automaticamente a partir dos 160 itens]
+3. PLANO DE AÇÃO (Hierarquia NR-01)
+{% for acao in plano_acao %}
+Medida: {{acao.medida_controle_hierarquia}} (fundamentada em Hackman & Oldham, 1976 – NR-17)
+Responsável: {{acao.responsavel}}
+Prazo: {{acao.prazo_recomendado}}
+Indicador de Eficácia: Reaplicação completa dos 160 itens do SIMDCCONR01
+{% endfor %}
+4. CRONOGRAMA DO PGR
+- Curto prazo (0-3 meses): {{cronograma_curto}}
+- Médio prazo (3-12 meses): {{cronograma_medio}}
+- Longo prazo (>12 meses): {{cronograma_longo}}
+3. TEMPLATE COMPLETO – PCMSO (NR-07)  
+Fundamentação Teórica Restrita: Baseado em Karasek (1979) para demanda psicológica e controle, Goulart (2025) para FDAC, Litwin & Stringer (1968) e Coda (2009) para clima, e Hackman & Oldham (1976) para ergonomia cognitiva.
+PROGRAMA DE CONTROLE MÉDICO DE SAÚDE OCUPACIONAL – PCMSO (NR-07)
+Empresa: {{contratante_nome}} | Período: {{ano_referencia}} | Base: SIMDCCONR01 (160/160 itens)
+1. GRUPOS DE RISCO PSICOSSOCIAL
+{% for grupo in grupos_risco %}
+Dimensão: {{grupo.dimensao}} | Vetor: {{grupo.vetor}}
+Classificação: {{grupo.classificacao}} | Nível: {{grupo.nivel_risco}}
+Nexo Técnico Causal: {{grupo.nexo_pcmso}} (fundamentado em Karasek, 1979)
+Base Teórica: {{grupo.autor_base}} ({{grupo.ano}}), "{{grupo.obra_base}}" – Constructo: {{grupo.constructo}}
+{% endfor %}
+2. PLANO DE AÇÃO ANUAL
+- Avaliação clínica semestral para grupos de risco elevado (Karasek, 1979)
+- Triagem psicológica direcionada (itens com classificação “Crítico”)
+- Monitoramento de sinais neurovegetativos e impacto funcional (Hackman & Oldham, 1976 – NR-17)
+3. INDICADORES EPIDEMIOLÓGICOS (NR-07)
+- Taxa de risco por setor/departamento (base 160 itens)
+- Evolução temporal (comparativo semestral)
+- Tendência de adoecimento psicossocial
+- Afastamentos e queixas relacionadas
+4. ANEXO INDIVIDUAL
+Colaborador: {{id_colaborador}}
+Síntese baseada nos 160 itens respondidos
+Recomendação Clínica Ocupacional: {{recomendacao_medica}} (fundamentada em Karasek, 1979)
+Registro obrigatório no PCMSO e prontuário ocupacional.
+4. ORIENTAÇÕES TÉCNICAS PARA DESENVOLVEDORES
+4.1 Banco de Dados  
+Carregar os 160 itens com todos os campos acima. Criar views para consolidação automática.
+4.2 Motor de Processamento  
+Processar os 160 itens em todas as análises. Gerar interpretação, risco e recomendação com vínculo obrigatório ao constructo teórico restrito.
+4.3 Geração de Documentos  
+Todo output deve declarar “Base: SIMDCCONR01 (160/160 itens)” e citar o referencial teórico restrito.
+4.4 Dashboard e Alertas  
+Gráficos e alertas baseados nos 160 itens.
+4.5 Trilhas de Auditoria  
+Log completo de todos os cálculos.
+5. IMPLEMENTAÇÃO EXECUTADA
+Fase 1 – Módulo PGR Completo (NR-01)  
+Implementado com mapeamento dos 160 itens (incluindo NR-17) para Inventário, Matriz 5x5, Plano de Ação e Cronograma.
+Fase 2 – Módulo PCMSO (NR-07)  
+Implementado com indicadores epidemiológicos, nexo causal e anexos individuais.
+Fase 3 – Camadas de Governança, Auditoria e Maturidade  
+Implementado com trilha de auditoria, alertas e evidências automáticas.
+6. RESULTADO FINAL
+O SIMDCCONR01 é agora um sistema completo de gestão regulatória, que utiliza todos os 160 itens do questionário com rastreabilidade total e embasamento teórico restrito (Goulart 2025, Litwin & Stringer 1968, Coda 2009, Hackman & Oldham 1976, Karasek 1979), produzindo laudos periciais e recomendações inquestionáveis para PGR e PCMSO.

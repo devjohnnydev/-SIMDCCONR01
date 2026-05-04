@@ -30,4 +30,7 @@ urlpatterns = [
     # Admin Master — Custom Plans
     path('admin/custom-requests/', views.admin_custom_requests, name='admin_custom_requests'),
     path('admin/custom-requests/<int:request_id>/', views.admin_custom_request_detail, name='admin_custom_request_detail'),
+
+    # Dashboard Financeiro Executivo
+    path('admin/financeiro/', views.financial_dashboard, name='financial_dashboard'),
 ]

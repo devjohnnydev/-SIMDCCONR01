@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Inventário de Perigos — {{ company.nome_fantasia }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'risk_management:dashboard' %}">GRO</a></li>
+                    <li class="breadcrumb-item active">Inventário de Perigos</li>
+                </ol>
+            </nav>
+            <h1><i class="bi bi-list-ul me-2"></i>Inventário de Perigos</h1>
+        </div>
+        <a href="{% url 'risk_management:hazard_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> Novo Perigo
+        </a>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Tipo de Risco</label>
+                    <select name="tipo" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="FISICO" {% if filter_tipo == 'FISICO' %}selected{% endif %}>Físico</option>
+                        <option value="QUIMICO" {% if filter_tipo == 'QUIMICO' %}selected{% endif %}>Químico</option>
+                        <option value="BIOLOGICO" {% if filter_tipo == 'BIOLOGICO' %}selected{% endif %}>Biológico</option>
+                        <option value="ERGONOMICO" {% if filter_tipo == 'ERGONOMICO' %}selected{% endif %}>Ergonômico</option>
+                        <option value="PSICOSSOCIAL" {% if filter_tipo == 'PSICOSSOCIAL' %}selected{% endif %}>Psicossocial</option>
+                        <option value="ACIDENTE" {% if filter_tipo == 'ACIDENTE' %}selected{% endif %}>Acidente</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Setor</label>
+                    <select name="setor" class="form-select">
+                        <option value="">Todos</option>
+                        {% for s in setores %}
+                        <option value="{{ s }}" {% if filter_setor == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">Todos</option>
+                        <option value="ACTIVE" {% if filter_status == 'ACTIVE' %}selected{% endif %}>Ativo</option>
+                        <option value="MITIGATED" {% if filter_status == 'MITIGATED' %}selected{% endif %}>Mitigado</option>
+                        <option value="ELIMINATED" {% if filter_status == 'ELIMINATED' %}selected{% endif %}>Eliminado</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel me-1"></i> Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Perigo</th>
+                        <th>Tipo</th>
+                        <th>Setor</th>
+                        <th>Função</th>
+                        <th>Norma</th>
+                        <th>Status</th>
+                        <th>Risco</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hazard in hazards %}
+                    <tr>
+                        <td>
+                            <strong>{{ hazard.descricao_perigo|truncatewords:10 }}</strong>
+                            {% if hazard.fonte_geradora %}<br><small class="text-muted">Fonte: {{ hazard.fonte_geradora }}</small>{% endif %}
+                        </td>
+                        <td>
+                            <span class="badge {% if hazard.tipo_risco == 'PSICOSSOCIAL' %}bg-danger{% elif hazard.tipo_risco == 'ERGONOMICO' %}bg-primary{% elif hazard.tipo_risco == 'FISICO' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                {{ hazard.get_tipo_risco_display }}
+                            </span>
+                        </td>
+                        <td>{{ hazard.setor }}</td>
+                        <td>{{ hazard.funcao }}</td>
+                        <td><small>{{ hazard.norma_referencia }}</small></td>
+                        <td>
+                            <span class="badge {% if hazard.status == 'ACTIVE' %}bg-danger{% elif hazard.status == 'MITIGATED' %}bg-warning{% else %}bg-success{% endif %}">
+                                {{ hazard.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if hazard.latest_assessment %}
+                                <span class="badge {% if hazard.latest_assessment.nivel_risco == 'INTOLERAVEL' %}bg-danger{% elif hazard.latest_assessment.nivel_risco == 'SUBSTANCIAL' %}bg-warning{% elif hazard.latest_assessment.nivel_risco == 'MODERADO' %}bg-primary{% else %}bg-success{% endif %}">
+                                    {{ hazard.latest_assessment.get_nivel_risco_display }} ({{ hazard.latest_assessment.score }})
+                                </span>
+                            {% else %}
+                                <a href="{% url 'risk_management:risk_assess' hazard.pk %}" class="btn btn-sm btn-outline-warning">Avaliar</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'risk_management:risk_assess' hazard.pk %}" class="btn btn-outline-secondary" title="Avaliar"><i class="bi bi-calculator"></i></a>
+                                <a href="{% url 'risk_management:hazard_edit' hazard.pk %}" class="btn btn-outline-secondary" title="Editar"><i class="bi bi-pencil"></i></a>
+                                {% if hazard.latest_assessment %}
+                                <a href="{% url 'risk_management:control_measures' hazard.latest_assessment.pk %}" class="btn btn-outline-secondary" title="Controles"><i class="bi bi-shield-check"></i></a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <div class="empty-state-icon"><i class="bi bi-shield-slash"></i></div>
+                                <h5>Nenhum perigo registrado</h5>
+                                <p>Comece cadastrando os perigos identificados na sua empresa.</p>
+                                <a href="{% url 'risk_management:hazard_create' %}" class="btn btn-primary mt-2">
+                                    <i class="bi bi-plus-lg me-1"></i> Cadastrar Primeiro Perigo
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

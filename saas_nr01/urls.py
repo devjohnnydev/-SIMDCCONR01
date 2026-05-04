@@ -62,6 +62,11 @@ urlpatterns = [
     path('support/', include('support.urls')),
     path('api/', include('accounts.api_urls')),
     path('api/cnpj/<str:cnpj>/', cnpj_lookup, name='cnpj_lookup'),
+    path('risks/', include('risk_management.urls')),
+    path('evolution/', include('evolution.urls')),
+    path('documents/', include('documents.urls')),
+    path('alerts/', include('alerts.urls')),
+    path('ia/', include('predictive_ai.urls')),
 ]
 
 if settings.DEBUG or config('RAILWAY_ENVIRONMENT', default=False) or config('RAILWAY_STATIC_URL', default=False):

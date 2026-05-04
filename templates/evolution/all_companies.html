@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Evolução — Todas as Empresas{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="page-header mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'evolution:dashboard' %}">Evolução</a></li>
+                <li class="breadcrumb-item active">Todas as Empresas</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="h2 mb-0"><i class="bi bi-buildings me-2 text-primary"></i>Evolução — Visão Consolidada</h1>
+            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">{{ total_companies }} empresa{{ total_companies|pluralize:"s" }}</span>
+        </div>
+    </div>
+
+    <!-- Companies Table -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th class="text-center">Score Atual</th>
+                            <th class="text-center">Classificação</th>
+                            <th class="text-center">Tendência</th>
+                            <th class="text-center">Respondentes</th>
+                            <th class="text-center">Laudos</th>
+                            <th class="text-center">Último Laudo</th>
+                            <th class="text-end">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in company_data %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm me-2" style="background: #e2e8f0; color: #475569;">
+                                        {{ item.company.nome_fantasia.0 }}
+                                    </div>
+                                    <strong>{{ item.company.nome_fantasia }}</strong>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="fw-bold fs-5
+                                    {% if item.current_score >= 4.3 %}text-success
+                                    {% elif item.current_score >= 3.5 %}text-primary
+                                    {% elif item.current_score >= 2.5 %}text-warning
+                                    {% else %}text-danger{% endif %}">
+                                    {{ item.current_score|floatformat:2 }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                {% if item.classification == 'Forte' %}
+                                <span class="badge bg-success">Forte</span>
+                                {% elif item.classification == 'Adequado' %}
+                                <span class="badge bg-primary">Adequado</span>
+                                {% elif item.classification == 'Atenção' or item.classification == 'Atencao' %}
+                                <span class="badge bg-warning text-dark">Atenção</span>
+                                {% else %}
+                                <span class="badge bg-danger">{{ item.classification }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if item.trend == 'improved' %}
+                                <span class="badge bg-success">{{ item.icon }} +{{ item.diff }}</span>
+                                {% elif item.trend == 'declined' %}
+                                <span class="badge bg-danger">{{ item.icon }} {{ item.diff }}</span>
+                                {% elif item.trend == 'stable' %}
+                                <span class="badge bg-secondary">{{ item.icon }}</span>
+                                {% else %}
+                                <span class="badge bg-info">{{ item.icon }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">{{ item.respondentes }}</td>
+                            <td class="text-center"><span class="badge bg-primary bg-opacity-10 text-primary">{{ item.total_snapshots }}</span></td>
+                            <td class="text-center">{{ item.last_date|date:"d/m/Y" }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'evolution:dashboard' %}?company={{ item.company.pk }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'evolution:sector_evolution' %}?company={{ item.company.pk }}" class="btn btn-sm btn-outline-info">
+                                    <i class="bi bi-diagram-3"></i>
+                                </a>
+                                <a href="{% url 'evolution:employee_evolution' %}?company={{ item.company.pk }}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-person-lines-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                <i class="bi bi-buildings fs-1 text-muted d-block mb-2"></i>
+                                <h5>Nenhuma empresa com dados de evolução</h5>
+                                <p class="text-muted">Gere laudos organizacionais para que os snapshots sejam criados.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

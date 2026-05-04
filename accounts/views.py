@@ -136,13 +136,32 @@ def admin_master_dashboard(request):
     if not request.user.is_admin_master:
         messages.error(request, 'Acesso nao autorizado.')
         return redirect('accounts:dashboard')
-    
+    # Métricas de Compliance NR (GRO)
+    from risk_management.models import HazardRegistry, RiskAssessment, ActionPlan
+    from alerts.models import Alert
+
+    total_hazards = HazardRegistry.objects.filter(status='ACTIVE').count()
+    critical_risks = RiskAssessment.objects.filter(
+        nivel_risco__in=['SUBSTANCIAL', 'INTOLERAVEL'],
+        hazard__status='ACTIVE'
+    ).count()
+    overdue_plans = ActionPlan.objects.filter(
+        status__in=['PENDENTE', 'EM_ANDAMENTO'],
+        prazo_fim__lt=timezone.now().date()
+    ).count()
+    pending_alerts = Alert.objects.filter(is_read=False).count()
+
     context = {
         'pending_companies': Company.objects.filter(status='PENDING').count(),
         'active_companies': Company.objects.filter(status='ACTIVE').count(),
         'total_users': User.objects.count(),
         'recent_companies': Company.objects.order_by('-created_at')[:10],
         'recent_logs': AuditLog.objects.select_related('user', 'company').order_by('-created_at')[:20],
+        # Compliance NR
+        'total_hazards': total_hazards,
+        'critical_risks': critical_risks,
+        'overdue_plans': overdue_plans,
+        'pending_alerts': pending_alerts,
     }
     
     return render(request, 'accounts/admin_master_dashboard.html', context)
@@ -184,7 +203,18 @@ def company_admin_dashboard(request):
         form_instance__in=active_forms,
         status__in=['PENDING', 'IN_PROGRESS']
     ).count()
-    
+    # Métricas de Compliance NR
+    from risk_management.models import HazardRegistry, RiskAssessment, ActionPlan
+    from alerts.models import Alert
+
+    company_hazards = HazardRegistry.objects.filter(company=company, status='ACTIVE').count()
+    company_critical = RiskAssessment.objects.filter(
+        hazard__company=company,
+        nivel_risco__in=['SUBSTANCIAL', 'INTOLERAVEL'],
+        hazard__status='ACTIVE'
+    ).count()
+    company_alerts = Alert.objects.filter(company=company, is_read=False).count()
+
     context = {
         'company': company,
         'total_employees': company.get_employee_count(),
@@ -194,6 +224,10 @@ def company_admin_dashboard(request):
         'form_stats': form_stats,
         'recent_employees': Employee.objects.filter(company=company).order_by('-created_at')[:5],
         'announcements': company.announcements.filter(is_active=True)[:5],
+        # Compliance NR
+        'company_hazards': company_hazards,
+        'company_critical': company_critical,
+        'company_alerts': company_alerts,
     }
     
     return render(request, 'accounts/company_admin_dashboard.html', context)

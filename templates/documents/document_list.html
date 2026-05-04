@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Documentos — {{ company.nome_fantasia }}{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb"><ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Documentos</li>
+            </ol></nav>
+            <h1><i class="bi bi-folder2-open me-2"></i>Gestão de Documentos</h1>
+        </div>
+        <a href="{% url 'documents:upload' %}" class="btn btn-primary"><i class="bi bi-cloud-upload me-1"></i> Novo Documento</a>
+    </div>
+
+    <!-- Tabs por tipo -->
+    <ul class="nav nav-pills mb-4 flex-wrap gap-2">
+        <li class="nav-item">
+            <a class="nav-link {% if not filter_tipo %}active{% endif %}" href="{% url 'documents:list' %}">Todos</a>
+        </li>
+        {% for code, info in type_counts.items %}
+        <li class="nav-item">
+            <a class="nav-link {% if filter_tipo == code %}active{% endif %}" href="?tipo={{ code }}">
+                {{ info.label }} <span class="badge bg-white text-dark ms-1">{{ info.count }}</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead><tr><th>Documento</th><th>Tipo</th><th>Versão</th><th>Status</th><th>Validade</th><th>Normas</th><th>Ações</th></tr></thead>
+                <tbody>
+                {% for doc in documents %}
+                <tr>
+                    <td>
+                        <a href="{% url 'documents:detail' doc.pk %}" class="text-decoration-none fw-bold">{{ doc.titulo }}</a>
+                        {% if doc.descricao %}<br><small class="text-muted">{{ doc.descricao|truncatewords:10 }}</small>{% endif %}
+                    </td>
+                    <td><span class="badge bg-primary">{{ doc.get_tipo_display }}</span></td>
+                    <td><span class="badge bg-secondary">v{{ doc.versao }}</span></td>
+                    <td>
+                        <span class="badge {% if doc.status == 'ACTIVE' %}bg-success{% elif doc.status == 'DRAFT' %}bg-warning{% elif doc.status == 'EXPIRED' %}bg-danger{% else %}bg-secondary{% endif %}">
+                            {{ doc.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if doc.validade %}
+                            <span class="{% if doc.is_expired %}text-danger fw-bold{% endif %}">{{ doc.validade|date:"d/m/Y" }}</span>
+                            {% if doc.is_expired %}<br><small class="text-danger">Expirado</small>{% endif %}
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% for n in doc.normas_aplicadas %}
+                        <span class="badge bg-info bg-opacity-10 text-info">{{ n }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'documents:detail' doc.pk %}" class="btn btn-outline-secondary"><i class="bi bi-eye"></i></a>
+                            {% if doc.arquivo %}<a href="{% url 'documents:download' doc.pk %}" class="btn btn-outline-secondary"><i class="bi bi-download"></i></a>{% endif %}
+                            <a href="{% url 'documents:new_version' doc.pk %}" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7">
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="bi bi-folder"></i></div>
+                        <h5>Nenhum documento cadastrado</h5>
+                        <p>Faça o upload de laudos, PGR, PCMSO e outros documentos regulatórios.</p>
+                        <a href="{% url 'documents:upload' %}" class="btn btn-primary mt-2"><i class="bi bi-cloud-upload me-1"></i> Enviar Primeiro Documento</a>
+                    </div>
+                </td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

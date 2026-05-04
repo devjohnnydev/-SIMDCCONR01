@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ doc.titulo }}{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb"><ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'documents:list' %}">Documentos</a></li>
+            <li class="breadcrumb-item active">{{ doc.titulo|truncatewords:5 }}</li>
+        </ol></nav>
+        <h1><i class="bi bi-file-earmark-text me-2"></i>{{ doc.titulo }}</h1>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Detalhes do Documento</strong>
+                    <div class="d-flex gap-2">
+                        {% if doc.arquivo %}<a href="{% url 'documents:download' doc.pk %}" class="btn btn-sm btn-primary"><i class="bi bi-download me-1"></i>Download</a>{% endif %}
+                        <a href="{% url 'documents:new_version' doc.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-circle me-1"></i>Nova Versão</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small">Tipo</label>
+                            <p class="fw-bold">{{ doc.get_tipo_display }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-muted small">Versão</label>
+                            <p><span class="badge bg-primary fs-6">v{{ doc.versao }}</span></p>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-muted small">Status</label>
+                            <p><span class="badge {% if doc.status == 'ACTIVE' %}bg-success{% elif doc.status == 'DRAFT' %}bg-warning{% elif doc.status == 'EXPIRED' %}bg-danger{% else %}bg-secondary{% endif %} fs-6">{{ doc.get_status_display }}</span></p>
+                        </div>
+                        {% if doc.descricao %}<div class="col-12"><label class="form-label text-muted small">Descrição</label><p>{{ doc.descricao }}</p></div>{% endif %}
+                        <div class="col-md-4"><label class="form-label text-muted small">Emissão</label><p>{{ doc.data_emissao|date:"d/m/Y"|default:"—" }}</p></div>
+                        <div class="col-md-4"><label class="form-label text-muted small">Validade</label><p class="{% if doc.is_expired %}text-danger fw-bold{% endif %}">{{ doc.validade|date:"d/m/Y"|default:"Indeterminada" }}</p></div>
+                        <div class="col-md-4"><label class="form-label text-muted small">Criado por</label><p>{{ doc.created_by.get_full_name|default:"Sistema" }}</p></div>
+                    </div>
+                    {% if doc.normas_aplicadas %}
+                    <div class="mt-3"><label class="form-label text-muted small">Normas Aplicadas</label><div class="d-flex gap-2 flex-wrap">
+                        {% for n in doc.normas_aplicadas %}<span class="badge bg-info">{{ n }}</span>{% endfor %}
+                    </div></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header"><i class="bi bi-clock-history me-2"></i><strong>Histórico de Versões</strong></div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for v in versions %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <strong class="small">v{{ v.versao }}</strong>
+                                <small class="text-muted">{{ v.alterado_em|date:"d/m/Y H:i" }}</small>
+                            </div>
+                            <small class="text-muted">{{ v.alterado_por.get_full_name|default:"Sistema" }}</small>
+                            {% if v.motivo_alteracao %}<br><small class="text-muted fst-italic">{{ v.motivo_alteracao }}</small>{% endif %}
+                        </div>
+                        {% empty %}
+                        <div class="p-3 text-center text-muted small">Sem histórico de versões.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

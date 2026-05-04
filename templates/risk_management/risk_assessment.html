@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% block title %}Avaliação de Risco — {{ hazard.descricao_perigo|truncatewords:5 }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .matrix-cell {
+        width: 70px; height: 70px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 0.5rem; cursor: pointer;
+        font-weight: 700; font-size: 1.1rem;
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+    }
+    .matrix-cell:hover { transform: scale(1.1); box-shadow: var(--shadow-md); }
+    .matrix-cell.selected { border-color: #1e293b; box-shadow: 0 0 0 3px rgba(30,41,59,0.3); }
+    .risk-trivial { background: #dcfce7; color: #166534; }
+    .risk-toleravel { background: #bbf7d0; color: #166534; }
+    .risk-moderado { background: #fef08a; color: #854d0e; }
+    .risk-substancial { background: #fed7aa; color: #9a3412; }
+    .risk-intoleravel { background: #fecaca; color: #991b1b; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'risk_management:dashboard' %}">GRO</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'risk_management:hazard_list' %}">Perigos</a></li>
+                <li class="breadcrumb-item active">Avaliar Risco</li>
+            </ol>
+        </nav>
+        <h1><i class="bi bi-calculator me-2"></i>Avaliação de Risco</h1>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card mb-4">
+                <div class="card-header"><i class="bi bi-exclamation-triangle me-2"></i>Perigo Avaliado</div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>{{ hazard.descricao_perigo }}</strong></p>
+                    <div class="text-muted small">
+                        <span class="badge bg-secondary">{{ hazard.get_tipo_risco_display }}</span>
+                        <span class="ms-2">{{ hazard.setor }} / {{ hazard.funcao }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><strong>Nova Avaliação</strong></div>
+                <div class="card-body">
+                    <form method="post" id="assessForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Probabilidade (1-5)</label>
+                            <input type="range" name="probabilidade" id="probSlider" class="form-range" min="1" max="5" value="3">
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Rara</span><span>Improvável</span><span>Possível</span><span>Provável</span><span>Quase certa</span>
+                            </div>
+                            <div class="text-center fw-bold fs-4 mt-1" id="probValue">3</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Severidade (1-5)</label>
+                            <input type="range" name="severidade" id="sevSlider" class="form-range" min="1" max="5" value="3">
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Insignificante</span><span>Leve</span><span>Moderada</span><span>Grave</span><span>Catastrófica</span>
+                            </div>
+                            <div class="text-center fw-bold fs-4 mt-1" id="sevValue">3</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Justificativa</label>
+                            <textarea name="justificativa" class="form-control" rows="2" placeholder="Opcional"></textarea>
+                        </div>
+                        <div class="p-3 rounded-3 text-center mb-3" id="resultPreview" style="background:#fef08a;">
+                            <div class="small text-muted">Resultado</div>
+                            <div class="fw-bold fs-4" id="resultText">MODERADO (9)</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-check-lg me-1"></i> Registrar Avaliação
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <!-- Matriz Visual 5x5 -->
+            <div class="card">
+                <div class="card-header"><i class="bi bi-grid-3x3 me-2"></i><strong>Matriz de Risco 5×5</strong></div>
+                <div class="card-body">
+                    <div class="text-center mb-2 small text-muted fw-bold">← SEVERIDADE →</div>
+                    <table class="mx-auto" style="border-spacing:6px;border-collapse:separate;">
+                        <thead>
+                            <tr>
+                                <th class="text-center p-1 small text-muted" style="width:30px;transform:rotate(-90deg);writing-mode:vertical-lr;">P</th>
+                                {% for s in "12345" %}
+                                <th class="text-center p-1 small text-muted">S{{ s }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in "54321" %}
+                            <tr>
+                                <td class="text-center p-1 small fw-bold text-muted">P{{ p }}</td>
+                                {% for s in "12345" %}
+                                {% with score=p|add:0 %}
+                                <td>
+                                    <div class="matrix-cell {% if p|add:'0'|stringformat:'d'|add:s|add:'0'|stringformat:'d' <= 2 %}risk-trivial{% elif p|add:'0'|stringformat:'d'|add:s|add:'0'|stringformat:'d' <= 6 %}risk-toleravel{% elif p|add:'0'|stringformat:'d'|add:s|add:'0'|stringformat:'d' <= 12 %}risk-moderado{% elif p|add:'0'|stringformat:'d'|add:s|add:'0'|stringformat:'d' <= 20 %}risk-substancial{% else %}risk-intoleravel{% endif %}"
+                                         data-prob="{{ p }}" data-sev="{{ s }}"
+                                         onclick="selectCell(this, {{ p }}, {{ s }})">
+                                        {{ p }}×{{ s }}
+                                    </div>
+                                </td>
+                                {% endwith %}
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+                        <span class="badge" style="background:#dcfce7;color:#166534;">Trivial (1-2)</span>
+                        <span class="badge" style="background:#bbf7d0;color:#166534;">Tolerável (3-6)</span>
+                        <span class="badge" style="background:#fef08a;color:#854d0e;">Moderado (7-12)</span>
+                        <span class="badge" style="background:#fed7aa;color:#9a3412;">Substancial (13-20)</span>
+                        <span class="badge" style="background:#fecaca;color:#991b1b;">Intolerável (21-25)</span>
+                    </div>
+                </div>
+            </div>
+
+            {% if existing_assessments %}
+            <div class="card mt-4">
+                <div class="card-header"><i class="bi bi-clock-history me-2"></i>Avaliações Anteriores</div>
+                <div class="card-body p-0">
+                    <table class="table table-hover">
+                        <thead><tr><th>Data</th><th>P×S</th><th>Nível</th><th>Por</th></tr></thead>
+                        <tbody>
+                            {% for a in existing_assessments %}
+                            <tr>
+                                <td>{{ a.data_avaliacao|date:"d/m/Y" }}</td>
+                                <td>{{ a.probabilidade }}×{{ a.severidade }} = {{ a.score }}</td>
+                                <td><span class="badge {% if a.nivel_risco == 'INTOLERAVEL' %}bg-danger{% elif a.nivel_risco == 'SUBSTANCIAL' %}bg-warning{% elif a.nivel_risco == 'MODERADO' %}bg-primary{% else %}bg-success{% endif %}">{{ a.get_nivel_risco_display }}</span></td>
+                                <td>{{ a.avaliado_por.get_short_name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const probSlider = document.getElementById('probSlider');
+const sevSlider = document.getElementById('sevSlider');
+const probVal = document.getElementById('probValue');
+const sevVal = document.getElementById('sevValue');
+const resultText = document.getElementById('resultText');
+const resultPreview = document.getElementById('resultPreview');
+
+function updateResult() {
+    const p = parseInt(probSlider.value);
+    const s = parseInt(sevSlider.value);
+    const score = p * s;
+    probVal.textContent = p;
+    sevVal.textContent = s;
+
+    let level, bg;
+    if (score <= 2) { level = 'TRIVIAL'; bg = '#dcfce7'; }
+    else if (score <= 6) { level = 'TOLERÁVEL'; bg = '#bbf7d0'; }
+    else if (score <= 12) { level = 'MODERADO'; bg = '#fef08a'; }
+    else if (score <= 20) { level = 'SUBSTANCIAL'; bg = '#fed7aa'; }
+    else { level = 'INTOLERÁVEL'; bg = '#fecaca'; }
+
+    resultText.textContent = level + ' (' + score + ')';
+    resultPreview.style.background = bg;
+
+    // Highlight matrix cell
+    document.querySelectorAll('.matrix-cell').forEach(c => c.classList.remove('selected'));
+    const cell = document.querySelector(`.matrix-cell[data-prob="${p}"][data-sev="${s}"]`);
+    if (cell) cell.classList.add('selected');
+}
+
+function selectCell(el, p, s) {
+    probSlider.value = p;
+    sevSlider.value = s;
+    updateResult();
+}
+
+probSlider.addEventListener('input', updateResult);
+sevSlider.addEventListener('input', updateResult);
+updateResult();
+</script>
+{% endblock %}

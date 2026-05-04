@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Evolução por Setor — {{ company.nome_fantasia }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="page-header mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'evolution:dashboard' %}">Evolução</a></li>
+                <li class="breadcrumb-item active">Por Setor</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h1 class="h2 mb-0"><i class="bi bi-diagram-3 me-2 text-primary"></i>Evolução por Setor</h1>
+            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">{{ total_snapshots }} laudos analisados</span>
+        </div>
+    </div>
+
+    {% if companies_list %}
+    <div class="mb-3">
+        <select class="form-select form-select-sm w-auto" onchange="window.location='?company='+this.value">
+            <option value="">Selecione uma empresa</option>
+            {% for c in companies_list %}
+            <option value="{{ c.pk }}" {% if c.pk == company.pk %}selected{% endif %}>{{ c.nome_fantasia }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
+
+    <!-- Sector Cards -->
+    <div class="row g-3 mb-4">
+        {% for sector, data in sectors.items %}
+        <div class="col-sm-6 col-xl-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h6 class="fw-bold mb-1">{{ sector }}</h6>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fs-4 fw-bold
+                                    {% if data.current >= 4.3 %}text-success
+                                    {% elif data.current >= 3.5 %}text-primary
+                                    {% elif data.current >= 2.5 %}text-warning
+                                    {% else %}text-danger{% endif %}">
+                                    {{ data.current|floatformat:2 }}
+                                </span>
+                                {% if data.trend == 'improved' %}
+                                <span class="badge bg-success">{{ data.icon }} +{{ data.diff }}</span>
+                                {% elif data.trend == 'declined' %}
+                                <span class="badge bg-danger">{{ data.icon }} {{ data.diff }}</span>
+                                {% elif data.trend == 'stable' %}
+                                <span class="badge bg-secondary">{{ data.icon }} Estável</span>
+                                {% else %}
+                                <span class="badge bg-info">{{ data.icon }} Novo</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            {% if data.current >= 4.3 %}
+                            <span class="badge bg-success">Forte</span>
+                            {% elif data.current >= 3.5 %}
+                            <span class="badge bg-primary">Adequado</span>
+                            {% elif data.current >= 2.5 %}
+                            <span class="badge bg-warning text-dark">Atenção</span>
+                            {% else %}
+                            <span class="badge bg-danger">Crítico</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <canvas id="chart-{{ forloop.counter }}" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-diagram-3 fs-1 text-muted d-block mb-2"></i>
+            <h5>Nenhum dado de setor disponível</h5>
+            <p class="text-muted">Gere um laudo organizacional para visualizar a evolução por setor.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sectorsData = JSON.parse('{{ sectors_json|escapejs }}');
+    const colors = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#14b8a6'];
+    let i = 0;
+    for (const [sector, data] of Object.entries(sectorsData)) {
+        i++;
+        const canvas = document.getElementById('chart-' + i);
+        if (canvas && data.scores.length > 0) {
+            new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: sector,
+                        data: data.scores,
+                        borderColor: colors[(i-1) % colors.length],
+                        backgroundColor: colors[(i-1) % colors.length] + '20',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { min: 1, max: 5, ticks: { stepSize: 1 } },
+                        x: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+    }
+});
+</script>
+{% endblock %}

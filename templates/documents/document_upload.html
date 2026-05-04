@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Enviar Documento{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb"><ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'documents:list' %}">Documentos</a></li>
+            <li class="breadcrumb-item active">Novo Documento</li>
+        </ol></nav>
+        <h1><i class="bi bi-cloud-upload me-2"></i>Enviar Documento</h1>
+    </div>
+    <div class="row"><div class="col-lg-8">
+        <div class="card"><div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Tipo de Documento *</label>
+                        <select name="tipo" class="form-select" required>
+                            {% for code, label in type_choices %}
+                            <option value="{{ code }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="DRAFT">Rascunho</option>
+                            <option value="ACTIVE" selected>Vigente</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Título *</label>
+                        <input type="text" name="titulo" class="form-control" required placeholder="Ex: PGR — Empresa XYZ — 2026">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Descrição</label>
+                        <textarea name="descricao" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Arquivo</label>
+                        <input type="file" name="arquivo" class="form-control" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Data de Emissão</label>
+                        <input type="date" name="data_emissao" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Validade</label>
+                        <input type="date" name="validade" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Normas Aplicadas</label>
+                        <div class="d-flex gap-3 flex-wrap">
+                            {% for norm in "NR-1 (2024.1),NR-7 (2024.1),NR-12 (2024.1),NR-17 (2024.1)"|split:"," %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="normas" value="{{ norm }}" id="norm{{ forloop.counter }}">
+                                <label class="form-check-label" for="norm{{ forloop.counter }}">{{ norm }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-cloud-upload me-1"></i> Enviar</button>
+                    <a href="{% url 'documents:list' %}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div></div>
+    </div></div>
+</div>
+{% endblock %}

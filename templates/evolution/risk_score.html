@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Score de Risco — {{ company.nome_fantasia }}{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb"><ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'evolution:dashboard' %}">Evolução</a></li>
+            <li class="breadcrumb-item active">Score de Risco</li>
+        </ol></nav>
+        <h1><i class="bi bi-speedometer2 me-2"></i>Score de Risco — {{ company.nome_fantasia }}</h1>
+    </div>
+    {% if current %}
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card text-center card-dashboard border-{% if current.faixa == 'ALTO' %}danger{% elif current.faixa == 'MEDIO' %}warning{% else %}success{% endif %}">
+                <div class="card-body">
+                    <div class="metric-label">Score Atual</div>
+                    <div class="metric-value {% if current.faixa == 'ALTO' %}text-danger{% elif current.faixa == 'MEDIO' %}text-warning{% else %}text-success{% endif %}">{{ current.score }}</div>
+                    <span class="badge {% if current.faixa == 'ALTO' %}bg-danger{% elif current.faixa == 'MEDIO' %}bg-warning{% else %}bg-success{% endif %}">{{ current.get_faixa_display }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card"><div class="card-body">
+                <h6 class="fw-bold mb-3">Detalhamento por Tipo de Risco</h6>
+                <div class="row g-2">
+                    {% for label, field in "Físico:score_fisico,Químico:score_quimico,Biológico:score_biologico,Ergonômico:score_ergonomico,Psicossocial:score_psicossocial"|split:"," %}
+                    {% with parts=label|split:":" %}
+                    <div class="col">
+                        <div class="text-center p-2 rounded" style="background:var(--bg-light)">
+                            <div class="small text-muted">{{ parts.0 }}</div>
+                            <div class="fw-bold fs-5">—</div>
+                        </div>
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
+                </div>
+            </div></div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="card">
+        <div class="card-header"><strong>Histórico do Score de Risco</strong></div>
+        <div class="card-body">
+            {% if chart_labels != '[]' %}
+            <canvas id="riskTimelineChart" height="300"></canvas>
+            {% else %}
+            <div class="empty-state"><div class="empty-state-icon"><i class="bi bi-speedometer"></i></div>
+                <h5>Sem dados históricos</h5><p>O score de risco será populado conforme laudos forem gerados.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('riskTimelineChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_labels|safe }},
+                datasets: [{
+                    label: 'Score de Risco (0-100)',
+                    data: {{ chart_scores|safe }},
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239,68,68,0.1)',
+                    fill: true, tension: 0.3, borderWidth: 3, pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { min: 0, max: 100 } },
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            low: { type: 'box', yMin: 0, yMax: 30, backgroundColor: 'rgba(16,185,129,0.05)' },
+                            high: { type: 'box', yMin: 71, yMax: 100, backgroundColor: 'rgba(239,68,68,0.05)' }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

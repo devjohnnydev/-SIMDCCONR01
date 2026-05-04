@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Planos de Ação — {{ company.nome_fantasia }}{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+            <nav aria-label="breadcrumb"><ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'risk_management:dashboard' %}">GRO</a></li>
+                <li class="breadcrumb-item active">Planos de Ação</li>
+            </ol></nav>
+            <h1><i class="bi bi-kanban me-2"></i>Planos de Ação</h1>
+        </div>
+        <a href="{% url 'risk_management:action_plan_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Novo Plano</a>
+    </div>
+
+    <!-- Filtro rápido -->
+    <div class="d-flex gap-2 mb-4 flex-wrap">
+        <a href="{% url 'risk_management:action_plan_list' %}" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline-primary{% endif %}">Todos</a>
+        {% for code, label in status_choices %}
+        <a href="?status={{ code }}" class="btn btn-sm {% if status_filter == code %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ label }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="row g-3">
+        {% for plan in plans %}
+        <div class="col-lg-6">
+            <div class="card {% if plan.is_overdue %}border-danger{% endif %}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="fw-bold mb-1">{{ plan.titulo }}</h6>
+                            <span class="badge {% if plan.status == 'CONCLUIDO' %}bg-success{% elif plan.status == 'EM_ANDAMENTO' %}bg-primary{% elif plan.status == 'CANCELADO' %}bg-secondary{% else %}bg-warning{% endif %}">
+                                {{ plan.get_status_display }}
+                            </span>
+                            <span class="badge {% if plan.prioridade == 'URGENTE' %}bg-danger{% elif plan.prioridade == 'ALTA' %}bg-warning{% else %}bg-secondary{% endif %} ms-1">
+                                {{ plan.get_prioridade_display }}
+                            </span>
+                            {% if plan.is_overdue %}<span class="badge bg-danger ms-1">⚠ VENCIDO</span>{% endif %}
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'risk_management:action_plan_edit' plan.pk %}" class="btn btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-2">{{ plan.descricao|truncatewords:30 }}</p>
+                    <div class="d-flex justify-content-between small text-muted mb-2">
+                        <span><i class="bi bi-person me-1"></i>{{ plan.responsavel }}</span>
+                        <span><i class="bi bi-calendar me-1"></i>Prazo: {{ plan.prazo_fim|date:"d/m/Y" }}</span>
+                    </div>
+                    <!-- Progress bar -->
+                    <div class="progress" style="height:8px;">
+                        <div class="progress-bar {% if plan.percentual_conclusao == 100 %}bg-success{% elif plan.is_overdue %}bg-danger{% else %}bg-primary{% endif %}" style="width:{{ plan.percentual_conclusao }}%"></div>
+                    </div>
+                    <div class="small text-end text-muted mt-1">{{ plan.percentual_conclusao }}%</div>
+                    <!-- Status rápido -->
+                    {% if plan.status != 'CONCLUIDO' and plan.status != 'CANCELADO' %}
+                    <div class="mt-2 d-flex gap-1">
+                        {% if plan.status == 'PENDENTE' %}
+                        <form method="post" action="{% url 'risk_management:action_plan_status' plan.pk %}">
+                            {% csrf_token %}<input type="hidden" name="status" value="EM_ANDAMENTO">
+                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-play me-1"></i>Iniciar</button>
+                        </form>
+                        {% endif %}
+                        <form method="post" action="{% url 'risk_management:action_plan_status' plan.pk %}">
+                            {% csrf_token %}<input type="hidden" name="status" value="CONCLUIDO">
+                            <button class="btn btn-sm btn-outline-success"><i class="bi bi-check-lg me-1"></i>Concluir</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body empty-state">
+                    <div class="empty-state-icon"><i class="bi bi-kanban"></i></div>
+                    <h5>Nenhum plano de ação</h5>
+                    <p>Crie planos de ação para gerenciar os riscos identificados.</p>
+                    <a href="{% url 'risk_management:action_plan_create' %}" class="btn btn-primary mt-2"><i class="bi bi-plus-lg me-1"></i> Criar Primeiro Plano</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

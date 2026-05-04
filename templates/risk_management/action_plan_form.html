@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Editar{% else %}Novo{% endif %} Plano de Ação{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb"><ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'risk_management:dashboard' %}">GRO</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'risk_management:action_plan_list' %}">Planos de Ação</a></li>
+            <li class="breadcrumb-item active">{% if editing %}Editar{% else %}Novo{% endif %}</li>
+        </ol></nav>
+        <h1><i class="bi bi-{% if editing %}pencil-square{% else %}plus-circle{% endif %} me-2"></i>{% if editing %}Editar Plano de Ação{% else %}Novo Plano de Ação{% endif %}</h1>
+    </div>
+    <div class="row"><div class="col-lg-8">
+        <div class="card"><div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {% if assessments %}
+                <div class="mb-3">
+                    <label class="form-label">Vincular a Risco Avaliado</label>
+                    <select name="risk_assessment" class="form-select">
+                        <option value="">— Sem vínculo —</option>
+                        {% for a in assessments %}
+                        <option value="{{ a.pk }}" {% if editing and plan.risk_assessment_id == a.pk %}selected{% endif %}>
+                            [{{ a.get_nivel_risco_display }}] {{ a.hazard.descricao_perigo|truncatewords:10 }} ({{ a.hazard.setor }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                <div class="mb-3">
+                    <label class="form-label">Título da Ação *</label>
+                    <input type="text" name="titulo" class="form-control" value="{% if editing %}{{ plan.titulo }}{% endif %}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Descrição Detalhada *</label>
+                    <textarea name="descricao" class="form-control" rows="4" required>{% if editing %}{{ plan.descricao }}{% endif %}</textarea>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Responsável *</label>
+                        <input type="text" name="responsavel" class="form-control" value="{% if editing %}{{ plan.responsavel }}{% endif %}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Prioridade</label>
+                        <select name="prioridade" class="form-select">
+                            {% for code, label in priority_choices %}
+                            <option value="{{ code }}" {% if editing and plan.prioridade == code %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Prazo de Início</label>
+                        <input type="date" name="prazo_inicio" class="form-control" value="{% if editing and plan.prazo_inicio %}{{ plan.prazo_inicio|date:'Y-m-d' }}{% endif %}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Prazo de Conclusão *</label>
+                        <input type="date" name="prazo_fim" class="form-control" value="{% if editing %}{{ plan.prazo_fim|date:'Y-m-d' }}{% endif %}" required>
+                    </div>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label class="form-label">Indicador de Eficácia</label>
+                    <textarea name="indicador_eficacia" class="form-control" rows="2" placeholder="Como a eficácia será medida? Ex: reaplicação SIMDCCONR01">{% if editing %}{{ plan.indicador_eficacia }}{% endif %}</textarea>
+                </div>
+                {% if editing %}
+                <div class="mb-3">
+                    <label class="form-label">% Conclusão</label>
+                    <input type="range" name="percentual_conclusao" class="form-range" min="0" max="100" step="5" value="{{ plan.percentual_conclusao }}" id="pctRange">
+                    <div class="text-center fw-bold" id="pctValue">{{ plan.percentual_conclusao }}%</div>
+                </div>
+                {% endif %}
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> {% if editing %}Salvar{% else %}Criar Plano{% endif %}</button>
+                    <a href="{% url 'risk_management:action_plan_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div></div>
+    </div></div>
+</div>
+{% endblock %}
+{% block extra_js %}
+{% if editing %}
+<script>
+const r = document.getElementById('pctRange'), v = document.getElementById('pctValue');
+if (r && v) r.addEventListener('input', () => v.textContent = r.value + '%');
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ instrumento }} | {{ dimensao }}{% endblock %}
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="page-header">
+        <nav aria-label="breadcrumb"><ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'evolution:dashboard' %}">Evolução</a></li>
+            <li class="breadcrumb-item active">{{ instrumento }} | {{ dimensao }}</li>
+        </ol></nav>
+        <h1><i class="bi bi-activity me-2"></i>{{ instrumento }} — {{ dimensao }}</h1>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            {% if chart_labels != '[]' %}
+            <canvas id="dimChart" height="300"></canvas>
+            {% else %}
+            <div class="empty-state"><p>Sem dados históricos para esta dimensão.</p></div>
+            {% endif %}
+        </div>
+    </div>
+    {% if evolutions %}
+    <div class="card mt-4"><div class="card-header"><strong>Histórico</strong></div>
+        <div class="table-responsive"><table class="table table-hover">
+            <thead><tr><th>Data</th><th>Média</th><th>Classificação</th><th>Respostas</th></tr></thead>
+            <tbody>{% for e in evolutions %}<tr>
+                <td>{{ e.date|date:"d/m/Y" }}</td><td>{{ e.media }}</td>
+                <td><span class="badge {% if e.classificacao == 'Crítico' %}bg-danger{% elif e.classificacao == 'Atenção' %}bg-warning{% elif e.classificacao == 'Adequado' %}bg-primary{% else %}bg-success{% endif %}">{{ e.classificacao }}</span></td>
+                <td>{{ e.total_respostas }}</td>
+            </tr>{% endfor %}</tbody>
+        </table></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('dimChart');
+    if (ctx) { new Chart(ctx, { type: 'line', data: { labels: {{ chart_labels|safe }}, datasets: [{ label: '{{ dimensao }}', data: {{ chart_values|safe }}, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.1)', fill: true, tension: 0.4, borderWidth: 3 }] }, options: { responsive: true, scales: { y: { min: 1, max: 5 } } } }); }
+});
+</script>
+{% endblock %}

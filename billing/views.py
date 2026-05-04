@@ -555,3 +555,23 @@ def admin_custom_request_detail(request, request_id):
         
     return render(request, 'billing/admin_custom_request_detail.html', {'req': custom_req})
 
+
+@login_required
+def financial_dashboard(request):
+    """Dashboard Financeiro Executivo — apenas Admin Master."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('accounts:dashboard')
+
+    import json
+    from .services import calculate_financial_metrics
+
+    metrics = calculate_financial_metrics()
+
+    # Serializar para JavaScript
+    context = {
+        **metrics,
+        'revenue_by_company_json': json.dumps(metrics['revenue_by_company'], default=str),
+    }
+
+    return render(request, 'billing/financial_dashboard.html', context)

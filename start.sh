@@ -29,6 +29,12 @@ python manage.py migrate --noinput
 # echo "Running fix_missing_options..."
 # python fix_missing_options.py
 
+echo "Populating NR Suggestions..."
+python manage.py seed_suggestions || true
+
+echo "Running predictive AI analysis..."
+python manage.py run_predictions || true
+
 echo "Ensuring media directory exists..."
 mkdir -p media
 

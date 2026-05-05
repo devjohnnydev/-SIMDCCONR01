@@ -38,7 +38,18 @@ class CompanyMiddleware:
         request.current_company = None
 
         if request.user.is_authenticated:
-            if hasattr(request.user, 'company') and request.user.company:
+            # Se for Admin Master, tenta pegar a empresa da sessao
+            if request.user.is_admin_master:
+                company_id = request.session.get('admin_selected_company_id')
+                if company_id:
+                    from companies.models import Company
+                    try:
+                        company = Company.objects.get(pk=company_id)
+                        request.current_company = company
+                    except Company.DoesNotExist:
+                        request.session.pop('admin_selected_company_id', None)
+
+            if not request.current_company and hasattr(request.user, 'company') and request.user.company:
                 company = request.user.company
                 request.current_company = company
 

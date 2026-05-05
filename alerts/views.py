@@ -11,8 +11,17 @@ from .services import run_all_checks
 @login_required
 def alert_list(request):
     """Lista de alertas do sistema."""
+    company = None
     if request.user.is_admin_master:
-        alerts = Alert.objects.all()
+        company_id = request.GET.get('company') or request.session.get('admin_selected_company_id')
+        if company_id:
+            from companies.models import Company
+            company = Company.objects.filter(pk=company_id).first()
+        
+        if company:
+            alerts = Alert.objects.filter(company=company)
+        else:
+            alerts = Alert.objects.all()
     elif request.user.company:
         alerts = Alert.objects.filter(company=request.user.company)
     else:

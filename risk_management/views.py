@@ -15,10 +15,17 @@ from audit.models import AuditLog
 def _get_company(request):
     """Helper: retorna a empresa do usuário ou None para admin_master."""
     if request.user.is_admin_master:
+        # Prioridade 1: Parametro GET
         company_pk = request.GET.get('company') or request.POST.get('company')
         if company_pk:
             from companies.models import Company
             return get_object_or_404(Company, pk=company_pk)
+            
+        # Prioridade 2: Empresa selecionada na sessao (injetada pelo middleware)
+        if hasattr(request, 'current_company') and request.current_company:
+            return request.current_company
+            
+        return None
     return request.user.company
 
 
@@ -27,8 +34,8 @@ def gro_dashboard(request):
     """Dashboard do ciclo GRO: identificar → avaliar → controlar → acompanhar."""
     company = _get_company(request)
     if not company:
-        messages.error(request, 'Selecione uma empresa.')
-        return redirect('accounts:dashboard')
+        messages.warning(request, 'Selecione uma empresa para visualizar o painel de riscos.')
+        return redirect('companies:list')
 
     hazards = HazardRegistry.objects.filter(company=company)
     action_plans = ActionPlan.objects.filter(company=company)

@@ -14,9 +14,12 @@ def _get_company(request):
         if company_pk:
             from companies.models import Company
             return get_object_or_404(Company, pk=company_pk)
-        # Para admin_master sem company selecionada, pega a primeira ativa
-        from companies.models import Company
-        return Company.objects.filter(status='ACTIVE').first()
+            
+        # Prioridade 2: Empresa selecionada na sessao (injetada pelo middleware)
+        if hasattr(request, 'current_company') and request.current_company:
+            return request.current_company
+            
+        return None
     return request.user.company
 
 
@@ -25,7 +28,9 @@ def evolution_dashboard(request):
     """Dashboard de evolução com gráficos e indicadores de tendência."""
     company = _get_company(request)
     if not company:
-        return redirect('accounts:dashboard')
+        from django.contrib import messages
+        messages.warning(request, 'Selecione uma empresa para visualizar a evolução.')
+        return redirect('companies:list')
 
     # Buscar snapshots (mais recente primeiro)
     snapshots = EvolutionSnapshot.objects.filter(

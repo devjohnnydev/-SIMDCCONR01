@@ -30,13 +30,17 @@
     </div>
 
     {% if companies_list %}
-    <div class="mb-3">
-        <select class="form-select form-select-sm w-auto" onchange="window.location='?company='+this.value">
-            <option value="">Selecione uma empresa</option>
+    <div class="mb-3 d-flex align-items-center gap-2">
+        <label class="small fw-bold text-muted text-uppercase">Filtrar Empresa:</label>
+        <select class="form-select form-select-sm w-auto" onchange="window.location='/companies/select/'+this.value+'/?next={{ request.path }}'">
+            <option value="">Todas as Empresas</option>
             {% for c in companies_list %}
             <option value="{{ c.pk }}" {% if c.pk == company.pk %}selected{% endif %}>{{ c.nome_fantasia }}</option>
             {% endfor %}
         </select>
+        {% if company %}
+        <a href="/companies/select/0/?next={{ request.path }}" class="btn btn-xs btn-outline-secondary py-0 px-2" style="font-size: 0.7rem;">Limpar Filtro</a>
+        {% endif %}
     </div>
     {% endif %}
 

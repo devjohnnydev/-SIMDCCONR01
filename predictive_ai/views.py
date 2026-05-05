@@ -16,8 +16,12 @@ def _get_company(request):
         if company_pk:
             from companies.models import Company
             return get_object_or_404(Company, pk=company_pk)
-        from companies.models import Company
-        return Company.objects.filter(status='ACTIVE').first()
+        
+        # Prioridade 2: Empresa selecionada na sessao (injetada pelo middleware)
+        if hasattr(request, 'current_company') and request.current_company:
+            return request.current_company
+            
+        return None
     return request.user.company
 
 
@@ -25,15 +29,16 @@ def _get_company(request):
 def predictive_dashboard(request):
     """Dashboard de IA Preditiva com alertas e tendências."""
     company = _get_company(request)
-    if not company:
+    if not company and not request.user.is_admin_master:
         return redirect('accounts:dashboard')
-
-    if request.user.is_admin_master:
+    elif not company and request.user.is_admin_master:
+        # Se for admin master e nao tiver empresa, mostra tudo mas avisa
         alerts = PredictiveAlert.objects.all().order_by('-created_at')[:50]
     else:
+        # Se tiver empresa (seja admin master ou nao), filtra por ela
         alerts = PredictiveAlert.objects.filter(
             company=company
-        ).order_by('-created_at')[:30]
+        ).order_by('-created_at')[:50]
 
     # Separar por tipo
     sector_alerts = [a for a in alerts if a.trend_type == 'SECTOR_DECLINE']

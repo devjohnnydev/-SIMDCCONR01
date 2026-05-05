@@ -14,6 +14,12 @@ def _get_company(request):
         if company_pk:
             from companies.models import Company
             return get_object_or_404(Company, pk=company_pk)
+            
+        # Prioridade 2: Empresa selecionada na sessao (injetada pelo middleware)
+        if hasattr(request, 'current_company') and request.current_company:
+            return request.current_company
+            
+        return None
     return request.user.company
 
 
@@ -22,7 +28,8 @@ def document_list(request):
     """Lista de documentos com filtros por tipo."""
     company = _get_company(request)
     if not company:
-        return redirect('accounts:dashboard')
+        messages.warning(request, 'Selecione uma empresa para visualizar os documentos.')
+        return redirect('companies:list')
 
     docs = Document.objects.filter(company=company)
 

@@ -19,6 +19,8 @@ python manage.py migrate --fake reports 0005 --noinput || true
 python manage.py migrate --fake reports 0006 --noinput || true
 python manage.py migrate --fake reports 0007 --noinput || true
 python manage.py migrate --fake billing 0005 --noinput || true
+python manage.py migrate --fake documents 0002 --noinput || true
+
 
 echo "Running migrate..."
 python manage.py migrate --noinput --fake-initial

@@ -80,12 +80,6 @@
                                         </li>
                                         {% elif company.status == 'ACTIVE' %}
                                         <li>
-                                            <a class="dropdown-item fw-bold text-success" href="{% url 'companies:select' company.pk %}">
-                                                <i class="bi bi-eye-fill me-2"></i> Selecionar para Gestão
-                                            </a>
-                                        </li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
                                             <a class="dropdown-item" href="{% url 'reports:admin_dashboard' company.pk %}">
                                                 <i class="bi bi-speedometer2 me-2 text-info"></i> Ver Dashboard
                                             </a>

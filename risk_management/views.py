@@ -20,12 +20,9 @@ def _get_company(request):
         if company_pk:
             from companies.models import Company
             return get_object_or_404(Company, pk=company_pk)
-            
-        # Prioridade 2: Empresa selecionada na sessao (injetada pelo middleware)
-        if hasattr(request, 'current_company') and request.current_company:
-            return request.current_company
-            
-        return None
+        # Para admin_master sem company selecionada via GET, usar a primeira ativa
+        from companies.models import Company
+        return Company.objects.filter(status='ACTIVE').first()
     return request.user.company
 
 
@@ -70,6 +67,11 @@ def gro_dashboard(request):
         prazo_fim__lt=timezone.now().date()
     ).count()
 
+    companies_list = None
+    if request.user.is_admin_master:
+        from companies.models import Company
+        companies_list = Company.objects.filter(status='ACTIVE')
+
     context = {
         'company': company,
         'total_hazards': total_hazards,
@@ -82,6 +84,7 @@ def gro_dashboard(request):
         'plans_andamento': plans_dict.get('EM_ANDAMENTO', 0),
         'plans_concluido': plans_dict.get('CONCLUIDO', 0),
         'overdue_plans': overdue_plans,
+        'companies_list': companies_list,
     }
     return render(request, 'risk_management/gro_dashboard.html', context)
 

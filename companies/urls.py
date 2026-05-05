@@ -19,8 +19,7 @@ urlpatterns = [
     path('announcements/create/', views.announcement_create, name='announcement_create'),
     path('announcements/<int:pk>/toggle/', views.announcement_toggle, name='announcement_toggle'),
     
-    path('select/<int:pk>/', views.select_company, name='select'),
-    
+
     # Logo do Banco de Dados
     path('logo/<int:pk>/', views.serve_company_logo, name='serve_logo'),
 ]

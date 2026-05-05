@@ -13,6 +13,16 @@
             </h1>
         </div>
         <div class="d-flex gap-2">
+            {% if companies_list %}
+            <form method="get" class="d-flex me-2">
+                <select name="company" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todas as Empresas</option>
+                    {% for c in companies_list %}
+                    <option value="{{ c.pk }}" {% if company and c.pk == company.pk %}selected{% endif %}>{{ c.nome_fantasia }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            {% endif %}
             {% if request.user.is_admin_master %}
             <form method="post" action="{% url 'alerts:run_checks' %}">
                 {% csrf_token %}

@@ -13,7 +13,7 @@ def alert_list(request):
     """Lista de alertas do sistema."""
     company = None
     if request.user.is_admin_master:
-        company_id = request.GET.get('company') or request.session.get('admin_selected_company_id')
+        company_id = request.GET.get('company')
         if company_id:
             from companies.models import Company
             company = Company.objects.filter(pk=company_id).first()
@@ -42,6 +42,11 @@ def alert_list(request):
     alerts = alerts.order_by('-created_at')[:100]
 
     unread_count = Alert.unread_count_for_user(request.user)
+    
+    companies_list = None
+    if request.user.is_admin_master:
+        from companies.models import Company
+        companies_list = Company.objects.filter(status='ACTIVE')
 
     return render(request, 'alerts/alert_list.html', {
         'alerts': alerts,
@@ -51,6 +56,8 @@ def alert_list(request):
         'filter_unread': unread_only,
         'type_choices': Alert.TYPE_CHOICES,
         'severity_choices': Alert.SEVERITY_CHOICES,
+        'companies_list': companies_list,
+        'company': company,
     })
 
 

@@ -14,12 +14,8 @@ def _get_company(request):
         if company_pk:
             from companies.models import Company
             return get_object_or_404(Company, pk=company_pk)
-            
-        # Prioridade 2: Empresa selecionada na sessao (injetada pelo middleware)
-        if hasattr(request, 'current_company') and request.current_company:
-            return request.current_company
-            
-        return None
+            from companies.models import Company
+        return Company.objects.filter(status='ACTIVE').first()
     return request.user.company
 
 

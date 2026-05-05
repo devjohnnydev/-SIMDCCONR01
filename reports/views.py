@@ -140,6 +140,7 @@ def admin_company_dashboard(request, company_pk):
     
     context = get_dashboard_data(company)
     context['is_admin_view'] = True
+    context['companies_list'] = Company.objects.filter(status='ACTIVE')
     
     return render(request, 'reports/dashboard.html', context)
 

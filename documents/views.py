@@ -15,11 +15,8 @@ def _get_company(request):
             from companies.models import Company
             return get_object_or_404(Company, pk=company_pk)
             
-        # Prioridade 2: Empresa selecionada na sessao (injetada pelo middleware)
-        if hasattr(request, 'current_company') and request.current_company:
-            return request.current_company
-            
-        return None
+        from companies.models import Company
+        return Company.objects.filter(status='ACTIVE').first()
     return request.user.company
 
 
@@ -47,6 +44,11 @@ def document_list(request):
         if count > 0:
             type_counts[t_code] = {'label': t_label, 'count': count}
 
+    companies_list = None
+    if request.user.is_admin_master:
+        from companies.models import Company
+        companies_list = Company.objects.filter(status='ACTIVE')
+
     return render(request, 'documents/document_list.html', {
         'documents': docs,
         'type_counts': type_counts,
@@ -54,6 +56,7 @@ def document_list(request):
         'filter_tipo': tipo,
         'filter_status': status,
         'company': company,
+        'companies_list': companies_list,
     })
 
 

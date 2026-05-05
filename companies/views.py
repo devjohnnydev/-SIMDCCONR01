@@ -249,23 +249,6 @@ def announcement_toggle(request, pk):
     return redirect('companies:announcements')
 
 
-@login_required
-@require_admin_master
-def select_company(request, pk):
-    """Define a empresa ativa na sessao para o ADMIN_MASTER."""
-    if str(pk) == '0':
-        request.session.pop('admin_selected_company_id', None)
-        messages.info(request, 'Filtro de empresa removido. Vendo dados globais.')
-    else:
-        company = get_object_or_404(Company, pk=pk)
-        request.session['admin_selected_company_id'] = company.id
-        messages.success(request, f'Visualizando dados da empresa: {company.nome_fantasia}')
-    
-    next_url = request.GET.get('next')
-    if next_url:
-        return redirect(next_url)
-    return redirect('accounts:dashboard')
-
 
 def serve_company_logo(request, pk):
     """Serve o logo da empresa diretamente do banco de dados."""

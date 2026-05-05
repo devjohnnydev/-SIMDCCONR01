@@ -52,9 +52,10 @@ def evolution_dashboard(request):
         company=company
     ).order_by('date')[:12]
 
-    risk_labels = [r.date.strftime('%b/%Y') for r in risk_scores]
-    risk_values = [r.score for r in risk_scores]
-    current_risk = risk_scores.last() if risk_scores.exists() else None
+    risk_scores_list = list(risk_scores)
+    risk_labels = [r.date.strftime('%b/%Y') for r in risk_scores_list]
+    risk_values = [r.score for r in risk_scores_list]
+    current_risk = risk_scores_list[-1] if risk_scores_list else None
 
     # Evolução por dimensão (últimos snapshots)
     dimension_evolutions = DimensionEvolution.objects.filter(

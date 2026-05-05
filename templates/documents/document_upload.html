@@ -52,12 +52,22 @@
                     <div class="col-12">
                         <label class="form-label">Normas Aplicadas</label>
                         <div class="d-flex gap-3 flex-wrap">
-                            {% for norm in "NR-1 (2024.1),NR-7 (2024.1),NR-12 (2024.1),NR-17 (2024.1)"|split:"," %}
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="normas" value="{{ norm }}" id="norm{{ forloop.counter }}">
-                                <label class="form-check-label" for="norm{{ forloop.counter }}">{{ norm }}</label>
+                                <input class="form-check-input" type="checkbox" name="normas" value="NR-1 (2024.1)" id="norm1">
+                                <label class="form-check-label" for="norm1">NR-1 (2024.1)</label>
                             </div>
-                            {% endfor %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="normas" value="NR-7 (2024.1)" id="norm2">
+                                <label class="form-check-label" for="norm2">NR-7 (2024.1)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="normas" value="NR-12 (2024.1)" id="norm3">
+                                <label class="form-check-label" for="norm3">NR-12 (2024.1)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="normas" value="NR-17 (2024.1)" id="norm4">
+                                <label class="form-check-label" for="norm4">NR-17 (2024.1)</label>
+                            </div>
                         </div>
                     </div>
                 </div>

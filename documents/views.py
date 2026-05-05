@@ -145,9 +145,17 @@ def document_new_version(request, pk):
 @login_required
 def document_download(request, pk):
     """Download do arquivo do documento."""
+    from django.http import HttpResponse
     company = _get_company(request)
     doc = get_object_or_404(Document, pk=pk, company=company)
-    if doc.arquivo:
+    
+    if doc.arquivo_db:
+        response = HttpResponse(doc.arquivo_db, content_type=doc.arquivo_mime or 'application/pdf')
+        filename = doc.arquivo_nome or f"documento_{doc.pk}.pdf"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    elif doc.arquivo:
         return FileResponse(doc.arquivo, as_attachment=True)
+        
     messages.error(request, 'Documento sem arquivo.')
     return redirect('documents:detail', pk=pk)

@@ -59,7 +59,7 @@
                     <td>
                         <div class="btn-group btn-group-sm">
                             <a href="{% url 'documents:detail' doc.pk %}" class="btn btn-outline-secondary"><i class="bi bi-eye"></i></a>
-                            {% if doc.arquivo %}<a href="{% url 'documents:download' doc.pk %}" class="btn btn-outline-secondary"><i class="bi bi-download"></i></a>{% endif %}
+                            {% if doc.arquivo or doc.arquivo_db %}<a href="{% url 'documents:download' doc.pk %}" class="btn btn-outline-secondary"><i class="bi bi-download"></i></a>{% endif %}
                             <a href="{% url 'documents:new_version' doc.pk %}" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i></a>
                         </div>
                     </td>

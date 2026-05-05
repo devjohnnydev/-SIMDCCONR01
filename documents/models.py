@@ -47,6 +47,10 @@ class Document(models.Model):
         'Arquivo', upload_to='documents/%Y/%m/',
         null=True, blank=True
     )
+    arquivo_db = models.BinaryField('Arquivo em Banco', null=True, blank=True)
+    arquivo_nome = models.CharField('Nome do Arquivo', max_length=255, blank=True, null=True)
+    arquivo_mime = models.CharField('MIME Type', max_length=100, blank=True, null=True)
+
 
     versao = models.IntegerField('Versão', default=1)
     parent_document = models.ForeignKey(
@@ -100,6 +104,27 @@ class Document(models.Model):
     def __str__(self):
         return f"[{self.get_tipo_display()}] {self.titulo} (v{self.versao})"
 
+    def save(self, *args, **kwargs):
+        """Sobrescreve save para persistir o arquivo no banco de dados."""
+        if self.arquivo:
+            try:
+                if hasattr(self.arquivo, 'file'):
+                    import mimetypes
+                    try: self.arquivo.seek(0)
+                    except: pass
+                    
+                    self.arquivo_db = self.arquivo.read()
+                    self.arquivo_nome = getattr(self.arquivo, 'name', 'document.pdf').split('/')[-1]
+                    self.arquivo_mime = mimetypes.guess_type(self.arquivo_nome)[0] or 'application/pdf'
+                    
+                    try: self.arquivo.seek(0)
+                    except: pass
+            except Exception as e:
+                print(f"Erro ao persistir arquivo no banco: {e}")
+        
+        super().save(*args, **kwargs)
+
+
     @property
     def is_expired(self):
         if self.validade:
@@ -111,12 +136,11 @@ class Document(models.Model):
         self.status = 'SUPERSEDED'
         self.save(update_fields=['status', 'updated_at'])
 
-        new_doc = Document.objects.create(
+        new_doc = Document(
             company=self.company,
             tipo=self.tipo,
             titulo=self.titulo,
             descricao=self.descricao,
-            arquivo=arquivo or self.arquivo,
             versao=self.versao + 1,
             parent_document=self,
             status='ACTIVE',
@@ -124,12 +148,25 @@ class Document(models.Model):
             data_emissao=timezone.now().date(),
             created_by=user,
         )
+        
+        if arquivo:
+            new_doc.arquivo = arquivo
+        else:
+            new_doc.arquivo = self.arquivo
+            new_doc.arquivo_db = self.arquivo_db
+            new_doc.arquivo_nome = self.arquivo_nome
+            new_doc.arquivo_mime = self.arquivo_mime
+            
+        new_doc.save()
 
         # Registrar no histórico
         DocumentVersion.objects.create(
             document=new_doc,
             versao=new_doc.versao,
             arquivo=new_doc.arquivo,
+            arquivo_db=new_doc.arquivo_db,
+            arquivo_nome=new_doc.arquivo_nome,
+            arquivo_mime=new_doc.arquivo_mime,
             alterado_por=user,
             motivo_alteracao='Nova versão gerada'
         )
@@ -154,6 +191,10 @@ class DocumentVersion(models.Model):
         'Arquivo da Versão', upload_to='documents/versions/%Y/%m/',
         null=True, blank=True
     )
+    arquivo_db = models.BinaryField('Arquivo em Banco', null=True, blank=True)
+    arquivo_nome = models.CharField('Nome do Arquivo', max_length=255, blank=True, null=True)
+    arquivo_mime = models.CharField('MIME Type', max_length=100, blank=True, null=True)
+
     alterado_por = models.ForeignKey(
         'accounts.User',
         on_delete=models.SET_NULL,
@@ -172,3 +213,24 @@ class DocumentVersion(models.Model):
     def __str__(self):
         user = self.alterado_por.get_full_name() if self.alterado_por else 'Sistema'
         return f"v{self.versao} — {user} em {self.alterado_em}"
+
+    def save(self, *args, **kwargs):
+        """Sobrescreve save para persistir o arquivo no banco de dados."""
+        if self.arquivo and not self.arquivo_db:
+            try:
+                if hasattr(self.arquivo, 'file'):
+                    import mimetypes
+                    try: self.arquivo.seek(0)
+                    except: pass
+                    
+                    self.arquivo_db = self.arquivo.read()
+                    self.arquivo_nome = getattr(self.arquivo, 'name', 'document.pdf').split('/')[-1]
+                    self.arquivo_mime = mimetypes.guess_type(self.arquivo_nome)[0] or 'application/pdf'
+                    
+                    try: self.arquivo.seek(0)
+                    except: pass
+            except Exception as e:
+                print(f"Erro ao persistir arquivo_versao no banco: {e}")
+        
+        super().save(*args, **kwargs)
+

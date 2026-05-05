@@ -15,7 +15,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <strong>Detalhes do Documento</strong>
                     <div class="d-flex gap-2">
-                        {% if doc.arquivo %}<a href="{% url 'documents:download' doc.pk %}" class="btn btn-sm btn-primary"><i class="bi bi-download me-1"></i>Download</a>{% endif %}
+                        {% if doc.arquivo or doc.arquivo_db %}<a href="{% url 'documents:download' doc.pk %}" class="btn btn-sm btn-primary"><i class="bi bi-download me-1"></i>Download</a>{% endif %}
                         <a href="{% url 'documents:new_version' doc.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-circle me-1"></i>Nova Versão</a>
                     </div>
                 </div>

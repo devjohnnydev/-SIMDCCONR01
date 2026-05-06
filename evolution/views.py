@@ -10,11 +10,10 @@ from .models import EvolutionSnapshot, RiskScoreHistory, DimensionEvolution
 
 def _get_company(request):
     if request.user.is_admin_master:
+        from companies.models import Company
         company_pk = request.GET.get('company')
         if company_pk:
-            from companies.models import Company
             return get_object_or_404(Company, pk=company_pk)
-            from companies.models import Company
         return Company.objects.filter(status='ACTIVE').first()
     return request.user.company
 

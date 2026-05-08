@@ -1,55 +1,159 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Evolução Individual{% endblock %}
+{% block title %}Evolução Individual - {{ selected_employee.nome|default:"Seleção" }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="page-header mb-4">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'evolution:dashboard' %}">Evolução</a></li>
-                <li class="breadcrumb-item active">Individual</li>
-            </ol>
-        </nav>
-        <h1 class="h2 mb-0"><i class="bi bi-person-lines-fill me-2 text-primary"></i>Evolução Individual</h1>
-    </div>
+<style>
+    /* Professional Styling for Evolution View */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        border-radius: 16px;
+    }
+    
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        border-radius: 16px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .profile-header::after {
+        content: '';
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        background: url('data:image/svg+xml,<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="rgba(255,255,255,0.05)"/></svg>');
+        pointer-events: none;
+    }
 
-    {% if companies_list %}
-    <div class="mb-3">
-        <select class="form-select form-select-sm w-auto d-inline-block" onchange="window.location='?company='+this.value">
-            <option value="">Selecione uma empresa</option>
-            {% for c in companies_list %}
-            <option value="{{ c.pk }}" {% if c.pk == company.pk %}selected{% endif %}>{{ c.nome_fantasia }}</option>
-            {% endfor %}
-        </select>
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        font-weight: bold;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+        transition: transform 0.2s;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+    
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .employee-list-item {
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+    }
+    .employee-list-item:hover {
+        background-color: var(--bg-light);
+    }
+    .employee-list-item.active {
+        background-color: rgba(37, 99, 235, 0.05);
+        border-left-color: var(--primary-color);
+        color: var(--text-dark);
+    }
+
+    .history-table th {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        background: var(--bg-light);
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .status-badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .status-critico { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+    .status-atencao { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+    .status-adequado { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .status-forte { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold text-dark"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Evolução Individual</h1>
+            <p class="text-muted mb-0">Acompanhamento histórico de saúde emocional e clima</p>
+        </div>
+        {% if companies_list %}
+        <div>
+            <select class="form-select form-select-sm shadow-sm" onchange="window.location='?company='+this.value" style="border-radius: 8px; min-width: 250px; padding: 0.5rem 1rem;">
+                <option value="">Selecione uma empresa</option>
+                {% for c in companies_list %}
+                <option value="{{ c.pk }}" {% if c.pk == company.pk %}selected{% endif %}>{{ c.nome_fantasia }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 
     <div class="row g-4">
-        <!-- Employee List -->
-        <div class="col-lg-4">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="bi bi-people me-2"></i>Funcionários</h5>
+        <!-- Coluna da Esquerda: Lista de Funcionários -->
+        <div class="col-lg-3">
+            <div class="card glass-card h-100 border-0">
+                <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0">
+                    <h6 class="text-uppercase fw-bold text-muted mb-3"><i class="bi bi-people me-2"></i>Colaboradores</h6>
+                    <div class="input-group input-group-sm mb-3 shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" id="searchEmployee" placeholder="Buscar funcionário...">
+                    </div>
                 </div>
                 <div class="card-body p-0">
-                    <div class="list-group list-group-flush" style="max-height: 600px; overflow-y: auto;">
+                    <div class="list-group list-group-flush" id="employeeList" style="max-height: calc(100vh - 250px); overflow-y: auto;">
                         {% for emp in employees %}
                         <a href="{% url 'evolution:employee_evolution_detail' emp.pk %}{% if companies_list %}?company={{ company.pk }}{% endif %}"
-                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center
-                                  {% if selected_employee and selected_employee.pk == emp.pk %}active{% endif %}">
-                            <div>
-                                <strong>{{ emp.nome }}</strong>
-                                <br><small class="{% if selected_employee and selected_employee.pk == emp.pk %}text-white-50{% else %}text-muted{% endif %}">
-                                    {{ emp.setor }} — {{ emp.cargo }}
-                                </small>
+                           class="list-group-item list-group-item-action employee-list-item py-3
+                                  {% if selected_employee and selected_employee.pk == emp.pk %}active fw-bold{% endif %}"
+                           data-name="{{ emp.nome|lower }}">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle me-3 shadow-sm" style="width: 40px; height: 40px; font-size: 1rem; border: none; background: {% if selected_employee and selected_employee.pk == emp.pk %}var(--primary-color){% else %}var(--bg-sidebar){% endif %}; color: white;">
+                                    {{ emp.nome|make_list|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="text-truncate" style="max-width: 180px;">{{ emp.nome }}</div>
+                                    <small class="text-muted d-block text-truncate" style="max-width: 180px;">{{ emp.cargo }}</small>
+                                </div>
                             </div>
-                            <i class="bi bi-chevron-right"></i>
                         </a>
                         {% empty %}
-                        <div class="text-center py-4 text-muted">
-                            <i class="bi bi-people fs-1 d-block mb-2"></i>
-                            Nenhum funcionário ativo.
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-person-x fs-1 d-block mb-2"></i>
+                            <small>Nenhum colaborador ativo.</small>
                         </div>
                         {% endfor %}
                     </div>
@@ -57,61 +161,137 @@
             </div>
         </div>
 
-        <!-- Employee Evolution Detail -->
-        <div class="col-lg-8">
+        <!-- Coluna da Direita: Dados de Evolução -->
+        <div class="col-lg-9">
             {% if selected_employee %}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary bg-opacity-10">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="mb-0 text-primary">{{ selected_employee.nome }}</h5>
-                            <small class="text-muted">{{ selected_employee.setor }} — {{ selected_employee.cargo }}</small>
+            
+            <!-- Perfil Header -->
+            <div class="profile-header shadow-sm mb-4">
+                <div class="d-flex flex-column flex-md-row align-items-center position-relative" style="z-index: 1;">
+                    <div class="avatar-circle me-md-4 mb-3 mb-md-0 shadow-sm">
+                        {{ selected_employee.nome|make_list|first|upper }}
+                    </div>
+                    <div class="text-center text-md-start flex-grow-1">
+                        <h2 class="mb-1 fw-bold">{{ selected_employee.nome }}</h2>
+                        <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-3 mt-2">
+                            <span class="badge bg-white bg-opacity-25 rounded-pill px-3 py-2"><i class="bi bi-diagram-3 me-2"></i>{{ selected_employee.setor }}</span>
+                            <span class="badge bg-white bg-opacity-25 rounded-pill px-3 py-2"><i class="bi bi-person-badge me-2"></i>{{ selected_employee.cargo }}</span>
+                            {% if selected_employee.cpf %}
+                            <span class="badge bg-white bg-opacity-25 rounded-pill px-3 py-2"><i class="bi bi-card-text me-2"></i>{{ selected_employee.cpf }}</span>
+                            {% endif %}
                         </div>
-                        <span class="badge bg-primary">{{ employee_data.history|length }} avaliação{{ employee_data.history|length|pluralize:"ões" }}</span>
                     </div>
                 </div>
-                <div class="card-body">
-                    {% if employee_data.history %}
-                    <!-- Evolution Chart -->
-                    <canvas id="employeeChart" height="200"></canvas>
-                    <hr class="my-4">
+            </div>
 
-                    <!-- History Table -->
+            {% if employee_data.history %}
+            <!-- KPIs -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Total de Avaliações</p>
+                                <h3 class="fw-bold mb-0 text-dark">{{ employee_data.history|length }}</h3>
+                            </div>
+                            <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                                <i class="bi bi-journal-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Último Score Geral</p>
+                                <h3 class="fw-bold mb-0 text-dark">{{ employee_data.history.0.avg_score }} <span class="text-muted fs-6">/ 5.0</span></h3>
+                            </div>
+                            <div class="stat-icon bg-info bg-opacity-10 text-info">
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem;">Classificação Atual</p>
+                                {% with last_class=employee_data.history.0.classification %}
+                                <h3 class="fw-bold mb-0 
+                                    {% if last_class == 'Forte' %}text-primary
+                                    {% elif last_class == 'Adequado' %}text-success
+                                    {% elif last_class == 'Atenção' %}text-warning
+                                    {% else %}text-danger{% endif %}">
+                                    {{ last_class }}
+                                </h3>
+                                {% endwith %}
+                            </div>
+                            <div class="stat-icon bg-light text-dark shadow-sm">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico de Evolução -->
+            <div class="card glass-card border-0 mb-4">
+                <div class="card-header bg-transparent pt-4 pb-0 border-0">
+                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-graph-up me-2 text-primary"></i>Linha do Tempo de Score</h5>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px; width: 100%;">
+                        <canvas id="employeeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Histórico -->
+            <div class="card glass-card border-0 mb-4">
+                <div class="card-header bg-transparent pt-4 pb-3 border-bottom">
+                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-table me-2 text-primary"></i>Histórico Detalhado</h5>
+                </div>
+                <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover align-middle history-table mb-0">
                             <thead>
                                 <tr>
-                                    <th>Data</th>
-                                    <th>Formulário</th>
+                                    <th class="ps-4">Data da Avaliação</th>
+                                    <th>Instrumento / Formulário</th>
                                     <th class="text-center">Score</th>
                                     <th class="text-center">Classificação</th>
-                                    <th class="text-center">Itens</th>
-                                    <th class="text-center">Laudo IA</th>
+                                    <th class="text-end pe-4">Ação</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for h in employee_data.history %}
                                 <tr>
-                                    <td>{{ h.date }}</td>
-                                    <td>{{ h.form_name }}</td>
-                                    <td class="text-center fw-bold">{{ h.avg_score }}</td>
-                                    <td class="text-center">
-                                        {% if h.classification == 'Forte' %}
-                                        <span class="badge bg-success">Forte</span>
-                                        {% elif h.classification == 'Adequado' %}
-                                        <span class="badge bg-primary">Adequado</span>
-                                        {% elif h.classification == 'Atenção' %}
-                                        <span class="badge bg-warning text-dark">Atenção</span>
-                                        {% else %}
-                                        <span class="badge bg-danger">Crítico</span>
-                                        {% endif %}
+                                    <td class="ps-4 fw-medium text-dark"><i class="bi bi-calendar2-event me-2 text-muted"></i>{{ h.date }}</td>
+                                    <td>
+                                        <span class="d-block text-dark">{{ h.form_name }}</span>
+                                        <small class="text-muted">{{ h.total_answers }} itens respondidos</small>
                                     </td>
-                                    <td class="text-center">{{ h.total_answers }}</td>
+                                    <td class="text-center fw-bold fs-5">{{ h.avg_score }}</td>
                                     <td class="text-center">
-                                        {% if h.has_diagnostic %}
-                                        <span class="badge bg-success"><i class="bi bi-check-circle"></i></span>
+                                        <span class="status-badge 
+                                            {% if h.classification == 'Forte' %}status-forte
+                                            {% elif h.classification == 'Adequado' %}status-adequado
+                                            {% elif h.classification == 'Atenção' %}status-atencao
+                                            {% else %}status-critico{% endif %}">
+                                            {{ h.classification }}
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        {% if h.has_diagnostic and h.validation_code %}
+                                        <a href="{% url 'reports:view_diagnostic' h.validation_code %}" class="btn btn-sm btn-outline-primary rounded-pill px-3" target="_blank" data-bs-toggle="tooltip" title="Ver Parecer Técnico Pericial">
+                                            <i class="bi bi-file-earmark-pdf-fill me-1"></i> Laudo
+                                        </a>
                                         {% else %}
-                                        <span class="badge bg-secondary"><i class="bi bi-dash"></i></span>
+                                        <button class="btn btn-sm btn-light rounded-pill px-3 disabled">
+                                            <i class="bi bi-dash"></i> Sem Laudo
+                                        </button>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -119,21 +299,33 @@
                             </tbody>
                         </table>
                     </div>
-                    {% else %}
-                    <div class="text-center py-5 text-muted">
-                        <i class="bi bi-clipboard-x fs-1 d-block mb-2"></i>
-                        <h5>Nenhuma avaliação concluída</h5>
-                        <p>Este funcionário ainda não completou nenhum formulário.</p>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
+            
             {% else %}
-            <div class="card shadow-sm">
-                <div class="card-body text-center py-5">
-                    <i class="bi bi-person-bounding-box fs-1 text-muted d-block mb-3"></i>
-                    <h4>Selecione um Funcionário</h4>
-                    <p class="text-muted">Escolha um funcionário na lista ao lado para visualizar sua evolução individual ao longo do tempo.</p>
+            <!-- Blank State for No History -->
+            <div class="card glass-card border-0 text-center py-5">
+                <div class="card-body my-5">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-4" style="width: 80px; height: 80px;">
+                        <i class="bi bi-clipboard-x fs-1 text-muted"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark">Nenhuma avaliação encontrada</h3>
+                    <p class="text-muted mx-auto" style="max-width: 400px;">Este funcionário ainda não possui formulários de risco psicossocial respondidos e consolidados no sistema.</p>
+                </div>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <!-- Blank State for Initial Load -->
+            <div class="card glass-card border-0 text-center h-100 d-flex flex-column justify-content-center py-5">
+                <div class="card-body my-5">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-4" style="width: 100px; height: 100px;">
+                        <i class="bi bi-person-bounding-box display-4 text-primary"></i>
+                    </div>
+                    <h2 class="fw-bold text-dark mb-3">Análise Individual</h2>
+                    <p class="text-muted mx-auto fs-5" style="max-width: 500px;">
+                        Selecione um colaborador no menu lateral para visualizar o histórico completo de saúde emocional, métricas de bem-estar e acesso aos laudos.
+                    </p>
                 </div>
             </div>
             {% endif %}
@@ -141,36 +333,84 @@
     </div>
 </div>
 
+<script>
+// Filter employee list
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchEmployee');
+    if(searchInput) {
+        searchInput.addEventListener('keyup', function() {
+            const filter = this.value.toLowerCase();
+            const items = document.querySelectorAll('.employee-list-item');
+            
+            items.forEach(function(item) {
+                const name = item.getAttribute('data-name');
+                if (name.indexOf(filter) > -1) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+});
+</script>
+
 {% if selected_employee and employee_data.history %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const labels = JSON.parse('{{ employee_data.chart_labels|escapejs }}');
-    const scores = JSON.parse('{{ employee_data.chart_scores|escapejs }}');
+    // Reverse the arrays so the chart shows oldest to newest (left to right)
+    const labelsRaw = JSON.parse('{{ employee_data.chart_labels|escapejs }}');
+    const scoresRaw = JSON.parse('{{ employee_data.chart_scores|escapejs }}');
+    
+    // As in Django we usually have newest first, we reverse for the chart
+    const labels = labelsRaw.slice().reverse();
+    const scores = scoresRaw.slice().reverse();
 
-    new Chart(document.getElementById('employeeChart'), {
+    const ctx = document.getElementById('employeeChart').getContext('2d');
+    
+    // Create gradient
+    let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
+    gradient.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+
+    new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
             datasets: [{
                 label: 'Score Médio',
                 data: scores,
-                borderColor: '#6366f1',
-                backgroundColor: 'rgba(99,102,241,0.1)',
+                borderColor: '#2563eb',
+                backgroundColor: gradient,
+                borderWidth: 3,
                 fill: true,
                 tension: 0.4,
-                pointRadius: 6,
+                pointRadius: 5,
                 pointHoverRadius: 8,
                 pointBackgroundColor: scores.map(s =>
-                    s >= 4.3 ? '#10b981' : s >= 3.5 ? '#6366f1' : s >= 2.5 ? '#f59e0b' : '#ef4444'
+                    s >= 4.3 ? '#2563eb' : s >= 3.5 ? '#16a34a' : s >= 2.5 ? '#d97706' : '#ef4444'
                 ),
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
                 tooltip: {
+                    backgroundColor: '#1e293b',
+                    padding: 12,
+                    titleFont: { size: 14, family: "'Inter', sans-serif" },
+                    bodyFont: { size: 13, family: "'Inter', sans-serif" },
                     callbacks: {
                         label: function(ctx) {
                             const v = ctx.parsed.y;
@@ -181,14 +421,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             },
             scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { family: "'Inter', sans-serif" } }
+                },
                 y: {
-                    min: 1, max: 5, ticks: { stepSize: 0.5 },
+                    min: 1, max: 5, ticks: { stepSize: 1, font: { family: "'Inter', sans-serif" } },
                     grid: {
                         color: function(ctx) {
-                            if (ctx.tick.value === 2.5) return 'rgba(239,68,68,0.3)';
-                            if (ctx.tick.value === 3.5) return 'rgba(245,158,11,0.3)';
-                            if (ctx.tick.value === 4.3) return 'rgba(16,185,129,0.3)';
+                            if (ctx.tick.value === 2.5) return 'rgba(239,68,68,0.2)'; // Linha de corte Crítico/Atenção
+                            if (ctx.tick.value === 3.5) return 'rgba(217,119,6,0.2)'; // Linha de corte Atenção/Adequado
                             return 'rgba(0,0,0,0.05)';
+                        },
+                        lineWidth: function(ctx) {
+                            if (ctx.tick.value === 2.5 || ctx.tick.value === 3.5) return 2;
+                            return 1;
                         }
                     }
                 }

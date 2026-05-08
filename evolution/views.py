@@ -352,6 +352,7 @@ def employee_evolution(request, employee_pk=None):
 
                     # Verificar se tem diagnóstico IA
                     has_diagnostic = hasattr(assign, 'diagnostic')
+                    validation_code = assign.diagnostic.validation_code if has_diagnostic else None
 
                     history.append({
                         'date': assign.completed_at.strftime('%d/%m/%Y') if assign.completed_at else 'N/A',
@@ -360,6 +361,7 @@ def employee_evolution(request, employee_pk=None):
                         'classification': classification,
                         'total_answers': len(scores),
                         'has_diagnostic': has_diagnostic,
+                        'validation_code': validation_code,
                         'assignment_pk': assign.pk,
                     })
 

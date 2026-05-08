@@ -326,15 +326,16 @@ def employee_evolution(request, employee_pk=None):
         for assign in assignments:
             answers = FormAnswer.objects.filter(
                 assignment=assign,
-                question__question_type='LIKERT'
+                question__question_type__in=['SCALE', 'SCALE_10']
             )
 
             scores = []
             if answers.exists():
                 for answer in answers:
                     try:
-                        val = float(answer.answer_value)
-                        scores.append(val)
+                        if answer.numeric_value is not None:
+                            val = float(answer.numeric_value)
+                            scores.append(val)
                     except (ValueError, TypeError):
                         pass
 

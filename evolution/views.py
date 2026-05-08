@@ -329,8 +329,8 @@ def employee_evolution(request, employee_pk=None):
                 question__question_type='LIKERT'
             )
 
+            scores = []
             if answers.exists():
-                scores = []
                 for answer in answers:
                     try:
                         val = float(answer.answer_value)
@@ -338,37 +338,42 @@ def employee_evolution(request, employee_pk=None):
                     except (ValueError, TypeError):
                         pass
 
-                if scores:
-                    avg = sum(scores) / len(scores)
-                    # Classificar
-                    if avg <= 2.4:
-                        classification = 'Crítico'
-                    elif avg <= 3.4:
-                        classification = 'Atenção'
-                    elif avg <= 4.2:
-                        classification = 'Adequado'
-                    else:
-                        classification = 'Forte'
+            if scores:
+                avg = sum(scores) / len(scores)
+                # Classificar
+                if avg <= 2.4:
+                    classification = 'Crítico'
+                elif avg <= 3.4:
+                    classification = 'Atenção'
+                elif avg <= 4.2:
+                    classification = 'Adequado'
+                else:
+                    classification = 'Forte'
+            else:
+                avg = 0
+                classification = 'N/A'
 
-                    # Verificar se tem diagnóstico IA
-                    has_diagnostic = hasattr(assign, 'diagnostic')
-                    is_signed = False
-                    validation_code = None
-                    if has_diagnostic:
-                        validation_code = assign.diagnostic.validation_code
-                        is_signed = assign.diagnostic.is_signed
+            # Verificar se tem diagnóstico IA
+            has_diagnostic = hasattr(assign, 'diagnostic')
+            is_signed = False
+            validation_code = None
+            if has_diagnostic:
+                validation_code = assign.diagnostic.validation_code
+                is_signed = assign.diagnostic.is_signed
 
-                    history.append({
-                        'date': assign.completed_at.strftime('%d/%m/%Y') if assign.completed_at else 'N/A',
-                        'form_name': assign.form_instance.title,
-                        'avg_score': round(avg, 2),
-                        'classification': classification,
-                        'total_answers': len(scores),
-                        'has_diagnostic': has_diagnostic,
-                        'is_signed': is_signed,
-                        'validation_code': validation_code,
-                        'assignment_pk': assign.pk,
-                    })
+            # Só exibe se houver notas numéricas OU se possuir laudo (diagnostic)
+            if scores or has_diagnostic:
+                history.append({
+                    'date': assign.completed_at.strftime('%d/%m/%Y') if assign.completed_at else 'N/A',
+                    'form_name': assign.form_instance.title,
+                    'avg_score': round(avg, 2) if avg else 'N/A',
+                    'classification': classification,
+                    'total_answers': len(scores),
+                    'has_diagnostic': has_diagnostic,
+                    'is_signed': is_signed,
+                    'validation_code': validation_code,
+                    'assignment_pk': assign.pk,
+                })
 
         # Filtrar laudos assinados
         signed_diagnostics = [h for h in history if h.get('has_diagnostic') and h.get('is_signed')]

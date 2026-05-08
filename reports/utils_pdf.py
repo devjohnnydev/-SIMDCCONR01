@@ -139,28 +139,20 @@ class RespondentReportRL:
 
         # ── LOGO (superior esquerdo) ──
         logo_drawn = False
-        logo_width = 0
         if self._logo_image_data:
             try:
                 from reportlab.lib.utils import ImageReader
                 img_reader = ImageReader(io.BytesIO(self._logo_image_data))
-                img_w, img_h = img_reader.getSize()
-                logo_width = (12*mm / img_h) * img_w
-                canvas.drawImage(img_reader, 15*mm, 270*mm, height=12*mm,
-                                 preserveAspectRatio=True, mask='auto')
+                canvas.drawImage(img_reader, 15*mm, 270*mm, height=12*mm, width=12*mm, preserveAspectRatio=True, mask='auto')
                 logo_drawn = True
             except Exception as e:
                 logger.warning(f"Erro ao desenhar logo no header: {e}")
 
-        # SEMPRE mostrar o nome SIMDCCONR01 (ao lado do logo ou sozinho)
-        if logo_drawn:
-            # Logo presente: não desenha texto redundante, o logo já contém a tipografia
-            pass
-        else:
-            # Sem logo: nome grande como fallback
-            canvas.setFont('Helvetica-Bold', 18)
-            canvas.setFillColor(COL_BLUE)
-            canvas.drawString(15*mm, 272*mm, "SIMDCCONR01")
+        # SEMPRE mostrar o nome SIMDCCONR01
+        canvas.setFont('Helvetica-Bold', 18)
+        canvas.setFillColor(COL_BLUE)
+        text_x = 30*mm if logo_drawn else 15*mm
+        canvas.drawString(text_x, 272*mm, "SIMDCCONR01")
 
         # ── TITULO (superior direito) ──
         canvas.setFont('Helvetica-Bold', 14)
@@ -550,19 +542,16 @@ class DepartmentReportRL:
         canvas.saveState()
         # Branding superior esquerdo
         logo_drawn = False
-        logo_width = 0
         if self._logo_image_data:
             try:
                 from reportlab.lib.utils import ImageReader
                 img_reader = ImageReader(io.BytesIO(self._logo_image_data))
-                img_w, img_h = img_reader.getSize()
-                logo_width = (12*mm / img_h) * img_w
-                canvas.drawImage(img_reader, 15*mm, 270*mm, height=12*mm, preserveAspectRatio=True, mask='auto')
+                canvas.drawImage(img_reader, 15*mm, 270*mm, height=12*mm, width=12*mm, preserveAspectRatio=True, mask='auto')
                 logo_drawn = True
             except: pass
         
         # Desenhar "SIMDCCONR01" ao lado do logo (ou sozinho se não houver logo)
-        text_x = 15*mm + (logo_width + 3*mm if logo_drawn else 0)
+        text_x = 30*mm if logo_drawn else 15*mm
         canvas.setFont('Helvetica-Bold', 18)
         canvas.setFillColor(COL_BLUE)
         canvas.drawString(text_x, 272*mm, "SIMDCCONR01")
@@ -785,8 +774,6 @@ class DepartmentReportRL:
         story.append(Spacer(1, 15*mm))
         story.append(Paragraph("________________________________________________", self.styles['Normal']))
         story.append(Paragraph("<font size=8 color='#64748b'>Documento gerado eletronicamente via Motor de Análise SIMDCCONR01</font>", self.styles['Normal']))
-        formatted_time = self.generated_at.strftime('%d/%m/%Y %H:%M:%S')
-        story.append(Paragraph(f"<font size=7 color='#94a3b8'>ID: {self.diagnostic.id} | Timestamp: {formatted_time}</font>", self.styles['Normal']))
 
         doc.build(story, onFirstPage=self._draw_header, onLaterPages=self._draw_header)
 

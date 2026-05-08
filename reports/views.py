@@ -694,12 +694,16 @@ def download_department_pdf(request, setor, form_id):
         return HttpResponse("Acesso negado", status=403)
         
     try:
+        from .engine_text import TextEngine
+        engine = TextEngine()
+        engine_data = engine.generate_department_report(report.form_instance, setor)
+        
         import io
         buffer = io.BytesIO()
         
         # 3. Gera o PDF usando o novo engine
         pdf_gen = DepartmentReportRL(buffer, company=report.company, diagnostic=report)
-        pdf_gen.build(report.diagnostic_data)
+        pdf_gen.build(report.diagnostic_data, engine_data=engine_data)
         
         pdf_bytes = buffer.getvalue()
         buffer.close()

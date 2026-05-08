@@ -585,7 +585,70 @@ class DepartmentReportRL:
         canvas.drawCentredString(105*mm, 10*mm, f"Página {canvas.getPageNumber()} — Consolidado SIMDCCONR01")
         canvas.restoreState()
 
-    def build(self, data):
+    def _draw_radar(self, canvas, x, y, dimension_summary):
+        """Desenha o gráfico radar diretamente no canvas."""
+        data = {dim['dimensao']: dim['media'] for dim in dimension_summary if dim.get('instrumento') == 'IMCO'}
+        if not data: return
+
+        labels = list(data.keys())
+        values = list(data.values())
+        n = len(labels)
+        if n < 3: return
+
+        max_r = 30*mm
+        max_val = 5.0
+
+        # Grid Circles
+        canvas.setStrokeColor(colors.lightgrey)
+        canvas.setLineWidth(0.1)
+        for level in range(1, 6):
+            r = max_r * (level / max_val)
+            canvas.circle(x, y, r, stroke=1, fill=0)
+
+        # Axes & Labels
+        angles = [(i * 360 / n) - 90 for i in range(n)]
+        canvas.setFont('Helvetica-Bold', 7)
+        canvas.setFillColor(COL_DARK)
+
+        for i, angle_deg in enumerate(angles):
+            rad = math.radians(angle_deg)
+            # Line
+            canvas.setStrokeColor(COL_SLATE_500)
+            canvas.setLineWidth(0.5)
+            canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
+            # Label
+            lx = x + (max_r + 8*mm)*math.cos(rad)
+            ly = y + (max_r + 8*mm)*math.sin(rad)
+            label_txt = labels[i][:18] + ".." if len(labels[i]) > 18 else labels[i]
+            canvas.drawCentredString(lx, ly, label_txt.upper())
+
+        # Data Polygon
+        points = []
+        for i, val in enumerate(values):
+            r = max_r * (min(val, max_val) / max_val)
+            rad = math.radians(angles[i])
+            points.append((x + r*math.cos(rad), y + r*math.sin(rad)))
+
+        p = canvas.beginPath()
+        p.moveTo(points[0][0], points[0][1])
+        for i in range(1, len(points)):
+            p.lineTo(points[i][0], points[i][1])
+        p.close()
+
+        canvas.setFillColor(COL_BLUE, alpha=0.25)
+        canvas.setStrokeColor(COL_BLUE)
+        canvas.setLineWidth(1.5)
+        canvas.drawPath(p, stroke=1, fill=1)
+
+        # Dots
+        canvas.setFillColor(COL_BLUE)
+        for pt in points:
+            canvas.circle(pt[0], pt[1], 1.2*mm, stroke=0, fill=1)
+
+    def build(self, data, engine_data=None):
+        if engine_data is None:
+            engine_data = {}
+            
         doc = SimpleDocTemplate(
             self.buffer,
             pagesize=A4,
@@ -604,10 +667,15 @@ class DepartmentReportRL:
 
         # 2. Métricas de Destaque
         idx = data.get('indice_bem_estar', 0)
+        overall_avg = engine_data.get('overall_avg', '—')
+        total_resp = engine_data.get('total_respondentes', '—')
+        
         metrics_data = [
-            [Paragraph(f"<font color='#64748b' size=8>DEPARTAMENTO</font><br/><b>{self.diagnostic.setor}</b>", self.styles['Normal']),
-             Paragraph(f"<font color='#64748b' size=8>DATA GERAÇÃO</font><br/><b>{self.generated_at.strftime('%d/%m/%Y')}</b>", self.styles['Normal']),
-             Paragraph(f"<font color='white' size=8>BEM-ESTAR DO GRUPO</font><br/><font color='white' size=14><b>{idx}%</b></font>", self.styles['Normal'])]
+            [
+             Paragraph(f"<font color='#64748b' size=8>RESPONDENTES</font><br/><b>{total_resp}</b>", self.styles['Normal']),
+             Paragraph(f"<font color='#64748b' size=8>MÉDIA GERAL</font><br/><b>{overall_avg} / 5.0</b>", self.styles['Normal']),
+             Paragraph(f"<font color='white' size=8>BEM-ESTAR DO GRUPO</font><br/><font color='white' size=14><b>{idx}%</b></font>", self.styles['Normal'])
+            ]
         ]
         metrics_table = Table(metrics_data, colWidths=[60*mm, 60*mm, 60*mm])
         metrics_table.setStyle(TableStyle([
@@ -621,15 +689,66 @@ class DepartmentReportRL:
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
         ]))
         story.append(metrics_table)
-        story.append(Spacer(1, 10*mm))
+        story.append(Spacer(1, 8*mm))
+
+        # Radar Chart
+        radar_data = engine_data.get('consolidation', [])
+        radar = RadarChartFlowable(self, radar_data, width=180*mm, height=75*mm)
+        if radar._has_data:
+            story.append(radar)
+            story.append(Spacer(1, 6*mm))
 
         # 3. Sumário do Clima Geral
-        story.append(Paragraph("1. Sumário do Clima Geral", self.styles['Heading2']))
+        story.append(Paragraph("1. Síntese do Clima Setorial", self.styles['Heading2']))
         story.append(Paragraph(saxutils.escape(data.get('clima_geral', '')), self.styles['Normal']))
         story.append(Spacer(1, 8*mm))
 
+        # Matriz de Risco
+        consolidation = engine_data.get('consolidation', [])
+        if consolidation:
+            story.append(Paragraph("2. Matriz de Risco por Dimensão", self.styles['Heading2']))
+            
+            matrix_data = [['INSTR.', 'DIMENSÃO', 'MÉDIA', 'CLASSIFICAÇÃO', 'RISCO (PGR)']]
+            col_widths = [18*mm, 65*mm, 15*mm, 35*mm, 45*mm]
+            
+            for item in consolidation:
+                status = item.get('classificacao', '-')
+                matrix_data.append([
+                    Paragraph(f"<font size=7 color='#2563eb'>{item.get('instrumento', '')}</font>", self.styles['Normal']),
+                    Paragraph(f"<font size=8>{saxutils.escape(item.get('dimensao', ''))}</font>", self.styles['Normal']),
+                    Paragraph(f"<font size=8>{item.get('media', '-')}</font>", self.styles['Normal']),
+                    Paragraph(f"<font size=8><b>{saxutils.escape(status)}</b></font>", self.styles['Normal']),
+                    Paragraph(f"<font size=7 color='#64748b'>{saxutils.escape(item.get('risco', '-'))}</font>", self.styles['Normal']),
+                ])
+                
+            matrix_table = Table(matrix_data, colWidths=col_widths, repeatRows=1)
+            matrix_table_style = [
+                ('BACKGROUND', (0, 0), (-1, 0), COL_DARK),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('INNERGRID', (0, 0), (-1, -1), 0.25, COL_SLATE_100),
+                ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+                ('TOPPADDING', (0, 0), (-1, -1), 5),
+            ]
+            
+            for row_idx in range(1, len(matrix_data)):
+                it = consolidation[row_idx - 1]
+                clr = colors.transparent
+                if it.get('classificacao_key') == 'critico': clr = COL_DANGER
+                elif it.get('classificacao_key') == 'atencao': clr = COL_WARNING
+                elif it.get('classificacao_key') == 'adequado': clr = COL_SUCCESS
+                matrix_table_style.append(('BACKGROUND', (3, row_idx), (3, row_idx), clr))
+                
+            matrix_table.setStyle(TableStyle(matrix_table_style))
+            story.append(matrix_table)
+            story.append(Spacer(1, 8*mm))
+
+
         # 4. Pontos Fortes e Alertas
-        story.append(Paragraph("2. Análise Detalhada", self.styles['Heading2']))
+        story.append(Paragraph("3. Análise Detalhada", self.styles['Heading2']))
         
         # Pontos Fortes
         story.append(Paragraph("<b>Pontos Fortes Identificados:</b>", self.styles['Normal']))
@@ -644,10 +763,22 @@ class DepartmentReportRL:
         story.append(Spacer(1, 8*mm))
 
         # 5. Sugestões de Gestão
-        story.append(Paragraph("3. Recomendações Estratégicas para o Gestor", self.styles['Heading2']))
+        story.append(Paragraph("4. Recomendações Estratégicas para o Gestor", self.styles['Heading2']))
         for i, s in enumerate(data.get('sugestoes_gestao', []), 1):
             story.append(Paragraph(f"<b>{i}.</b> {saxutils.escape(s)}", self.styles['Normal']))
             story.append(Spacer(1, 3*mm))
+
+        # 6. Referencias
+        references = engine_data.get('references', [])
+        if references:
+            story.append(Spacer(1, 8*mm))
+            story.append(Paragraph("5. Bibliografia e Rastreabilidade", self.styles['Heading3']))
+            ref_p = []
+            for r in references[:5]:
+                safe_r = saxutils.escape(r)
+                ref_p.append(f"\u2022 {safe_r}")
+            if ref_p:
+                story.append(Paragraph("<br/>".join(ref_p), self.styles['Normal']))
 
         # Autenticação
         story.append(Spacer(1, 15*mm))

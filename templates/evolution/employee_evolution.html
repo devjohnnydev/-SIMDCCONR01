@@ -236,6 +236,35 @@
                 </div>
             </div>
 
+            {% if employee_data.signed_diagnostics %}
+            <!-- Laudos Assinados -->
+            <div class="card glass-card border-0 mb-4">
+                <div class="card-header bg-transparent pt-4 pb-2 border-bottom">
+                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-file-earmark-medical me-2 text-primary"></i>Laudos Periciais Assinados</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush rounded-bottom" style="border-radius: 0 0 16px 16px;">
+                        {% for laudo in employee_data.signed_diagnostics %}
+                        <a href="{% url 'reports:view_diagnostic' laudo.validation_code %}" target="_blank" class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center" data-bs-toggle="tooltip" title="Abrir Parecer Técnico">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                    <i class="bi bi-check2-circle fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark">{{ laudo.form_name }}</h6>
+                                    <small class="text-muted"><i class="bi bi-calendar-check me-1"></i>Avaliado em {{ laudo.date }} | Score Geral: {{ laudo.avg_score }}</small>
+                                </div>
+                            </div>
+                            <div class="btn btn-sm btn-outline-success rounded-pill px-3">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Laudo
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <!-- Gráfico de Evolução -->
             <div class="card glass-card border-0 mb-4">
                 <div class="card-header bg-transparent pt-4 pb-0 border-0">

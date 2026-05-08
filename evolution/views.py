@@ -352,7 +352,11 @@ def employee_evolution(request, employee_pk=None):
 
                     # Verificar se tem diagnóstico IA
                     has_diagnostic = hasattr(assign, 'diagnostic')
-                    validation_code = assign.diagnostic.validation_code if has_diagnostic else None
+                    is_signed = False
+                    validation_code = None
+                    if has_diagnostic:
+                        validation_code = assign.diagnostic.validation_code
+                        is_signed = assign.diagnostic.is_signed
 
                     history.append({
                         'date': assign.completed_at.strftime('%d/%m/%Y') if assign.completed_at else 'N/A',
@@ -361,12 +365,17 @@ def employee_evolution(request, employee_pk=None):
                         'classification': classification,
                         'total_answers': len(scores),
                         'has_diagnostic': has_diagnostic,
+                        'is_signed': is_signed,
                         'validation_code': validation_code,
                         'assignment_pk': assign.pk,
                     })
 
+        # Filtrar laudos assinados
+        signed_diagnostics = [h for h in history if h.get('has_diagnostic') and h.get('is_signed')]
+
         employee_data = {
             'history': history,
+            'signed_diagnostics': signed_diagnostics,
             'chart_labels': json.dumps([h['date'] for h in history]),
             'chart_scores': json.dumps([h['avg_score'] for h in history]),
         }

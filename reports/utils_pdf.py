@@ -561,10 +561,11 @@ class DepartmentReportRL:
                 logo_drawn = True
             except: pass
         
+        # Desenhar "SIMDCCONR01" ao lado do logo (ou sozinho se não houver logo)
+        text_x = 15*mm + (logo_width + 3*mm if logo_drawn else 0)
         canvas.setFont('Helvetica-Bold', 18)
         canvas.setFillColor(COL_BLUE)
-        if not logo_drawn:
-            canvas.drawString(15*mm, 272*mm, "SIMDCCONR01")
+        canvas.drawString(text_x, 272*mm, "SIMDCCONR01")
 
         # Título superior direito
         canvas.setFont('Helvetica-Bold', 14)
@@ -784,7 +785,8 @@ class DepartmentReportRL:
         story.append(Spacer(1, 15*mm))
         story.append(Paragraph("________________________________________________", self.styles['Normal']))
         story.append(Paragraph("<font size=8 color='#64748b'>Documento gerado eletronicamente via Motor de Análise SIMDCCONR01</font>", self.styles['Normal']))
-        story.append(Paragraph(f"<font size=7 color='#94a3b8'>ID: {self.diagnostic.id} | Timestamp: {self.generated_at.isoformat()}</font>", self.styles['Normal']))
+        formatted_time = self.generated_at.strftime('%d/%m/%Y %H:%M:%S')
+        story.append(Paragraph(f"<font size=7 color='#94a3b8'>ID: {self.diagnostic.id} | Timestamp: {formatted_time}</font>", self.styles['Normal']))
 
         doc.build(story, onFirstPage=self._draw_header, onLaterPages=self._draw_header)
 

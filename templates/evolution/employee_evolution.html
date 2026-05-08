@@ -421,12 +421,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 borderWidth: 3,
                 fill: true,
                 tension: 0.4,
+                spanGaps: true,
                 pointRadius: 5,
                 pointHoverRadius: 8,
-                pointBackgroundColor: scores.map(s =>
-                    s >= 4.3 ? '#2563eb' : s >= 3.5 ? '#16a34a' : s >= 2.5 ? '#d97706' : '#ef4444'
-                ),
-                pointBorderColor: '#ffffff',
+                pointBackgroundColor: scores.map(s => {
+                    if (s === null) return 'transparent';
+                    return s >= 4.3 ? '#2563eb' : s >= 3.5 ? '#16a34a' : s >= 2.5 ? '#d97706' : '#ef4444';
+                }),
+                pointBorderColor: scores.map(s => s === null ? 'transparent' : '#ffffff'),
                 pointBorderWidth: 2
             }]
         },

@@ -319,7 +319,7 @@ def employee_evolution(request, employee_pk=None):
         assignments = FormAssignment.objects.filter(
             employee=selected_employee,
             status='COMPLETED',
-        ).select_related('form_instance', 'form_instance__template').order_by('completed_at')
+        ).select_related('form_instance', 'form_instance__template').order_by('-completed_at')
 
         # Para cada assignment, calcular score médio das respostas
         history = []
@@ -367,7 +367,7 @@ def employee_evolution(request, employee_pk=None):
                 history.append({
                     'date': assign.completed_at.strftime('%d/%m/%Y') if assign.completed_at else 'N/A',
                     'form_name': assign.form_instance.title,
-                    'avg_score': round(avg, 2) if avg else 'N/A',
+                    'avg_score': round(avg, 2) if scores else 'N/A',
                     'classification': classification,
                     'total_answers': len(scores),
                     'has_diagnostic': has_diagnostic,
@@ -383,7 +383,7 @@ def employee_evolution(request, employee_pk=None):
             'history': history,
             'signed_diagnostics': signed_diagnostics,
             'chart_labels': json.dumps([h['date'] for h in history]),
-            'chart_scores': json.dumps([h['avg_score'] for h in history]),
+            'chart_scores': json.dumps([h['avg_score'] if h['avg_score'] != 'N/A' else None for h in history]),
         }
 
     # Admin pode ver todas as empresas

@@ -1,0 +1,600 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HISTÓRICO REVISÃO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+IDENTIFICAÇÃO DO EMPREGADOR
+
+Razão Social:	NOME DA EMPRESA
+CNPJ:   		número do CNPJ
+Endereço:          	Endereço da empresa
+Grau de Risco:   	3
+CNAE:               	indicação CNAE correspondente
+
+INTRODUÇÃO
+
+Este Documento contém o Inventário Geral dos Riscos relacionados às atividades existentes na Organização, compreendendo todas as categorias de riscos à segurança e saúde dos trabalhadores e constitui um dos documentos básicos do Programa de Gestão de Riscos, no que diz respeito ao reconhecimento e avaliação de riscos relacionados a agentes físicos, químicos, biológicos, ergonômicos, de acidentes ou mecânicos, bem como a atualização mais recente da NR 1, publicada em 2024 e válida a partir de 2025, introduziu mudanças importantes, incluindo a incorporação dos riscos psicossociais como parte das obrigações das empresas no gerenciamento de saúde e segurança no trabalho. A inclusão reflete a preocupação crescente com a saúde mental e o bem-estar, alinhando o Brasil a padrões internacionais. 
+Riscos psicossociais referem-se a fatores associados à organização e às condições de trabalho que podem causar impacto negativo na saúde mental e no bem-estar dos trabalhadores. Exemplos desses riscos incluem carga de trabalho excessiva, falta de controle sobre o trabalho, conflitos interpessoais, assédio moral e a ausência de apoio social no ambiente de trabalho. Esses fatores podem levar ao desenvolvimento de doenças como depressão, ansiedade e a síndrome de burnout, prejudicando tanto o trabalhador quanto a produtividade da empresa.
+Aos Empregadores cabe:
+
+Incorporar os riscos psicossociais ao Programa de Gerenciamento de Riscos Ocupacionais (PGR): 
+
+Identificar fatores psicossociais no ambiente de trabalho, como excesso de carga de trabalho, conflitos interpessoais, assédio, dentre outros.
+Nota.: A Norma não obriga a contratação de psicólogos ou outros profissionais especializados como funcionários fixos. No entanto, empresas podem contratar especialistas como consultores para auxiliar na identificação e avaliação de riscos psicossociais, especialmente em casos mais complexos.
+
+Documentar esses riscos no PGR; 
+Implementar medidas preventivas e corretivas; 
+Treinar gestores e colaboradores para identificar, prevenir e mitigar os riscos psicossociais; 
+Desenvolver programas de sensibilização sobre saúde mental; 
+As empresas precisam registrar ações específicas sobre a prevenção dos riscos psicossociais, como pesquisas de clima, treinamentos e intervenções;
+Auditorias internas e externas devem incluir verificações relacionadas à gestão desses riscos; 
+A norma destaca a importância de políticas organizacionais voltadas para a promoção do equilíbrio emocional, prevenindo estresse ocupacional, burnout e outros problemas. 
+O empregador é responsável por oferecer um ambiente seguro, enquanto os trabalhadores devem seguir orientações e reportar situações de risco.
+Alinhamento com outras normas:
+A NR 1 também reforça a integração com outras exigências, como a NR 17 (Ergonomia), para abordar aspectos físicos e psicossociais de maneira estruturada. 
+
+Os dados constantes neste documento servem de base para a elaboração do Plano de Ação Anual de Segurança e Saúde do Trabalho, que contempla as ações de controle a serem mantidas, implementadas ou melhoradas, assim como as atividades de monitoramento das exposições.
+Os riscos identificados para cada grupo de trabalhadores expostos irão subsidiar a elaboração ou reformulação do PCMSO NR 7.
+
+FUNDAMENTAÇÃO LEGAL
+
+Este programa visa identificar e evitar os riscos ocupacionais que possam ser originados no trabalho, identificar os possíveis perigos e possíveis lesões ou agravos à saúde, avaliar os riscos ocupacionais indicando o nível de risco, classificar os riscos ocupacionais para determinar a necessidade de adoção de medidas de prevenção ou não, acompanhar o controle dos riscos ocupacionais, controlar os riscos ambientais existentes no local de trabalho com adoção de medidas e ações efetivas, monitorar a exposição dos trabalhadores aos riscos ambientais existentes no local de trabalho, eliminar ou minimizar a níveis compatíveis com limites de tolerância da NR 15 da Portaria 3214/78 do MTE ou com os da ACGIH - American Conference of Governmental Industrial Higyenists, bem como acompanhamento psicológico para aplicação de ferramentas adequadas e análise criteriosa dos níveis de risco psicossociais.
+
+GERENCIAMENTO DOS RISCOS
+
+O GRO é a interface direta de todos os documentos (Normas Regulamentadoras correlatas) de segurança e saúde do trabalho da Organização. O principal objetivo do GRO é a implementação de um processo contínuo, para identificação, avaliação, tratamento e monitoramento dos riscos existentes nos ambientes de trabalho através do Inventário de Riscos e Plano de Ação.
+Citar os documentos e treinamentos existentes na organização, exemplo abaixo:
+Documentos e Treinamento existentes na Organização: Programa de Atenção a Emergência; LTCAT – Laudo Técnico de Condições Ambientais do Trabalho; Análise Ergonômica do Trabalho; FISPQ – Ficha de Informações de Segurança de Produtos Químicos; Treinamento Altura NR 35; Treinamento Trabalhos Eletricidade NR 10; Controle e Treinamento EPI NR 6.
+OBJETIVOS
+
+Os objetivos deste Inventário Geral de Riscos são: 
+Caracterizar exposições a todas as condições perigosas e aos agentes potencialmente nocivos – químicos, físicos, biológicos, ergonômicos, psicossociais e outros fatores estressores que constituem cargas de trabalho física e mental significativas.
+Caracterizar a intensidade e a variação temporal das exposições para todos os trabalhadores – próprios e de contratadas que atuem em atividades dentro dos limites da Organização.
+Avaliar os riscos potenciais à segurança e saúde de todos os trabalhadores.
+Priorizar e recomendar ações para controlar exposições que representem riscos inaceitáveis e intoleráveis.
+Registrar as avaliações ambientais realizadas na empresa.
+Comunicar os resultados do processo de levantamento de perigos e avaliação de riscos para todos os trabalhadores envolvidos.
+Manter o registro histórico das exposições para todos os trabalhadores de forma que problemas futuros de saúde possam ser analisados e gerenciados com base em informações reais de exposição.
+Manter o registro histórico das exposições para todos os trabalhadores de forma que problemas futuros de saúde possam ser analisados e gerenciados com base em informações reais de exposição.
+
+
+ABRANGÊNCIA
+
+Este Programa de Gerenciamento de Riscos, através de seu Inventário de Riscos Ocupacionais, descreverá os riscos ocupacionais existentes na organização, dentro de seus setores, no intuito de potencializar a segurança e saúde dos trabalhadores. O processo se inicia com a caracterização básica de cada unidade – processo e ambiente de trabalho, força de trabalho e agentes ambientais e estressores, os quais se destacam:
+
+FÍSICOS, dentre outros: ruído, vibrações, temperaturas anormais, pressões anormais, radiações ionizantes, radiações não ionizantes e umidade.
+
+QUÍMICOS, dentre outros: Substância química, por si só ou em misturas, quer seja em seu estado natural, quer seja produzida, utilizada ou gerada no processo de trabalho, que em função de sua natureza, concentração e exposição, é capaz de causar lesão ou agravo à saúde do trabalhador. Exemplos: fumos de cádmio, poeira mineral contendo sílica cristalina, vapores de tolueno, névoas de ácido sulfúrico.
+
+BIOLÓGICOS, dentre outros: Microrganismos, parasitas ou materiais originados de organismos que, em função de sua natureza e do tipo de exposição, são capazes de acarretar lesão ou agravo à saúde do trabalhador. Exemplos: bactéria Bacillus anthracis, vírus linfotrópico da célula T humana, príon agente de doença de Creutzfeldt-Jakob, fungo Coccidioides immitis.
+
+ACIDENTES, dentre outros:  são potencialmente geradores de acidentes, como o arranjo físico deficiente; máquinas e equipamentos sem proteção; ferramentas inadequadas; ou defeituosas; eletricidade; incêndio ou explosão; animais peçonhentos; armazenamento inadequado, dentre outros.
+
+ERGONÔMICOS, dentre outros: são todas as condições que afetam o bem-estar do indivíduo, sejam elas físicas, mentais ou organizacionais. Podem ser compreendidas como fatores que interferem nas características psicofisiológicas do profissional, provocando desconfortos e problemas de saúde. São exemplos de riscos ergonômicos: levantamento de peso, ritmo excessivo de trabalho, monotonia, repetitividade, postura inadequada.
+
+PSICOSSOCIAIS, dentre outros são: cargas de trabalho excessivas, exigências contraditórias e falta de clareza na definição das funções, falta de participação na tomada de decisões que afetam o trabalhador, falta de controlo sobre a forma como o trabalho é executado, má gestão de mudanças organizacionais, precariedade laboral, comunicação ineficaz, falta de apoio das chefias ou dos colegas, assédio psicológico e sexual, e clientes, pacientes alunos, etc. difíceis.
+
+
+DEFINIÇÕES HIGIENE DO TRABALHO 
+
+DANO – É a consequência de um perigo em termos de lesão, doença, ou uma combinação desses.
+
+PERIGO – Fonte, situação ou ato com potencial para provocar danos humanos em termos de lesão, ou uma combinação dessas.
+
+IDENTIFICAÇÃO DE PERIGOS – Processo de reconhecimento que um perigo existe, e de definição de suas características.
+
+RISCO – Combinação da probabilidade de ocorrência de um evento perigoso ou exposição com a gravidade da lesão ou doença que pode ser causada pelo evento ou exposição.
+
+AVALIAÇÃO DE RISCOS – Processo de avaliação de risco proveniente de perigo, levando em consideração a adequação de qualquer controle existente, e decidindo se o risco é ou não aceitável.
+
+ANÁLISE QUALITATIVA - Análise técnica, realizada através de inspeção nos locais de trabalho, com o objetivo de determinar qualitativamente o potencial de gravidade dos riscos aos quais os trabalhadores possam estar expostos.
+
+AVALIAÇÃO QUANTITATIVA - Avaliação técnica, realizada com a utilização de aparelhos de medição, de modo que os riscos existentes no local de trabalho possam ser mensurados e comparados com os parâmetros legais e técnicos. A Avaliação Quantitativa tem como principais objetivos: Comprovar o controle da exposição ocupacional aos agentes identificados; Dimensionar a exposição ocupacional dos grupos de trabalhadores; Subsidiar as medidas de prevenção.
+
+RISCO ACEITÁVEL - Risco que foi reduzido a um nível que pode ser tolerado pela empresa, levando em consideração suas obrigações legais e sua própria política de SST.
+
+ESTIMATIVA DE RISCO – Processo para determinar a frequência ou a probabilidade e as consequências de um perigo.
+
+NÍVEL DE AÇÃO – Corresponde a um valor a partir do qual devem ser iniciadas medidas preventivas de forma a minimizar a probabilidade de que as exposições à agentes ambientais ultrapasse os limites de tolerância. Agentes Químicos + 50% do LT (limite de tolerância), Ruído= dose 0,5.
+
+LIMITE DE TOLERÂNCIA – LT – Concentração ou intensidade máxima ou mínimas, relacionadas à natureza e o tempo de exposição ao agente, que não causará dano à saúde do trabalho, durante sua vida laboral (item 15.1.5 da NR 15, Portaria 3214).
+
+VALOR TETO – Concentração que não pode ser excedida durante nenhum momento da exposição do trabalhador. 
+
+INCIDENTE: Ocorrência decorrente, ou no decorrer, de um trabalho, que pode resultar em lesões e problemas de saúde.
+ACIDENTE: Um incidente em que ocorrem lesões e problemas de saúde.
+FATORES/ INFLUÊNCIA HUMANA: referem-se a questões ambientais, organizacionais e de trabalho. Características humanas e individuais que influenciam o comportamento no trabalho que pode afetar a saúde e a segurança do trabalhador.
+SEVERIDADE/ CONSEQUÊNCIAS: Expressa o potencial de danos para a Saúde e Segurança, não sendo apenas aqueles mais diretos e visíveis ou mensuráveis.
+FREQUÊNCIA/PROBABILIDADE: É a possibilidade de ocorrer um evento com dano, levando-se em consideração os registros históricos dos acidentes/doenças ocupacionais e o controle eficiente existente.
+CONTROLE: Instalações, equipamentos, instrumentos ou procedimentos que objetivem controlar os perigos. Ex: EPI (protetor auricular, óculos, etc.); EPC (exaustores, guarda-corpo, etc.); instrumentos (manômetros, termômetros); sistemas de segurança, procedimentos (instruções técnicas) entre outros.
+EMERGÊNCIA: Situações não planejadas, geradoras de dano real à integridade das pessoas, meio ambiente e patrimônio.
+PROFISSIONAL HABILITADO: Profissional previamente qualificado e com registro no competente conselho de classe. 
+LEGISLAÇÃO APLICÁVEL: Requisitos ou normas legais relativas à Segurança e Saúde no Trabalho, associados aos perigos e riscos ocupacionais da empresa.
+SST: Segurança e Saúde no Trabalho
+PAIR: Perda Auditiva Induzida pelo Ruído. 
+OUTROS REQUISITOS: Obrigações da organização decorrentes de acordos com órgãos públicos e outras partes interessadas, formalmente estabelecidas ou da menção de normas técnicas em legislação.
+
+PROCESSO DE ELABORAÇÃO 
+
+INVENTÁRIO DE RISCOS
+A metodologia aplicada apresenta baseia-se nas normas ISO 14001, OHSAS 18001, BS 8800 e AS/NZS 4360, possibilitando a síntese do processo de identificação, análise, avaliação e controle de riscos, de forma a subsidiar o gestor da organização na elaboração e implementação do PROGRAMA DE GERENCIAMENTO DE RISCOS.
+APLICAÇÃO
+O processo deverá ser implantado a partir de “situações”, aplicando-se a metodologia definida para identificação dos perigos e gerenciamento dos riscos ocupacionais, sempre levando em consideração as oportunidades em relação ao seu escopo, natureza e cronograma, para assegurar que eles sejam proativos ao invés de reativos e sejam utilizados de forma contínua, dentro de cada setor/área, avaliando-se sistematicamente a necessidade de revisão do inventário de riscos e perigos, quando:
+Antes do início do funcionamento do estabelecimento;
+Nas atividades existentes;
+Quando houver qualquer modificação nos processos, atividades, avaliação da tolerabilidade e/ou exigência do sistema;
+Se houver ocorrência de acidente (s) ou doenças (s), e for (em) detectado (s) novo (s) perigo (s), risco (s), deficiência ou ausência de controles associados ao evento;
+Nas mudanças das instalações, na implementação de novos projetos, nas áreas, máquinas e ou equipamentos.
+Nas ampliações de área e/ou de equipamentos na empresa, desde a fase de projeto/ planejamento até a operação do objeto da ampliação;
+Alterações significativas de processos/atividades, visando assegurar a atualização das informações do levantamento inicial;
+Nas novas instalações ou processos de manufatura.
+
+A identificação, avaliação e gerenciamento de perigos e riscos são conduzidos em fases sob a responsabilidade da Organização:
+
+Fase 01 - Identificação dos Perigos, Riscos e Danos relacionados com cada processo/atividade de trabalho, classificação da magnitude do risco e identificação das medidas de controle dos riscos.
+Fase 02 - Analise e determinação do grau de risco em função da combinação da Influência humana, da probabilidade/ frequência da ocorrência e da consequência/ severidade de um determinado evento perigoso.
+Fase 03 - Especificação do método de medição e monitoramento das medidas de controle dos riscos e determinação das medidas para controle dos riscos com grau de risco moderado e ou significativo.
+Fase 04 - Coordenação das atividades de identificação dos perigos/riscos, análise e determinação do grau de risco e a especificação do método de medição e monitoramento.
+
+IDENTIFICAÇÃO DA SITUAÇÃO OPERACIONAL
+As atividades relacionadas aos perigos e riscos deverão abranger as seguintes situações em que ocorrem ou possam ocorrer:
+
+Rotineiras (R): Relativa às atividades realizadas no dia-a-dia dos setores/ áreas de maneira rotineiras, tanto operacionais como administrativas.
+
+Não rotineiras (NR): Relativa às atividades conduzidas fora da rotina (Exemplos: paradas, partidas, manutenções programadas de unidades/ áreas com intervenções diferentes daquelas realizadas rotineiramente, testes, etc.).
+
+Emergencial (E): Incluem-se nesta categoria situações não planejadas com potencial de causar danos associados aos eventos de risco.
+
+Nota: Os possíveis perigos são geralmente, oriundos de situações emergenciais e/ou de acidentes de trabalho e, além dos prováveis riscos relativos à própria segurança, têm o potencial de gerar impactos à saúde dos colaboradores e contratados.
+
+IDENTIFICAÇÃO DO PERIGO
+A identificação dos perigos deve ser realizada de maneira individualizada, para cada atividade. O processo para identificação de perigo deve ser proativo e contínuo e, deve levar em consideração, mas não se limitar a:
+
+Como o trabalho é organizado, fatores sociais (incluindo carga de trabalho, horário de trabalho, vitimização, assédio e bullying), liderança e cultura da organização;
+
+Atividades e situações de rotina e não rotineiras, incluindo perigos decorrentes de: Infraestrutura, equipamentos, materiais, substâncias e condições físicas de local de trabalho; Projeto de produtos e serviços, pesquisa, desenvolvimento, ensaios, produção, montagem, construção, entrega de serviços, manutenção e disposição; Fatores humanos e; Como o trabalho é realizado.
+
+Incidentes anteriores relevantes, internos ou externos à organização, incluindo emergências e suas causas;
+
+Potenciais situações de emergência;
+
+Pessoas, incluindo a consideração de: Aquelas com acesso ao local de trabalho e suas atividades, incluindo trabalhadores contratados, visitantes e outras pessoas; Aquelas nas vizinhanças do local de trabalho, que podem ser afetadas pelas atividades da organização; Trabalhadores em um local que não esteja sob controle direto da organização;
+
+Outras questões, incluindo a consideração de: Projeto das áreas de trabalho, processos, instalações, maquinário/equipamentos, procedimentos, operacionais e organização do trabalho, incluindo sua adaptação às necessidades e capacidades dos trabalhadores envolvidos; Situações que ocorram nas proximidades do local de trabalho, causadas por atividades relacionadas ao trabalho sob o controle da organização; Situações não controladas pela organização e que ocorram nas imediações do local de trabalho, que possam causar lesões e problemas de saúde às pessoas no local de trabalho;
+
+Mudanças reais ou propostas na organização, operações, processos.
+
+Mudanças no conhecimento de, e informações sobre, perigos.
+
+Nota: De um mesmo perigo poderão resultar vários riscos, que podem ser enquadrados em graus de riscos distintos, bem como, poderão ser tratados de maneiras distintas;
+
+A natureza do risco deve ser identificada e pode ser enquadrada em uma das seguintes categorias: Físico; Químico; Biológico; Acidente; Ergonômico; Psicossocial; Perigosos; Outros fatores de risco.
+
+IDENTIFICAÇÃO DO RISCO, DANOS/AGRAVOS À SAÚDE
+Para cada perigo deve-se efetuada a Identificação dos riscos, dos danos estratificando-os para maior compreensão e sensibilização dos usuários.
+A avaliação das exposições ocupacionais aos agentes físicos, químicos e biológicos, quando necessária, deverá ser realizada conforme os requisitos da NR 09, inclusive, para fins de avaliação das medidas de prevenção e ou controle dos riscos e, posteriormente caso necessário determinar a necessidade de adoção direta de outras medidas de prevenção.
+A avaliação da exposição dos colaboradores deve levar em conta o NE – Nível de Exposição e o LT – Limite de Tolerância previstos nas normas regulamentadoras e seus anexos, na ausência de limites de tolerância nas normas nacionais devem ser utilizados como referência para a adoção de medidas de prevenção aqueles previstos pela American Conference of Governmental Industrial Higyenists - ACGIH.
+
+ORIGEM DO RISCO
+A identificação da origem do risco deve considerar sua fonte e ou circunstancias que podem ser classificadas de das seguintes formas:
+
+Interna: Os inerentes aos projetos das áreas de trabalho, processos, instalações, maquinário/equipamentos, procedimentos, operacionais e organização do trabalho, incluindo sua adaptação às necessidades, capacidades dos trabalhadores envolvidos e ou situações que ocorram nas proximidades do local de trabalho, causadas por atividades relacionadas ao trabalho sob o controle da organização;
+Externa: Situações não controladas pela organização e que ocorram nas imediações do local de trabalho, que possam causar lesões e problemas de saúde às pessoas no local de trabalho.
+
+CLASSIFICAÇÃO DO RISCO
+Visando uma melhor caracterização do risco em análise, bem como, definir sua abrangência, todos os riscos identificados devem ser enquadrados em uma das seguintes classes:
+
+Funcional (F): São os riscos específicos de determinada função onde apenas a pessoa que está realizando a atividade fica exposta ao perigo e deve incluir trabalhadores em um local que esteja ou não sob controle direto da organização.
+
+Posicional (P): Todas as pessoas que trabalham no processo ou posto de trabalho onde a atividade está sendo realizada ficam expostas ao perigo.
+
+Geral (G): Todas as pessoas do setor ou da organização ficam expostas ao perigo (ex. incêndio, explosão etc.), independentemente da função ou local de trabalho incluindo:
+
+Pessoas com acesso ao local de trabalho e ou as atividades, incluindo trabalhadores, contratados, visitantes, outras pessoas e;
+Aqueles nas vizinhanças do local de trabalho, que podem ser afetadas pelas atividades da organização.
+
+DESCRIÇÃO DAS MEDIDAS DE PREVENÇÃO/CONTROLE DOS RISCOS
+A organização deve adotar medidas de prevenção para eliminar, reduzir ou controlar os riscos sempre que:
+As exigências previstas em Normas Regulamentadoras e ou nos dispositivos legais determinarem;
+A classificação da prioridade dos riscos ocupacionais;
+Houver evidências de associação, por meio do controle médico da saúde, entre as lesões e os agravos à saúde dos trabalhadores com os riscos e as situações de trabalho identificados;
+
+Para melhor identificar os meios de prevenção, gerenciamento e ou controle dos riscos, a organização deve estabelecer, implementar e manter um processo para a eliminação de perigos e redução de riscos de SSO, utilizando a seguinte hierarquia de controles:
+
+Eliminar os perigos: Esta ação consiste em eliminar o processo ou a causa da condição perigosa: Por exemplo automatizar processos de trabalho manual, ou instalar sistemas que desligam máquinas e equipamentos caso ocorra o acesso indevido de pessoas.
+Substituir: Substituir a fonte geradora por processos, operações, materiais ou equipamentos menos perigosos.
+Utilizar controles de engenharia e reorganização do trabalho: São as medidas estabelecidas nos projetos de máquinas e equipamentos que contribuem para a eliminação do ou minimização do risco (Ex: Sistema de exaustão das estufas e cabines de pintura, linhas de vida instalada nos telhados, dentre outros).
+Dispositivos de Segurança que possam atuar de forma preventiva, ou seja, inibindo automaticamente a ação do agente evitando a ocorrência do perigo, ou ainda, aquele que possa sinalizar rapidamente para ação de uma pessoa ou equipe que possa tomar ações e minimizar o resultado do evento perigoso. Na tabela abaixo estão relacionados alguns exemplos: agentes extintores, bacia de contenção, detectores de fumaça, splinklers, dentre outros.
+
+São equipamentos de Proteção Coletiva devidamente dimensionado para prevenir a ocorrência do evento em questão, que possa afetar a saúde e a segurança dos funcionários, que possa ser demonstrada sua capacidade atual de ação, sua manutenção preventiva conforme normas técnicas e ou legislação especifica. Exemplo de proteção coletiva - EPC (Proteção mecânica, ventilação local, exaustão, biombos, isolamento acústico, confinamento, enclausuramento, mecanismos de operação remota, etc.).
+
+Quando comprovada pela organização a inviabilidade técnica da adoção de medidas de proteção coletiva, ou quando estas não forem suficientes ou encontrarem-se em fase de estudo, planejamento ou implantação ou, ainda, em caráter complementar ou emergencial, deverão ser adotadas outras medidas, obedecendo-se a seguinte hierarquia:
+Utilizar controles administrativos ou de organização do trabalho, incluindo treinamento: 
+
+Os controles administrativos consideram procedimentos de Segurança, Instruções de Segurança, Instruções Integradas, Procedimentos Integrados, dentre outros. As instruções/ procedimentos em questão podem ser específicos para assuntos de Segurança e Saúde no Trabalho, ou uma instrução/ procedimento que aborde sobre outros temas relacionado a operação de equipamentos, método de trabalho, etc., contudo todos devem considerar as informações sobre Segurança e Saúde no Trabalho e abordar como o risco é controlado. Os treinamentos aplicados devem ser devidamente comprovados (Ex: Integração, Segurança na operação de máquinas, Utilização de EPI, Segurança no trabalho em espaço confinado, Segurança nos trabalhos em altura e outros).
+
+Utilizar equipamento de proteção individual EPI: Fornecimento de Equipamentos de Proteção Individual, este que deve ser apropriado ao risco, possuir aprovação dos órgãos competentes, ser mantido em condições satisfatórias de uso. O (s) colaboradores (s) deve (m) ter conhecimento (s)/ treinamento (s) do seu uso e limitações. Quando se aplicar à utilização de determinado EPI (óculos, luvas, proteção respiratória, protetor auditivo, etc.) indicar com a sigla EPI;
+
+Nota: Na ausência e ou impossibilidade de implementação de controles, indicar com a frase “Não aplicado”.
+
+AVALIAÇÃO E ANÁLISE DO RISCO
+A organização deve estabelecer critérios para implementar e manter um processo de avaliação dos riscos de segurança e saúde no trabalho relativos aos perigos identificados. Estes critérios levam em consideração a eficácia dos controles existentes e a avaliação de outros riscos relacionados ao estabelecimento, implementação, operação e manutenção do sistema de gestão de Segurança e Saúde no trabalho, como por exemplo:
+
+Fatores/Influência Humana - As análises dos fatores humanos devem considerar o comportamento das pessoas (Exemplo: Capacitação, conduta, competência, disciplina, temperamento, iniciativa, postura, hábitos), o contexto do trabalhador; (Ambiente de trabalho, estresse e tensão, limitações físicas ou psicológicas) e outros fatores. Avaliar a relação das pessoas com os riscos de Segurança e Saúde no Trabalho (condições subjetivas).
+PERIODICIDADE E FORMA DE AVALIAÇÃO DO DESENVOLVIMENTO DO PGR
+A avaliação de riscos deve constituir um processo contínuo e ser revista a cada dois anos ou quando da ocorrência das seguintes situações:
+após implementação das medidas de prevenção, para avaliação de riscos residuais;
+após inovações e modificações nas tecnologias, ambientes, processos, condições, procedimentos e organização do trabalho que impliquem em novos riscos ou modifiquem os riscos existentes;
+quando identificadas inadequações, insuficiências ou ineficácias das medidas de prevenção;
+na ocorrência de acidentes ou doenças relacionadas ao trabalho;
+quando houver mudança nos requisitos legais aplicáveis;
+após a solicitação justificada dos trabalhadores ou da CIPA, quando houver.
+Observação.: No caso de organizações que possuírem certificações em sistema de gestão de SST, o prazo poderá ser de até 3 (três) anos.
+
+
+FORMA DE REGISTRO, MANUTENÇÃO E DIVULGAÇÃO DE DADOS
+O documento e suas alterações deverão estar disponíveis de modo a proporcionar o imediato acesso às autoridades competentes.
+Todos os documentos relativos ao PROGRAMA DE GERENCIAMENTO DE RISCOS, e suas respectivas revisões e atualizações, permanecerão arquivados conforme critérios específicos durante um período mínimo de 20 anos.
+Para os documentos que devem estar à disposição dos trabalhadores ou dos seus representantes, a organização deverá prover meios de acesso destes às informações, de modo a atender os objetivos da norma específica. Para confecção do documento, e suas alterações e complementações deverão consultar os trabalhadores quanto à percepção de riscos ocupacionais,
+podendo para este fim ser adotadas as manifestações da Comissão Interna de Prevenção de Acidentes - CIPA, quando houver e comunicar aos trabalhadores sobre os riscos consolidados no inventário de riscos e as medidas de prevenção do plano de ação do PGR.
+O planejamento de ações e controle dos riscos ocupacionais serão disponibilizados no Plano de Ação, indicando as medidas de prevenção a serem introduzidas, aprimoradas ou mantidas, com cronograma, formas de acompanhamento e aferição de resultados.
+O plano / Cronograma de Ações deverá indicar claramente os prazos para o desenvolvimento das etapas e o cumprimento de metas. A empresa poderá identificar ou incluir novas ações prevencionistas no Cronograma de Ações do Plano de Ação, sempre que considerar necessário.
+
+A análise da eficácia e as correções das metas e prioridades serão realizadas considerando as avaliações do ambiente de trabalho, os dados coletados com os trabalhadores e a verificação de possíveis alterações nos setores de trabalho. O cronograma de ações será alterado conforme as correções das metas e prioridades estabelecidas.
+O cronograma deste documento deve ser atualizado periodicamente até a expiração do prazo de validade de dois anos.
+Nota.: Para execução, acompanhamento ou avaliação de atividades específicas que extrapolem a capacidade dos recursos humanos disponíveis na organização ou por questões técnico-legais, o Responsável pelo PROGRAMA DE GERENCIAMENTO DE RISCOS poderá contratar serviços de especialistas, para contribuir com o Gerenciamento dos Riscos Ocupacionais.
+
+RESPONSABILIDADES
+
+EMPREGADOR 
+Cabe ao Empregador implementar o GRO - Gerenciamento de Riscos Ocupacionais e este deve constituir um Programa de Gerenciamento de Riscos - PGR. São responsabilidades do Empregador:
+
+a) cumprir e fazer cumprir as disposições legais e regulamentares sobre segurança e saúde no trabalho; 
+b) informar aos trabalhadores:
+I. os riscos ocupacionais existentes nos locais de trabalho; 
+II. as medidas de prevenção adotadas pela empresa para eliminar ou reduzir tais riscos;
+III. os resultados dos exames médicos e de exames complementares de diagnóstico aos quais os próprios trabalhadores forem submetidos; e
+IV. os resultados das avaliações ambientais realizadas nos locais de trabalho. 
+c) elaborar ordens de serviço sobre segurança e saúde no trabalho, dando ciência aos trabalhadores; 
+d) permitir que representantes dos trabalhadores acompanhem a fiscalização dos preceitos legais e regulamentares sobre segurança e saúde no trabalho; 
+e) determinar procedimentos que devem ser adotados em caso de acidente ou doença relacionada ao trabalho, incluindo a análise de suas causas; 
+f) disponibilizar à Inspeção do Trabalho todas as informações relativas à segurança e saúde no trabalho; e 
+g) implementar medidas de prevenção, ouvidos os trabalhadores, de acordo com a seguinte ordem de prioridade: 
+I. eliminação dos fatores de risco; 
+II. minimização e controle dos fatores de risco, com a adoção de medidas de proteção coletiva; 
+III. minimização e controle dos fatores de risco, com a adoção de medidas administrativas ou de organização do trabalho; e 
+IV. adoção de medidas de proteção individual.
+
+
+TRABALHADOR 
+a) cumprir as disposições legais e regulamentares sobre segurança e saúde no trabalho, inclusive as ordens de serviço expedidas pelo empregador;  
+b) submeter-se aos exames médicos previstos nas NR; 
+c) colaborar com a organização na aplicação das NR; e 
+d) usar o equipamento de proteção individual fornecido pelo empregador.
+
+Constitui ato faltoso a recusa injustificada do empregado ao cumprimento do disposto nas alíneas do subitem anterior. 
+
+1.4.3 O trabalhador pode interromper suas atividades quando constatar uma situação de trabalho onde, a seu ver, por motivos razoáveis, envolva um risco grave e iminente para a sua vida ou saúde, informando imediatamente ao seu superior hierárquico. 
+1.4.3.1 O empregador não pode exigir o retorno dos trabalhadores à atividade enquanto não sejam adotadas as medidas corretivas da situação de grave e iminente risco para sua vida ou saúde. 
+1.4.3.2 O trabalhador deve ser protegido de consequências injustificadas, em decorrência da interrupção prevista no caput do item 1.4.3 desta NR. 
+1.4.3.3 O trabalhador deve comunicar, imediatamente, ao seu superior hierárquico as situações de trabalho que envolvam um risco grave e iminente para a sua vida ou saúde, bem como de terceiros. 
+1.4.4 Todo trabalhador, ao ser admitido ou quando mudar de função que implique em alteração de risco, deve receber informações sobre: 
+a) os riscos ocupacionais que existam ou possam originar-se nos locais de trabalho; 
+b) os meios para prevenir e controlar tais riscos; 
+c) as medidas adotadas pela organização; 
+d) os procedimentos a serem adotados em situação de emergência; e 
+e) os procedimentos a serem adotados, em conformidade com os subitens 1.4.3 e 1.4.3.1. 1.4.4.1 
+As informações podem ser transmitidas: 
+a) durante os treinamentos; e 
+b) por meio de diálogos de segurança, documento físico ou eletrônico.
+
+
+IMPLEMENTAÇÃO E ACOMPANHAMENTO DAS MEDIDAS DE PREVENÇÃO – A implementação das medidas de prevenção e respectivos ajustes devem ser registrados. O desempenho das medidas de prevenção deve ser acompanhado de forma planejada e contemplar:
+
+A verificação da execução das ações planejadas;
+As inspeções dos locais e equipamentos de trabalho; e
+O monitoramento das condições ambientais e exposições a agentes nocivos, quando aplicável.
+
+As medidas de prevenção devem ser corrigidas quando os dados obtidos no acompanhamento indicarem ineficácia em seu desempenho;
+Acompanhamento da saúde ocupacional dos trabalhadores;
+A organização deve desenvolver ações em saúde ocupacional dos trabalhadores integradas às demais medidas de prevenção em SST, de acordo com os riscos gerados pelo trabalho;
+
+O controle da saúde dos empregados deve ser um processo preventivo planejado, sistemático e continuado, de acordo com a classificação de riscos ocupacionais e nos termos da NR-07.
+Análise de acidentes e doenças relacionadas ao trabalho;
+A organização deve analisar os acidentes e as doenças relacionadas ao trabalho;
+
+As análises de acidentes e doenças relacionadas ao trabalho devem documentados e:
+Considerar as situações geradoras dos eventos, levando em conta as atividades efetivamente desenvolvidas, ambiente de trabalho, materiais e organização da produção e do trabalho;
+Identificar os fatores relacionados com o evento; e
+Fornecer evidências para subsidiar e revisar as medidas de prevenção existentes.
+ 
+PREPARAÇÃO PARA RESPOSTA EMERGÊNCIAS - A organização deve estabelecer, implementar e manter procedimentos de respostas aos cenários de emergências, de acordo com os riscos, as características e as circunstâncias das atividades.
+Os procedimentos de respostas aos cenários de emergências devem prever, no mínimo:
+Os meios e recursos necessários para os primeiros socorros, encaminhamento de acidentados e abandono de locais afetados; e
+As medidas necessárias para os cenários de emergências de grande magnitude, quando aplicável.
+1.5.6.3 A organização deve realizar exercícios simulados, conforme previsto em procedimento de resposta a emergências, que deve incluir sua periodicidade. 
+1.5.6.3.1 Devem ser geradas evidências do exercício simulado quando realizado.
+
+METODOLOGIA
+
+O Inventário de Riscos, foi elaborado a partir das metodologias da Gestão de Riscos - Técnicas para o processo de avaliação de riscos da ISO/IEC 31.010, Guia para Sistemas de Gestão da Segurança e Saúde no Trabalho da BS 8.800, estratégia para avaliação da exposição ocupacional segundo a AIHA - American Industrial Hygiene Association.
+
+O Inventário de perigos e riscos é utilizado para evidenciar a identificação dos perigos, avaliação, e gerenciamento dos Riscos, através:
+
+Identificação da ÁREA levando em consideração a característica dos processos e ambiente de trabalho que gera ou possa gerar perigos e riscos ocupacionais e ou agravos a saúde.
+Identificação das ATIVIDADES e suas características considerando os processos e instalações em todos os setores/ áreas, incluindo as com riscos gerados aos e ou pelos terceiros e prestadores de Serviços instalados nas dependências da empresa.
+
+
+
+
+
+Fatores/influência Humana – As análises dos fatores humanos devem considerar o coportamento dfas pessoas (exemplo: capacitação, conduta, competência, disciplina, temperamento, iniciativa, postura, hábitos), o contexto do trabalhador (ambiente de trabalho, stresse e tensão, limitações físicas ou psicolólicas), entre outros fatores. Avaliar a relação das pessoas com os riscos de Segurança e Saude do Trabalho.
+
+Assim, para cada agente evidenciado, em função da combinação da (Probabilidade) com os possíveis efeitos (Severidade) que este agente poderá causar a saúde do trabalhador, se estabelece uma graduação para o risco da exposição ocupacional, conforme matriz abaixo:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ENCERRAMENTO
+
+É de responsabilidade da XXXXX, a elaboração desde inventário de risco e plano de ação (inicial) a partir de vistoria técnica para avaliação dos postos de trabalho.
+Modificações posteriores que alterem a classificação dos agentes ou agravos a gestão dos perigos/riscos, deverão ser atualizadas, conforme determinação da NR 1. A veracidade das informações e detalhes dos processos, transmitidos na vistoria técnica, são de responsabilidade da Empresa Contratante. INVENTÁRIO DE RISCOS OCUPACIONAIS foi elaborado na forma de ANÁLISE PRELIMINAR DE RISCOS, cuja tabela de compilação de dados é disponibilizada na forma de planilha eletrônica, de forma a proporcionar dinamismo nas atualizações e acompanhamento dos cenários de exposição ocupacional. 
+
+Responsável pela Elaboração do Programa de Gerenciamento de Riscos Revisão 002.
+
+
+
+
+
+Nome do engenheiro/técnico
+Engenheira de Segurança do Trabalho
+CPF: numero
+Registro conselho de classe
+
+
+
+Responsável legal pela Organização
+
+
+
+
+
+Responsável pela Empresa Contratante
+
+
+
+--- TABELA 1 ---
+CONTROLE DE REVISÕES | CONTROLE DE REVISÕES | CONTROLE DE REVISÕES
+REVISÃO | DATA | ALTERAÇÃO
+002 | 29/01/2025 | Elaboração inicial
+ |  | 
+ |  | 
+ |  | 
+ |  | 
+ |  | 
+
+--- TABELA 2 ---
+PROBABILIDADE | PROBABILIDADE | PROBABILIDADE | PROBABILIDADE | PROBABILIDADE | PROBABILIDADE | PROBABILIDADE
+INDICE | HIPÓTESE | PERIODICIDADE | PERFIL DE EXPOSIÇÃO | PERFIL DE EXPOSIÇÃO | FATOR DE PROTEÇÃO | FATOR DE PROTEÇÃO
+INDICE | HIPÓTESE | TEMPO DE EXPOSIÇÃO
+/JORNADA DE
+TRABALHO | QUALITATIVO | QUANTITATIVO | PROCESSO PRODUTIVO | MEDIDAS DE PREVENÇÃO
+1 | ALTAMENTE IMPROVÁVEL | Eventual | Contato periódico com o agente a extra baixas concentrações ou intensidades. | Exposição média estimada | Sistema enclausurado; | Ótimo nível de controle
+1 | ALTAMENTE IMPROVÁVEL | < 1 hora | Insignificantes quantidades do agente envolvidas na atividade Breves períodos de exposição ao Perigo | < 10% do LEO | Sem
+possibilidade de contato com a pele, ou por inalação | 
+2 | IMPROVÁVEL | Mensal
+
+< = 4 horas
+
+< 10% jornada | Contato periódico com o agente a moderadas concentrações ou contato regular a baixas concentrações ou intensidades;
+
+Extra baixas quantidades do agente envolvidas na atividade - miligramas (sólidos) litros (líquidos); | Exposição média estimada
+
+>10% e <50% LEO | Sistema enclausurado, com pequena possibilidade de exposição durante alguma etapa do processo ex: coleta de
+amostra; | Medidas de controle adequadas e suficientes, atuais, podem ser mantidas a longo prazo.
+ | IMPROVÁVEL |  | Breves períodos de exposição ao
+Perigo |  | Baixa possibilidade de contato direto com a pele e
+inalação | 
+3 | POSSÍVEL | Semanal
+
+< 4 entre < 6
+
+
+< 50% jornada | Contato periódico com o agente a altas concentrações ou contato regular	a	moderadas concentrações ou intensidades;
+
+Pequenas quantidades do agente envolvidas na atividade – gramas (sólidos) mililitros (líquidos); | .. | Sistema enclausurado ou aberto com ventilação automática e barreiras de controle;
+
+Possibilidade de contato direto com a pele e inalação | Nível de controle apresenta	alguma deficiência;
+
+As medidas de controle existentes	são adequadas, eficientes e suficientes, mas não há evidências de que podem ser mantidas a longo prazo.
+4 | PROVÁVEL | Mais de uma vez por semana
+
+< 6 entre < 8
+
+>75% jornada | Contato periódico com o agente a altíssimas concentrações ou contato regular a altas concentrações ou intensidades;
+
+Significativas quantidades do agente envolvidas na atividade quilogramas (sólidos) litros (líquidos); | Exposição média estimada
+
+> LEO | Sistema aberto, ventilação passiva e barreiras de proteção;
+
+Alta possibilidade de contato direto com a pele e inalação | Nível de controle deficiente;
+
+As medidas de controle existentes	são
+adequadas,	mas apresentam problemas
+
+significativos	que implicam em eficiência duvidosa e não há garantias		de
+manutenção adequada.
+5 | ALTAMENTE PROVÁVEL | Diária
+
+100% da jornada de trabalho | Contato regular com o agente a altíssimas concentrações ou intensidades;
+
+Grandes quantidades do agente envolvidas na atividade; | Exposição média estimada
+
+> 5 x LEO | Sistema aberto, sem ventilação contato direto com a pele e inalação de vapores | As medidas de controle são	inexistentes	ou reconhecidamente inadequadas	ou
+insuficientes	a neutralização do efeito
+nocivo do Perigo/agente.
+ | ALTAMENTE PROVÁVEL |  | Toneladas	(sólidos)	metros
+cúbicos (líquidos); |  |  | 
+ | ALTAMENTE PROVÁVEL |  | Probabilidade	elevada	de ocorrência de Acidentes/Doenças
+ocupacionais; |  |  | 
+
+--- TABELA 3 ---
+INDICE | HIPÓTESE | ACIDENTES | AGENTE FÍSICO | AGENTE BIOLÓGICO | RISCO PSICOSSOCIAL | RISCO ERGONÔMICO | RISCO QUÍMICO
+1 | INSIGNIFICANTE | EFEITOS SENSIBILIZANTES
+
+Demandam apenas primeiros socorros (pequenos cortes, queimaduras leves, lesões superficiais) | .. | .. | Quando o agente, não representar risco potencial de dano à saúde, representando apenas situação de desconforto. | Quando o agente, não representar risco potencial de dano à saúde | Não irritante à pele, olhos e membranas mucosas.
+Pode haver irritação olhos com poeira.
+ACGIH A5 - Sem evidência de carcinogenicidade, teratogenicidade ou mutagenicidade.
+IARC Grupo 4 - Agente provavelmente não carcinogênico.
+Letalidade:
+LD50 entre 2000 e < 5000 mg/kg (oral)
+Para gases, vapores, poeiras e névoas, LC50 no intervalo equivalente dos níveis oral e dérmico do LD50 (i.e., entre 2000 e < 5000 mg/kg peso corporal).
+2 | PEQUENO | EFEITOS REVERSÍVEIS À SAÚDE
+Requer tratamento médico, sem afastamento do trabalho.
+(queimaduras médias, torções, deslocamentos, pequenas fraturas, dermatites) | Umidade | Pequena possibilidade de causar doenças ao ser humano | .. | Quando o agente, não representar risco potencial de dano à saúde, representando apenas situação de desconforto. | Irritante leve para os olhos.
+Irritante para pele.
+ACGIH A4 – Não classificado como carcinogênico humano.
+IARC Grupo 3 - Não classificado como carcinogênico humano.
+Letalidade:
+LD50 entre 300 e menor que 2000 mg/kg peso corporal (oral); 
+LD50 entre 1000 e < 2000 mg/kg peso corporal (dermal); 
+LC50 entre 2500 e < 5000 ppm (gás); 
+LC50 entre 10 e < 20 mg/l (vapor);
+LC50 entre 1. e < 5 mg/l (poeira/névoa)
+3 | MÉDIO | EFEITOS REVERSÍVEIS À SAÚDE
+Com afastamento < 15 dias, com tratamento e acompanhamento médico.
+
+(queimaduras maiores, fraturas maiores, envenenamento) | Vibração
+Radiação não Ionizante
+Frio
+Calor Ruído | Passível de causas doença no ser humano, porém existem tratamentos médicos eficazes. | Pode representar risco potencial de dano reversível à saúde, podendo gerar incapacidade temporária. | Pode representar risco potencial de dano reversível à saúde, podendo gerar incapacidade temporária. | Irritante para os olhos e sensibilização da pele.
+Efeito cáustico e corrosivo severo.
+Pneumoconiose não fibrogênica.
+Agente apresenta TLV-Stel
+ACGIH A3 – Não classificado como carcinogênico humano, apenas para animais.
+IARC Grupo 2B – Possivelmente carcinogênico à humanos.
+Letalidade:
+LD50 > 50 e < 300 mg/kg peso corporal (oral)
+LD50 > 200 e < 1000 mg/kg peso corporal (dermal)
+LC50 > 500 e < 2500 ppm (gás)
+LC50 > 2 e < 10 mg/l (vapor)
+LC50 > 0.5 e < 1 mg/l (poeira/névoa)
+4 | GRANDE | EFEITOS IRREVERSÍVEIS
+Com afastamento > 15 dias, incapacitante, permanente, com possibilidade de retorno ao trabalho. | Condição Hiperbárica
+
+Radiação Ionizante | Com potencial de causar doenças e infecções graves ao ser humano, porém nem sempre existem meios de tratamento médico. | Pode representar risco potencial de dano irreversível à saúde ou incapacidade permanente. | Pode representar risco potencial de dano irreversível à saúde ou incapacidade permanente. | Lesão ocular grave.
+Sensibilização respiratória (asma, rinite).
+Agente apresenta TLV-CEIL
+ACGIH A2 – Suspeito de carcinogênico para humanos.
+IARC Grupo 2A – Provavelmente carcinogênico à humanos.
+Letalidade:
+LD50 < 50 mg/kg peso corporal (oral)
+LD50 < 200 mg/kg peso corporal (dermal)
+LC50 < 500 ppm (gás)
+LC50 < 2 mg/l (vapor)
+LC50 < 0.5 mg/l (poeira/névoa)
+5 | CATASTRÓFICO | EFEITO DE AMEAÇA A VISA/LESÃO OU DOENÇA INCAPACITANTE
+
+Doenças Ocupacionais irreversíveis e incapacitantes
+Câncer Ocupacional, Encurtamento severo do tempo de vida; Doenças fatais
+Agudas | .. | Possibilidade de alta transmissibilidade de um ser humano ao outro. Alto potencial de causar doenças graves ao ser humano, para as quais não existem tratamentos médicos eficazes. |  | .. | Carcinogênico
+ACGIH A1 – Carcinogênico para humanos.
+IARC Grupo 1 – Carcinogênico para humanos.
+
+--- TABELA 4 ---
+FATOR DE INFLUÊNCIA HUMANA | FATOR DE INFLUÊNCIA HUMANA | FATOR DE INFLUÊNCIA HUMANA
+1 | BAIXO | trabalho de fácil execução. sem tensão, fadiga ou carga de trabalho que aumental a possibilidade de erros operacionais ou de conduta
+2 | MÉDIO | trabalho ou situação (stress, fadiga, carga de trabalho) com possibilidade  de erros operacionais ou de conduta, mais que não demandam de permissão ou de autorizações especiais
+3 | ALTO | Trabalho ou situação (stress, fadiga, carga de trabalho) com possibilidade  de erros operacionais ou de conduta, que demandam de permissão ou de autorizações especiais
+
+--- TABELA 5 ---
+PROBABILIDADE | GRADUAÇÃO DO RISCO | GRADUAÇÃO DO RISCO | GRADUAÇÃO DO RISCO | GRADUAÇÃO DO RISCO | GRADUAÇÃO DO RISCO | GRADUAÇÃO DO RISCO
+PROBABILIDADE | 5 | MODERADO | MODERADO | ALTO | MUITO ALTO | MUITO ALTO
+PROBABILIDADE | 4 | BAIXO | MODERADO | MODERADO | ALTO | MUITO ALTO
+PROBABILIDADE | 3 | BAIXO | BAIXO | MODERADO | MODERADO | ALTO
+PROBABILIDADE | 2 | TRIVIAL | BAIXO | BAIXO | MODERADO | MODERADO
+PROBABILIDADE | 1 | TRIVIAL | TRIVIAL | BAIXO | BAIXO | MODERADO
+ |  | 1 | 2 | 3 | 4 | 5
+ |  | SEVERIDADE | SEVERIDADE | SEVERIDADE | SEVERIDADE | SEVERIDADE
+
+--- TABELA 6 ---
+ANÁLISE DO RISCO | ANÁLISE DO RISCO | ANÁLISE DO RISCO | ANÁLISE DO RISCO
+EXPOSIÇÃO
+RESULTANTE RISCO | ANÁLISE | AÇÕES | OBSERVAÇÃO
+TRIVIAL | ACEITÁVEL | Monitoramento do risco | Nenhuma ação adicional imediata é necessária;
+
+Registrar e informar aos trabalhadores.
+BAIXO | ACEITÁVEL | Monitoramento do risco | Nenhuma ação adicional imediata é necessária;
+
+Considerações podem ser feitas para verificar a viabilidade de redução do risco associado ou ainda melhorias;
+
+Registrar e informar aos trabalhadores.
+MODERADO | TOLERÁVEL | Medidas para redução ou, no mínimo, manutenção do risco, devem ser implementadas a médio prazo. | Coleta de mais informações sobre as exposições;
+
+Avaliações adicionais devem ser definidas, para estabelecer mais precisamente as medidas de controle a serem melhoradas, inclusive avaliações quantitativas (se aplicável);
+
+Procedimentos de controle operacional e/ou planos de emergência são recomendáveis.
+
+NOTA: É permitida a permanência de risco tolerável, mesmo depois de implementados os novos controles, desde que seja evidenciada sua tratativa e a inexistência de tecnologia e/ou
+inviabilidade técnica/administrativa, para a redução do risco.
+ALTO | TOLERÁVEL | Medidas para redução ou, no mínimo, manutenção do risco, devem ser implementadas a curto prazo. | Medidas de controle devem ser implementadas;
+
+Quando avaliadas e definidas as medidas a serem implementadas, devem ser definidos responsáveis e prazos de conclusão;
+
+Procedimentos de controle operacional e/ou planos de emergência são necessários.

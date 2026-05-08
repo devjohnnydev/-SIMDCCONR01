@@ -1,0 +1,36 @@
+1. Questionário de Riscos Psicossociais (Questões e Pontuação)
+Risco 1: Carga de Trabalho
+Pergunta: A carga de trabalho que você enfrenta no seu dia-a-dia é excessiva? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 2: Controle sobre as Atividades
+Pergunta: Você sente que tem autonomia suficiente para tomar decisões no seu trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 3: Suporte Social
+Pergunta: Você sente que pode contar com os colegas e supervisores quando precisa de apoio? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 4: Relações Interpessoais
+Pergunta: Existe um clima de respeito e colaboração entre você e seus colegas de trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 5: Reconhecimento
+Pergunta: Você sente que seu esforço e desempenho são reconhecidos adequadamente? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre

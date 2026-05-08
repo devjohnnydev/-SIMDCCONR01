@@ -1,0 +1,36 @@
+4. Modelo de Riscos Psicossociais com Subcategorias e Pontuação
+Categoria 1: Carga de Trabalho
+Pergunta: Você sente que tem uma carga de trabalho equilibrada? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Categoria 2: Autonomia no Trabalho
+Pergunta: Você sente que tem liberdade para tomar decisões relacionadas ao seu trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Categoria 3: Relações Sociais
+Pergunta: Você tem um bom relacionamento com seus colegas de trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Categoria 4: Reconhecimento e Recompensa
+Pergunta: Você sente que é reconhecido pelos seus esforços no trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Categoria 5: Definição de Papéis
+Pergunta: Você tem clareza sobre seu papel e suas responsabilidades no trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre

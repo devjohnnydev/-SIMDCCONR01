@@ -1,0 +1,36 @@
+3. Questionário de Fatores Psicossociais com Escala de Frequência
+Risco 1: Sobrecarga de Trabalho
+Pergunta: Com que frequência você tem prazos curtos ou tarefas em excesso para realizar? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 2: Falta de Clareza nos Objetivos
+Pergunta: Você tem uma ideia clara do que se espera de você no trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 3: Impacto da Falta de Recursos
+Pergunta: A falta de recursos ou apoio afeta seu desempenho no trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 4: Pressão de Tempo
+Pergunta: Com que frequência você se sente pressionado a realizar suas atividades dentro de prazos apertados? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 5: Conflitos Interpessoais
+Pergunta: Você enfrenta frequentemente conflitos com colegas de trabalho ou supervisores? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre

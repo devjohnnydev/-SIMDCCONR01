@@ -715,6 +715,7 @@ def generate_department_report_action(request):
 def view_department_report(request, setor, form_id):
     """Visualização de um laudo de departamento específico."""
     from reports.models import DepartmentDiagnostic
+    from reports.engine_text import TextEngine
     
     report = get_object_or_404(
         DepartmentDiagnostic, 
@@ -726,10 +727,21 @@ def view_department_report(request, setor, form_id):
     if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
         messages.error(request, 'Acesso negado.')
         return redirect('accounts:dashboard')
+    
+    # Gerar dados rastreáveis do Motor de Texto Determinístico
+    engine_data = {}
+    try:
+        engine = TextEngine()
+        engine_data = engine.generate_department_report(
+            report.form_instance, setor
+        )
+    except Exception as e:
+        engine_data = {'error': str(e)}
         
     return render(request, 'reports/department_diagnostic_view.html', {
         'report': report,
-        'data': report.diagnostic_data
+        'data': report.diagnostic_data,
+        'engine_data': engine_data,
     })
 
 def verify_contract_protocol(request, protocol):

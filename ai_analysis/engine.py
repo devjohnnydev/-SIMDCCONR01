@@ -107,7 +107,6 @@ def generate_department_diagnostic(company, sector_name, form_instance, user=Non
         q_text = a.question.text
         if q_text not in aggregation:
             aggregation[q_text] = []
-        # Limitamos a amostra para nao estourar o contexto se houver muitos funcionarios
         if len(aggregation[q_text]) < 20: 
             aggregation[q_text].append(a.get_display_value())
 
@@ -116,28 +115,35 @@ def generate_department_diagnostic(company, sector_name, form_instance, user=Non
         context += f"Pergunta: {q_text}\nRespostas (amostra): {', '.join(map(str, values))}\n\n"
 
     prompt = f"""
-    Como um consultor sênior em Psicologia Organizacional e SST, analise o CLIMA SOCIOEMOCIONAL do departamento '{sector_name}' da empresa {company.nome_fantasia}.
-    Baseie-se nestes dados agregados (anônimos) de {assignments.count()} funcionários:
+    Você é um consultor sênior em Psicologia Organizacional, SST e NR-01.
     
+    Analise o CLIMA SOCIOEMOCIONAL do setor '{sector_name}' da empresa {company.nome_fantasia},
+    com base nos dados agregados (anônimos) de {assignments.count()} funcionários.
+    
+    Dados Agregados:
     {context}
     
-    Gere um relatório JSON rigoroso com:
-    1. clima_geral: Resumo do estado emocional coletivo.
-    2. pontos_fortes: O que está funcionando bem no setor.
-    3. areas_alerta: Riscos de clima ou esgotamento identificados.
-    4. sugestoes_gestao: Acões recomendadas para o gestor do setor.
-    5. indice_bem_estar: Valor de 0 a 100, onde o valor deve refletir matematicamente a média de positividade das respostas analisadas.
+    INSTRUÇÕES DE FORMATAÇÃO:
+    - Use linguagem técnica profissional em português formal
+    - clima_geral: parágrafo narrativo de 4-6 linhas com diagnóstico situacional
+    - pontos_fortes: lista de 3-5 pontos observáveis e específicos (não genéricos)
+    - areas_alerta: lista de 3-5 riscos psicossociais com impacto potencial
+    - sugestoes_gestao: lista de 3-5 ações concretas com horizonte temporal
+    - indice_bem_estar: valor inteiro de 0 a 100 baseado na média das respostas
+    
+    Gere um relatório JSON rigoroso com os campos acima.
+    Cada ponto/alerta/sugestão deve ser uma frase completa e profissional.
     """
 
     try:
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": "Você é um analista de clima organizacional que responde exclusivamente em JSON."},
+                {"role": "system", "content": "Você é um analista de clima organizacional e riscos psicossociais NR-01. Responda exclusivamente em JSON válido. Use linguagem técnica profissional em português formal."},
                 {"role": "user", "content": prompt}
             ],
             response_format={ "type": "json_object" },
-            temperature=0.2
+            temperature=0.15
         )
         data = json.loads(response.choices[0].message.content)
         
@@ -156,4 +162,5 @@ def generate_department_diagnostic(company, sector_name, form_instance, user=Non
     except Exception as e:
         print(f"ERROR in Department AI Analysis: {str(e)}")
         return {"error": f"Erro na IA: {str(e)}", "status": "failed"}
+
 

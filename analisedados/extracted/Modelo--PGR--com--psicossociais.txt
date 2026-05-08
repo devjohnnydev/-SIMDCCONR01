@@ -1,0 +1,713 @@
+ 
+PGR
+PGR
+Programa de Gerenciamento de Riscos
+NR 01
+
+
+
+
+
+SUMÁRIO
+1 - IDENTIFICAÇÃO DA EMPRESA ........................................ 4 2 - AVALIADORES ..................................................... 5
+3 - APRESENTAÇÃO ................................................... 6 4 - OBJETIVOS ....................................................... 7 5 - CONSIDERAÇÕES PRELIMINARES ..................................... 8 6 - ÁREA DE ABRANGÊNCIA DO PGR NA EMPRESA .......................... 10 
+7 - AVALIAÇÃO DOS RISCOS ............................................ 11
+7.1 Critérios utilizados para definição do nível do risco ....................... 11
+7.2 Níveis de risco possíveis ............................................ 12
+7.3 Matriz para determinação dos níveis de riscos ........................... 13 7.4 Classificações de prioridade de risco .................................. 13 8 - INSTRUMENTO(S) UTILIZADO(S) NA AVALIAÇÃO DOS RISCOS ............... 15 
+9 - METODOLOGIA DE USO DO(S) INTRUMENTO(S) ......................... 16 10 - ANTECIPAÇÃO DOS RISCOS ....................................... 17 11 - INVENTÁRIO DE RISCOS ........................................... 19 12 - RECONHECIMENTO E ANÁLISE DOS RISCOS DO AMBIENTE DE TRABALHO .. 26 13 - METAS E PRIORIDADES DE CONTROLE ............................... 34 14 - REGISTRO E DIVULGAÇÃO DOS DADOS .............................. 36 15 - RECOMENDAÇÕES A EMPRESA ..................................... 37 16 - CONSIDERAÇÕES FINAIS ........................................... 38
+17 - ENCERRAMENTO ................................................. 39
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Este Programa de Gerenciamento de Riscos(PGR) foi desenvolvido por profissionais habilitados conforme recomenda o Ministério do Trabalho e a legislação vigente.
+Para os levantamentos de Riscos na empresa PGR usou-se o conceito de EXPOSTO DE MAIOR RISCO (maximum risk employee - MRE), sendo avaliadas as piores condições de trabalho, que deixam o trabalhador mais exposto aos agentes nocivos.
+Este documento é de uso exclusivo da empresa PGR para consultas, orientações e acompanhamento dos programas prevencionistas da empresa.
+Este Programa se constitui em documento legal e específico, conforme a legislação em vigor, sendo um produto original e único, e que nenhuma parte ou todo, poderá ser reproduzido, transmitido, copiado sem a licença ou permissão por escrito do autor.
+1 - IDENTIFICAÇÃO DA EMPRESA
+RAZÃO SOCIAL: EMPRESA DEMO LTDA.
+CNPJ: 00.000.000/0000-00 GRAU DE RISCO: 1
+RESPONSÁVEL(IS) DA EMPRESA:  
+2 - AVALIADORES
+ENGENHEIRO(S) RESPONSÁVEL(IS):
+NOME: Adalberto Lopez
+CREA: 
+NIT: 
+TITULAÇÃO: Engenheiro em Segurança do Trabalho
+3 - APRESENTAÇÃO
+Este Programa de Gerenciamento de Riscos estará composto das seguintes etapas:
+Objetivo e considerações preliminares;
+Antecipação, reconhecimento e levantamento dos riscos;
+Avaliação dos riscos e da exposição dos trabalhadores;
+Estabelecimento de metas e prioridades de controle;
+Cronograma de implantação das medidas de controle e a avaliação de sua eficácia;
+Monitoramento de exposição aos riscos;
+Registro e divulgação dos dados.
+As etapas do PGR serão registradas neste documento e deverão ficar a disposição das Autoridades, Serviço Especializado em Segurança e Medicina do Trabalho ( SESMT), Comissão Interna de Prevenção a Acidentes (CIPA), Instituto Nacional do Seguro Social ( INSS), Secretaria de Inspeção do Trabalho/Departamento de Segurança e Saúde no Trabalho ( SIT/DSST), Delegacia Regional do Trabalho (DRT), entre outros.
+A guarda do documento, autorização para emissão de cópias, divulgação de seu conteúdo, são de exclusiva responsabilidade da empresa através de seus mandatários.
+
+4 - OBJETIVOS
+O PGR é parte integrante do Programa de Segurança Ocupacional da PGR, em conjunto com outras iniciativas prevencionistas da empresa.
+Visa também, propor medidas de prevenção e controle dos riscos encontrados, através de sua neutralização, minimização ou eliminação dos mesmos.
+Este trabalho informa os empregadores e trabalhadores sobre os riscos, meios para previnir ou limitar tais riscos e para proteger-se dos mesmos de modo a alcançar altos índices de satisfação em relação à preservação do bem estar e da integridade física e mental dos trabalhadores.
+O presente programa tem por finalidade atender as determinações legais emanadas na NR-1 (Norma Regulamentadora de N° 1).
+4.1 -  OBJETIVO GERAL
+Preservar a saúde e a integridade física dos trabalhadores, através da antecipação, reconhecimento, avaliação e consequente controle da ocorrência de riscos ambientais existentes ou que venham a existir no ambiente de trabalho, tendo em consideração a proteção do meio ambiente e dos recursos naturais.
+4.2 -  OBJETIVOS ESPECÍFICOS
+» Controlar os riscos ambientais no local de trabalho com a adoção de medidas de controle;
+» Monitorar a exposição dos colaboradores aos riscos ambientais existentes no local de trabalho;
+» Fornecer informações sobre as condições de trabalho dos trabalhadores na empresa;
+» Apresentar informações sobre a saúde, o bem estar e a integridade física e mental dos trabalhadores da empresa;
+
+
+5 - CONSIDERAÇÕES PRELIMINARES
+Seguindo com base nos preceitos legais vigentes, passamos a analisar os aspectos relativos ao ambiente de trabalho, objetivo do presente trabalho, aplicáveis à empresa inspecionada, considerando sua classificação de acordo com as normas expedidas pelo Ministério do Trabalho e Emprego, em razão do número de empregados e a natureza do risco de suas atividades. Para tanto, foram efetuados os devidos levantamentos na empresa, sempre na companhia dos funcionários, pela Gerência e encarregados dos setores da mesma. As atividades de levantamento das condições do(s) ambiente(s) de trabalho foram realizadas nas dependências da PGR.
+Os dados, avaliações e sugestões encontram sustentação legal na Norma Regulamentadora nº 1 relativa à Segurança e Medicina do Trabalho
+A NR - 1 estabelece a obrigatoriedade da elaboração e implementação, por parte de todos os empregadores e instituições que admitam trabalhadores como empregados, do Programa de Gerenciamento de Riscos - PGR, visando a prevenção da saúde e da integridade dos trabalhadores, através da antecipação, reconhecimento, avaliação e consequente controle da ocorrência de riscos ambientais e suas possíveis influências no bem estar e na integridade física e mental do trabalhador.
+As ações do PGR devem ser desenvolvidas em âmbito de cada estabelecimento, sob a responsabilidade do empregador, com a participação dos trabalhadores, sendo que uma reavaliação e uma análise global de seu desenvolvimento para a realização de ajustes necessários e estabelecimentos de novas metas e prioridades deverá ser realizado anualmente ou sempre que necessário, conforme estipula a NR - 1.
+O PGR é parte integrante do conjunto mais amplo das iniciativas da empresa no campo da preservação da saúde e integridade dos trabalhadores, devendo estar articulado com o disposto nas demais NR's. Em especial com o Programa de Controle Médico de Saúde Ocupacional - PCMSO, determinado de acordo com a NR - 7, promovendo assim uma interligação entre os programas prevencionistas da empresa.
+Para efeito deste PGR são considerados riscos ambientais, os agentes existentes no meio ambiente de trabalho que, em função de sua natureza, concentração ou intensidade, tempo e grau de exposição, são capazes de causar dano a saúde do trabalhador e são classificados em:
+Agentes Físicos: ruído, frio, calor, radiações (ionizantes, não ionizantes), umidade, pressões anormais;
+Agentes Químicos:  poeiras minerais, poeiras vegetais, névoas, neblina, gases, vapor, substâncias diversas, fumos metálicos, hidrocarbonetos;
+Agentes Biológicos: vírus, bactérias, protozoários, fungos, bacilos, parasitas, microrganismos, animais peçonhentos;
+Agentes Ergonômicos: Psicossociais   esforço físico, ritmo excessivo, trabalho em turnos, postura incorreta, levantamento e transporte manual de peso, monotonia e repetitividade, jornada prolongada, controle rígido de produtividade; estress,assédio, pressão com metas, conflitos com equipe 
+Acidentes: máquinas, equipamentos ou implementos sem proteção, ferramentas (inadequadas/defeituosas), arranjo físico inadequado e outras situações.
+6 - ÁREA DE ABRANGÊNCIA DO PGR NA EMPRESA
+Os empregadores deverão informar todos os seus colaboradores de maneira apropriada e suficiente sobre os riscos ambientais que possam originar-se nos locais de trabalho e sobre os meios disponíveis para prevenir, limitar ou eliminar tais riscos e para proteger-se dos mesmos, assim como a proteção ao meio ambiente de possíveis impactos ambientais.
+Cabe aos empregadores proporcionar os meios e recursos necessários para o cumprimento dos objetivos e atribuições do SESMT ou dos critérios estabelecidos pela NR-1.
+Os colaboradores interessados terão o direito de apresentar propostas e receber informações e orientações a fim de assegurar a proteção aos riscos ambientais identificados na execução do PGR.
+Sempre que vários empregadores realizem simultaneamente atividades no mesmo local de trabalho terão o dever de executar ações integradas para aplicar as medidas previstas no PGR visando à proteção de todos os colaboradores expostos aos riscos ambientais.
+O conhecimento e a percepção que os colaboradores têm do processo de trabalho e dos riscos ambientais presentes, incluindo os dados consignados no Mapa de Riscos, previstos na NR-5, deverão ser considerados para fins de planejamento e execução do PGR em todas as suas fases.
+
+7 - AVALIAÇÃO DOS RISCOS
+Na avaliação de cada risco ocupacional existente nos setores e funções no estabelecimento para determinação do nível do risco e sua
+classificação foi utilizada a matriz de riscos AIHA.
+7.1 Critérios utilizados para definição do nível do risco
+
+7.2 Níveis de risco possíveis
+7.3 Matriz para determinação dos níveis de riscos
+
+
+7.4  Classificações de prioridade de risco
+
+9.2.2 -  QUALITATIVAS
+
+        Foram realizadas avaliações qualitativas para as seguintes exposições: Postura incômoda por longos períodos, Ritmo Excessivo.
+
+
+10 - ANTECIPAÇÃO DOS RISCOS Psicossociais 
+Setor(es):	Setor 1, Setor 2
+Risco(s) Doenças cardiovasculares, como derrames
+Distúrbios do sono, como insônia
+Depressão e ansiedade
+Síndrome de Burnout
+Fadiga física e mental
+Baixa autoestima
+Desmotivação e insatisfação profissional
+Aumento do risco de acidentes de trabalho
+Setor(es):	Setor 1, Setor 2
+
+12 - RECONHECIMENTO E ANÁLISE DOS RISCOS PSICOSSOCIAIS DO AMBIENTE
+DE TRABALHO
+
+
+13 - METAS E PRIORIDADES DE CONTROLE
+13.1 -  AÇÕES IMEDIATAS
+ Nenhuma ação imediata...
+13.2 -  CRONOGRAMA DE AÇÕES
+13.3 -  RESPONSABILIDADES
+13.4 -  PRIORIDADES
+LEGENDA DE PRIORIDADE
+
+14 - REGISTRO E DIVULGAÇÃO DOS DADOS
+Deverá ser mantido pelo empregador ou instituição um registro de dados, estruturado de forma a constituir um histórico técnico e administrativo do desenvolvimento do PGR.
+O registro de dados deverá estar sempre disponível aos colaboradores interessados ou seus representantes e para as autoridades competentes.
+O registro de dados refere-se ao documento base composto de relatórios de antecipação ou de reconhecimento de riscos, laudos técnicos de avaliação quantitativa dos agentes ambientais, registros de treinamento, entre outros.
+O registro de dados deverá ser mantido por um período mínimo de 20 anos, já que este é o prazo para prescrições das ações cíveis conforme determina o Art. 177 do Código de Processo Civil (CPC).
+15 - RECOMENDAÇÕES A EMPRESA
+A partir do levantamento dos processos e atividades da Empresa PGR , das exigências e dos riscos das atividades, do acompanhamento clínico individual dos empregados, de levantamento epidemiológico, sugerimos a instalação das medidas sugeridas no PGR nos prazos estabelecidos.
+Exames médicos ocupacionais são a principal forma de monitoramento individual a respeito das condições de trabalho, mas são assim como qualquer processo terapêutico instituído, ineficazes para a melhoria das condições de saúde dos trabalhadores, caso as causas de agravo à saúde advenham das condições de trabalho.
+16 - CONSIDERAÇÕES FINAIS
+Este Programa permanecerá válido enquanto forem mantidas as condições existentes na empresa por ocasião da vistoria. Quaisquer alterações que venham a ocorrer nas atividades, planta física e equipamentos exigirão novas análises.
+Neste trabalho foram realizadas diversas avaliações sempre considerando as piores condições de trabalho encontradas e as piores condições de trabalho do local.
+As avaliações realizadas para a descrição das funções neste trabalho foram realizadas de forma quantitativa e qualitativa conforme o tipo de agente insalubre que o colaborador estava exposto.
+17 - ENCERRAMENTO
+Este documento PGR – Programa de Gerenciamento de Riscos foi elaborado e verificado por profissional legalmente habilitado, está composto com xx páginas incluindo os anexos, sendo todas rubricadas e assinadas abaixo.
+ 14 de janeiro 2025
+
+Engenheiro em Segurança do Trabalho - 
+ANEXOS
+
+
+--- TABELA 1 ---
+Probabilidade | Probabilidade | Probabilidade
+Significado | Peso | Descrição
+1 - Não há exposição | 0 | Nenhum contato com o agente ou contato improvável
+2 - Exposição a níveis baixos | 1 | Contatos não frequentes com o agente
+3 - Exposição moderada | 2 | Contato frequente com o agente a baixas concentrações ou não frequentes a altas concentrações
+4 - Exposição elevada | 3 | Contato frequente com o agente a altas concentrações
+5 - Exposição elevadíssima | 4 | Contato frequente com o agente a concentrações elevadíssimas
+Efeito | Efeito | Efeito
+Significado | Peso | Descrição
+1 - Pouca importância | 0 | Efeitos reversíveis de pouca importância ou não são conhecidos ou apenas suspeitos
+2 - Preocupantes | 1 | Efeitos reversíveis preocupantes
+3 - Severos | 2 | Efeitos reversíveis severos e preocupantes
+4 - Irreversíveis | 3 | Efeitos irreversíveis preocupantes
+5 - Ameaça | 4 | Ameaça a vida ou doença/lesão incapacitante
+
+--- TABELA 2 ---
+Nível de Risco | Nível de Risco
+Nível | Significado
+0 - Trivial | Risco trivial
+1 - Baixo | Risco Baixo
+2 - Moderado | Risco Moderado
+3 - Alto | Risco Alto
+4 - Muito Alto | Risco Muito Alto
+
+--- TABELA 3 ---
+ |  |  |  | Probabilidade |  | 
+ |  | 1 - Não há exposição
+(Peso 0) | 2 - Exposição a níveis baixos (Peso 1) | 3 - Exposição moderada (Peso 2) | 4 - Exposição elevada
+(Peso 3) | 5 - Exposição elevadíssima (Peso 4)
+Efeito | 1 - Pouca importância (Peso 0) | Trivial | Trivial | Trivial | Trivial | Baixo
+Efeito | 2 - Preocupantes (Peso1) | Trivial | Baixo | Baixo | Baixo | Moderado
+Efeito | 3 - Severos (Peso 2) | Trivial | Baixo | Moderado | Moderado | Moderado
+Efeito | 4 - Irreversíveis (Peso 3) | Trivial | Moderado | Moderado | Alto | Alto
+Efeito | 5 - Ameaça (Peso 4) | Baixo | Moderado | Moderado | Alto | Muito Alto
+
+--- TABELA 4 ---
+ | Classificação de Risco
+Classificação | Significado
+1 - Irrelevante | Não prioritário.Ações dentro do princípio de melhoria contínua. Pode ser necessária avaliação quantitativa do
+Setor/GHE para confirmação da categoria, a critério do profissional de Higiene Ocupacional
+2 - De Atenção | Prioridade básica.Iniciar processo de avaliação quantitativa do Setor/GHE para confirmação da categoria e monitoramento periódico.
+3 - Crítica | Prioridade preferencial.Adotar medidas de controle para redução da exposição e iniciar processo de avaliação quantitativa do Setor/GHE.
+4 - Não tolerável | Prioridade máxima.Adotar medidas imediatas de controle. Quando não, a continuidade da operação só poderá ocorrer com ciência e aprovação do gerente geral da unidade ou instalação. Iniciar processo de avaliação quantitativa do Setor/GHE para verificação do rebaixamento da categoria de risco.
+
+--- TABELA 5 ---
+Cargo(s): | Cargo 1, Cargo 2              Risco encontrado : Jornada de trabalho Excessiva
+Descrição(ões): | Quando o trabalhador passa mais tempo trabalhando do que descansando.
+Sugestão(ões): | Definir tarefas: Delegar funções e delimitar tarefas 
+Criar cronogramas: Estabelecer prazos alcançáveis 
+Acompanhar o planejamento: Monitorar o andamento das tarefas 
+Investir em treinamentos: Capacitar a liderança para definir prioridades 
+Incentivar a saúde mental: Promover uma cultura de bem-estar 
+Incentivar a prática de exercícios: Manter e melhorar a saúde dos funcionários 
+Investir em tecnologia: Otimizar o tempo de trabalho
+
+--- TABELA 6 ---
+Ritmo Excessivo | 
+Setor(es): | Setor 1, Setor 2
+Cargo(s): | Cargo 1, Cargo 2
+Descrição(ões): | Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestão(ões): | Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Risco(s): | Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador.
+ | AGENTES DO TIPO: Ergonômico
+Extress | Extress
+
+--- TABELA 7 ---
+Cargo(s): | Cargo 1, Cargo 2
+Descrição(ões): | O estresse ocupacional pode ser causado por diversos fatores, entre eles:
+	•	Excesso de cobrança e metas inalcançáveis
+	•	Carga de trabalho excessiva ou mal distribuída
+	•	Falta de reconhecimento ou apoio da liderança
+	•	Ambiente de trabalho tóxico (assédio, fofocas, competitividade nociva)
+	•	Falta de clareza nas funções e responsabilidades
+	•	Jornada prolongada ou falta de pausas adequadas
+	•	Falta de equilíbrio entre vida pessoal e profissional
+Sugestão(ões): | Realizar pesquisa de clima organizacional
+RH / SESMT
+Trimestral
+Identificar fontes de estresse
+Promover palestras sobre saúde mental e qualidade de vida
+SESMT / Psicólogo do trabalho
+Bimestral
+Conteúdo educativo e preventivo
+Criar canais de escuta e acolhimento dos colaboradores
+RH
+Contínuo
+Pode incluir atendimento psicológico
+Estabelecer pausas regulares durante a jornada
+Supervisores / Gerentes
+Imediato
+Garantir descanso físico e mental
+Avaliar e reestruturar a carga de trabalho
+Liderança
+Imediato
+Redistribuição de tarefas de forma justa
+Reconhecer e valorizar os colaboradores
+Liderança / RH
+Mensal
+Incentivos e feedbacks positivos
+Implantar políticas de combate ao assédio
+Jurídico / RH
+Imediato
+Ambiente mais saudável e seguro
+Risco(s): | Consequências do estresse no trabalhador:
+	•	Físicas: dores de cabeça, problemas gástricos, distúrbios do sono, cansaço crônico
+	•	Psicológicas: ansiedade, depressão, irritabilidade, dificuldade de concentração
+	•	Comportamentais: aumento do absenteísmo, queda na produtividade, isolamento social
+	•	Em casos mais graves: síndrome de burnout
+
+--- TABELA 8 ---
+ |  | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS
+Setor: | Setor: | Setor 1 | Setor 1 | Setor 1 | Setor 1 | Qtde de Colaboradores: | Qtde de Colaboradores: | 0 | 0 | 0 | 0
+CBO | Cargo: | CBO | Cargo: | 0101-05 | Cargo 1 | 0101-05 | Cargo 1 | 0101-05 | Cargo 1 | 0101-05 | Cargo 1 | Função: | Função: |  |  |  | 
+Descrição das Atividades: | Descrição das Atividades: | DESCRIÇÃO DA ATIVIDADE | DESCRIÇÃO DA ATIVIDADE | DESCRIÇÃO DA ATIVIDADE | DESCRIÇÃO DA ATIVIDADE | DESCRIÇÃO DA ATIVIDADE | DESCRIÇÃO DA ATIVIDADE | DESCRIÇÃO DA ATIVIDADE | DESCRIÇÃO DA ATIVIDADE | DESCRIÇÃO DA ATIVIDADE | DESCRIÇÃO DA ATIVIDADE
+ |  | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES
+Tipo Agente: | Tipo Agente: | Ergonomicos | Ergonomicos | Agente: | Agente: | Ritmo excessivo | Ritmo excessivo | Nível do Risco: | Nível do Risco: | 2 - Moderado | 2 - Moderado
+Atividade(s)/Processo(s): | Atividade(s)/Processo(s): | Atividade | Atividade | Atividade | Atividade | Perigo(s): | Perigo(s): | Perigo | Perigo | Perigo | Perigo
+Fontes Geradoras: | Fontes Geradoras: | Ambiente | Ambiente | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados | Dados | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+AQUI VOCÊ PODE COLOCAR MAIS SUGESTOES
+Tipo Agente: | Tipo Agente: | Ergonômico | Ergonômico | Agente: | Agente: | stress | stress | Nível do Risco: | Nível do Risco: | 2 - Moderado | 2 - Moderado
+Atividade(s)/Processo(s): | Atividade(s)/Processo(s): | Processo | Processo | Processo | Processo | Perigo(s): | Perigo(s): | Perigos | Perigos | Perigos | Perigos
+Fontes Geradoras: | Fontes Geradoras: | Ambiente | Ambiente | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados |  | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+Tipo Agente: |  | Ergonômico | Ergonômico | Agente: | Agente: | Assedio Moral | Assedio Moral | Nível do Risco: | Nível do Risco: | 1 - Baixo | 1 - Baixo
+Atividade(s)/Processo(s): |  |  |  |  |  | Perigo(s): | Perigo(s): |  |  |  | 
+Fontes Geradoras: |  | Ambiente | Ambiente | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados |  | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis, | Descrição: Está ligado principalmente no ambiente trabalho
+Riscos (Possíveis danos à saúde): Aumento do risco de ataques cardíacos, Problemas de saúde física, como falta de tempo para atividade física
+Sugestões: Delegar funções e delimitar tarefas, Estabelecer prazos alcançáveis,
+ | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS
+Agente | Fonte Geradora | Fonte Geradora | Intensidade/ Concentração | Intensidade/ Concentração | Técnica Utilizada | Técnica Utilizada | Nível de Ação | Nível de Ação | Limite de tolerância | Limite de tolerância | Tipo/Tempo de
+Exposição
+ |  |  |  |  |  |  | 80 dB | 80 dB | 85 dB | 85 dB | N.A.()
+ | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s)
+Recomendados: |  | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular.
+Utilizados: |  | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular.
+ |  | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS
+Setor: | Setor: | Setor 1 | Setor 1 | Setor 1 | Setor 1 | Qtde de Colaboradores: | Qtde de Colaboradores: | 0 | 0 | 0 | 0
+CBO | Cargo: | CBO | Cargo: | 0101-05 | Cargo 2 | 0101-05 | Cargo 2 | 0101-05 | Cargo 2 | 0101-05 | Cargo 2 | Função: | Função: |  |  |  | 
+Descrição das Atividades: | Descrição das Atividades: | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal.
+ |  | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES
+Tipo Agente: | Tipo Agente: | Físico | Físico | Agente: | Agente: | Ruído contínuo ou intermitente (Leg. Trabalhista) | Ruído contínuo ou intermitente (Leg. Trabalhista) | Nível do Risco: | Nível do Risco: | 4 - Muito Alto | 4 - Muito Alto
+Atividade(s)/Processo(s): | Atividade(s)/Processo(s): |  |  |  |  | Perigo(s): | Perigo(s): |  |  |  | 
+Fontes Geradoras: | Fontes Geradoras: | Ambiente | Ambiente | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados | Dados | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado principalmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição 
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A.
+Tipo Agente: | Tipo Agente: | Químico | Químico | Agente: | Agente: | Chumbo | Chumbo | Nível do Risco: | Nível do Risco: | 4 - Muito Alto | 4 - Muito Alto
+Atividade(s)/Processo(s): | Atividade(s)/Processo(s): |  |  |  |  | Perigo(s): | Perigo(s): |  |  |  | 
+Fontes Geradoras: | Fontes Geradoras: | Ambiente | Ambiente | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados | Dados | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica. | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica. | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica. | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica. | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica. | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica. | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica. | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica. | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica. | Descrição: Composto presente em eletrodos utilizados na solda formando fumos quando aquecidos durante o processo de soldagem.
+Sugestões: Utilização de EPIs conforme determina o PPRA e realização de exames médicos recomendados pelo PCMSO.
+Riscos (Possíveis danos à saúde): Anemias devido a transtornos enzimáticos, anemia Sideroblástica secundária a toxinas, hipotireoidismo devido a substâncias exógenas, transtornos mentais decorrentes de lesão e disfunção cerebrais, hipertensão arterial, arritmias cardíacas e insuficiência renal crônica.
+ |  | EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. |  |  |  |  | 
+ | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS |  |  |  |  | 
+Agente | Fonte Geradora | Fonte Geradora | Intensidade/ Concentração | Intensidade/ Concentração | Técnica Utilizada | Técnica Utilizada | Nível de Ação | Nível de Ação | Limite de tolerância | Limite de tolerância | Tipo/Tempo de
+Exposição
+Chumbo | Ambiente | Ambiente |  |  | Avaliação Quantitativa | Avaliação Quantitativa |  |  |  |  | N.A.()
+Ruído contínuo ou intermitente (Leg.
+Trabalhista) | Ambiente | Ambiente | 110 dB | 110 dB | Avaliação Quantitativa | Avaliação Quantitativa | 80 dB | 80 dB | 85 dB | 85 dB | N.A.()
+ | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) |  |  |  |  | 
+Recomendados: |  | Protetor Auricular, Protetor Auricular Concha. | Protetor Auricular, Protetor Auricular Concha. | Protetor Auricular, Protetor Auricular Concha. | Protetor Auricular, Protetor Auricular Concha. | Protetor Auricular, Protetor Auricular Concha. |  |  |  |  | 
+Utilizados: |  | Protetor Auricular, Protetor Auricular Concha. | Protetor Auricular, Protetor Auricular Concha. | Protetor Auricular, Protetor Auricular Concha. | Protetor Auricular, Protetor Auricular Concha. | Protetor Auricular, Protetor Auricular Concha. |  |  |  |  | 
+
+--- TABELA 9 ---
+ |  | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS
+Setor: | Setor: | Setor 2 | Setor 2 | Setor 2 | Setor 2 | Qtde de Colaboradores: | Qtde de Colaboradores: | 0 | 0 | 0 | 0
+CBO | Cargo: | CBO | Cargo: | 0101-05 | Cargo 1 | 0101-05 | Cargo 1 | 0101-05 | Cargo 1 | 0101-05 | Cargo 1 | Função: | Função: |  |  |  | 
+Descrição das Atividades: | Descrição das Atividades: | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal.
+ |  | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES
+Tipo Agente: | Tipo Agente: | Físico | Físico | Agente: | Agente: | Ruído contínuo ou intermitente (Leg. Trabalhista) | Ruído contínuo ou intermitente (Leg. Trabalhista) | Nível do Risco: | Nível do Risco: | 2 - Moderado | 2 - Moderado
+Atividade(s)/Processo(s): | Atividade(s)/Processo(s): | Atividade | Atividade | Atividade | Atividade | Perigo(s): | Perigo(s): | Perigo | Perigo | Perigo | Perigo
+Fontes Geradoras: | Fontes Geradoras: | N.A. | N.A. | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados | Dados | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Esta ligado princi palmente nos locais ligados co m a área operacional.
+Sugestões: Analisar a possib ilidade de isolamento das fonte s de ruído; ou troca de maquiná rio, para diminuição do ruído no  ambiente de trabalho; Uso de EPI recomendado; Orientaçã o quanto ao correto uso e efetua r a manutenção preventiva e pe riódica dos equipamentos.
+Riscos(Possíveis danos à s aúde): Fadiga nervosa, alteraç ões mentais, perda de memori a, irritabilidade, dificuldade em  coordenar idéias, hipertensão, modificação do ritmo respi ratório,perturbações gastrointe stinais, diminuição da viso noturna, dificuldade na perce pção de cores.Alem destas consequências o ruido atinge  também o aparelho auditivo ca usando a perda temporário ou d efinitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A.
+Tipo Agente: | Tipo Agente: | Ergonômico | Ergonômico | Agente: | Agente: | Postura incômoda por longos períodos | Postura incômoda por longos períodos | Nível do Risco: | Nível do Risco: | 2 - Moderado | 2 - Moderado
+Atividade(s)/Processo(s): | Atividade(s)/Processo(s): | Processo | Processo | Processo | Processo | Perigo(s): | Perigo(s): | Perigos | Perigos | Perigos | Perigos
+Fontes Geradoras: | Fontes Geradoras: | N.A. | N.A. | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados | Dados | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador.
+ |  | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A.
+Tipo Agente: |  | Ergonômico | Ergonômico | Agente: | Agente: | Ritmo Excessivo | Ritmo Excessivo | Nível do Risco: | Nível do Risco: | 1 - Baixo | 1 - Baixo
+Atividade(s)/Processo(s): |  |  |  |  |  | Perigo(s): | Perigo(s): |  |  |  | 
+Fontes Geradoras: |  | N.A. | N.A. | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados |  | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A.
+ | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS
+Agente | Fonte Geradora | Fonte Geradora | Intensidade/ Concentração | Intensidade/ Concentração | Técnica Utilizada | Técnica Utilizada | Nível de Ação | Nível de Ação | Limite de tolerância | Limite de tolerância | Tipo/Tempo de
+Exposição
+Ruído contínuo ou intermitente (Leg.
+Trabalhista) | Ambiente | Ambiente | 83 dB | 83 dB | Avaliação Quantitativa | Avaliação Quantitativa | 80 dB | 80 dB | 85 dB | 85 dB | N.A.()
+ | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s)
+Recomendados: |  | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular.
+Utilizados: |  | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular.
+ |  | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS | RECONHECIMENTO E ANÁLISE DOS RISCOS AMBIENTAIS
+Setor: | Setor: | Setor 2 | Setor 2 | Setor 2 | Setor 2 | Qtde de Colaboradores: | Qtde de Colaboradores: | 0 | 0 | 0 | 0
+CBO | Cargo: | CBO | Cargo: | 0101-05 | Cargo 2 | 0101-05 | Cargo 2 | 0101-05 | Cargo 2 | 0101-05 | Cargo 2 | Função: | Função: |  |  |  | 
+Descrição das Atividades: | Descrição das Atividades: | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal. | As funções deste grupo consistem em manter, cumprir e defender a constituição federal dentro da sua esfera de atribuições; observar as leis; promover as condições de segurança necessárias para o desenvolvimento e o bem-estar geral; e defender a integridade territorial e a soberania do país. Para isto, dirigem e orientam órgãos superiores das forças armadas; planejam e conduzem os divers os assuntos da área militar; e assessoram na realização das políticas públicas na esfera federal.
+ |  | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES | EXPO SIÇÕES
+Tipo Agente: | Tipo Agente: | Físico | Físico | Agente: | Agente: | Ruído contínuo ou intermitente (Leg. Trabalhista) | Ruído contínuo ou intermitente (Leg. Trabalhista) | Nível do Risco: | Nível do Risco: | 2 - Moderado | 2 - Moderado
+Atividade(s)/Processo(s): | Atividade(s)/Processo(s): | Atividade | Atividade | Atividade | Atividade | Perigo(s): | Perigo(s): | Perigo | Perigo | Perigo | Perigo
+Fontes Geradoras: | Fontes Geradoras: | N.A. | N.A. | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados | Dados | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Está ligado principalmente nos locais ligados com a área operacional.
+Sugestões: Analisar a possibilidade de isolamento das fonte s de ruído; ou troca de maquinário, para diminuição do ruído no ambiente de trabalho; Uso de EPI recomendado; Orientação quanto ao correto uso e efetua r a manutenção preventiva e periódica dos equipamentos.
+Riscos (Possíveis danos à saúde): Fadiga nervosa, alterações mentais, perda de memória, irritabilidade, dificuldade em  coordenar ideias, hipertensão, modificação do ritmo respiratório, perturbações gastrointestinais, diminuição da viso noturna, dificuldade na percepção de cores. Além destas consequências o ruído atinge também o aparelho auditivo causando a perda temporário ou definitiva da audição EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A.
+Tipo Agente: | Tipo Agente: | Ergonômico | Ergonômico | Agente: | Agente: | Postura incômoda por longos períodos | Postura incômoda por longos períodos | Nível do Risco: | Nível do Risco: | 2 - Moderado | 2 - Moderado
+Atividade(s)/Processo(s): | Atividade(s)/Processo(s): | Processo | Processo | Processo | Processo | Perigo(s): | Perigo(s): | Perigos | Perigos | Perigos | Perigos
+Fontes Geradoras: | Fontes Geradoras: | N.A. | N.A. | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados | Dados | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador. | Descrição: Ocorre principalmente em ambientes de trabalho onde o mesmo é desenvolvido principalmente sentado, como em atividades de escritórios, motoristas, etc.
+Sugestões: Alternar períodos de trabalho sentado com atividades que possam ser realizadas em pé. Usar cadeiras, bancos, etc., com formato anatômico adaptado ao biotipo do trabalhador.
+ |  | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Riscos (Possíveis danos à saúde): Problemas principalmente na coluna cervical que é a mais atingida em casos de postura inadequada, além de outros problemas diversos como dores, etc.
+EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A.
+Tipo Agente: |  | Ergonômico | Ergonômico | Agente: | Agente: | Ritmo Excessivo | Ritmo Excessivo | Nível do Risco: | Nível do Risco: | 1 - Baixo | 1 - Baixo
+Atividade(s)/Processo(s): |  |  |  |  |  | Perigo(s): | Perigo(s): |  |  |  | 
+Fontes Geradoras: |  | N.A. | N.A. | Meio de propagação/Trajetória: | Meio de propagação/Trajetória: | N.A. | N.A. | Tipo/Tempo de Exposição: | Tipo/Tempo de Exposição: | N.A. | N.A.
+Dados |  | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A. | Descrição: Ocorre principalmente em linhas de produção onde o trabalhador tem que acompanhar o ritmo de trabalho da equipe.
+Sugestões: Adequar a velocidade de produção conforme o biotipo médio dos trabalhadores e a sua capacidade física.
+Riscos (Possíveis danos à saúde): Pode levar a problemas orgânicos diversos e até a exaustão física do trabalhador. EPI(s) Eficaz(es):N.A.
+EPC(s) Eficaz(es):N.A.
+ | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS | AVALIAÇÕES QUANTITATIVAS
+Agente | Fonte Geradora | Fonte Geradora | Intensidade/ Concentração | Intensidade/ Concentração | Técnica Utilizada | Técnica Utilizada | Nível de Ação | Nível de Ação | Limite de tolerância | Limite de tolerância | Tipo/Tempo de
+Exposição
+Ruído contínuo ou intermitente (Leg.
+Trabalhista) | Ambiente | Ambiente | 83 dB | 83 dB | Avaliação Quantitativa | Avaliação Quantitativa | 80 dB | 80 dB | 85 dB | 85 dB | N.A.()
+ | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s) | EPI(s)
+Recomendados: |  | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular.
+Utilizados: |  | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular. | Protetor Auricular.
+
+--- TABELA 10 ---
+Ação | Maio 25 | Jun
+25 | jul
+25 | Agos
+25 | Set
+25 | Out 
+25 | Nov
+25 | Dez
+25 | Jan
+26 | Fev
+26 | març
+26 | Abril
+26
+Contratar profissional ou empresa para a realização das análises ergonômicas conforme NR 17 item 8.4. | X | X | X | X | X |  |  |  |  |  |  | 
+
+--- TABELA 11 ---
+Tipo | Ação |  | Responsável
+Ação | Contratar profissional ou empresa para a realização das análises ergonômicas e psicossociais  conforme NR 17 item 8.4. | Empresa | 
+
+--- TABELA 12 ---
+Tipo | Ação | Prioridade
+Ação | Contratar profissional ou empresa para a realização das análises ergonômicas conforme NR 17 item 8.4. | 2
+
+--- TABELA 13 ---
+Grau 1 | Irrelevante | Não prioritário. Ações dentro do princípio de melhoria contínua. Pode ser necessária avaliação quantitativa do Setor/GHE para confirmação da categoria, a critério do profissional de Higiene Ocupacional
+Grau 2 | De Atenção | Prioridade básica. Iniciar processo de avaliação quantitativa do Setor/GHE para confirmação da categoria e monitoramento periódico.
+Grau 3 | Crítica | Prioridade preferencial. Adotar medidas de controle para redução da exposição e iniciar processo de avaliação quantitativa do Setor/GHE.
+Grau 4 | Não tolerável | Prioridade máxima. Adotar medidas imediatas de controle. Quando não, a continuidade da operação só poderá ocorrer com ciência e aprovação do gerente geral da unidade ou instalação. Iniciar processo de avaliação quantitativa do Setor/GHE para verificação do rebaixamento da categoria de risco.

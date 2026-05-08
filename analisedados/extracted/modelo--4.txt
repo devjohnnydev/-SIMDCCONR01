@@ -1,0 +1,36 @@
+2. Questionário de Avaliação dos Riscos Psicossociais - Modelo de Likert
+Risco 1: Exigências Emocionais
+Pergunta: O seu trabalho exige que você lide com emoções intensas ou difíceis com frequência? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 2: Desequilíbrio entre Esforço e Recompensa
+Pergunta: Você sente que as recompensas (salário, benefícios, reconhecimento) são proporcionais ao esforço que você dedica ao trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 3: Condições de Trabalho
+Pergunta: As condições físicas do seu ambiente de trabalho são adequadas para o desempenho das suas atividades? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 4: Fadiga e Estresse
+Pergunta: Você se sente fisicamente exausto após o trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 5: Confusão de Papéis
+Pergunta: Você sente que tem clareza sobre suas responsabilidades no trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre

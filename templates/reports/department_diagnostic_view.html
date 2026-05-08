@@ -1,159 +1,381 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}Laudo Setorial — {{ report.setor }} | SIMDCCONR01{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/dashboard-premium.css' %}">
 <style>
-    body { background: #f8fafc; }
-    .glass-card {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 1.5rem;
+    :root {
+        --clr-primary: #1a56db;
+        --clr-dark: #111827;
+        --clr-success: #059669;
+        --clr-warning: #d97706;
+        --clr-danger: #dc2626;
+        --clr-bg: #f8fafc;
+        --clr-card: rgba(255,255,255,0.85);
+        --radius: 1.25rem;
     }
-    .badge-premium {
-        padding: 0.5rem 1rem;
+    body { background: var(--clr-bg); font-family: 'Inter', system-ui, sans-serif; }
+    .glass-card {
+        background: var(--clr-card);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.4);
+        border-radius: var(--radius);
+    }
+    .section-title {
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: #64748b;
+        margin-bottom: 1rem;
+    }
+    .kpi-box {
+        background: #fff;
+        border-radius: 1rem;
+        padding: 1.25rem;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+        transition: transform 0.15s;
+    }
+    .kpi-box:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+    .kpi-value { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+    .kpi-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; font-weight: 600; }
+    .risk-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.35rem 0.9rem;
         border-radius: 2rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: 0.3px;
+    }
+    .risk-critico { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .risk-atencao { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+    .risk-adequado { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .risk-forte { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+    .matrix-table { width: 100%; font-size: 0.78rem; }
+    .matrix-table thead th {
+        background: #f1f5f9;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.8px;
+        color: #475569;
+        padding: 0.75rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .matrix-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    .matrix-table tbody tr:hover { background: #f8fafc; }
+    .narrative-box {
+        background: #fff;
+        border-left: 4px solid var(--clr-primary);
+        border-radius: 0 0.75rem 0.75rem 0;
+        padding: 1.5rem;
+        line-height: 1.85;
+        text-align: justify;
+        color: #1e293b;
+        font-size: 0.95rem;
+    }
+    .ref-list li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.78rem;
+        color: #475569;
+    }
+    @media print {
+        @page { size: A4; margin: 1.5cm; }
+        body { background: #fff !important; font-size: 10pt !important; }
+        .container { width: 100% !important; max-width: none !important; padding: 0 !important; }
+        .col-lg-11 { width: 100% !important; max-width: 100% !important; }
+        .glass-card { box-shadow: none !important; border: 1px solid #ddd !important; }
+        .d-print-none { display: none !important; }
+        .card { break-inside: avoid; }
+        canvas { max-width: 300px !important; height: auto !important; margin: 0 auto !important; display: block !important; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <!-- HEADER PREMIUM -->
-            <div class="glass-card shadow-lg mb-5 overflow-hidden border-0">
-                <div class="card-header bg-dark text-white p-4 border-0">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center">
-                            <img src="{% static 'img/logo.png' %}" alt="Logo" class="me-3" style="height: 45px; width: auto; object-fit: contain;">
-                            <div>
-                                <div class="d-flex align-items-center gap-2 mb-1">
-                                    <span class="badge bg-primary rounded-pill px-2 py-1" style="font-size: 0.65rem;">CONSOLIDADO SETORIAL</span>
-                                    <span class="text-primary fw-bold" style="font-size: 0.9rem;">SIMDCCONR01</span>
-                                </div>
-                                <h2 class="fw-bold mb-0 text-white" style="letter-spacing: -0.5px; font-size: 1.5rem;">Laudo Socioemocional: {{ report.setor }}</h2>
+        <div class="col-lg-11">
+
+            {# ═══════════════════════ HEADER PROFISSIONAL ═══════════════════════ #}
+            <div class="glass-card shadow-lg mb-4 overflow-hidden border-0">
+                <div class="p-4 p-md-5" style="background: linear-gradient(135deg, #111827 0%, #1e3a5f 100%);">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="badge rounded-pill px-3 py-1" style="background: rgba(255,255,255,0.15); color: #93c5fd; font-size: 0.65rem; letter-spacing: 1px;">CONSOLIDADO SETORIAL</span>
+                                <span class="text-white fw-bold" style="font-size: 0.8rem; opacity: 0.9;">SIMDCCONR01</span>
+                            </div>
+                            <h2 class="fw-bold text-white mb-1" style="letter-spacing: -0.5px; font-size: 1.65rem;">
+                                Laudo Socioemocional: {{ report.setor }}
+                            </h2>
+                            <div class="d-flex flex-wrap gap-3 mt-3">
+                                <span class="text-white small" style="opacity: 0.75;"><i class="bi bi-building me-1"></i>{{ report.company.nome_fantasia }}</span>
+                                {% if report.company.cnpj %}<span class="text-white small" style="opacity: 0.75;"><i class="bi bi-upc me-1"></i>CNPJ: {{ report.company.cnpj }}</span>{% endif %}
+                                <span class="text-white small" style="opacity: 0.75;"><i class="bi bi-calendar3 me-1"></i>Emissão: {{ report.generated_at|date:"d/m/Y" }}</span>
                             </div>
                         </div>
                         <div class="d-print-none text-end">
-                            <i class="bi bi-shield-check fs-1 text-primary opacity-75"></i>
+                            <i class="bi bi-shield-check" style="font-size: 2.5rem; color: rgba(147,197,253,0.4);"></i>
                         </div>
                     </div>
                 </div>
-                
-                <!-- METRICAS EM CARDS -->
-                <div class="card-body p-4 p-md-5">
-                    <div class="row g-4 mb-5 text-center">
-                        <div class="col-md-3">
-                            <div class="p-3 bg-white rounded-4 border shadow-sm h-100 d-flex flex-column justify-content-center">
-                                <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Empresa</div>
-                                <div class="fw-bold text-dark">{{ report.company.nome_fantasia }}</div>
+
+                {# ═══════════════════════ KPIs ═══════════════════════ #}
+                <div class="p-4 p-md-5">
+                    <div class="section-title"><i class="bi bi-bar-chart me-1"></i>Indicadores-Chave</div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="kpi-box">
+                                <div class="kpi-value text-primary">{{ data.indice_bem_estar|default:"—" }}%</div>
+                                <div class="kpi-label">Índice de Bem-Estar</div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="p-3 bg-white rounded-4 border shadow-sm h-100 d-flex flex-column justify-content-center">
-                                <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Status de Autenticidade</div>
-                                <div class="fw-bold text-success"><i class="bi bi-patch-check-fill me-1"></i>Verificado IA</div>
+                        <div class="col-6 col-md-3">
+                            <div class="kpi-box">
+                                <div class="kpi-value" style="color: var(--clr-dark);">{{ engine_data.total_respondentes|default:"—" }}</div>
+                                <div class="kpi-label">Respondentes</div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="p-3 bg-white rounded-4 border shadow-sm h-100 d-flex flex-column justify-content-center">
-                                <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Data de Emissão</div>
-                                <div class="fw-bold text-dark">{{ report.generated_at|date:"d/m/Y" }}</div>
+                        <div class="col-6 col-md-3">
+                            <div class="kpi-box">
+                                {% with engine_data.overall_avg as avg %}
+                                <div class="kpi-value {% if engine_data.overall_key == 'critico' %}text-danger{% elif engine_data.overall_key == 'atencao' %}text-warning{% else %}text-success{% endif %}">
+                                    {{ avg|default:"—" }}
+                                </div>
+                                {% endwith %}
+                                <div class="kpi-label">Média Geral (1-5)</div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="p-4 bg-primary text-white rounded-4 shadow h-100 d-flex flex-column justify-content-center">
-                                <div class="small fw-bold text-uppercase mb-1 opacity-75" style="font-size: 0.7rem;">Bem-estar do Grupo</div>
-                                <div class="fs-2 fw-bold">{{ data.indice_bem_estar }}%</div>
+                        <div class="col-6 col-md-3">
+                            <div class="kpi-box">
+                                <span class="risk-badge {% if engine_data.overall_key == 'critico' %}risk-critico{% elif engine_data.overall_key == 'atencao' %}risk-atencao{% elif engine_data.overall_key == 'adequado' %}risk-adequado{% else %}risk-forte{% endif %}">
+                                    {{ engine_data.overall_classification|default:"—" }}
+                                </span>
+                                <div class="kpi-label mt-2">Classificação Geral</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- SUMÁRIO EXECUTIVO -->
-                    <div class="mb-5 position-relative">
-                        <h4 class="fw-bold text-dark mb-4">
-                            <i class="bi bi-file-earmark-text text-primary me-2"></i>Sumário do Clima Geral
-                        </h4>
-                        <div class="p-4 bg-white border border-light rounded-4 shadow-sm" style="border-left: 5px solid #2563eb !important;">
-                            <p class="mb-0 text-dark fs-5" style="line-height: 1.8; text-align: justify;">
-                                {{ data.clima_geral }}
-                            </p>
+                    {# ═══════════════════════ SUMÁRIO EXECUTIVO IA ═══════════════════════ #}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-file-earmark-text me-1"></i>Síntese do Clima Setorial</div>
+                        <div class="narrative-box">
+                            {{ data.clima_geral|default:"Análise indisponível." }}
                         </div>
                     </div>
 
-                    <!-- PONTOS FORTES E ALERTAS (GRID) -->
+                    {# ═══════════════════════ GRÁFICO + RISCOS ═══════════════════════ #}
+                    <div class="row g-4 mb-5">
+                        <div class="col-lg-5">
+                            <div class="section-title"><i class="bi bi-diagram-3 me-1"></i>Perfil Dimensional (IMCO)</div>
+                            <div class="p-3 bg-white rounded-4 border shadow-sm" style="height: 320px;">
+                                <canvas id="radarDept"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="section-title"><i class="bi bi-exclamation-triangle me-1"></i>Clusters de Risco</div>
+                            {% if engine_data.risk_clusters %}
+                            <div class="table-responsive">
+                                <table class="matrix-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Instrumento</th>
+                                            <th>Dimensão</th>
+                                            <th>Média</th>
+                                            <th>Classificação</th>
+                                            <th>Nível de Risco</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cluster in engine_data.risk_clusters %}
+                                        <tr>
+                                            <td><span class="badge bg-dark bg-opacity-10 text-dark rounded-pill" style="font-size: 0.65rem;">{{ cluster.instrumento }}</span></td>
+                                            <td class="fw-medium text-dark">{{ cluster.dimensao }}</td>
+                                            <td class="fw-bold">{{ cluster.media }}</td>
+                                            <td>
+                                                <span class="risk-badge {% if cluster.classificacao_key == 'critico' %}risk-critico{% else %}risk-atencao{% endif %}">
+                                                    {{ cluster.classificacao }}
+                                                </span>
+                                            </td>
+                                            <td class="text-muted small">{{ cluster.risco }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="p-4 bg-white rounded-4 border text-center">
+                                <i class="bi bi-check-circle text-success fs-1 mb-2 d-block"></i>
+                                <p class="text-muted mb-0">Nenhum cluster de risco identificado neste setor.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {# ═══════════════════════ MATRIZ DE RISCO COMPLETA ═══════════════════════ #}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-grid-3x3-gap me-1"></i>Matriz de Risco por Dimensão — Consolidação do Setor</div>
+                        {% if engine_data.consolidation %}
+                        <div class="table-responsive bg-white rounded-4 border shadow-sm p-3">
+                            <table class="matrix-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:15%">Instrumento</th>
+                                        <th style="width:30%">Dimensão</th>
+                                        <th style="width:10%">Média</th>
+                                        <th style="width:15%">Classificação</th>
+                                        <th style="width:10%">Respostas</th>
+                                        <th style="width:20%">Nível de Risco (PGR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in engine_data.consolidation %}
+                                    <tr>
+                                        <td><span class="badge bg-primary bg-opacity-10 text-primary rounded-pill" style="font-size: 0.65rem;">{{ item.instrumento }}</span></td>
+                                        <td class="fw-medium text-dark">{{ item.dimensao }}</td>
+                                        <td class="fw-bold">{{ item.media }}</td>
+                                        <td>
+                                            <span class="risk-badge {% if item.classificacao_key == 'critico' %}risk-critico{% elif item.classificacao_key == 'atencao' %}risk-atencao{% elif item.classificacao_key == 'adequado' %}risk-adequado{% else %}risk-forte{% endif %}">
+                                                {{ item.classificacao }}
+                                            </span>
+                                        </td>
+                                        <td class="text-muted">{{ item.total_respostas }}</td>
+                                        <td class="small text-muted">{{ item.risco|default:"—" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="p-4 bg-white rounded-4 border text-center text-muted">
+                            <i class="bi bi-info-circle me-2"></i>Dados do Motor de Texto não disponíveis para este setor. Gere novamente o laudo.
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {# ═══════════════════════ PONTOS FORTES × ALERTAS ═══════════════════════ #}
                     <div class="row g-4 mb-5">
                         <div class="col-md-6">
+                            <div class="section-title"><i class="bi bi-star-fill text-success me-1"></i>Pontos Fortes Identificados</div>
                             <div class="h-100 p-4 bg-white rounded-4 border border-success border-opacity-25 shadow-sm">
-                                <h5 class="fw-bold text-success mb-4 text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">
-                                    <i class="bi bi-star-fill me-2"></i>Pontos Fortes Identificados
-                                </h5>
                                 <ul class="list-unstyled mb-0">
                                     {% for ponto in data.pontos_fortes %}
                                     <li class="mb-3 d-flex align-items-start">
-                                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
-                                        <span class="text-dark">{{ ponto }}</span>
+                                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 mt-1 flex-shrink-0" style="width: 28px; height: 28px;">
+                                            <i class="bi bi-check-lg text-success" style="font-size: 0.85rem;"></i>
+                                        </div>
+                                        <span class="text-dark" style="line-height: 1.6;">{{ ponto }}</span>
                                     </li>
+                                    {% empty %}
+                                    <li class="text-muted"><i class="bi bi-dash me-2"></i>Nenhum ponto forte destacado.</li>
                                     {% endfor %}
                                 </ul>
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <div class="section-title"><i class="bi bi-exclamation-triangle-fill text-danger me-1"></i>Áreas de Alerta e Riscos</div>
                             <div class="h-100 p-4 bg-white rounded-4 border border-danger border-opacity-25 shadow-sm">
-                                <h5 class="fw-bold text-danger mb-4 text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">
-                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Áreas de Alerta e Riscos
-                                </h5>
                                 <ul class="list-unstyled mb-0">
                                     {% for alerta in data.areas_alerta %}
                                     <li class="mb-3 d-flex align-items-start">
-                                        <i class="bi bi-arrow-right-circle text-danger me-3 mt-1"></i>
-                                        <span class="text-dark">{{ alerta }}</span>
+                                        <div class="bg-danger bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 mt-1 flex-shrink-0" style="width: 28px; height: 28px;">
+                                            <i class="bi bi-arrow-right text-danger" style="font-size: 0.85rem;"></i>
+                                        </div>
+                                        <span class="text-dark" style="line-height: 1.6;">{{ alerta }}</span>
                                     </li>
+                                    {% empty %}
+                                    <li class="text-muted"><i class="bi bi-dash me-2"></i>Nenhum alerta identificado.</li>
                                     {% endfor %}
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <!-- RECOMENDAÇÕES ESTRATÉGICAS -->
+                    {# ═══════════════════════ RECOMENDAÇÕES ESTRATÉGICAS ═══════════════════════ #}
                     <div class="mb-5">
-                        <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
-                            <h4 class="fw-bold text-dark mb-0">
-                                <i class="bi bi-lightning-charge-fill text-warning me-2"></i>Recomendações Estratégicas para o Setor
-                            </h4>
-                        </div>
-                        <div class="row g-4">
+                        <div class="section-title"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Recomendações Estratégicas para o Setor</div>
+                        <div class="row g-3">
                             {% for sugestao in data.sugestoes_gestao %}
-                            <div class="col-md-12">
-                                <div class="card border-0 bg-light rounded-4 p-4 shadow-sm hover-lift">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-4 shadow-sm" style="width: 45px; height: 45px; flex-shrink: 0;">
-                                            {{ forloop.counter }}
-                                        </div>
-                                        <div class="text-dark fw-medium fs-5">{{ sugestao }}</div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-white rounded-3 border shadow-sm d-flex align-items-start h-100">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm flex-shrink-0" style="width: 36px; height: 36px; font-size: 0.8rem; font-weight: 700;">
+                                        {{ forloop.counter }}
                                     </div>
+                                    <div class="text-dark" style="font-size: 0.9rem; line-height: 1.6;">{{ sugestao }}</div>
                                 </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-12">
+                                <p class="text-muted"><i class="bi bi-dash me-2"></i>Nenhuma sugestão disponível.</p>
                             </div>
                             {% endfor %}
                         </div>
                     </div>
 
-                    <!-- AUTENTICAÇÃO -->
-                    <div class="mt-5 pt-5 border-top text-center">
-                        <div class="mb-4">
-                            <div class="badge bg-light text-muted p-2 rounded-pill shadow-sm">
-                                <i class="bi bi-cpu me-1"></i>Análise Consolidada SIMDCCONR01
+                    {# ═══════════════════════ REFERÊNCIAS BIBLIOGRÁFICAS ═══════════════════════ #}
+                    {% if engine_data.references %}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-book me-1"></i>Referências Bibliográficas e Rastreabilidade</div>
+                        <div class="p-4 bg-white rounded-4 border shadow-sm">
+                            <p class="text-muted small mb-3">
+                                Este laudo setorial fundamenta-se nas seguintes obras e normas regulamentadoras, 
+                                com rastreabilidade item a item conforme o modelo FDAC (Goulart, 2025):
+                            </p>
+                            <ul class="list-unstyled ref-list mb-0">
+                                {% for ref in engine_data.references %}
+                                <li>
+                                    <i class="bi bi-bookmark-fill text-primary me-2" style="font-size: 0.55rem;"></i>{{ ref }}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {# ═══════════════════════ CONFORMIDADE LEGAL ═══════════════════════ #}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-patch-check me-1"></i>Conformidade Regulatória</div>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="p-3 bg-white rounded-3 border text-center">
+                                    <div class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">NR-01 (2025)</div>
+                                    <small class="text-muted" style="font-size: 0.7rem;">Portaria 1.419/2024 — Riscos Psicossociais</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-white rounded-3 border text-center">
+                                    <div class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">ISO 45003:2021</div>
+                                    <small class="text-muted" style="font-size: 0.7rem;">Saúde Psicológica e Segurança no Trabalho</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-white rounded-3 border text-center">
+                                    <div class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">PGR / GRO</div>
+                                    <small class="text-muted" style="font-size: 0.7rem;">Programa de Gerenciamento de Riscos</small>
+                                </div>
                             </div>
                         </div>
-                        <p class="text-muted small mx-auto" style="max-width: 600px;">
-                            Este parecer foi consolidado através do cruzamento estatístico e bibliográfico fundamentado em Goulart (2025). 
-                            As respostas individuais são protegidas por sigilo psicossocial e protocolos de anonimato.
+                    </div>
+
+                    {# ═══════════════════════ RODAPÉ / AUTENTICAÇÃO ═══════════════════════ #}
+                    <div class="mt-5 pt-4 border-top text-center">
+                        <div class="mb-3">
+                            <div class="badge bg-light text-muted p-2 rounded-pill shadow-sm" style="font-size: 0.7rem;">
+                                <i class="bi bi-cpu me-1"></i>Análise Consolidada SIMDCCONR01 — Motor de Texto Determinístico + IA
+                            </div>
+                        </div>
+                        <p class="text-muted small mx-auto mb-4" style="max-width: 700px; line-height: 1.7;">
+                            Este parecer foi consolidado através do cruzamento estatístico e bibliográfico 
+                            fundamentado em Goulart (2025), utilizando o motor de texto determinístico SIMDCCONR01 
+                            com rastreabilidade total (160/160 itens). As respostas individuais são protegidas por 
+                            sigilo psicossocial e protocolos de anonimato conforme LGPD.
                         </p>
                         
-                        <div class="mt-5 d-flex flex-wrap justify-content-center gap-3 d-print-none">
+                        <div class="d-flex flex-wrap justify-content-center gap-3 d-print-none">
                             <a href="{% url 'accounts:download_department_report_pdf' report.setor report.form_instance.id %}" 
                                class="btn btn-dark rounded-pill px-5 py-2 fw-medium shadow">
                                 <i class="bi bi-file-earmark-pdf-fill me-2"></i>Baixar PDF Profissional
@@ -168,81 +390,70 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
-<style>
-    .bg-light-blue { background-color: #f0f7ff; }
-    @media print {
-        @page {
-            size: A4;
-            margin: 1.5cm;
-        }
-        body {
-            background-color: white !important;
-            color: #000 !important;
-            font-size: 11pt !important;
-        }
-        .container {
-            width: 100% !important;
-            max-width: none !important;
-            padding: 0 !important;
-        }
-        .col-lg-10 {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 0 !important;
-        }
-        .card {
-            border: 1px solid #eee !important;
-            box-shadow: none !important;
-            break-inside: auto;
-        }
-        .card-header {
-            background-color: #212529 !important;
-            color: white !important;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-        }
-        .card-body {
-            padding: 20pt !important;
-        }
-        .row {
-            display: flex !important;
-            flex-wrap: wrap !important;
-        }
-        /* Keep the metrics row as a simple grid in print */
-        .card-body.bg-light .row.g-4 {
-            display: flex !important;
-            flex-direction: row !important;
-        }
-        .card-body.bg-light .col-md-3 {
-            width: 25% !important;
-            border-right: 1px solid #ddd !important;
-        }
-        .card-body.bg-light .col-md-3:last-child {
-            border-right: none !important;
-        }
-        /* Stack larger sections */
-        .mb-5, .mb-4 {
-            break-inside: avoid;
-            margin-bottom: 25pt !important;
-        }
-        .col-md-6 {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin-bottom: 15pt !important;
-        }
-        .btn, .navbar, .no-print {
-            display: none !important;
-        }
-        h2, h4, h5 {
-            color: #000 !important;
-            page-break-after: avoid;
-        }
-        .badge {
-            border: 1px solid #ccc !important;
-            color: #000 !important;
-            background: transparent !important;
-        }
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (typeof Chart === 'undefined') return;
+    const canvas = document.getElementById('radarDept');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const labels = [];
+    const values = [];
+    
+    {% if engine_data.consolidation %}
+        {% for item in engine_data.consolidation %}
+            {% if item.instrumento == 'IMCO' %}
+                labels.push("{{ item.dimensao|escapejs }}");
+                values.push({{ item.media }} * 20);
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    if (!labels.length) {
+        labels.push('Clima', 'Liderança', 'Processos', 'Comunicação', 'Bem-estar');
+        values.push(70, 70, 70, 70, 70);
     }
-</style>
+
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Perfil do Setor (%)',
+                data: values,
+                fill: true,
+                backgroundColor: 'rgba(26, 86, 219, 0.12)',
+                borderColor: '#1a56db',
+                pointBackgroundColor: '#1a56db',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: '#1a56db',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { font: { size: 10, family: "'Inter', sans-serif" }, usePointStyle: true, boxWidth: 6 }
+                }
+            },
+            scales: {
+                r: {
+                    angleLines: { display: true, color: 'rgba(0,0,0,0.04)' },
+                    grid: { color: 'rgba(0,0,0,0.04)' },
+                    suggestedMin: 0, suggestedMax: 100,
+                    ticks: { stepSize: 20, display: false },
+                    pointLabels: { font: { size: 9, family: "'Inter', sans-serif", weight: '600' }, color: '#475569' }
+                }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}

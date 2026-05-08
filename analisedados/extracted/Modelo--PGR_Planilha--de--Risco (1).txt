@@ -1,0 +1,176 @@
+
+=== SHEET: MATRIZ DE RISCO ===
+ |  |  |    TABELA DE IDENTIFICAÇÃO DE PERIGOS POR GES (Grupo de Exposição Similar) |  |  |  |  |  |  |  |  |  |  |  |  | 2021-10-22 00:00:00 |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES: | 01 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+SETOR: | Administrativo |  |  |  |  |  |  |  | Total de Trabalhadores Expostos: |  |  | 2 |  |  | Fase: | ( ) Antecipação     (x) Reconhecimento |  |  |  |  |  |  |  |  |  |  |  |  | 
+Processo: |  |  |  |  | Descrição do Setor: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Serviços administrativos em geral. |  |  |  |  | Ambiente climatizado e limpo; Pé direito 2,70 m; Fechamento em alvenaria; piso em cerâmica; iluminação artificial através de lâmpadas fluorescentes. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Agente / Tipo | Perigo / Fonte de Riscos | Dano | Padrões Legais / Limite de Exposição | Fonte Geradora | Controle Existente e sua Eficácia |  |  |  |  |  | Perfil de exposição existente |  | Avaliação do Risco |  |  |  | Definições de ações necessárias e prioridades | Critério para monitoração da exposição |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  | POAD/EPC | Eficaz | EPI | CA | Atenuação /
+Fator de Proteção | Eficaz | Intens. / Conc. | Técnica Utilizada | P | G | RISCO | IN |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  | (S/N) |  |  |  | (S/N) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+A | Queda de pessoa com diferença de nível | Fraturas; torsões, politraumatismo | .. | Escadas | Corrimão | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 1 | Informação adicional necessária (P2) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+E | Fatores Ergonômicos | doenças osteo musculares | NR 17 | Arranjo físico; Postura inadequada; Posto de trabalho inadequado | .. | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 2 | Informação adicional necessária (P1) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+Observação.: Necessário realização de análise ergonômica de acordo com NR 17. Implantar política de controle de acidentes, para intervenções necessárias. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES: | 02 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+SETOR: | Comercial Externo |  |  |  |  |  |  |  | Total de Trabalhadores Expostos: |  |  | 2 |  |  | Fase: | ( ) Antecipação     (x) Reconhecimento |  |  |  |  |  |  |  |  |  |  |  |  | 
+Processo: |  |  |  |  | Descrição do Setor: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Comercialização de produtos em instalações de clientes em hospitais. |  |  |  |  | Áreas de lavanderia dos hospitais. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Agente / Tipo | Perigo / Fonte de Riscos | Dano | Padrões Legais / Limite de Exposição | Fonte Geradora | Controle Existente e sua Eficácia |  |  |  |  |  | Perfil de exposição existente |  | Avaliação do Risco |  |  |  | Definições de ações necessárias e prioridades | Critério para monitoração da exposição |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  | POAD/EPC | Eficaz | EPI | CA | Atenuação /
+Fator de Proteção | Eficaz | Intens. / Conc. | Técnica Utilizada | P | G | RISCO | IN |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  | (S/N) |  |  |  | (S/N) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+F | Ruído | Sistema Auditivo | 85,0 dB(A) | Máquinas equipamentos da lavanderia | .. | .. | Protetor Auditivo | 11512 | 18 dB(A) | S | 79,8 dB(A) | Quantitativa | 2 - improvável | 1 - Reversível, leve | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 1 |  | 21
+E | Fatores Ergonômicos | doenças osteo musculares | NR 17 | Arranjo físico; Postura inadequada; Levantamento de peso | .. |  | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 1 - Reversível, leve | Baixo | 1 | Informação adicional necessária (P2) | Anual (P2) |  |  |  |  |  |  |  | 3 | 1 |  | 31
+A | Queda de pessoa com diferença de nível | Fraturas; torsões, politraumatismo | .. | Escadas | Corrimão |  | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 1 | Informação adicional necessária (P2) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+B | Biológico | Diversas doenças | NR 32 | Diversos microorganismos (roupas/uniformes, dentre outros/ contaminados do hospital) | .. |  | Avental de PVC; óculos de proteção | 36670 | .. | S | .. | Qualitativo | 3 - pouco provável | 2 - Reversível, severo | Médio | 1 | Informação adicional necessária (P2) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+Observação.:  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES: | 03 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+SETOR: |  Laboratório  |  |  |  |  |  |  |  | Total de Trabalhadores Expostos: |  |  | 2 |  |  | Fase: | ( ) Antecipação     (x) Reconhecimento |  |  |  |  |  |  |  |  |  |  |  |  | 
+Processo: |  |  |  |  | Descrição do Setor: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Controle de qualidade de matérias primas e produtos. |  |  |  |  | Ambiente climatizado e limpo; Pé direito 2,70 m; Fechamento em alvenaria; piso revestido em paviflex; iluminação artificial através de lâmpadas fluorescentes. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Agente / Tipo | Perigo / Fonte de Riscos | Dano | Padrões Legais / Limite de Exposição | Fonte Geradora | Controle Existente e sua Eficácia |  |  |  |  |  | Perfil de exposição existente |  | Avaliação do Risco |  |  |  | Definições de ações necessárias e prioridades | Critério para monitoração da exposição |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  | POAD/EPC | Eficaz | EPI | CA | Atenuação /
+Fator de Proteção | Eficaz | Intens. / Conc. | Técnica Utilizada | P | G | RISCO | IN |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  | (S/N) |  |  |  | (S/N) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+F | Ruído | Sistema Auditivo | NR 15                     85,0 dB(A) | Máquinas e equipamentos presentes no setor | .. | .. | Protetor auditivo | 11512 | 18,0 dB(A) | S | 79,2 dB(A) | Quantitativa | 2 - improvável | 1 - Reversível, leve | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 1 |  | 21
+E | Fatores Ergonômicos | doenças osteo musculares | NR 17 | Arranjo físico; Postura inadequada; Posto de trabalho inadequado | .. | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 2 | Informação adicional necessária (P1) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+A | Armazenamento de inflamáveis | Acidente com incêndio/explosões | .. | Acesso a ambiente com armazenamento de inflamáveis | Controle de acesso restrito; sistema de exautão; aterramento | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 3 - Irreversível, severo | Alto | 1 | Controle necessário (P1) Informação adicional necessária (P2) | Semestral (P1) |  |  |  |  |  |  |  | 3 | 3 |  | 33
+A | Manipulação/análise/transporte  de amostras de químicos | Queimaduras  | .. | Respingo de produtos químicos | Capela com exaustão; Chuveiro de segurança; procedimento para manipulação de amostras químicas | S | Luva nitrílica; óculos de segurança ampla visão; jaleco com manga comprida | .. | .. | .. | NA | Avaliação Qualitativa | 4 - provável | 2 - Reversível, severo | Alto | 1 | Controle necessário (P1) Informação adicional necessária (P2) | Monitorar após adotar medidas de controle (P1) |  |  |  |  |  |  |  | 4 | 2 |  | 42
+Q | Ácido Clorídrico | Sistema Respiratório/ Irritação | NR 15                          4 ppm | Análises laboratoriais | Capela com exaustão; Chuveiro de segurança | S |  | 17968 | .. | S | < 0,1 ppm | Quantitativa | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ | Clorofórmio |  | NR 15                          20 ppm |  |  |  |  |  |  |  | < 0,1 ppm | Qualitativo | 2 - improvável | 2 - Reversível, severo | Baixo | 1 | Informação adicional necessária (P2) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ | Ácido Acético |  | NR 15                          8 ppm |  |  |  |  |  |  |  | 0,2 ppm |  | 2 - improvável | 2 - Reversível, severo | Baixo | 1 | Informação adicional necessária (P2) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES: | 04 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+SETOR: | Fabricação e Envase |  |  |  |  |  |  |  | Total de Trabalhadores Expostos: |  |  | 1 |  |  | Fase: | ( ) Antecipação     (x) Reconhecimento |  |  |  |  |  |  |  |  |  |  |  |  | 
+Processo: |  |  |  |  | Descrição do Setor: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Envase dos produtos químicos utilizados para limpeza. |  |  |  |  | Ambiente localizado no Galpão; Pé direito acima de 3,00 m; Fechamento em alvenaria; piso cimentado; iluminação artificial através de lâmpadas fluorescentes. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Agente / Tipo | Perigo / Fonte de Riscos | Dano | Padrões Legais / Limite de Exposição | Fonte Geradora | Controle Existente e sua Eficácia |  |  |  |  |  | Perfil de exposição existente |  | Avaliação do Risco |  |  |  | Definições de ações necessárias e prioridades | Critério para monitoração da exposição |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  | POAD/EPC | Eficaz | EPI | CA | Atenuação /
+Fator de Proteção | Eficaz | Intens. / Conc. | Técnica Utilizada | P | G | RISCO | IN |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  | (S/N) |  |  |  | (S/N) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+F | Ruído | Sistema Auditivo | NR 15                     85,0 dB(A) | Máquinas de envase | .. | .. | Protetor auditivo | 11512 | 18,0 dB(A) | S | 82,0 dB(A) | Quantitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 0 | Manter o controle existente. (P1) Controle adicional necessário se for possível e viável. (P2) | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+A | Armazenamento de inflamáveis | Acidente com incêndio/explosões | .. | Acesso a ambiente com armazenamento de inflamáveis | Controle de acesso restrito; sistema de exautão; aterramento | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 3 - Irreversível, severo | Alto | 1 | Controle necessário (P1) Informação adicional necessária (P2) | Semestral (P1) |  |  |  |  |  |  |  | 3 | 3 |  | 33
+A | Envase de produtos químicos | Queimaduras  | .. | Respingo de produtos químicos | Capela com exaustão; Chuveiro de segurança; procedimento para manipulação de amostras químicas | S |  | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 1 - Reversível, leve | Baixo | 1 | Informação adicional necessária (P2) | Anual (P2) |  |  |  |  |  |  |  | 3 | 1 |  | 31
+E | Fatores Ergonômicos | doenças osteo musculares | NR 17 | Arranjo físico; Postura inadequada; Levantamento de peso; trabalho repetitivo | .. | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 2 | Informação adicional necessária (P1) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+Q | Ácido Clorídrico | Sistema Respiratório/ Irritação | 4 ppm | Durante o processo de produção e envase dos produtos | Capela de Exaustão | S | Luva nitrílica | 17968 | .. | S | < 0,2 ppm | Quantitativa | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ | Monóxido de Carbono |  | 39 ppm |  | Sistema de Exaustão | S |  |  |  |  | < 2 ppm | Quantitativa | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ | Cloro |  | 0,8 ppm |  | Chuveiro de Segurança | S |  |  |  |  | < 0,02 ppm | Quantitativa | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ | Ácido Nítrilico |  |  ACGIH - TLV                     TWA – 2 ppm        (5mg/m3)
+STEL – 4 ppm (10mg/m3)
+ |  | Lava Ólhos | S | Óculos de ampla visão | 19072 | .. | S | < 0,1 ppm | Quantitativa | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES: | 05 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+SETOR: | Fabricação de Fracionados |  |  |  |  |  |  |  | Total de Trabalhadores Expostos: |  |  | 1 |  |  | Fase: | ( ) Antecipação     (x) Reconhecimento |  |  |  |  |  |  |  |  |  |  |  |  | 
+Processo: |  |  |  |  | Descrição do Setor: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Linha de produção dos fracionados. |  |  |  |  | Ambiente localizado no Galpão; Pé direito acima de 3,00 m; Fechamento em alvenaria; piso cimentado; iluminação artificial através de lâmpadas fluorescentes. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Agente / Tipo | Perigo / Fonte de Riscos | Dano | Padrões Legais / Limite de Exposição | Fonte Geradora | Controle Existente e sua Eficácia |  |  |  |  |  | Perfil de exposição existente |  | Avaliação do Risco |  |  |  | Definições de ações necessárias e prioridades | Critério para monitoração da exposição |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  | POAD/EPC | Eficaz | EPI | CA | Atenuação /
+Fator de Proteção | Eficaz | Intens. / Conc. | Técnica Utilizada | P | G | RISCO | IN |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  | (S/N) |  |  |  | (S/N) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+F | Calor | Sudorese/ Fadiga | 26,7 °C | Máquinas presentes na produção | Sistema de Exaustão | S | .. | .. | .. | .. | 24,8 °C | Quantitativa | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+E | Fatores Ergonômicos | doenças osteo musculares | NR 17 | Arranjo físico; Postura inadequada; Levantamento de peso; trabalho repetitivo | .. | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 2 | Informação adicional necessária (P1) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+A | Queda de pessoa com diferença de nível | Fraturas; torsões, politraumatismo | .. | Desnível de plataforma | Guarda corpo | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 1 | Informação adicional necessária (P2) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+F | Ruído | Sistema Auditivo | 85,0 dB(A) | Circulação da empilhadeira | .. | .. | Protetor auditivo | 11512 | 18,0 dB(A) | S | 87,3 dB(A) | Quantitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 0 | Manter o controle existente. (P1) Controle adicional necessário se for possível e viável. (P2) | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+Q | Monóxido de Carbono | Sistema Respiratório | 39 ppm |  | Sistema de Exaustão | S | .. | .. | .. | .. | 5 ppm | Quantitativa | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES: | 06 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+SETOR: | Estoque |  |  |  |  |  |  |  | Total de Trabalhadores Expostos: |  |  | 1 |  |  | Fase: | ( ) Antecipação     (x) Reconhecimento |  |  |  |  |  |  |  |  |  |  |  |  | 
+Processo: |  |  |  |  | Descrição do Setor: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Recebimento; Conferência e Armazenamento de produtos. |  |  |  |  | Ambiente localizado no Galpão; Pé direito acima de 3,00 m; Fechamento em alvenaria; piso cimentado; iluminação artificial através de lâmpadas fluorescentes. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Agente / Tipo | Perigo / Fonte de Riscos | Dano | Padrões Legais / Limite de Exposição | Fonte Geradora | Controle Existente e sua Eficácia |  |  |  |  |  | Perfil de exposição existente |  | Avaliação do Risco |  |  |  | Definições de ações necessárias e prioridades | Critério para monitoração da exposição |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  | POAD/EPC | Eficaz | EPI | CA | Atenuação /
+Fator de Proteção | Eficaz | Intens. / Conc. | Técnica Utilizada | P | G | RISCO | IN |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  | (S/N) |  |  |  | (S/N) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+F | Ruído | Sistema Auditivo | NR 15                      85,0 dB(A) | Circulação da empilhadeira | .. | .. | Protetor auditivo | 11512 | 18,0 dB(A) | S | 79,8 dB(A) | Quantitativo | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+E | Fatores Ergonômicos | doenças osteo musculares | NR 17 | Arranjo físico; Postura inadequada; Levantamento de peso; trabalho repetitivo | .. | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 2 | Informação adicional necessária (P1) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+A | Queda de pessoa com diferença de nível | Fraturas; torsões, politraumatismo | .. | Desnível de plataforma | Guarda corpo | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 1 | Informação adicional necessária (P2) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+Q | Monóxido de Carbono | Sistema Respiratório | NR 15                          39 ppm | Circulação de empilhadeira a gás (GLP) | Sistema de exaustão | S | .. | .. | .. | .. | < 2 ppm | Quantitativo | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES: | 07 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+SETOR: | Logistica de materiais |  |  |  |  |  |  |  | Total de Trabalhadores Expostos: |  |  | 1 |  |  | Fase: | ( ) Antecipação     (x) Reconhecimento |  |  |  |  |  |  |  |  |  |  |  |  | 
+Processo: |  |  |  |  | Descrição do Setor: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Linha de produção; armazenamento dos produtos e materiais. |  |  |  |  | Ambiente localizado no Galpão; Pé direito acima de 3,00 m; Fechamento em alvenaria; piso cimentado; iluminação artificial através de lâmpadas fluorescentes. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Agente / Tipo | Perigo / Fonte de Riscos | Dano | Padrões Legais / Limite de Exposição | Fonte Geradora | Controle Existente e sua Eficácia |  |  |  |  |  | Perfil de exposição existente |  | Avaliação do Risco |  |  |  | Definições de ações necessárias e prioridades | Critério para monitoração da exposição |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  | POAD/EPC | Eficaz | EPI | CA | Atenuação /
+Fator de Proteção | Eficaz | Intens. / Conc. | Técnica Utilizada | P | G | RISCO | IN |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  | (S/N) |  |  |  | (S/N) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+F | Ruído | Sistema Auditivo | NR 15                     85,0 dB(A) | Durante o processo de utilização da empilhadeira | .. | .. | Protetor auditivo | 11512 | 18,0 dB(A) | S | 83,2 dB(A) | Quantitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 0 | Manter o controle existente. (P1) Controle adicional necessário se for possível e viável. (P2) | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+E | Fatores Ergonômicos | doenças osteo musculares | NR 17 | Arranjo físico; Postura inadequada; Levantamento de peso | .. | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 2 | Informação adicional necessária (P1) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+A | Armazenamento de inflamáveis | Acidente com incêndio/explosões | .. | Acesso a ambiente com armazenamento de inflamáveis | Controle de acesso restrito; sistema de exautão; aterramento | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 3 - Irreversível, severo | Alto | 1 | Controle necessário (P1) Informação adicional necessária (P2) | Semestral (P1) |  |  |  |  |  |  |  | 3 | 3 |  | 33
+F | Vibração | Lombalgia | NR 15                     Aren: 1,0 m/s²
+VDVR: 21,0 m/s² | Condução Empilhadeira | .. | .. | .. | .. | .. | .. | Aren: 0,32 m/s²
+VDVR: 2,1 m/s² | Quantitativa | 3 - pouco provável | 1 - Reversível, leve | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Anual (P2) |  |  |  |  |  |  |  | 3 | 1 |  | 31
+Q | Monóxido de Carbono | Sistema Respiratório | NR 15                         39 ppm | Motor Empilhadeira (GLP) | Sistema de exaustão | S | .. | .. | .. | .. | < 2 ppm | Quantitativa | 2 - improvável | 2 - Reversível, severo | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1) | Monitoramento periódico não necessário. |  |  |  |  |  |  |  | 2 | 2 |  | 22
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES: | 08 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+SETOR: | Manutenção Elétrica |  |  |  |  |  |  |  | Total de Trabalhadores Expostos: |  |  | 1 |  |  | Fase: | ( ) Antecipação     (x) Reconhecimento |  |  |  |  |  |  |  |  |  |  |  |  | 
+Processo: |  |  |  |  | Descrição do Setor: |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Manutenção preventiva e corretiva das instalações elétricas de máquinas, equipamentos e estrutural. |  |  |  |  | Sala localizada no Galpão; Pé direito de 3,00 m; Fechamento em divisória naval; piso cimentado; iluminação artificial através de lâmpadas fluorescentes. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+Agente / Tipo | Perigo / Fonte de Riscos | Dano | Padrões Legais / Limite de Exposição | Fonte Geradora | Controle Existente e sua Eficácia |  |  |  |  |  | Perfil de exposição existente |  | Avaliação do Risco |  |  |  | Definições de ações necessárias e prioridades | Critério para monitoração da exposição |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  | POAD/EPC | Eficaz | EPI | CA | Atenuação /
+Fator de Proteção | Eficaz | Intens. / Conc. | Técnica Utilizada | P | G | RISCO | IN |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  | (S/N) |  |  |  | (S/N) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+A | Choque Elétrico | Queimaduras; Problemas vasculares | .. | Processo de instalação e reparação de tomadas e pontos elétricos | Desenergisação dos sistemas; instruções de trabalho; procedimento de desenergização LOTOTO. | S | Luva isolante | 17698 | .. | S | .. | .. | 4 - provável | 4 - Fatal ou incapacitante | Crítico | 1 | Controle necessário (P1) Informação adicional necessária (P1) | Monitorar após adotar medidas de controle (P1) |  |  |  |  |  |  |  | 4 | 4 |  | 44
+E | Fatores Ergonômicos | doenças osteo musculares | NR 17 | Arranjo físico; Postura inadequada; Levantamento de peso | .. | .. | .. | .. | .. | .. | NA | Avaliação Qualitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 2 | Informação adicional necessária (P1) antes de se decidir se há necessidade de controle adicional. | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+F | Ruído | Sistema Auditivo | 85,0 dB(A) | Maquinas e equipamentos  | .. | .. | Protetor auditivo | 11512 | 18,0 dB(A) | S | 83,2 dB(A) | Quantitativa | 3 - pouco provável | 2 - Reversível, severo | Médio | 0 | Manter o controle existente. (P1) Controle adicional necessário se for possível e viável. (P2) | Anual (P2) |  |  |  |  |  |  |  | 3 | 2 |  | 32
+
+=== SHEET: PLANO DE AÇÃO ===
+PLANO DE AÇÕES |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+SETOR/ LOCAL | AÇÃO | INÍCIO DA AÇÃO | DATA PARA CONCLUSÃO DA AÇÃO  (mm/aa) |  |  |  |  |  |  |  |  |  |  | 
+ |  |  | Jan | Fev | Mar | Abr | Mai | Jun | Jul | Ago | Set | Out | Nov | Dez
+Controle de Equipamentos de Proteção Individual | Fornecimento de EPI´s, conforme tabela EPI X FUNÇÃO | imediato |  |  |  |  |  |  |  |  |  |  |  | 
+ | Ministrar treinamento aos trabalhadores sobre a necessidade e correta utilização dos EPI’s (equipamentos de proteção individual e MEDIDAS DE PROTEÇÃO COLETIVA), além de orientações quanto à forma correta para realizar sua conservação, guarda e higienização. Orienta-los ainda quanto à suas obrigações com relação aos equipamentos de proteção individual. |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Estabelecer procedimentos para aquisição, entrega e substituição dos EPI’s adequados à cada atividade. |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Registrar a entrega e substituição dos EPI’s, bem como o treinamento para sua correta utilização, em ficha apropriada, assinada OBRIGATORIAMENTE pelos empregados. |  | PERMANENTE |  |  |  |  |  |  |  |  |  |  | 
+ | Exigir dos fornecedores de EPI’s, os respectivos CA - Certificado de Aprovação atualizados, mantendo atualizado os laudos técnicos destes EPI’s, fornecidos pelos fabricantes, assegurando sua efetiva proteção, como estabelece a NR-6 “Equipamentos de Proteção Individual - EPI” . |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | Manter locais adequados para higienização e guarda dos EPI’s. |  |  |  |  |  |  |  |  |  |  |  |  | 
+Todos os GES | Realizar análise ergonônica para todas as atividades de acordo com NR 17. Após revisar o plano de ação para as medidas cabíveis. |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES 1 | Implantar política de controle de acidentes para intervenções necessária, bem como procedimento para acidente de pessoa com queda  de desnível "escada". |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES 3 | Implantar política de controle de acidentes para intervenções necessária, bem como procedimento para acesso a áreas com inflamáveis. |  |  |  |  |  |  |  |  |  |  |  |  | 
+GES 6 | Implantar política de controle de acidentes para intervenções necessária, bem como procedimento para manipulação e transporte de amostras de produtos químicos |  |  |  |  |  |  |  |  |  |  |  |  | 
+
+=== SHEET: MATRIZ ===
+ | P: | Probabilidade  | G: | Gravidade | RISCO: |  |  |  |  |  | 
+ | 1 | altamente improvável | 1 | Reversível, leve | Irrelevante |  | 1 - altamente improvável | 1 |  | 1 - Reversível, leve | 1
+ | 2 | improvável | 2 | Reversível, severo | Baixo |  | 2 - improvável | 2 |  | 2 - Reversível, severo | 2
+ | 3 | pouco provável | 3 | Irreversível, severo | Médio |  | 3 - pouco provável | 3 |  | 3 - Irreversível, severo | 3
+ | 4 | provável | 4 | Fatal ou incapacitante | Alto |  | 4 - provável | 4 |  | 4 - Fatal ou incapacitante | 4
+ |  |  |  |  | Crítico |  |  |  |  |  | 
+ |  |  | RESULTADO |  |  |  |  |  |  |  | 
+CHAVE | P: | G: | MATRIZ 1 | MATRIZ 2 | RISCO: | INCERTEZA: |  |  |  |  | 
+11 | 1 | 1 | Irrelevante | Monitoramento periódico não necessário. |  |  |  |  |  |  | 
+21 | 2 | 1 | Baixo | Monitoramento periódico não necessário. | Irrelevante | 0 | Certa |  |  |  | 
+31 | 3 | 1 | Baixo | Anual (P2) | Baixo | 1 | Incerta |  |  |  | 
+41 | 4 | 1 | Médio | Monitorar após adotar medidas de controle (P1) | Médio | 2 | Altamente incerta |  |  |  | 
+12 | 1 | 2 | Baixo | Monitoramento periódico não necessário. | Alto |  |  |  |  |  | 
+22 | 2 | 2 | Baixo | Monitoramento periódico não necessário. | Crítico |  |  |  |  |  | 
+32 | 3 | 2 | Médio | Anual (P2) |  |  |  |  |  |  | 
+42 | 4 | 2 | Alto | Monitorar após adotar medidas de controle (P1) | Irrelevante | 0 | Nenhuma ação é necessária. |  |  |  | 
+13 | 1 | 3 | Baixo | Monitoramento periódico não necessário. | Baixo | 0 | Nenhum controle adicional é necessário. Manter o controle existente. (P1)
+ |  |  |  | 
+23 | 2 | 3 | Médio | Anual (P1) | Médio | 0 | Manter o controle existente. (P1) Controle adicional necessário se for possível e viável. (P2) |  |  |  | 
+33 | 3 | 3 | Alto | Semestral (P1) | Alto | 0 | Controle necessário (P1) |  |  |  | 
+43 | 4 | 3 | Alto | Monitorar após adotar medidas de controle (P1) | Crítico | 0 | Controle necessário (P1) |  |  |  | 
+14 | 1 | 4 | Médio | Anual (P1) | Irrelevante | 1 | Nenhuma informação adicional é necessária. |  |  |  | 
+24 | 2 | 4 | Alto | Semestral (P1) | Baixo | 1 | Informação adicional necessária (P2) |  |  |  | 
+34 | 3 | 4 | Alto | Trimestral (P1) | Médio | 1 | Informação adicional necessária (P2) antes de se decidir se há necessidade de controle adicional. |  |  |  | 
+44 | 4 | 4 | Crítico | Monitorar após adotar medidas de controle (P1) | Alto | 1 | Controle necessário (P1) Informação adicional necessária (P2) |  |  |  | 
+ |  |  |  |  | Crítico | 1 | Controle necessário (P1) Informação adicional necessária (P1) |  |  |  | 
+ |  |  |  |  | Irrelevante | 2 | Nenhuma informação adicional é necessária. |  |  |  | 
+ |  |  |  |  | Baixo | 2 | Informação adicional necessária (P1) |  |  |  | 
+ |  |  |  |  | Médio | 2 | Informação adicional necessária (P1) antes de se decidir se há necessidade de controle adicional. |  |  |  | 
+ |  |  |  |  | Alto | 2 | Controle necessário (P1) Informação adicional necessária (P1) |  |  |  | 
+ |  |  |  |  | Crítico | 2 | Controle necessário (P1) Informação adicional necessária (P1) |  |  |  | 
+
+=== SHEET: LEGENDAS ===
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+POAD: Procedimentos Administrativos / EPC: Equipamentos de Proteção Coletivo / EPI: Equipamentos de Proteção Individual / (S) SIM / (N) NÃO / (N AV) Não Avaliado / (NA) Não se Aplica / (I) inexistente |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+(CA) Certificado de Aprovação / (P) Probabilidade / (G) Gravidade / (IN) Grau de Incerteza / (HP) Habitual e Permanente / (HI) Habitual e Intermitente / (EV) Eventual / (INT) Intermitente. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | (P1) prioridade 1  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 
+ | (P2) prioridade 2 (secundária) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 

@@ -1,0 +1,36 @@
+5. Questionário de Avaliação de Estresse e Riscos Psicossociais
+Risco 1: Sobrecarga de Trabalho
+Pergunta: Com que frequência você se sente sobrecarregado com as tarefas no trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 2: Insegurança no Trabalho
+Pergunta: Você se sente inseguro(a) sobre seu futuro no trabalho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 3: Pressão para Resultados
+Pergunta: Você sente que há uma pressão constante para atingir resultados específicos? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 4: Falta de Feedback
+Pergunta: Você recebe feedback regular e construtivo sobre o seu desempenho? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre
+Risco 5: Ambiguidade de Função
+Pergunta: Você sente que há ambiguidade ou falta de clareza nas suas tarefas e responsabilidades? 
+(1) Nunca
+(2) Raramente
+(3) Às vezes
+(4) Frequentemente
+(5) Sempre

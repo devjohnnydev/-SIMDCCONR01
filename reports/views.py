@@ -280,11 +280,14 @@ def generate_simdcconr01_report(request, form_pk):
         'chart_bars': chart_bars,
     }
 
-    html_string = render_to_string('reports/pdf/laudo_organizacional.html', context)
-    pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
-    if error:
-        messages.error(request, error)
-        return redirect('reports:dashboard')
+    import io
+    from .utils_pdf import OrganizationalReportRL
+
+    buffer = io.BytesIO()
+    pdf_gen = OrganizationalReportRL(buffer, company=company)
+    pdf_gen.build(laudo_data)
+    pdf = buffer.getvalue()
+    buffer.close()
 
     # Criar snapshot de evolução automático
     try:
@@ -351,11 +354,14 @@ def download_individual_pdf(request, form_pk, assignment_pk):
         'generated_at': timezone.now(),
     }
 
-    html_string = render_to_string('reports/pdf/individual_respondente.html', context)
-    pdf, error = html_to_pdf(html_string, base_url=request.build_absolute_uri('/'))
-    if error:
-        messages.error(request, error)
-        return redirect('reports:dashboard')
+    import io
+    from .utils_pdf import RespondentReportRL
+
+    buffer = io.BytesIO()
+    pdf_gen = RespondentReportRL(buffer, company=company, respondent_id=f"#{assignment.pk}")
+    pdf_gen.build(report_data, [])
+    pdf = buffer.getvalue()
+    buffer.close()
 
     AuditLog.log(
         user=request.user,

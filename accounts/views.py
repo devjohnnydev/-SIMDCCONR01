@@ -310,10 +310,12 @@ def generate_laudo_action(request, assignment_id):
         messages.warning(request, 'Funcionario ainda nao concluiu o questionario.')
         return redirect('accounts:admin_laudos')
         
-    diagnostic, created = EmployeeDiagnostic.objects.get_or_create(
-        assignment=assignment, 
-        defaults={'diagnostic_data': {}}
-    )
+    from ai_analysis.engine import generate_employee_diagnostic
+    diagnostic = generate_employee_diagnostic(assignment)
+    
+    if isinstance(diagnostic, dict) and 'error' in diagnostic:
+        messages.error(request, f"Erro ao processar laudo: {diagnostic['error']}")
+        return redirect('accounts:admin_laudos')
     
     messages.success(request, f"Parecer de {assignment.employee.nome} liberado para assinatura!")
         

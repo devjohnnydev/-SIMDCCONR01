@@ -16,9 +16,8 @@ def generate_employee_diagnostic(assignment):
     """
     from reports.models import EmployeeDiagnostic
     
-    # 1. Verifica se ja existe laudo para este assignment
     existing_diagnostic = getattr(assignment, 'diagnostic', None)
-    if existing_diagnostic:
+    if existing_diagnostic and existing_diagnostic.diagnostic_data:
         return existing_diagnostic
         
     # Se nao existe, vamos rodar a IA
@@ -58,11 +57,16 @@ def generate_employee_diagnostic(assignment):
         data = json.loads(response.choices[0].message.content)
         
         # 2. Salva o resultado no banco
-        diagnostic = EmployeeDiagnostic.objects.create(
-            assignment=assignment,
-            diagnostic_data=data
-        )
-        return diagnostic
+        if existing_diagnostic:
+            existing_diagnostic.diagnostic_data = data
+            existing_diagnostic.save()
+            return existing_diagnostic
+        else:
+            diagnostic = EmployeeDiagnostic.objects.create(
+                assignment=assignment,
+                diagnostic_data=data
+            )
+            return diagnostic
         
     except Exception as e:
         import traceback

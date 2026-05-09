@@ -14,6 +14,7 @@ import logging
 import io
 import xml.sax.saxutils as saxutils
 from django.utils import timezone
+from datetime import timedelta
 from django.conf import settings
 
 from reportlab.lib import colors
@@ -284,7 +285,7 @@ class RespondentReportRL:
             [Paragraph(f"<font color='#64748b' size=7>FUNCIONÁRIO</font><br/><b>{saxutils.escape(emp.nome.upper())}</b>", self.styles['Normal']),
              Paragraph(f"<font color='#64748b' size=7>CPF</font><br/><b>{saxutils.escape(emp.cpf or 'Não informado')}</b>", self.styles['Normal'])],
             [Paragraph(f"<font color='#64748b' size=7>EMPRESA</font><br/><b>{saxutils.escape(self.company.nome_fantasia.upper()) if self.company else '-'}</b>", self.styles['Normal']),
-             Paragraph(f"<font color='#64748b' size=7>DATA DA AVALIAÇÃO</font><br/><b>{timezone.localtime(self.generated_at).strftime('%d/%m/%Y %H:%M')}</b>", self.styles['Normal'])],
+             Paragraph(f"<font color='#64748b' size=7>DATA DA AVALIAÇÃO</font><br/><b>{(self.generated_at - timedelta(hours=3)).strftime('%d/%m/%Y %H:%M')}</b>", self.styles['Normal'])],
             [Paragraph(f"<font color='#64748b' size=7>SETOR E CARGO</font><br/><b>{saxutils.escape(emp.setor)} — {saxutils.escape(emp.cargo)}</b>", self.styles['Normal']), ""]
         ]
         info_table = Table(info_data, colWidths=[110*mm, 70*mm])
@@ -442,7 +443,7 @@ class RespondentReportRL:
 
             ts = ""
             if self.diagnostic.signature_timestamp:
-                ts = timezone.localtime(self.diagnostic.signature_timestamp).strftime('%d/%m/%Y %H:%M')
+                ts = (self.diagnostic.signature_timestamp - timedelta(hours=3)).strftime('%d/%m/%Y %H:%M')
 
             # Montar linhas da tabela de assinatura com objetos Paragraph
             sig_rows = []

@@ -221,9 +221,11 @@ class RespondentReportRL:
             canvas.setLineWidth(0.5)
             canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
             # Label
-            lx = x + (max_r + 10*mm)*math.cos(rad)
-            ly = y + (max_r + 10*mm)*math.sin(rad)
-            label_txt = labels[i][:18] + ".." if len(labels[i]) > 18 else labels[i]
+            dist = max_r + (12*mm if i % 2 == 0 else 5*mm)
+            lx = x + dist*math.cos(rad)
+            ly = y + dist*math.sin(rad)
+            label_txt = labels[i][:15] + ".." if len(labels[i]) > 15 else labels[i]
+            canvas.setFont('Helvetica-Bold', 6)
             if math.cos(rad) > 0.1:
                 canvas.drawString(lx, ly - 2, label_txt.upper())
             elif math.cos(rad) < -0.1:
@@ -282,7 +284,7 @@ class RespondentReportRL:
             [Paragraph(f"<font color='#64748b' size=7>FUNCIONÁRIO</font><br/><b>{saxutils.escape(emp.nome.upper())}</b>", self.styles['Normal']),
              Paragraph(f"<font color='#64748b' size=7>CPF</font><br/><b>{saxutils.escape(emp.cpf or 'Não informado')}</b>", self.styles['Normal'])],
             [Paragraph(f"<font color='#64748b' size=7>EMPRESA</font><br/><b>{saxutils.escape(self.company.nome_fantasia.upper()) if self.company else '-'}</b>", self.styles['Normal']),
-             Paragraph(f"<font color='#64748b' size=7>DATA DA AVALIAÇÃO</font><br/><b>{self.generated_at.strftime('%d/%m/%Y %H:%M')}</b>", self.styles['Normal'])],
+             Paragraph(f"<font color='#64748b' size=7>DATA DA AVALIAÇÃO</font><br/><b>{timezone.localtime(self.generated_at).strftime('%d/%m/%Y %H:%M')}</b>", self.styles['Normal'])],
             [Paragraph(f"<font color='#64748b' size=7>SETOR E CARGO</font><br/><b>{saxutils.escape(emp.setor)} — {saxutils.escape(emp.cargo)}</b>", self.styles['Normal']), ""]
         ]
         info_table = Table(info_data, colWidths=[110*mm, 70*mm])
@@ -440,7 +442,7 @@ class RespondentReportRL:
 
             ts = ""
             if self.diagnostic.signature_timestamp:
-                ts = self.diagnostic.signature_timestamp.strftime('%d/%m/%Y %H:%M')
+                ts = timezone.localtime(self.diagnostic.signature_timestamp).strftime('%d/%m/%Y %H:%M')
 
             # Montar linhas da tabela de assinatura com objetos Paragraph
             sig_rows = []
@@ -626,9 +628,11 @@ class DepartmentReportRL:
             canvas.setLineWidth(0.5)
             canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
             # Label
-            lx = x + (max_r + 10*mm)*math.cos(rad)
-            ly = y + (max_r + 10*mm)*math.sin(rad)
-            label_txt = labels[i][:18] + ".." if len(labels[i]) > 18 else labels[i]
+            dist = max_r + (12*mm if i % 2 == 0 else 5*mm)
+            lx = x + dist*math.cos(rad)
+            ly = y + dist*math.sin(rad)
+            label_txt = labels[i][:15] + ".." if len(labels[i]) > 15 else labels[i]
+            canvas.setFont('Helvetica-Bold', 6)
             if math.cos(rad) > 0.1:
                 canvas.drawString(lx, ly - 2, label_txt.upper())
             elif math.cos(rad) < -0.1:
@@ -898,9 +902,11 @@ class OrganizationalReportRL:
             canvas.setStrokeColor(COL_SLATE_500)
             canvas.setLineWidth(0.5)
             canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
-            lx = x + (max_r + 10*mm)*math.cos(rad)
-            ly = y + (max_r + 10*mm)*math.sin(rad)
-            label_txt = labels[i][:18] + ".." if len(labels[i]) > 18 else labels[i]
+            dist = max_r + (12*mm if i % 2 == 0 else 5*mm)
+            lx = x + dist*math.cos(rad)
+            ly = y + dist*math.sin(rad)
+            label_txt = labels[i][:15] + ".." if len(labels[i]) > 15 else labels[i]
+            canvas.setFont('Helvetica-Bold', 6)
             if math.cos(rad) > 0.1:
                 canvas.drawString(lx, ly - 2, label_txt.upper())
             elif math.cos(rad) < -0.1:

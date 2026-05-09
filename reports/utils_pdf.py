@@ -221,10 +221,15 @@ class RespondentReportRL:
             canvas.setLineWidth(0.5)
             canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
             # Label
-            lx = x + (max_r + 8*mm)*math.cos(rad)
-            ly = y + (max_r + 8*mm)*math.sin(rad)
+            lx = x + (max_r + 10*mm)*math.cos(rad)
+            ly = y + (max_r + 10*mm)*math.sin(rad)
             label_txt = labels[i][:18] + ".." if len(labels[i]) > 18 else labels[i]
-            canvas.drawCentredString(lx, ly, label_txt.upper())
+            if math.cos(rad) > 0.1:
+                canvas.drawString(lx, ly - 2, label_txt.upper())
+            elif math.cos(rad) < -0.1:
+                canvas.drawRightString(lx, ly - 2, label_txt.upper())
+            else:
+                canvas.drawCentredString(lx, ly - 2, label_txt.upper())
 
         # Data Polygon
         points = []
@@ -621,10 +626,15 @@ class DepartmentReportRL:
             canvas.setLineWidth(0.5)
             canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
             # Label
-            lx = x + (max_r + 8*mm)*math.cos(rad)
-            ly = y + (max_r + 8*mm)*math.sin(rad)
+            lx = x + (max_r + 10*mm)*math.cos(rad)
+            ly = y + (max_r + 10*mm)*math.sin(rad)
             label_txt = labels[i][:18] + ".." if len(labels[i]) > 18 else labels[i]
-            canvas.drawCentredString(lx, ly, label_txt.upper())
+            if math.cos(rad) > 0.1:
+                canvas.drawString(lx, ly - 2, label_txt.upper())
+            elif math.cos(rad) < -0.1:
+                canvas.drawRightString(lx, ly - 2, label_txt.upper())
+            else:
+                canvas.drawCentredString(lx, ly - 2, label_txt.upper())
 
         # Data Polygon
         points = []

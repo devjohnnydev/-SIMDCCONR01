@@ -881,74 +881,41 @@
     <div class="step-row">
       <div class="step-content">
         <span class="step-num">01</span>
-        <h3>Modelos e Coleta</h3>
-        <p>Acesse o painel administrativo para baixar o formulário de avaliação manual para impressão ou envie links digitais, garantindo o início imediato da coleta de dados.</p>
+        <h3>Cadastro e Organização</h3>
+        <p>Cadastre suas empresas e defina setores e GHEs em um ambiente unificado. O sistema permite o gerenciamento de múltiplos CNPJs em um painel administrativo centralizado.</p>
       </div>
-      <div class="step-img"><img src="{% static 'img/step1.png' %}" alt="Coleta de dados"></div>
+      <div class="step-img"><img src="{% static 'img/step1.png' %}" alt="Cadastro de Empresas e GHE"></div>
     </div>
 
     <div class="step-row">
       <div class="step-content">
         <span class="step-num">02</span>
-        <h3>Dashboard Estratégico</h3>
-        <p>Acompanhe em tempo real métricas cruciais como o total de empresas, avaliações recentes e relatórios salvos, visualizando a distribuição por segmento em gráficos intuitivos.</p>
+        <h3>Coleta de Dados</h3>
+        <p>Envie formulários estruturados via links digitais e monitore o andamento das respostas, garantindo a avaliação rápida dos fatores organizacionais e psicossociais.</p>
       </div>
-      <div class="step-img"><img src="{% static 'img/step2.png' %}" alt="Dashboard"></div>
+      <div class="step-img"><img src="{% static 'img/step2.png' %}" alt="Coleta e Envios"></div>
     </div>
 
     <div class="step-row">
       <div class="step-content">
         <span class="step-num">03</span>
-        <h3>Avaliação Estruturada</h3>
-        <p>Aplique avaliações métricas organizadas por categorias de risco para mapear detalhadamente todos os fatores psicossociais e organizacionais do ambiente de trabalho.</p>
+        <h3>Análise e Diagnóstico</h3>
+        <p>A plataforma consolida as respostas, fornecendo diagnósticos precisos com laudos periciais e relatórios de evolução segmentados por GHE e ambiente de trabalho.</p>
       </div>
-      <div class="step-img"><img src="{% static 'img/step3.png' %}" alt="Avaliação"></div>
+      <div class="step-img"><img src="{% static 'img/step3.png' %}" alt="Laudos e Análise"></div>
     </div>
 
     <div class="step-row">
       <div class="step-content">
         <span class="step-num">04</span>
-        <h3>Inventário de Riscos (PGR)</h3>
-        <p>Gere automaticamente a matriz de risco e obtenha o inventário ocupacional completo, estruturado com probabilidade e severidade para integração imediata ao seu PGR/GRO.</p>
+        <h3>Inventário de Riscos e GRO</h3>
+        <p>Obtenha seu inventário de riscos completo, incluindo matrizes de probabilidade e severidade, além de recomendações de planos de ação prontos para integração ao PGR.</p>
       </div>
-      <div class="step-img"><img src="{% static 'img/step4.png' %}" alt="Inventário"></div>
+      <div class="step-img"><img src="{% static 'img/step4.png' %}" alt="Inventário PGR/GRO"></div>
     </div>
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section id="testimonials" class="testi-section">
-  <div class="section-inner">
-    <div class="section-header">
-      <span class="section-label">O MERCADO COMPROVA</span>
-      <h2 class="section-title">O que dizem os especialistas</h2>
-    </div>
-  </div>
-  <div class="testi-track-wrap">
-    <div class="testi-track">
-      {% for t in testimonials %}
-      <div class="testi-card">
-        <div class="testi-stars">{% for i in "12345" %}{% if forloop.counter <= t.rating %}<i class="bi bi-star-fill"></i>{% endif %}{% endfor %}</div>
-        <blockquote>"{{ t.content }}"</blockquote>
-        <div class="testi-footer">
-          <div class="testi-avatar">{{ t.author_name|slice:":1" }}</div>
-          <div class="testi-info"><strong>{{ t.author_name }}</strong><span>{{ t.author_role }} @ {{ t.author_company }}</span></div>
-        </div>
-      </div>
-      {% endfor %}
-      {% for t in testimonials %}
-      <div class="testi-card">
-        <div class="testi-stars">{% for i in "12345" %}{% if forloop.counter <= t.rating %}<i class="bi bi-star-fill"></i>{% endif %}{% endfor %}</div>
-        <blockquote>"{{ t.content }}"</blockquote>
-        <div class="testi-footer">
-          <div class="testi-avatar">{{ t.author_name|slice:":1" }}</div>
-          <div class="testi-info"><strong>{{ t.author_name }}</strong><span>{{ t.author_role }} @ {{ t.author_company }}</span></div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
 
 <!-- TIMELINE (O QUE FAZ) -->
 <section class="timeline-section" id="o-que-faz">
@@ -968,8 +935,8 @@
           <h4><i class="bi bi-database-add"></i> Centralização e Coleta</h4>
           <ul class="timeline-list">
             <li>Substitua planilhas, papel e links avulsos. Centralize tudo em um só lugar. <i class="bi bi-check"></i></li>
-            <li>Levantamento automático de fatores de risco com identificação rápida. <i class="bi bi-check"></i></li>
-            <li>Segmentação por setor, GHE, GES ou ambiente de trabalho. <i class="bi bi-check"></i></li>
+            <li>Levantamento estruturado de fatores de risco organizacionais. <i class="bi bi-check"></i></li>
+            <li>Organização clara por setor e GHE para integração com PGR. <i class="bi bi-check"></i></li>
           </ul>
         </div>
       </div>
@@ -981,8 +948,8 @@
           <h4><i class="bi bi-gear-wide-connected"></i> Gestão Estratégica</h4>
           <ul class="timeline-list">
             <li><i class="bi bi-check"></i> Avaliações em períodos personalizados para monitorar evolução.</li>
-            <li><i class="bi bi-check"></i> Planos de ação e sugestões automáticas baseadas na legislação.</li>
-            <li><i class="bi bi-check"></i> Reavaliações e comparativos de resultados entre ciclos.</li>
+            <li><i class="bi bi-check"></i> Geração de inventário e sugestões de medidas preventivas.</li>
+            <li><i class="bi bi-check"></i> Reavaliações periódicas para comparar resultados e eficácia.</li>
           </ul>
         </div>
       </div>
@@ -993,9 +960,9 @@
         <div class="timeline-card">
           <h4><i class="bi bi-shield-check"></i> Segurança Jurídica</h4>
           <ul class="timeline-list">
-            <li>Garante anonimato dos colaboradores conforme diretrizes da LGPD. <i class="bi bi-check"></i></li>
-            <li>Metodologia validada pelo MTE para evitar custos em auditorias. <i class="bi bi-check"></i></li>
-            <li>Relatórios de Gestão prontos para serem anexados ao PGR/GRO. <i class="bi bi-check"></i></li>
+            <li>Conformidade com a LGPD e acesso controlado às informações. <i class="bi bi-check"></i></li>
+            <li>Metodologia alinhada às normativas vigentes do MTE (NR-01, NR-17). <i class="bi bi-check"></i></li>
+            <li>Laudos empresariais e individuais prontos para comprovar regularidade. <i class="bi bi-check"></i></li>
           </ul>
         </div>
       </div>
@@ -1006,9 +973,9 @@
         <div class="timeline-card">
           <h4><i class="bi bi-file-earmark-zip"></i> Integração com PGR</h4>
           <ul class="timeline-list">
-            <li><i class="bi bi-check"></i> Inventário de Riscos com tabelas prontas sem complicações.</li>
-            <li><i class="bi bi-check"></i> Matriz Automatizada baseada em severidade e probabilidade.</li>
-            <li><i class="bi bi-check"></i> Documentação Técnica completa pronta para fiscalização.</li>
+            <li><i class="bi bi-check"></i> Inventário de Riscos com tabelas de probabilidade e severidade.</li>
+            <li><i class="bi bi-check"></i> Cruzamento de dados automatizado para os planos de ação.</li>
+            <li><i class="bi bi-check"></i> Documentação técnica completa para apoiar fiscalizações.</li>
           </ul>
         </div>
       </div>

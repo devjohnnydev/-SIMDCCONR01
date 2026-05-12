@@ -170,13 +170,13 @@
 
                     {# ═══════════════════════ GRÁFICO + RISCOS ═══════════════════════ #}
                     <div class="row g-4 mb-5">
-                        <div class="col-lg-5">
+                        <div class="col-lg-12">
                             <div class="section-title"><i class="bi bi-diagram-3 me-1"></i>Perfil Dimensional (IMCO)</div>
-                            <div class="p-3 bg-white rounded-4 border shadow-sm" style="height: 380px;">
+                            <div class="p-3 bg-white rounded-4 border shadow-sm" style="height: 500px; width: 100%;">
                                 <canvas id="radarDept"></canvas>
                             </div>
                         </div>
-                        <div class="col-lg-7">
+                        <div class="col-lg-12">
                             <div class="section-title"><i class="bi bi-exclamation-triangle me-1"></i>Clusters de Risco</div>
                             {% if engine_data.risk_clusters %}
                             <div class="table-responsive">
@@ -453,16 +453,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     suggestedMin: 0, suggestedMax: 100,
                     ticks: { stepSize: 20, display: false, backdropColor: 'transparent' },
                     pointLabels: { 
-                        font: { size: 8.5, family: "'Inter', sans-serif", weight: '600' }, 
+                        font: { size: 9, family: "'Inter', sans-serif", weight: '600' }, 
                         color: '#475569',
-                        padding: 8,
+                        padding: 12,
                         callback: function(label) {
-                            if (label.length <= 14) return label;
+                            if (label.length <= 12) return label;
                             const words = label.split(' ');
                             const lines = [];
                             let current = '';
                             words.forEach(w => {
-                                if ((current + ' ' + w).trim().length <= 14) {
+                                if ((current + ' ' + w).trim().length <= 12) {
                                     current = (current + ' ' + w).trim();
                                 } else {
                                     if (current) lines.push(current);

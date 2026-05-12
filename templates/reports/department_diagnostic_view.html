@@ -172,7 +172,7 @@
                     <div class="row g-4 mb-5">
                         <div class="col-lg-5">
                             <div class="section-title"><i class="bi bi-diagram-3 me-1"></i>Perfil Dimensional (IMCO)</div>
-                            <div class="p-3 bg-white rounded-4 border shadow-sm" style="height: 320px;">
+                            <div class="p-3 bg-white rounded-4 border shadow-sm" style="height: 380px;">
                                 <canvas id="radarDept"></canvas>
                             </div>
                         </div>
@@ -437,6 +437,9 @@ document.addEventListener("DOMContentLoaded", function () {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+                padding: { top: 30, bottom: 30, left: 20, right: 20 }
+            },
             plugins: {
                 legend: {
                     position: 'bottom',
@@ -448,8 +451,28 @@ document.addEventListener("DOMContentLoaded", function () {
                     angleLines: { display: true, color: 'rgba(0,0,0,0.04)' },
                     grid: { color: 'rgba(0,0,0,0.04)' },
                     suggestedMin: 0, suggestedMax: 100,
-                    ticks: { stepSize: 20, display: false },
-                    pointLabels: { font: { size: 9, family: "'Inter', sans-serif", weight: '600' }, color: '#475569' }
+                    ticks: { stepSize: 20, display: false, backdropColor: 'transparent' },
+                    pointLabels: { 
+                        font: { size: 8.5, family: "'Inter', sans-serif", weight: '600' }, 
+                        color: '#475569',
+                        padding: 8,
+                        callback: function(label) {
+                            if (label.length <= 14) return label;
+                            const words = label.split(' ');
+                            const lines = [];
+                            let current = '';
+                            words.forEach(w => {
+                                if ((current + ' ' + w).trim().length <= 14) {
+                                    current = (current + ' ' + w).trim();
+                                } else {
+                                    if (current) lines.push(current);
+                                    current = w;
+                                }
+                            });
+                            if (current) lines.push(current);
+                            return lines;
+                        }
+                    }
                 }
             }
         }

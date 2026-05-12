@@ -9,12 +9,29 @@ from .models import EvolutionSnapshot, RiskScoreHistory, DimensionEvolution
 
 
 def _get_company(request):
+    """Helper: retorna a empresa do usuário ou da sessão para admin_master."""
     if request.user.is_admin_master:
-        from companies.models import Company
-        company_pk = request.GET.get('company')
+        # Prioridade 1: Parametro GET ou POST
+        company_pk = request.GET.get('company') or request.POST.get('company')
         if company_pk:
+            request.session['selected_company_id'] = str(company_pk)
+            from companies.models import Company
             return get_object_or_404(Company, pk=company_pk)
-        return Company.objects.filter(status='ACTIVE').first()
+            
+        # Prioridade 2: Sessão
+        session_company_id = request.session.get('selected_company_id')
+        if session_company_id:
+            from companies.models import Company
+            company = Company.objects.filter(pk=session_company_id).first()
+            if company:
+                return company
+
+        # Para admin_master sem company selecionada, usar a primeira ativa
+        from companies.models import Company
+        company = Company.objects.filter(status='ACTIVE').first()
+        if company:
+            request.session['selected_company_id'] = str(company.pk)
+        return company
     return request.user.company
 
 

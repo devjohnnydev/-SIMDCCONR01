@@ -222,17 +222,29 @@ class RespondentReportRL:
             canvas.setLineWidth(0.5)
             canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
             # Label
-            dist = max_r + (12*mm if i % 2 == 0 else 5*mm)
+            dist = max_r + (15*mm if i % 2 == 0 else 5*mm)
             lx = x + dist*math.cos(rad)
             ly = y + dist*math.sin(rad)
-            label_txt = labels[i][:15] + ".." if len(labels[i]) > 15 else labels[i]
-            canvas.setFont('Helvetica-Bold', 6)
-            if math.cos(rad) > 0.1:
-                canvas.drawString(lx, ly - 2, label_txt.upper())
-            elif math.cos(rad) < -0.1:
-                canvas.drawRightString(lx, ly - 2, label_txt.upper())
+            
+            words = labels[i].split(' ')
+            if len(labels[i]) > 12 and len(words) >= 2:
+                lines = [words[0], " ".join(words[1:])]
             else:
-                canvas.drawCentredString(lx, ly - 2, label_txt.upper())
+                lines = [labels[i]]
+            lines = [l[:16] + ".." if len(l) > 16 else l for l in lines]
+            
+            canvas.setFont('Helvetica-Bold', 5.5)
+            line_height = 6
+            start_y = ly + (len(lines) - 1) * (line_height / 2) - 2
+            
+            for idx_l, line_txt in enumerate(lines):
+                draw_y = start_y - (idx_l * line_height)
+                if math.cos(rad) > 0.1:
+                    canvas.drawString(lx, draw_y, line_txt.upper())
+                elif math.cos(rad) < -0.1:
+                    canvas.drawRightString(lx, draw_y, line_txt.upper())
+                else:
+                    canvas.drawCentredString(lx, draw_y, line_txt.upper())
 
         # Data Polygon
         points = []
@@ -629,17 +641,29 @@ class DepartmentReportRL:
             canvas.setLineWidth(0.5)
             canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
             # Label
-            dist = max_r + (12*mm if i % 2 == 0 else 5*mm)
+            dist = max_r + (15*mm if i % 2 == 0 else 5*mm)
             lx = x + dist*math.cos(rad)
             ly = y + dist*math.sin(rad)
-            label_txt = labels[i][:15] + ".." if len(labels[i]) > 15 else labels[i]
-            canvas.setFont('Helvetica-Bold', 6)
-            if math.cos(rad) > 0.1:
-                canvas.drawString(lx, ly - 2, label_txt.upper())
-            elif math.cos(rad) < -0.1:
-                canvas.drawRightString(lx, ly - 2, label_txt.upper())
+            
+            words = labels[i].split(' ')
+            if len(labels[i]) > 12 and len(words) >= 2:
+                lines = [words[0], " ".join(words[1:])]
             else:
-                canvas.drawCentredString(lx, ly - 2, label_txt.upper())
+                lines = [labels[i]]
+            lines = [l[:16] + ".." if len(l) > 16 else l for l in lines]
+            
+            canvas.setFont('Helvetica-Bold', 5.5)
+            line_height = 6
+            start_y = ly + (len(lines) - 1) * (line_height / 2) - 2
+            
+            for idx_l, line_txt in enumerate(lines):
+                draw_y = start_y - (idx_l * line_height)
+                if math.cos(rad) > 0.1:
+                    canvas.drawString(lx, draw_y, line_txt.upper())
+                elif math.cos(rad) < -0.1:
+                    canvas.drawRightString(lx, draw_y, line_txt.upper())
+                else:
+                    canvas.drawCentredString(lx, draw_y, line_txt.upper())
 
         # Data Polygon
         points = []
@@ -903,17 +927,29 @@ class OrganizationalReportRL:
             canvas.setStrokeColor(COL_SLATE_500)
             canvas.setLineWidth(0.5)
             canvas.line(x, y, x + max_r*math.cos(rad), y + max_r*math.sin(rad))
-            dist = max_r + (12*mm if i % 2 == 0 else 5*mm)
+            dist = max_r + (15*mm if i % 2 == 0 else 5*mm)
             lx = x + dist*math.cos(rad)
             ly = y + dist*math.sin(rad)
-            label_txt = labels[i][:15] + ".." if len(labels[i]) > 15 else labels[i]
-            canvas.setFont('Helvetica-Bold', 6)
-            if math.cos(rad) > 0.1:
-                canvas.drawString(lx, ly - 2, label_txt.upper())
-            elif math.cos(rad) < -0.1:
-                canvas.drawRightString(lx, ly - 2, label_txt.upper())
+            
+            words = labels[i].split(' ')
+            if len(labels[i]) > 12 and len(words) >= 2:
+                lines = [words[0], " ".join(words[1:])]
             else:
-                canvas.drawCentredString(lx, ly - 2, label_txt.upper())
+                lines = [labels[i]]
+            lines = [l[:16] + ".." if len(l) > 16 else l for l in lines]
+            
+            canvas.setFont('Helvetica-Bold', 5.5)
+            line_height = 6
+            start_y = ly + (len(lines) - 1) * (line_height / 2) - 2
+            
+            for idx_l, line_txt in enumerate(lines):
+                draw_y = start_y - (idx_l * line_height)
+                if math.cos(rad) > 0.1:
+                    canvas.drawString(lx, draw_y, line_txt.upper())
+                elif math.cos(rad) < -0.1:
+                    canvas.drawRightString(lx, draw_y, line_txt.upper())
+                else:
+                    canvas.drawCentredString(lx, draw_y, line_txt.upper())
 
         points = []
         for i, val in enumerate(values):

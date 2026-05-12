@@ -457,6 +457,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         color: '#475569',
                         padding: 12,
                         callback: function(label) {
+                            if (label.includes("CLAREZA")) {
+                                return ["CLAREZA", "ORGANIZACIONAL"];
+                            }
+                            if (label.includes("COMPETIÇÃO")) {
+                                return ["", "COMPETIÇÃO"]; // Adiciona linha em branco para empurrar o texto para baixo e afastar
+                            }
                             if (label.length <= 12) return label;
                             const words = label.split(' ');
                             const lines = [];

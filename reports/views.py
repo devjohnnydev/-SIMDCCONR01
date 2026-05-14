@@ -741,17 +741,16 @@ def download_department_pdf(request, setor, form_id):
     from .models import DepartmentDiagnostic
     from .utils_pdf import DepartmentReportRL
     
-    # 1. Recupera o laudo
-    report = get_object_or_404(
-        DepartmentDiagnostic, 
-        company=request.user.company, 
-        setor=setor, 
-        form_instance_id=form_id
-    )
-    
-    # 2. Verifica permissão
+    # 1. Verifica permissão básica
     if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
         return HttpResponse("Acesso negado", status=403)
+        
+    # 2. Recupera o laudo com base na role
+    lookup = {'setor': setor, 'form_instance_id': form_id}
+    if request.user.role == 'COMPANY_ADMIN':
+        lookup['company'] = request.user.company
+        
+    report = get_object_or_404(DepartmentDiagnostic, **lookup)
         
     try:
         from .engine_text import TextEngine

@@ -296,6 +296,15 @@ def generate_simdcconr01_report(request, form_pk):
     except Exception as e:
         logger.warning(f'Erro ao criar snapshot de evolução: {e}')
 
+    # Arquivar no repositório de documentos da empresa
+    try:
+        from .services import archive_report_to_documents, notify_company_report_ready
+        titulo = f'Laudo Pericial Organizacional — {form_instance.title}'
+        doc = archive_report_to_documents(pdf, company, titulo, user=request.user)
+        notify_company_report_ready(company, titulo, document=doc)
+    except Exception as e:
+        logger.warning(f'Erro ao arquivar relatório: {e}')
+
     # Log de auditoria
     AuditLog.log(
         user=request.user,

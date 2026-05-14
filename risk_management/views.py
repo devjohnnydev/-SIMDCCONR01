@@ -41,15 +41,11 @@ def _get_company(request):
 
 @login_required
 def gro_dashboard(request):
-    """Dashboard do ciclo GRO — somente ADMIN_MASTER."""
-    if not request.user.is_admin_master:
-        messages.error(request, 'Acesso restrito ao administrador. Utilize o menu Planos de Ação.')
-        return redirect('risk_management:action_plan_list')
-
+    """Dashboard do ciclo GRO — visualização para empresa (somente leitura) e admin (completo)."""
     company = _get_company(request)
     if not company:
         messages.warning(request, 'Selecione uma empresa para visualizar o painel de riscos.')
-        return redirect('companies:list')
+        return redirect('companies:list') if request.user.is_admin_master else redirect('accounts:dashboard')
 
     hazards = HazardRegistry.objects.filter(company=company)
     action_plans = ActionPlan.objects.filter(company=company)
@@ -89,6 +85,9 @@ def gro_dashboard(request):
         from companies.models import Company
         companies_list = Company.objects.filter(status='ACTIVE')
 
+    # Empresa vê o dashboard em modo somente-leitura (sem criar/editar perigos)
+    is_readonly = not request.user.is_admin_master
+
     context = {
         'company': company,
         'total_hazards': total_hazards,
@@ -102,6 +101,7 @@ def gro_dashboard(request):
         'plans_concluido': plans_dict.get('CONCLUIDO', 0),
         'overdue_plans': overdue_plans,
         'companies_list': companies_list,
+        'is_readonly': is_readonly,
     }
     return render(request, 'risk_management/gro_dashboard.html', context)
 

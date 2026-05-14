@@ -25,12 +25,14 @@
                 </select>
             </form>
             {% endif %}
+            {% if not is_readonly %}
             <a href="{% url 'risk_management:hazard_create' %}" class="btn btn-primary">
                 <i class="bi bi-plus-lg me-1"></i> Novo Perigo
             </a>
             <a href="{% url 'risk_management:risk_matrix' %}" class="btn btn-outline-primary">
                 <i class="bi bi-grid-3x3 me-1"></i> Matriz 5×5
             </a>
+            {% endif %}
         </div>
     </div>
 
@@ -97,9 +99,13 @@
                                 <div class="mb-2"><i class="bi bi-search display-5 text-danger"></i></div>
                                 <h6 class="fw-bold">1. Identificar</h6>
                                 <p class="small text-muted mb-2">Perigos cadastrados por setor, função e atividade</p>
+                                {% if not is_readonly %}
                                 <a href="{% url 'risk_management:hazard_list' %}" class="btn btn-sm btn-outline-danger">
                                     {{ total_hazards }} perigo{{ total_hazards|pluralize:"s" }}
                                 </a>
+                                {% else %}
+                                <span class="badge bg-danger">{{ total_hazards }} perigo{{ total_hazards|pluralize:"s" }}</span>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -107,9 +113,13 @@
                                 <div class="mb-2"><i class="bi bi-clipboard-data display-5 text-warning"></i></div>
                                 <h6 class="fw-bold">2. Avaliar</h6>
                                 <p class="small text-muted mb-2">Probabilidade × Severidade na Matriz 5×5</p>
+                                {% if not is_readonly %}
                                 <a href="{% url 'risk_management:risk_matrix' %}" class="btn btn-sm btn-outline-warning">
                                     Ver Matriz
                                 </a>
+                                {% else %}
+                                <span class="badge bg-warning">Avaliado pelo consultor</span>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -180,15 +190,19 @@
             <div class="card mt-4">
                 <div class="card-header"><strong><i class="bi bi-lightning me-2"></i>Ações Rápidas</strong></div>
                 <div class="card-body d-grid gap-2">
+                    {% if not is_readonly %}
                     <a href="{% url 'risk_management:hazard_create' %}" class="btn btn-outline-danger btn-sm">
                         <i class="bi bi-plus-circle me-1"></i> Registrar Novo Perigo
                     </a>
+                    {% endif %}
                     <a href="{% url 'risk_management:action_plan_create' %}" class="btn btn-outline-primary btn-sm">
                         <i class="bi bi-list-task me-1"></i> Criar Plano de Ação
                     </a>
+                    {% if not is_readonly %}
                     <a href="{% url 'risk_management:hazard_list' %}" class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-table me-1"></i> Inventário Completo
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

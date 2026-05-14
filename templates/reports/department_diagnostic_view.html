@@ -183,8 +183,9 @@
                                 <table class="matrix-table">
                                     <thead>
                                         <tr>
-                                            <th>Instrumento</th>
+                                            <th>Vetor</th>
                                             <th>Dimensão</th>
+                                            <th>Instr.</th>
                                             <th>Média</th>
                                             <th>Classificação</th>
                                             <th>Nível de Risco</th>
@@ -193,8 +194,9 @@
                                     <tbody>
                                         {% for cluster in engine_data.risk_clusters %}
                                         <tr>
-                                            <td><span class="badge bg-dark bg-opacity-10 text-dark rounded-pill" style="font-size: 0.65rem;">{{ cluster.instrumento }}</span></td>
+                                            <td class="fw-semibold" style="font-size: 0.75rem;">{{ cluster.vetor }}</td>
                                             <td class="fw-medium text-dark">{{ cluster.dimensao }}</td>
+                                            <td><span class="badge bg-dark bg-opacity-10 text-dark rounded-pill" style="font-size: 0.65rem;">{{ cluster.instrumento }}</span></td>
                                             <td class="fw-bold">{{ cluster.media }}</td>
                                             <td>
                                                 <span class="risk-badge {% if cluster.classificacao_key == 'critico' %}risk-critico{% else %}risk-atencao{% endif %}">
@@ -224,19 +226,21 @@
                             <table class="matrix-table mb-0">
                                 <thead>
                                     <tr>
-                                        <th style="width:15%">Instrumento</th>
-                                        <th style="width:30%">Dimensão</th>
-                                        <th style="width:10%">Média</th>
-                                        <th style="width:15%">Classificação</th>
-                                        <th style="width:10%">Respostas</th>
-                                        <th style="width:20%">Nível de Risco (PGR)</th>
+                                        <th style="width:12%">Vetor</th>
+                                        <th style="width:20%">Dimensão</th>
+                                        <th style="width:10%">Instr.</th>
+                                        <th style="width:8%">Média</th>
+                                        <th style="width:12%">Classificação</th>
+                                        <th style="width:8%">Respostas</th>
+                                        <th style="width:15%">Nível de Risco (PGR)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for item in engine_data.consolidation %}
                                     <tr>
-                                        <td><span class="badge bg-primary bg-opacity-10 text-primary rounded-pill" style="font-size: 0.65rem;">{{ item.instrumento }}</span></td>
+                                        <td class="fw-semibold" style="font-size: 0.75rem;">{{ item.vetor }}</td>
                                         <td class="fw-medium text-dark">{{ item.dimensao }}</td>
+                                        <td><span class="badge bg-primary bg-opacity-10 text-primary rounded-pill" style="font-size: 0.65rem;">{{ item.instrumento }}</span></td>
                                         <td class="fw-bold">{{ item.media }}</td>
                                         <td>
                                             <span class="risk-badge {% if item.classificacao_key == 'critico' %}risk-critico{% elif item.classificacao_key == 'atencao' %}risk-atencao{% elif item.classificacao_key == 'adequado' %}risk-adequado{% else %}risk-forte{% endif %}">

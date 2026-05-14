@@ -119,15 +119,16 @@
             {% if report_data.dimension_summary %}
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-header bg-white p-3 border-0 rounded-top-4">
-                    <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-grid-3x3-gap text-primary me-2"></i>Síntese por Dimensão</h6>
+                    <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-grid-3x3-gap text-primary me-2"></i>Síntese por Vetor e Dimensão</h6>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-sm align-middle mb-0" style="font-size: 0.78rem;">
                             <thead style="background: #f8fafc;">
                                 <tr>
-                                    <th class="text-muted text-uppercase border-0 px-3 py-2" style="font-size: 0.6rem; letter-spacing: 0.8px;">Instrumento</th>
+                                    <th class="text-muted text-uppercase border-0 px-3 py-2" style="font-size: 0.6rem; letter-spacing: 0.8px;">Vetor</th>
                                     <th class="text-muted text-uppercase border-0 py-2" style="font-size: 0.6rem; letter-spacing: 0.8px;">Dimensão</th>
+                                    <th class="text-muted text-uppercase border-0 py-2" style="font-size: 0.6rem; letter-spacing: 0.8px;">Instr.</th>
                                     <th class="text-muted text-uppercase border-0 py-2 text-center" style="font-size: 0.6rem; letter-spacing: 0.8px;">Média</th>
                                     <th class="text-muted text-uppercase border-0 py-2" style="font-size: 0.6rem; letter-spacing: 0.8px;">Status</th>
                                     <th class="text-muted text-uppercase border-0 py-2 text-center" style="font-size: 0.6rem; letter-spacing: 0.8px;">Itens</th>
@@ -136,8 +137,9 @@
                             <tbody>
                                 {% for dim in report_data.dimension_summary %}
                                 <tr style="border-bottom: 1px solid #f1f5f9;">
-                                    <td class="px-3"><span class="badge bg-primary bg-opacity-10 text-primary rounded-pill" style="font-size: 0.6rem;">{{ dim.instrumento }}</span></td>
+                                    <td class="px-3 fw-semibold" style="font-size: 0.75rem;">{{ dim.vetor }}</td>
                                     <td class="fw-medium text-dark">{{ dim.dimensao }}</td>
+                                    <td><span class="badge bg-primary bg-opacity-10 text-primary rounded-pill" style="font-size: 0.6rem;">{{ dim.instrumento }}</span></td>
                                     <td class="fw-bold text-center">{{ dim.media }}</td>
                                     <td>
                                         <span class="badge rounded-pill {% if dim.classificacao_key == 'critico' %}bg-danger{% elif dim.classificacao_key == 'atencao' %}bg-warning text-dark{% elif dim.classificacao_key == 'adequado' %}bg-success{% else %}bg-primary{% endif %}" style="font-size: 0.6rem;">
@@ -391,20 +393,22 @@
                             <table class="table table-sm table-borderless align-middle mb-0" style="font-size: 0.75rem;">
                                 <thead style="border-bottom: 2px solid #e9ecef;">
                                     <tr>
-                                        <th style="width: 8%" class="text-muted text-uppercase">ID</th>
-                                        <th style="width: 40%" class="text-muted text-uppercase">Item / Pergunta</th>
-                                        <th style="width: 15%" class="text-muted text-uppercase">Constructo</th>
-                                        <th style="width: 15%" class="text-muted text-uppercase">Referência</th>
-                                        <th style="width: 10%" class="text-center text-muted text-uppercase">Valor</th>
-                                        <th style="width: 12%" class="text-muted text-uppercase">Status</th>
+                                        <th style="width: 7%" class="text-muted text-uppercase">ID</th>
+                                        <th style="width: 10%" class="text-muted text-uppercase">Vetor</th>
+                                        <th style="width: 12%" class="text-muted text-uppercase">Dimensão</th>
+                                        <th style="width: 30%" class="text-muted text-uppercase">Item / Pergunta</th>
+                                        <th style="width: 12%" class="text-muted text-uppercase">Referência</th>
+                                        <th style="width: 8%" class="text-center text-muted text-uppercase">Valor</th>
+                                        <th style="width: 10%" class="text-muted text-uppercase">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for item in cat_data.items %}
                                     <tr style="border-bottom: 1px solid #e9ecef;">
                                         <td class="fw-bold" style="color: {{ cat_data.meta.color }};">{{ item.id_item }}</td>
+                                        <td class="text-muted" style="font-size: 0.7rem;">{{ item.vetor }}</td>
+                                        <td class="text-muted" style="font-size: 0.7rem;">{{ item.dimensao }}</td>
                                         <td class="text-wrap text-dark">{{ item.pergunta }}</td>
-                                        <td class="text-muted">{{ item.constructo }}</td>
                                         <td class="text-muted">{{ item.autor }} ({{ item.ano }})</td>
                                         <td class="fw-bold text-center text-dark">{{ item.valor|default:"-" }}</td>
                                         <td>

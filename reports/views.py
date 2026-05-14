@@ -722,6 +722,15 @@ def download_department_pdf(request, setor, form_id):
         
         pdf_bytes = buffer.getvalue()
         buffer.close()
+
+        # Arquivar no repositório de documentos
+        try:
+            from .services import archive_report_to_documents, notify_company_report_ready
+            titulo = f'Laudo Setorial — {setor} — {report.form_instance.title}'
+            doc = archive_report_to_documents(pdf_bytes, report.company, titulo, user=request.user)
+            notify_company_report_ready(report.company, titulo, document=doc)
+        except Exception as arch_e:
+            logger.warning(f'Erro ao arquivar relatório setorial: {arch_e}')
         
         safe_setor = slugify(setor)
         filename = f"laudo_setorial_{safe_setor}_{timezone.now().strftime('%Y%m%d')}.pdf"

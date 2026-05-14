@@ -375,6 +375,30 @@ class RespondentReportRL:
             story.append(Spacer(1, 4*mm))
 
         # ═══════════════════════════════════════════════
+        # 3.1 TABELA VETOR × DIMENSÃO (Resumo Individual)
+        # ═══════════════════════════════════════════════
+        dim_summary = report_data.get('dimension_summary', [])
+        if dim_summary:
+            story.append(Paragraph("Síntese por Vetor e Dimensão", self.styles['Heading2']))
+            # Converter dimension_summary para o formato esperado pela tabela
+            items_for_table = []
+            for dim in dim_summary:
+                from reports.knowledge_base import RISK_RULES
+                key = dim.get('classificacao_key', 'adequado')
+                risk_info = RISK_RULES.get(key, RISK_RULES['adequado'])
+                items_for_table.append({
+                    'vetor': dim.get('vetor', ''),
+                    'dimensao': dim.get('dimensao', ''),
+                    'instrumento': dim.get('instrumento', ''),
+                    'media': dim.get('media', 0),
+                    'classificacao': dim.get('classificacao', ''),
+                    'classificacao_key': key,
+                    'acao_pgr': risk_info.get('acao_pgr', ''),
+                })
+            story.append(_build_vetor_dimension_table(self.styles, items_for_table))
+            story.append(Spacer(1, 6*mm))
+
+        # ═══════════════════════════════════════════════
         # 4. RELATÓRIO ESTRUTURADO (sem PageBreak!)
         # ═══════════════════════════════════════════════
         story.append(Paragraph("Relatório Estruturado", self.styles['Heading2']))

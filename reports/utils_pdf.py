@@ -74,12 +74,12 @@ def _build_vetor_dimension_table(styles, items, title='Matriz de Risco por Vetor
     for item in items:
         vetor = item.get('vetor', item.get('dimensao', ''))
         data.append([
-            Paragraph(f"<font size=7>{saxutils.escape(vetor)}</font>", styles['Normal']),
-            Paragraph(f"<font size=7>{saxutils.escape(item.get('dimensao', ''))}</font>", styles['Normal']),
-            Paragraph(f"<font size=7 color='#2563eb'>{item.get('instrumento', '')}</font>", styles['Normal']),
+            Paragraph(f"<font size=7>{saxutils.escape(str(vetor))}</font>", styles['Normal']),
+            Paragraph(f"<font size=7>{saxutils.escape(str(item.get('dimensao', '')))}</font>", styles['Normal']),
+            Paragraph(f"<font size=7 color='#2563eb'>{str(item.get('instrumento', ''))}</font>", styles['Normal']),
             Paragraph(f"<font size=8><b>{item.get('media', '-')}</b></font>", styles['Normal']),
-            Paragraph(f"<font size=7><b>{saxutils.escape(item.get('classificacao', '-'))}</b></font>", styles['Normal']),
-            Paragraph(f"<font size=6 color='#64748b'>{saxutils.escape(item.get('acao_pgr', item.get('risco', '-')))}</font>", styles['Normal']),
+            Paragraph(f"<font size=7><b>{saxutils.escape(str(item.get('classificacao', '-')))}</b></font>", styles['Normal']),
+            Paragraph(f"<font size=6 color='#64748b'>{saxutils.escape(str(item.get('acao_pgr', item.get('risco', '-'))))}</font>", styles['Normal']),
         ])
     
     tbl = Table(data, colWidths=col_widths, repeatRows=1)
@@ -474,12 +474,12 @@ class RespondentReportRL:
             story.append(Spacer(1, 5*mm))
             story.append(Paragraph("5. Análise por Dimensão — Fundamentação Teórica", self.styles['Heading2']))
             for dim in dim_analysis:
-                story.append(Paragraph(f"<b>{saxutils.escape(dim['dimensao'])} ({saxutils.escape(dim['vetor'])}) — {dim['instrumento']}</b>", self.styles['Heading4']))
+                story.append(Paragraph(f"<b>{saxutils.escape(str(dim.get('dimensao', '')))} ({saxutils.escape(str(dim.get('vetor', '')))}) — {str(dim.get('instrumento', ''))}</b>", self.styles['Heading4']))
                 if dim.get('interpretacao'):
-                    story.append(Paragraph(saxutils.escape(dim['interpretacao']), self.styles['Normal']))
-                story.append(Paragraph(f"<font color='#64748b' size='8'>Média: {dim['media']} | Risco: {dim['risco']} | PGR: {dim['acao_pgr']}</font>", self.styles['Normal']))
+                    story.append(Paragraph(saxutils.escape(str(dim['interpretacao'])), self.styles['Normal']))
+                story.append(Paragraph(f"<font color='#64748b' size='8'>Média: {dim.get('media', '-')} | Risco: {dim.get('risco', '-')} | PGR: {dim.get('acao_pgr', '-')}</font>", self.styles['Normal']))
                 if dim.get('recomendacao'):
-                    story.append(Paragraph(f"<b>Recomendação:</b> {saxutils.escape(dim['recomendacao'])}", self.styles['Normal']))
+                    story.append(Paragraph(f"<b>Recomendação:</b> {saxutils.escape(str(dim['recomendacao']))}", self.styles['Normal']))
                 story.append(Spacer(1, 4*mm))
 
         # ═══════════════════════════════════════════════
@@ -488,14 +488,14 @@ class RespondentReportRL:
         if pcmso_data:
             story.append(Spacer(1, 5*mm))
             story.append(Paragraph("6. Anexo PCMSO — Saúde Ocupacional Individual", self.styles['Heading2']))
-            story.append(Paragraph(f"<b>Risco Psicossocial:</b> {pcmso_data.get('nivel', '')}", self.styles['Normal']))
-            story.append(Paragraph(f"<b>Classificação Geral:</b> {pcmso_data.get('overall', '')} ({pcmso_data.get('overall_avg', '')})", self.styles['Normal']))
+            story.append(Paragraph(f"<b>Risco Psicossocial:</b> {str(pcmso_data.get('nivel', ''))}", self.styles['Normal']))
+            story.append(Paragraph(f"<b>Classificação Geral:</b> {str(pcmso_data.get('overall', ''))} ({str(pcmso_data.get('overall_avg', ''))})", self.styles['Normal']))
             story.append(Spacer(1, 2*mm))
             story.append(Paragraph("<b>Síntese Psicossocial:</b>", self.styles['Normal']))
-            story.append(Paragraph(saxutils.escape(pcmso_data.get('sintese', '')), self.styles['Normal']))
+            story.append(Paragraph(saxutils.escape(str(pcmso_data.get('sintese', ''))), self.styles['Normal']))
             story.append(Spacer(1, 2*mm))
             story.append(Paragraph("<b>Recomendações Clínicas:</b>", self.styles['Normal']))
-            story.append(Paragraph(saxutils.escape(pcmso_data.get('recomendacoes', '')), self.styles['Normal']))
+            story.append(Paragraph(saxutils.escape(str(pcmso_data.get('recomendacoes', ''))), self.styles['Normal']))
             story.append(Spacer(1, 5*mm))
 
         # ═══════════════════════════════════════════════
@@ -509,12 +509,12 @@ class RespondentReportRL:
             pgr_table_data = [['DIMENSÃO', 'VETOR', 'MÉDIA', 'PROB', 'IMP', 'AÇÃO PGR']]
             for item in pgr_items:
                 pgr_table_data.append([
-                    Paragraph(f"<font size='7'>{saxutils.escape(item['dimensao'])}</font>", self.styles['Normal']),
-                    Paragraph(f"<font size='7'>{saxutils.escape(item['vetor'])}</font>", self.styles['Normal']),
-                    str(item['media']),
-                    str(item['probabilidade']),
-                    str(item['impacto']),
-                    Paragraph(f"<font size='7'>{saxutils.escape(item['acao_pgr'])}</font>", self.styles['Normal'])
+                    Paragraph(f"<font size='7'>{saxutils.escape(str(item.get('dimensao', '')))}</font>", self.styles['Normal']),
+                    Paragraph(f"<font size='7'>{saxutils.escape(str(item.get('vetor', '')))}</font>", self.styles['Normal']),
+                    str(item.get('media', '-')),
+                    str(item.get('probabilidade', '-')),
+                    str(item.get('impacto', '-')),
+                    Paragraph(f"<font size='7'>{saxutils.escape(str(item.get('acao_pgr', '')))}</font>", self.styles['Normal'])
                 ])
             pgr_table = Table(pgr_table_data, colWidths=[35*mm, 25*mm, 15*mm, 15*mm, 15*mm, 75*mm])
             pgr_table.setStyle(TableStyle([
@@ -957,12 +957,12 @@ class DepartmentReportRL:
             story.append(Spacer(1, 5*mm))
             story.append(Paragraph("Análise por Dimensão — Fundamentação Teórica", self.styles['Heading2']))
             for dim in dim_analysis:
-                story.append(Paragraph(f"<b>{saxutils.escape(dim['dimensao'])} ({saxutils.escape(dim['vetor'])}) — {dim['instrumento']}</b>", self.styles['Heading4']))
+                story.append(Paragraph(f"<b>{saxutils.escape(str(dim.get('dimensao', '')))} ({saxutils.escape(str(dim.get('vetor', '')))}) — {str(dim.get('instrumento', ''))}</b>", self.styles['Heading4']))
                 if dim.get('interpretacao'):
-                    story.append(Paragraph(saxutils.escape(dim['interpretacao']), self.styles['Normal']))
-                story.append(Paragraph(f"<font color='#64748b' size='8'>Média: {dim['media']} | Risco: {dim['risco']} | PGR: {dim['acao_pgr']}</font>", self.styles['Normal']))
+                    story.append(Paragraph(saxutils.escape(str(dim['interpretacao'])), self.styles['Normal']))
+                story.append(Paragraph(f"<font color='#64748b' size='8'>Média: {dim.get('media', '-')} | Risco: {dim.get('risco', '-')} | PGR: {dim.get('acao_pgr', '-')}</font>", self.styles['Normal']))
                 if dim.get('recomendacao'):
-                    story.append(Paragraph(f"<b>Recomendação:</b> {saxutils.escape(dim['recomendacao'])}", self.styles['Normal']))
+                    story.append(Paragraph(f"<b>Recomendação:</b> {saxutils.escape(str(dim['recomendacao']))}", self.styles['Normal']))
                 story.append(Spacer(1, 4*mm))
 
         # ═══════════════════════════════════════════════
@@ -976,12 +976,12 @@ class DepartmentReportRL:
             pgr_table_data = [['DIMENSÃO', 'VETOR', 'MÉDIA', 'PROB', 'IMP', 'AÇÃO PGR']]
             for item in pgr_items:
                 pgr_table_data.append([
-                    Paragraph(f"<font size='7'>{saxutils.escape(item['dimensao'])}</font>", self.styles['Normal']),
-                    Paragraph(f"<font size='7'>{saxutils.escape(item['vetor'])}</font>", self.styles['Normal']),
-                    str(item['media']),
-                    str(item['probabilidade']),
-                    str(item['impacto']),
-                    Paragraph(f"<font size='7'>{saxutils.escape(item['acao_pgr'])}</font>", self.styles['Normal'])
+                    Paragraph(f"<font size='7'>{saxutils.escape(str(item.get('dimensao', '')))}</font>", self.styles['Normal']),
+                    Paragraph(f"<font size='7'>{saxutils.escape(str(item.get('vetor', '')))}</font>", self.styles['Normal']),
+                    str(item.get('media', '-')),
+                    str(item.get('probabilidade', '-')),
+                    str(item.get('impacto', '-')),
+                    Paragraph(f"<font size='7'>{saxutils.escape(str(item.get('acao_pgr', '')))}</font>", self.styles['Normal'])
                 ])
             pgr_table = Table(pgr_table_data, colWidths=[35*mm, 25*mm, 15*mm, 15*mm, 15*mm, 75*mm])
             pgr_table.setStyle(TableStyle([
@@ -1003,19 +1003,19 @@ class DepartmentReportRL:
         if nr17_data and nr17_data.get('items'):
             story.append(Spacer(1, 5*mm))
             story.append(Paragraph("Achados Ergonômicos — NR-17", self.styles['Heading2']))
-            story.append(Paragraph(f"<b>Achado:</b> {saxutils.escape(nr17_data.get('achado', ''))}", self.styles['Normal']))
-            story.append(Paragraph(f"<b>Base Teórica:</b> {nr17_data.get('base_teorica', '')}", self.styles['Normal']))
+            story.append(Paragraph(f"<b>Achado:</b> {saxutils.escape(str(nr17_data.get('achado', '')))}", self.styles['Normal']))
+            story.append(Paragraph(f"<b>Base Teórica:</b> {saxutils.escape(str(nr17_data.get('base_teorica', '')))}", self.styles['Normal']))
             for acao in nr17_data.get('acoes', []):
-                story.append(Paragraph(f"\u2022 {saxutils.escape(acao)}", self.styles['Normal']))
+                story.append(Paragraph(f"\u2022 {saxutils.escape(str(acao))}", self.styles['Normal']))
             story.append(Spacer(1, 4*mm))
 
         if nr12_data and nr12_data.get('items'):
             story.append(Spacer(1, 5*mm))
             story.append(Paragraph("Segurança em Máquinas — NR-12", self.styles['Heading2']))
-            story.append(Paragraph(f"<b>Achado:</b> {saxutils.escape(nr12_data.get('achado', ''))}", self.styles['Normal']))
-            story.append(Paragraph(f"<b>Base Normativa:</b> {nr12_data.get('base_normativa', '')}", self.styles['Normal']))
+            story.append(Paragraph(f"<b>Achado:</b> {saxutils.escape(str(nr12_data.get('achado', '')))}", self.styles['Normal']))
+            story.append(Paragraph(f"<b>Base Normativa:</b> {saxutils.escape(str(nr12_data.get('base_normativa', '')))}", self.styles['Normal']))
             for acao in nr12_data.get('acoes', []):
-                story.append(Paragraph(f"\u2022 {saxutils.escape(acao)}", self.styles['Normal']))
+                story.append(Paragraph(f"\u2022 {saxutils.escape(str(acao))}", self.styles['Normal']))
             story.append(Spacer(1, 4*mm))
 
         # ═══════════════════════════════════════════════
@@ -1029,7 +1029,7 @@ class DepartmentReportRL:
         story.append(Spacer(1, 4*mm))
         
         story.append(Paragraph("Conclusão Pericial", self.styles['Heading2']))
-        story.append(Paragraph(saxutils.escape(conclusao or "Análise concluída conforme parâmetros do SIMDCCONR01."), self.styles['Normal']))
+        story.append(Paragraph(saxutils.escape(str(conclusao or "Análise concluída conforme parâmetros do SIMDCCONR01.")), self.styles['Normal']))
         story.append(Spacer(1, 2*mm))
         story.append(Paragraph("<font size='7' color='#64748b'>Ressalva legal: Este documento constitui parecer técnico pericial elaborado com base em instrumento validado. O sigilo é garantido conforme LGPD.</font>", self.styles['Normal']))
 

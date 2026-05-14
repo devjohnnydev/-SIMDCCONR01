@@ -44,7 +44,7 @@
             <a href="{% url 'forms:instance_create' template.pk %}" class="btn btn-primary rounded-pill px-3">
                 <i class="bi bi-play-circle me-1"></i>Usar Template
             </a>
-            {% if not template.is_locked %}
+            {% if user.is_admin_master and not template.is_locked %}
             <button class="btn btn-success rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#addQuestionModal">
                 <i class="bi bi-plus-lg me-1"></i>Adicionar Pergunta
             </button>
@@ -98,7 +98,7 @@
                             </div>
                             {% endif %}
                         </div>
-                        {% if not template.is_locked %}
+                        {% if user.is_admin_master and not template.is_locked %}
                         <div class="d-flex gap-1 ms-3 flex-shrink-0">
                             <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
                                 data-bs-target="#editQuestionModal_{{ question.pk }}">

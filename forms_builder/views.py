@@ -450,11 +450,16 @@ def question_add(request, template_pk):
     """Adiciona uma nova pergunta a um template."""
     template = get_object_or_404(FormTemplate, pk=template_pk)
 
+    # Somente ADMIN_MASTER pode alterar templates globais
+    if template.is_global and not request.user.is_admin_master:
+        messages.error(request, 'Somente o administrador master pode alterar o template global.')
+        return redirect('forms:template_detail', pk=template_pk)
+
     if template.is_locked:
         messages.error(request, 'Este template é imutável (SIMDCCONR01). Não é possível adicionar perguntas.')
         return redirect('forms:template_detail', pk=template_pk)
 
-    if not template.is_global and template.company != request.user.company:
+    if not template.is_global and template.company != getattr(request.user, 'company', None):
         messages.error(request, 'Acesso não autorizado.')
         return redirect('forms:templates')
 
@@ -501,11 +506,15 @@ def question_edit(request, question_pk):
     question = get_object_or_404(FormQuestion, pk=question_pk)
     template = question.template
 
+    if template.is_global and not request.user.is_admin_master:
+        messages.error(request, 'Somente o administrador master pode alterar o template global.')
+        return redirect('forms:template_detail', pk=template.pk)
+
     if template.is_locked:
         messages.error(request, 'Este template é imutável (SIMDCCONR01). Não é possível editar perguntas.')
         return redirect('forms:template_detail', pk=template.pk)
 
-    if not template.is_global and template.company != request.user.company:
+    if not template.is_global and template.company != getattr(request.user, 'company', None):
         messages.error(request, 'Acesso não autorizado.')
         return redirect('forms:templates')
 
@@ -534,11 +543,15 @@ def question_delete(request, question_pk):
     question = get_object_or_404(FormQuestion, pk=question_pk)
     template = question.template
 
+    if template.is_global and not request.user.is_admin_master:
+        messages.error(request, 'Somente o administrador master pode alterar o template global.')
+        return redirect('forms:template_detail', pk=template.pk)
+
     if template.is_locked:
         messages.error(request, 'Este template é imutável (SIMDCCONR01). Não é possível remover perguntas.')
         return redirect('forms:template_detail', pk=template.pk)
 
-    if not template.is_global and template.company != request.user.company:
+    if not template.is_global and template.company != getattr(request.user, 'company', None):
         messages.error(request, 'Acesso não autorizado.')
         return redirect('forms:templates')
 

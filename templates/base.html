@@ -772,6 +772,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'department_reports_list' %}active{% endif %}" href="{% url 'accounts:department_reports_list' %}">
+                            <i class="bi bi-building-check"></i> Laudos por Setor
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'plan_list' %}active{% endif %}" href="{% url 'billing:plan_list' %}">
                             <i class="bi bi-tags"></i> Planos de Assinatura
                         </a>
@@ -865,11 +870,7 @@
                             <i class="bi bi-bar-chart-line-fill"></i> Painel de Dados
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'department_reports_list' %}active{% endif %}" href="{% url 'accounts:department_reports_list' %}">
-                            <i class="bi bi-building-check"></i> Laudos por Setor
-                        </a>
-                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link {% if 'announcement' in request.path %}active{% endif %}" href="{% url 'companies:announcements' %}">
                             <i class="bi bi-megaphone-fill"></i> Comunicados
@@ -880,18 +881,13 @@
                         <h6>Compliance NR</h6>
                     </div>
                     <li class="nav-item">
-                        <a class="nav-link {% if 'risks' in request.path %}active{% endif %}" href="{% url 'risk_management:dashboard' %}">
-                            <i class="bi bi-shield-exclamation"></i> Gestão de Riscos
+                        <a class="nav-link {% if 'action-plans' in request.path %}active{% endif %}" href="{% url 'risk_management:action_plan_list' %}">
+                            <i class="bi bi-clipboard2-check"></i> Planos de Ação
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if 'evolution' in request.path %}active{% endif %}" href="{% url 'evolution:dashboard' %}">
                             <i class="bi bi-graph-up-arrow"></i> Evolução e Inteligência
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if 'ia' in request.path %}active{% endif %}" href="{% url 'predictive_ai:dashboard' %}">
-                            <i class="bi bi-robot"></i> IA Preditiva
                         </a>
                     </li>
                     <li class="nav-item">

@@ -15,12 +15,38 @@
         </a>
     </div>
 
+    <!-- SELETOR DE EMPRESA (ADMIN) -->
+    {% if companies_list %}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-building me-2"></i>Selecionar Empresa</h5>
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-8">
+                    <select name="company" class="form-select" onchange="this.form.submit()">
+                        <option value="">Selecione uma empresa...</option>
+                        {% for c in companies_list %}
+                        <option value="{{ c.id }}" {% if company and company.id == c.id %}selected{% endif %}>{{ c.nome_fantasia }} ({{ c.cnpj }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-filter me-1"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if company %}
     <!-- GERAR NOVO LAUDO -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
-            <h5 class="fw-bold mb-3">Gerar Nova Análise de Setor</h5>
+            <h5 class="fw-bold mb-3">Gerar Nova Análise de Setor — {{ company.nome_fantasia }}</h5>
             <form action="{% url 'accounts:generate_department_report' %}" method="POST" class="row g-3 align-items-end">
                 {% csrf_token %}
+                <input type="hidden" name="company" value="{{ company.id }}">
                 <div class="col-md-5">
                     <label class="form-label small text-uppercase fw-bold">Selecionar Setor</label>
                     <select name="setor" class="form-select" required>
@@ -54,6 +80,14 @@
             </div>
         </div>
     </div>
+    {% else %}
+    {% if companies_list %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        Selecione uma empresa acima para visualizar os setores e laudos.
+    </div>
+    {% endif %}
+    {% endif %}
 
     <!-- LISTA DE LAUDOS EXISTENTES -->
     <div class="card border-0 shadow-sm">

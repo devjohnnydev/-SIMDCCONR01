@@ -41,7 +41,11 @@ def _get_company(request):
 
 @login_required
 def gro_dashboard(request):
-    """Dashboard do ciclo GRO: identificar → avaliar → controlar → acompanhar."""
+    """Dashboard do ciclo GRO — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador. Utilize o menu Planos de Ação.')
+        return redirect('risk_management:action_plan_list')
+
     company = _get_company(request)
     if not company:
         messages.warning(request, 'Selecione uma empresa para visualizar o painel de riscos.')
@@ -104,7 +108,11 @@ def gro_dashboard(request):
 
 @login_required
 def hazard_list(request):
-    """Lista de perigos com filtros."""
+    """Lista de perigos — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:action_plan_list')
+
     company = _get_company(request)
     if not company:
         return redirect('accounts:dashboard')
@@ -143,7 +151,11 @@ def hazard_list(request):
 
 @login_required
 def hazard_create(request):
-    """Cria novo registro de perigo."""
+    """Cria novo registro de perigo — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:action_plan_list')
+
     company = _get_company(request)
     if not company:
         return redirect('accounts:dashboard')
@@ -188,7 +200,11 @@ def hazard_create(request):
 
 @login_required
 def hazard_edit(request, pk):
-    """Edita um registro de perigo."""
+    """Edita um registro de perigo — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:action_plan_list')
+
     company = _get_company(request)
     hazard = get_object_or_404(HazardRegistry, pk=pk, company=company)
 
@@ -227,7 +243,11 @@ def hazard_edit(request, pk):
 
 @login_required
 def hazard_delete(request, pk):
-    """Remove um perigo."""
+    """Remove um perigo — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:action_plan_list')
+
     company = _get_company(request)
     hazard = get_object_or_404(HazardRegistry, pk=pk, company=company)
     if request.method == 'POST':
@@ -239,7 +259,11 @@ def hazard_delete(request, pk):
 
 @login_required
 def risk_assess(request, hazard_pk):
-    """Avaliação de risco para um perigo (Probabilidade × Severidade)."""
+    """Avaliação de risco para um perigo — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:action_plan_list')
+
     company = _get_company(request)
     hazard = get_object_or_404(HazardRegistry, pk=hazard_pk, company=company)
 
@@ -269,7 +293,11 @@ def risk_assess(request, hazard_pk):
 
 @login_required
 def risk_matrix_view(request):
-    """Visualização da Matriz de Risco 5×5."""
+    """Visualização da Matriz de Risco 5×5 — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:action_plan_list')
+
     company = _get_company(request)
     if not company:
         return redirect('accounts:dashboard')

@@ -660,38 +660,48 @@ def edit_signatario(request, pk):
 
 @login_required
 def department_reports_list(request):
-    """Listagem de laudos por departamento para a empresa."""
-    if request.user.role != 'COMPANY_ADMIN':
-        messages.error(request, 'Acesso restrito a administradores de empresa.')
+    """Listagem de laudos por departamento — somente ADMIN_MASTER."""
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Acesso restrito ao administrador master.')
         return redirect('accounts:dashboard')
     
     from reports.models import DepartmentDiagnostic
     from employees.models import Employee
     from forms_builder.models import FormInstance
     
-    company = request.user.company
+    # Admin pode selecionar empresa via GET param ou sessão
+    company_pk = request.GET.get('company') or request.session.get('selected_company_id')
+    company = None
+    if company_pk:
+        company = Company.objects.filter(pk=company_pk).first()
+        if company:
+            request.session['selected_company_id'] = str(company.pk)
     
-    # Busca todos os setores que têm pelo menos 1 funcionário ativo
-    setores = Employee.objects.filter(company=company, status='ACTIVE').values_list('setor', flat=True).distinct()
+    companies_list = Company.objects.filter(status='ACTIVE')
     
-    # Busca formulários ativos para esta empresa (excluindo rascunhos)
-    active_forms = FormInstance.objects.filter(company=company).exclude(status='DRAFT')
+    setores = []
+    active_forms = []
+    existing_reports = []
     
-    # Laudos já gerados
-    existing_reports = DepartmentDiagnostic.objects.filter(company=company).select_related('form_instance')
+    if company:
+        setores = Employee.objects.filter(company=company, status='ACTIVE').values_list('setor', flat=True).distinct()
+        active_forms = FormInstance.objects.filter(company=company).exclude(status='DRAFT')
+        existing_reports = DepartmentDiagnostic.objects.filter(company=company).select_related('form_instance')
     
     return render(request, 'accounts/department_reports_list.html', {
         'setores': setores,
         'active_forms': active_forms,
-        'reports': existing_reports
+        'reports': existing_reports,
+        'company': company,
+        'companies_list': companies_list,
     })
 
 
 @login_required
 def generate_department_report_action(request):
     """Action POST para gerar laudo de departamento via IA."""
-    if request.user.role != 'COMPANY_ADMIN':
-        messages.error(request, 'Ação não permitida.')
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Ação restrita ao administrador master.')
         return redirect('accounts:dashboard')
         
     if request.method == 'POST':
@@ -700,10 +710,12 @@ def generate_department_report_action(request):
         
         setor = request.POST.get('setor')
         form_id = request.POST.get('form_id')
+        company_pk = request.POST.get('company') or request.session.get('selected_company_id')
+        company = get_object_or_404(Company, pk=company_pk)
         
-        form_instance = get_object_or_404(FormInstance, pk=form_id, company=request.user.company)
+        form_instance = get_object_or_404(FormInstance, pk=form_id, company=company)
         
-        result = generate_department_diagnostic(request.user.company, setor, form_instance, user=request.user)
+        result = generate_department_diagnostic(company, setor, form_instance, user=request.user)
         
         if isinstance(result, dict) and 'error' in result:
             messages.error(request, result['error'])
@@ -715,20 +727,26 @@ def generate_department_report_action(request):
 
 @login_required
 def view_department_report(request, setor, form_id):
-    """Visualização de um laudo de departamento específico."""
+    """Visualização de um laudo de departamento específico — somente ADMIN_MASTER."""
     from reports.models import DepartmentDiagnostic
     from reports.engine_text import TextEngine
     
-    report = get_object_or_404(
-        DepartmentDiagnostic, 
-        company=request.user.company, 
-        setor=setor, 
-        form_instance_id=form_id
-    )
-    
-    if request.user.role not in ['ADMIN_MASTER', 'COMPANY_ADMIN']:
-        messages.error(request, 'Acesso negado.')
+    if request.user.role != 'ADMIN_MASTER':
+        messages.error(request, 'Acesso restrito ao administrador master.')
         return redirect('accounts:dashboard')
+    
+    # Admin: resolve empresa pela sessão ou pelo próprio relatório
+    company_pk = request.GET.get('company') or request.session.get('selected_company_id')
+    if company_pk:
+        company = get_object_or_404(Company, pk=company_pk)
+    else:
+        # Fallback: busca direto pelo relatório sem filtrar empresa
+        company = None
+    
+    lookup = {'setor': setor, 'form_instance_id': form_id}
+    if company:
+        lookup['company'] = company
+    report = get_object_or_404(DepartmentDiagnostic, **lookup)
     
     # Gerar dados rastreáveis do Motor de Texto Determinístico
     engine_data = {}

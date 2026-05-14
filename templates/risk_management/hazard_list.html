@@ -47,6 +47,7 @@
                     <label class="form-label">Status</label>
                     <select name="status" class="form-select">
                         <option value="">Todos</option>
+                        <option value="PENDING_REVIEW" {% if filter_status == 'PENDING_REVIEW' %}selected{% endif %}>Pendente de Revisão</option>
                         <option value="ACTIVE" {% if filter_status == 'ACTIVE' %}selected{% endif %}>Ativo</option>
                         <option value="MITIGATED" {% if filter_status == 'MITIGATED' %}selected{% endif %}>Mitigado</option>
                         <option value="ELIMINATED" {% if filter_status == 'ELIMINATED' %}selected{% endif %}>Eliminado</option>
@@ -80,7 +81,9 @@
                     <tr>
                         <td>
                             <strong>{{ hazard.descricao_perigo|truncatewords:10 }}</strong>
-                            {% if hazard.fonte_geradora %}<br><small class="text-muted">Fonte: {{ hazard.fonte_geradora }}</small>{% endif %}
+                            {% if hazard.auto_generated %}<span class="badge bg-info bg-opacity-75 ms-1" title="Gerado automaticamente"><i class="bi bi-robot"></i></span>{% endif %}
+                            {% if hazard.source_dimension %}<br><small class="text-primary">{{ hazard.source_instrument }} — {{ hazard.source_dimension }}</small>{% endif %}
+                            {% if hazard.fonte_geradora %}<br><small class="text-muted">Fonte: {{ hazard.fonte_geradora|truncatewords:8 }}</small>{% endif %}
                         </td>
                         <td>
                             <span class="badge {% if hazard.tipo_risco == 'PSICOSSOCIAL' %}bg-danger{% elif hazard.tipo_risco == 'ERGONOMICO' %}bg-primary{% elif hazard.tipo_risco == 'FISICO' %}bg-warning{% else %}bg-secondary{% endif %}">
@@ -91,7 +94,8 @@
                         <td>{{ hazard.funcao }}</td>
                         <td><small>{{ hazard.norma_referencia }}</small></td>
                         <td>
-                            <span class="badge {% if hazard.status == 'ACTIVE' %}bg-danger{% elif hazard.status == 'MITIGATED' %}bg-warning{% else %}bg-success{% endif %}">
+                            <span class="badge {% if hazard.status == 'ACTIVE' %}bg-danger{% elif hazard.status == 'PENDING_REVIEW' %}bg-warning text-dark{% elif hazard.status == 'MITIGATED' %}bg-warning{% else %}bg-success{% endif %}">
+                                {% if hazard.status == 'PENDING_REVIEW' %}<i class="bi bi-hourglass-split me-1"></i>{% endif %}
                                 {{ hazard.get_status_display }}
                             </span>
                         </td>
@@ -106,10 +110,21 @@
                         </td>
                         <td>
                             <div class="btn-group btn-group-sm">
+                                {% if hazard.status == 'PENDING_REVIEW' %}
+                                <form method="POST" action="{% url 'risk_management:approve_hazard' hazard.pk %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success" title="Aprovar"><i class="bi bi-check-lg"></i></button>
+                                </form>
+                                <form method="POST" action="{% url 'risk_management:reject_hazard' hazard.pk %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger" title="Rejeitar"><i class="bi bi-x-lg"></i></button>
+                                </form>
+                                {% else %}
                                 <a href="{% url 'risk_management:risk_assess' hazard.pk %}" class="btn btn-outline-secondary" title="Avaliar"><i class="bi bi-calculator"></i></a>
                                 <a href="{% url 'risk_management:hazard_edit' hazard.pk %}" class="btn btn-outline-secondary" title="Editar"><i class="bi bi-pencil"></i></a>
                                 {% if hazard.latest_assessment %}
                                 <a href="{% url 'risk_management:control_measures' hazard.latest_assessment.pk %}" class="btn btn-outline-secondary" title="Controles"><i class="bi bi-shield-check"></i></a>
+                                {% endif %}
                                 {% endif %}
                             </div>
                         </td>

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Comparação de Pesquisas — SIMDCCONR01{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-arrow-left-right me-2 text-primary"></i>Comparação de Pesquisas</h2>
+            <p class="text-muted mb-0">Análise evolutiva entre aplicações do SIMDCCONR01 — {{ company.nome_fantasia }}</p>
+        </div>
+        <a href="{% url 'risk_management:dashboard' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Voltar ao Painel
+        </a>
+    </div>
+
+    <!-- Seletor de Pesquisas -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title fw-bold"><i class="bi bi-sliders me-2"></i>Selecionar Pesquisas</h5>
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label fw-semibold">Pesquisa Anterior</label>
+                    <select name="previous" class="form-select">
+                        <option value="">Selecione...</option>
+                        {% for form in closed_forms %}
+                        <option value="{{ form.pk }}" {% if previous_pk == form.pk|stringformat:"d" %}selected{% endif %}>
+                            {{ form.title }} ({{ form.created_at|date:"d/m/Y" }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label fw-semibold">Pesquisa Atual</label>
+                    <select name="current" class="form-select">
+                        <option value="">Selecione...</option>
+                        {% for form in closed_forms %}
+                        <option value="{{ form.pk }}" {% if current_pk == form.pk|stringformat:"d" %}selected{% endif %}>
+                            {{ form.title }} ({{ form.created_at|date:"d/m/Y" }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search me-1"></i>Comparar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if comparison %}
+    <!-- Resumo Geral -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="card-body">
+                    <div class="text-muted small">GERAL ANTERIOR</div>
+                    <div class="fs-2 fw-bold">{{ comparison.overall.anterior }}</div>
+                    <span class="badge bg-secondary">{{ comparison.overall.classificacao_anterior }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="card-body">
+                    <div class="text-muted small">GERAL ATUAL</div>
+                    <div class="fs-2 fw-bold">{{ comparison.overall.atual }}</div>
+                    <span class="badge bg-primary">{{ comparison.overall.classificacao_atual }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm text-center py-3 {% if comparison.overall.variacao > 0 %}border-start border-success border-4{% elif comparison.overall.variacao < 0 %}border-start border-danger border-4{% endif %}">
+                <div class="card-body">
+                    <div class="text-muted small">VARIAÇÃO</div>
+                    <div class="fs-2 fw-bold {% if comparison.overall.variacao > 0 %}text-success{% elif comparison.overall.variacao < 0 %}text-danger{% endif %}">
+                        {% if comparison.overall.variacao > 0 %}+{% endif %}{{ comparison.overall.variacao }}
+                    </div>
+                    <span class="badge {% if 'MELHORA' in comparison.overall.status %}bg-success{% elif 'PIORA' in comparison.overall.status %}bg-danger{% elif comparison.overall.status == 'SANADO' %}bg-info{% else %}bg-secondary{% endif %}">
+                        {{ comparison.overall.status_label }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm py-3">
+                <div class="card-body text-center">
+                    <div class="d-flex justify-content-around">
+                        <div>
+                            <div class="fs-4 fw-bold text-success">{{ comparison.melhorias }}</div>
+                            <div class="small text-muted">Melhorias</div>
+                        </div>
+                        <div>
+                            <div class="fs-4 fw-bold text-info">{{ comparison.sanados }}</div>
+                            <div class="small text-muted">Sanados</div>
+                        </div>
+                        <div>
+                            <div class="fs-4 fw-bold text-danger">{{ comparison.pioras }}</div>
+                            <div class="small text-muted">Pioras</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Evolução por Dimensão -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-table me-2"></i>Evolução por Dimensão</h5>
+            <form method="GET" class="d-inline">
+                <input type="hidden" name="current" value="{{ current_pk }}">
+                <input type="hidden" name="previous" value="{{ previous_pk }}">
+                <input type="hidden" name="update_hazards" value="1">
+                <button type="submit" class="btn btn-sm btn-outline-light">
+                    <i class="bi bi-arrow-repeat me-1"></i>Atualizar Perigos
+                </button>
+            </form>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Instrumento</th>
+                            <th>Dimensão</th>
+                            <th class="text-center">Anterior</th>
+                            <th class="text-center">Atual</th>
+                            <th class="text-center">Variação</th>
+                            <th class="text-center">Status</th>
+                            <th>Interpretação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dim in comparison.dimensions %}
+                        <tr>
+                            <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ dim.instrumento }}</span></td>
+                            <td class="fw-semibold">{{ dim.dimensao }}</td>
+                            <td class="text-center">
+                                <span class="badge {% if dim.classificacao_anterior == 'Crítico' %}bg-danger{% elif dim.classificacao_anterior == 'Atenção' %}bg-warning text-dark{% elif dim.classificacao_anterior == 'Adequado' %}bg-success{% else %}bg-info{% endif %}">
+                                    {{ dim.anterior }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge {% if dim.classificacao_atual == 'Crítico' %}bg-danger{% elif dim.classificacao_atual == 'Atenção' %}bg-warning text-dark{% elif dim.classificacao_atual == 'Adequado' %}bg-success{% else %}bg-info{% endif %}">
+                                    {{ dim.atual }}
+                                </span>
+                            </td>
+                            <td class="text-center fw-bold {% if dim.variacao > 0 %}text-success{% elif dim.variacao < 0 %}text-danger{% endif %}">
+                                {% if dim.variacao > 0 %}+{% endif %}{{ dim.variacao }}
+                                <small class="d-block text-muted">({{ dim.percentual }}%)</small>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge {% if 'MELHORA' in dim.status %}bg-success{% elif 'PIORA' in dim.status %}bg-danger{% elif dim.status == 'SANADO' %}bg-info{% else %}bg-secondary{% endif %}">
+                                    {% if dim.status == 'SANADO' %}<i class="bi bi-check-circle me-1"></i>{% endif %}
+                                    {% if 'MELHORA' in dim.status %}<i class="bi bi-arrow-up me-1"></i>{% endif %}
+                                    {% if 'PIORA' in dim.status %}<i class="bi bi-arrow-down me-1"></i>{% endif %}
+                                    {{ dim.status_label }}
+                                </span>
+                            </td>
+                            <td class="small text-muted" style="max-width: 300px;">{{ dim.interpretacao|truncatewords:30 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if comparison.hazards_updated %}
+    <div class="alert alert-success mt-3">
+        <i class="bi bi-check-circle me-2"></i>
+        <strong>{{ comparison.hazards_updated|length }} perigo(s)</strong> foram atualizados com base na comparação:
+        <ul class="mb-0 mt-2">
+            {% for h in comparison.hazards_updated %}
+            <li>{{ h.dimensao }} → <strong>{{ h.novo_status }}</strong></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

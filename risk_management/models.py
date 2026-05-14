@@ -30,6 +30,7 @@ class HazardRegistry(models.Model):
     ]
 
     STATUS_CHOICES = [
+        ('PENDING_REVIEW', 'Pendente de Revisão'),
         ('ACTIVE', 'Ativo'),
         ('MITIGATED', 'Mitigado'),
         ('ELIMINATED', 'Eliminado'),
@@ -47,6 +48,21 @@ class HazardRegistry(models.Model):
     atividade = models.CharField('Atividade', max_length=300)
     descricao_perigo = models.TextField('Descrição do Perigo')
     fonte_geradora = models.CharField('Fonte Geradora', max_length=300, blank=True)
+
+    # Campos para perigos auto-gerados pelo sistema
+    auto_generated = models.BooleanField('Gerado Automaticamente', default=False)
+    source_dimension = models.CharField(
+        'Dimensão de Origem', max_length=100, blank=True,
+        help_text='Dimensão do questionário que originou este perigo'
+    )
+    source_instrument = models.CharField(
+        'Instrumento de Origem', max_length=30, blank=True,
+        help_text='IMCO, FDAC, NR-01, NR-17, NR-12'
+    )
+    source_score = models.DecimalField(
+        'Score de Origem', max_digits=4, decimal_places=2, null=True, blank=True,
+        help_text='Média da dimensão no momento da geração'
+    )
 
     tipo_risco = models.CharField(
         'Tipo de Risco',

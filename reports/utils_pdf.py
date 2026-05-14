@@ -50,6 +50,57 @@ COL_DANGER = colors.HexColor("#fee2e2")
 COL_WARNING = colors.HexColor("#fef3c7")
 COL_SUCCESS = colors.HexColor("#dcfce7")
 COL_GREEN = colors.HexColor("#16a34a")
+COL_FORTE = colors.HexColor("#dbeafe")
+
+
+def _color_for_key(key):
+    """Retorna a cor de fundo para uma classificação."""
+    return {'critico': COL_DANGER, 'atencao': COL_WARNING,
+            'adequado': COL_SUCCESS, 'forte': COL_FORTE}.get(key, colors.transparent)
+
+
+def _build_vetor_dimension_table(styles, items, title='Matriz de Risco por Vetor e Dimensão'):
+    """
+    Constrói uma tabela profissional com VETOR × DIMENSÃO × MÉDIA × CLASSIFICAÇÃO × RISCO.
+    Usado em todos os 3 tipos de relatório.
+    """
+    from reportlab.platypus import Table, TableStyle, Paragraph
+    
+    header = ['VETOR', 'DIMENSÃO', 'INSTR.', 'MÉDIA', 'CLASS.', 'RISCO (PGR)']
+    col_widths = [30*mm, 38*mm, 14*mm, 14*mm, 22*mm, 60*mm]
+    
+    data = [[Paragraph(f"<font size=7><b>{h}</b></font>", styles['Normal']) for h in header]]
+    
+    for item in items:
+        vetor = item.get('vetor', item.get('dimensao', ''))
+        data.append([
+            Paragraph(f"<font size=7>{saxutils.escape(vetor)}</font>", styles['Normal']),
+            Paragraph(f"<font size=7>{saxutils.escape(item.get('dimensao', ''))}</font>", styles['Normal']),
+            Paragraph(f"<font size=7 color='#2563eb'>{item.get('instrumento', '')}</font>", styles['Normal']),
+            Paragraph(f"<font size=8><b>{item.get('media', '-')}</b></font>", styles['Normal']),
+            Paragraph(f"<font size=7><b>{saxutils.escape(item.get('classificacao', '-'))}</b></font>", styles['Normal']),
+            Paragraph(f"<font size=6 color='#64748b'>{saxutils.escape(item.get('acao_pgr', item.get('risco', '-')))}</font>", styles['Normal']),
+        ])
+    
+    tbl = Table(data, colWidths=col_widths, repeatRows=1)
+    style_cmds = [
+        ('BACKGROUND', (0, 0), (-1, 0), COL_DARK),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, COL_SLATE_100),
+        ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
+        ('FONTSIZE', (0, 0), (-1, -1), 7),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 4),
+    ]
+    for row_idx in range(1, len(data)):
+        it = items[row_idx - 1]
+        clr = _color_for_key(it.get('classificacao_key', ''))
+        style_cmds.append(('BACKGROUND', (4, row_idx), (4, row_idx), clr))
+    tbl.setStyle(TableStyle(style_cmds))
+    return tbl
 
 
 class RadarChartFlowable(Flowable):
@@ -746,47 +797,11 @@ class DepartmentReportRL:
         story.append(Paragraph(saxutils.escape(data.get('clima_geral', '')), self.styles['Normal']))
         story.append(Spacer(1, 8*mm))
 
-        # Matriz de Risco
+        # Matriz de Risco por Vetor × Dimensão
         consolidation = engine_data.get('consolidation', [])
         if consolidation:
-            story.append(Paragraph("2. Matriz de Risco por Dimensão", self.styles['Heading2']))
-            
-            matrix_data = [['INSTR.', 'DIMENSÃO', 'MÉDIA', 'CLASSIFICAÇÃO', 'RISCO (PGR)']]
-            col_widths = [18*mm, 65*mm, 15*mm, 35*mm, 45*mm]
-            
-            for item in consolidation:
-                status = item.get('classificacao', '-')
-                matrix_data.append([
-                    Paragraph(f"<font size=7 color='#2563eb'>{item.get('instrumento', '')}</font>", self.styles['Normal']),
-                    Paragraph(f"<font size=8>{saxutils.escape(item.get('dimensao', ''))}</font>", self.styles['Normal']),
-                    Paragraph(f"<font size=8>{item.get('media', '-')}</font>", self.styles['Normal']),
-                    Paragraph(f"<font size=8><b>{saxutils.escape(status)}</b></font>", self.styles['Normal']),
-                    Paragraph(f"<font size=7 color='#64748b'>{saxutils.escape(item.get('risco', '-'))}</font>", self.styles['Normal']),
-                ])
-                
-            matrix_table = Table(matrix_data, colWidths=col_widths, repeatRows=1)
-            matrix_table_style = [
-                ('BACKGROUND', (0, 0), (-1, 0), COL_DARK),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-                ('INNERGRID', (0, 0), (-1, -1), 0.25, COL_SLATE_100),
-                ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
-                ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
-                ('TOPPADDING', (0, 0), (-1, -1), 5),
-            ]
-            
-            for row_idx in range(1, len(matrix_data)):
-                it = consolidation[row_idx - 1]
-                clr = colors.transparent
-                if it.get('classificacao_key') == 'critico': clr = COL_DANGER
-                elif it.get('classificacao_key') == 'atencao': clr = COL_WARNING
-                elif it.get('classificacao_key') == 'adequado': clr = COL_SUCCESS
-                matrix_table_style.append(('BACKGROUND', (3, row_idx), (3, row_idx), clr))
-                
-            matrix_table.setStyle(TableStyle(matrix_table_style))
-            story.append(matrix_table)
+            story.append(Paragraph("2. Matriz de Risco por Vetor e Dimensão", self.styles['Heading2']))
+            story.append(_build_vetor_dimension_table(self.styles, consolidation))
             story.append(Spacer(1, 8*mm))
 
 
@@ -1025,44 +1040,8 @@ class OrganizationalReportRL:
 
         risk_matrix = laudo_data.get('risk_matrix', [])
         if risk_matrix:
-            story.append(Paragraph("1. Matriz de Risco Organizacional", self.styles['Heading2']))
-            
-            matrix_data = [['INSTR.', 'DIMENSÃO', 'MÉDIA', 'CLASSIFICAÇÃO', 'RISCO (PGR)']]
-            col_widths = [18*mm, 65*mm, 15*mm, 35*mm, 45*mm]
-            
-            for item in risk_matrix:
-                status = item.get('classificacao', '-')
-                matrix_data.append([
-                    Paragraph(f"<font size=7 color='#2563eb'>{item.get('instrumento', '')}</font>", self.styles['Normal']),
-                    Paragraph(f"<font size=8>{saxutils.escape(item.get('dimensao', ''))}</font>", self.styles['Normal']),
-                    Paragraph(f"<font size=8>{item.get('media', '-')}</font>", self.styles['Normal']),
-                    Paragraph(f"<font size=8><b>{saxutils.escape(status)}</b></font>", self.styles['Normal']),
-                    Paragraph(f"<font size=7 color='#64748b'>{saxutils.escape(item.get('risco', '-'))}</font>", self.styles['Normal']),
-                ])
-                
-            matrix_table = Table(matrix_data, colWidths=col_widths, repeatRows=1)
-            matrix_table_style = [
-                ('BACKGROUND', (0, 0), (-1, 0), COL_DARK),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-                ('INNERGRID', (0, 0), (-1, -1), 0.25, COL_SLATE_100),
-                ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
-                ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
-                ('TOPPADDING', (0, 0), (-1, -1), 5),
-            ]
-            
-            for row_idx in range(1, len(matrix_data)):
-                it = risk_matrix[row_idx - 1]
-                clr = colors.transparent
-                if it.get('classificacao_key') == 'critico': clr = COL_DANGER
-                elif it.get('classificacao_key') == 'atencao': clr = COL_WARNING
-                elif it.get('classificacao_key') == 'adequado': clr = COL_SUCCESS
-                matrix_table_style.append(('BACKGROUND', (3, row_idx), (3, row_idx), clr))
-                
-            matrix_table.setStyle(TableStyle(matrix_table_style))
-            story.append(matrix_table)
+            story.append(Paragraph("1. Matriz de Risco Organizacional por Vetor e Dimensão", self.styles['Heading2']))
+            story.append(_build_vetor_dimension_table(self.styles, risk_matrix))
             story.append(Spacer(1, 8*mm))
 
         sesmt = laudo_data.get('sesmt', {})

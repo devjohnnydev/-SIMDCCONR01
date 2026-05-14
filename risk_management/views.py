@@ -85,6 +85,15 @@ def gro_dashboard(request):
         from companies.models import Company
         companies_list = Company.objects.filter(status='ACTIVE')
 
+    # Perigos pendentes de revisão (auto-gerados)
+    pending_review = hazards.filter(status='PENDING_REVIEW').count()
+
+    # Pesquisas encerradas (para botão de geração automática)
+    from forms_builder.models import FormInstance
+    closed_forms = FormInstance.objects.filter(
+        company=company, status='CLOSED'
+    ).order_by('-created_at')[:5] if request.user.is_admin_master else []
+
     # Empresa vê o dashboard em modo somente-leitura (sem criar/editar perigos)
     is_readonly = not request.user.is_admin_master
 
@@ -102,6 +111,8 @@ def gro_dashboard(request):
         'overdue_plans': overdue_plans,
         'companies_list': companies_list,
         'is_readonly': is_readonly,
+        'pending_review': pending_review,
+        'closed_forms': closed_forms,
     }
     return render(request, 'risk_management/gro_dashboard.html', context)
 
@@ -472,3 +483,150 @@ def action_plan_status(request, pk):
             plan.save()
             messages.success(request, f'Status atualizado para {plan.get_status_display()}!')
     return redirect('risk_management:action_plan_list')
+
+
+@login_required
+def approve_hazard(request, pk):
+    """Aprova um perigo pendente de revisão — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:dashboard')
+
+    company = _get_company(request)
+    hazard = get_object_or_404(HazardRegistry, pk=pk, company=company, status='PENDING_REVIEW')
+
+    if request.method == 'POST':
+        hazard.status = 'ACTIVE'
+        hazard.save(update_fields=['status', 'updated_at'])
+        AuditLog.log(
+            user=request.user, action='UPDATE',
+            description=f'Perigo aprovado: {hazard.descricao_perigo[:60]}',
+            obj=hazard, company=company, request=request
+        )
+        messages.success(request, f'Perigo "{hazard.source_dimension}" aprovado e visível para a empresa.')
+
+    return redirect('risk_management:hazard_list')
+
+
+@login_required
+def reject_hazard(request, pk):
+    """Rejeita (arquiva) um perigo pendente de revisão — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:dashboard')
+
+    company = _get_company(request)
+    hazard = get_object_or_404(HazardRegistry, pk=pk, company=company, status='PENDING_REVIEW')
+
+    if request.method == 'POST':
+        hazard.status = 'ELIMINATED'
+        hazard.save(update_fields=['status', 'updated_at'])
+        AuditLog.log(
+            user=request.user, action='DELETE',
+            description=f'Perigo rejeitado: {hazard.descricao_perigo[:60]}',
+            obj=hazard, company=company, request=request
+        )
+        messages.success(request, f'Perigo "{hazard.source_dimension}" rejeitado.')
+
+    return redirect('risk_management:hazard_list')
+
+
+@login_required
+def approve_all_hazards(request):
+    """Aprova todos os perigos pendentes de uma pesquisa — somente ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:dashboard')
+
+    company = _get_company(request)
+
+    if request.method == 'POST':
+        pending = HazardRegistry.objects.filter(
+            company=company, status='PENDING_REVIEW'
+        )
+        count = pending.count()
+        pending.update(status='ACTIVE', updated_at=timezone.now())
+        messages.success(request, f'{count} perigos aprovados com sucesso.')
+
+    return redirect('risk_management:hazard_list')
+
+
+@login_required
+def generate_hazards_from_survey(request, form_pk):
+    """Dispara a geração automática de perigos a partir de uma pesquisa — ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:dashboard')
+
+    from forms_builder.models import FormInstance
+    form_instance = get_object_or_404(FormInstance, pk=form_pk)
+
+    if request.method == 'POST':
+        from .services import auto_generate_hazards
+        result = auto_generate_hazards(form_instance, user=request.user)
+
+        total = result['total_generated']
+        skipped = result['total_skipped']
+
+        if total > 0:
+            messages.success(
+                request,
+                f'{total} perigo(s) gerado(s) automaticamente e aguardando sua revisão. '
+                f'{skipped} já existiam.'
+            )
+        else:
+            messages.info(
+                request,
+                'Nenhum novo perigo identificado. Todas as dimensões estão adequadas '
+                'ou os perigos já foram gerados anteriormente.'
+            )
+
+    return redirect('risk_management:hazard_list')
+
+
+@login_required
+def compare_surveys_view(request):
+    """Compara duas pesquisas da mesma empresa — ADMIN_MASTER."""
+    if not request.user.is_admin_master:
+        messages.error(request, 'Acesso restrito ao administrador.')
+        return redirect('risk_management:dashboard')
+
+    company = _get_company(request)
+    if not company:
+        return redirect('accounts:dashboard')
+
+    from forms_builder.models import FormInstance
+
+    # Pesquisas encerradas desta empresa
+    closed_forms = FormInstance.objects.filter(
+        company=company, status='CLOSED'
+    ).order_by('-created_at')
+
+    comparison = None
+    current_pk = request.GET.get('current')
+    previous_pk = request.GET.get('previous')
+
+    if current_pk and previous_pk:
+        current_form = get_object_or_404(FormInstance, pk=current_pk, company=company)
+        previous_form = get_object_or_404(FormInstance, pk=previous_pk, company=company)
+
+        from .services import compare_surveys
+        comparison = compare_surveys(current_form, previous_form)
+
+        # Se solicitado, atualizar perigos
+        if request.GET.get('update_hazards') == '1':
+            from .services import update_hazards_from_comparison
+            updated = update_hazards_from_comparison(company, comparison, current_form, request.user)
+            if updated:
+                messages.success(request, f'{len(updated)} perigo(s) atualizado(s) com base na evolução.')
+            comparison['hazards_updated'] = updated
+
+    context = {
+        'company': company,
+        'closed_forms': closed_forms,
+        'comparison': comparison,
+        'current_pk': current_pk,
+        'previous_pk': previous_pk,
+    }
+    return render(request, 'risk_management/compare_surveys.html', context)
+

@@ -1,0 +1,667 @@
+﻿0: ESPECIFICA├ç├âO DETALHADA E MINUCIOSA PARA CONSTRU├ç├âO DO SISTEMA  
+1: Sistema Informatizado de Medida de Disson├óncia de Cultura e Clima Organizacional e NR-1/NR-17/NR-12 (SIMDCCONR01)
+3: Vers├úo Final ÔÇô 25 de mar├ºo de 2026
+5: 1. Objetivo
+7: O sistema tem como objetivo criar uma aplica├º├úo web segura, escal├ível, responsiva e intuitiva para coletar, armazenar, analisar e visualizar respostas de um question├írio integrado composto por 160 perguntas, distribu├¡das nos seguintes blocos:
+9: IMCO ÔÇô Instrumento de Medida do Clima Organizacional (88 perguntas, validado estatisticamente por Coda et al., 2009).  
+10: FDAC ÔÇô Modelo de Cultura Organizacional (12 perguntas, te├│rico).  
+11: Blocos NR-01/SESMT ÔÇô Fatores de Risco Psicossocial e Neurocognitivo (46 perguntas).  
+12: Blocos NR-17 ÔÇô Aspectos Ergon├┤micos F├¡sicos e Cognitivos (12 perguntas).  
+13: Blocos NR-12 Integrados ÔÇô Seguran├ºa e Ergonomia em M├íquinas e Equipamentos (2 perguntas).  
+15: O sistema realiza o diagn├│stico de disson├óncias de cultura e clima organizacional, identifica fatores de risco psicossocial, ergon├┤mico e de seguran├ºa em m├íquinas, e subsidia a elabora├º├úo, o monitoramento cont├¡nuo e a atualiza├º├úo do Programa de Gerenciamento de Riscos (PGR) e do Gerenciamento de Riscos Ocupacionais (GRO), em conformidade com a NR-1 (Portaria MTE n┬║ 1.419/2024, prorrogada pela Portaria n┬║ 765/2025, com vig├¬ncia plena a partir de 25 de maio de 2026), NR-17 e NR-12.  
+17: O sistema garante plena conformidade com a LGPD (Lei n┬║ 13.709/2018) para o indiv├¡duo e para a empresa, rastreabilidade completa por CPF e CNPJ (com heran├ºa autom├ítica de hist├│rico em caso de mudan├ºa de empresa), reaplica├º├úo semestral autom├ítica do question├írio, consentimento expl├¡cito diferenciado, gera├º├úo de laudos periciais assinados digitalmente, encaminhamento m├®dico especializado quando detectadas altera├º├Áes psicossociais, e uso de intelig├¬ncia artificial para an├ílise dos dados, diagn├│sticos, recomenda├º├Áes, elabora├º├úo e monitoramento do PGR/GRO, com registro de a├º├Áes das empresas e preven├º├úo proativa de riscos trabalhistas, criminais e civis.
+19: 1.1 Vis├úo Geral e Objetivos do Sistema
+20: Escopo Detalhado: Diagn├│stico integrado de cultura, clima e riscos psicossociais/ergon├┤micos, com transforma├º├úo autom├ítica dos resultados em laudos periciais, an├ílises personalizadas, recomenda├º├Áes e planos de a├º├úo para PGR/GRO.  
+21: P├║blico-Alvo:  
+22: Respondentes (colaboradores): recebem c├│pia das respostas e an├ílise personalizada.  
+23: Gestores de RH/SESMT: recebem an├ílise consolidada por departamento e relat├│rios de apoio ao PGR.  
+24: Administrador ISMCBE: acesso total, assinatura digital de laudos e monitoramento global.  
+25: Objetivo do Prot├│tipo: Demonstrar todas as funcionalidades com 10 respostas simuladas.
+27: 2. Requisitos Gerais
+28: Tecnologias: React (frontend), Node.js (backend), MongoDB Atlas, Python/Flask + scikit-learn (IA).  
+29: Hospedagem: Replit (URL p├║blica).  
+30: Interface: Design responsivo, cores azul, branco e preto, alinhado ├á marca ISMCBE.  
+31: Conformidade: LGPD (individual e corporativa), NR-1, NR-17, NR-12, boas pr├íticas OWASP e WCAG 2.1.  
+32: Rastreabilidade: CPF e CNPJ com heran├ºa autom├ítica de hist├│rico.  
+33: Reaplica├º├úo: Autom├ítica a cada 6 meses, com notifica├º├úo por e-mail, WhatsApp ou SMS.  
+34: Relat├│rios: Emitidos como laudos periciais assinados digitalmente, com farta ader├¬ncia ├á legisla├º├úo.
+36: 3. Question├írio Completo e Finalizado (160 perguntas)
+38: Instru├º├Áes Gerais (exibidas ao respondente):  
+39: Responda ├ás quest├Áes abaixo com base na sua percep├º├úo e experi├¬ncia pessoal. Suas respostas s├úo confidenciais, tratadas de forma agregada e destinadas ao diagn├│stico de cultura, clima organizacional e fatores de risco psicossocial, ergon├┤mico e de seguran├ºa relacionados ao trabalho (NR-1, NR-17 e NR-12). Todas as quest├Áes s├úo obrigat├│rias. O preenchimento levar├í aproximadamente 9 a 11 minutos.
+41: 3.1 Fun├º├úo: IMCO ÔÇô Clima Organizacional (88 perguntas)
+43: Vetor: Motiva├º├úo
+45: Dimens├úo: Reconhecimento (7 quest├Áes)  
+46: 1. Nesta empresa, as pol├¡ticas de reconhecimento existentes s├úo aplicadas de forma homog├¬nea e profissional para todos os empregados.  
+47: 2. O sistema de remunera├º├úo existente ├® um excelente instrumento para valorizar e reconhecer aqueles que atingem suas metas.  
+48: 3. A empresa reconhece e aproveita aqueles que demonstram esp├¡rito de lideran├ºa.  
+49: 4. Na minha ├írea, os empregados que desempenham bem suas tarefas s├úo devidamente reconhecidos pelos chefes.  
+50: 5. O caminho para ser reconhecido ├® obter os resultados esperados.  
+51: 6. Na empresa onde trabalho n├úo ├® necess├írio estar mais pr├│ximo da Diretoria/Chefia no dia-a-dia para ser reconhecido.  
+52: 107. Sinto que recebo reconhecimento adequado pelo esfor├ºo e pelos resultados que entrego.
+54: Dimens├úo: Comprometimento (6 quest├Áes)  
+55: 7. Na empresa onde trabalho, h├í grande empenho para encontrar as melhores alternativas para execu├º├úo das atividades.  
+56: 8. Mesmo que surgisse outra oportunidade, pensaria muito antes de deixar meu emprego na empresa onde trabalho.  
+57: 9. Na empresa onde trabalho, em situa├º├Áes de dificuldade, as pessoas preferem levantar o problema em busca de solu├º├Áes adequadas, ao inv├®s de ignor├í-lo.  
+58: 10. Posso garantir que a maioria de meus colegas atende prontamente ├ás demandas/necessidades de servi├ºo.  
+59: 11. O empregado da empresa onde trabalho tem grande orgulho de pertencer a ela.  
+60: 12. Percebo que os empregados da empresa onde trabalho demonstram um grau de fidelidade elevado ├á mesma.
+62: Dimens├úo: Progresso Profissional (5 quest├Áes)  
+63: 13. As oportunidades de crescimento profissional s├úo acess├¡veis a todos os empregados.  
+64: 14. H├í excelentes oportunidades de crescimento profissional na empresa onde trabalho.  
+65: 15. Meu trabalho me d├í a oportunidade de aprender novas t├®cnicas e habilidades, contribuindo para meu crescimento profissional.  
+66: 16. Tenho certeza de que as expectativas de crescimento profissional se concretizam nesta empresa.  
+67: 17. A estrutura de cargos existente ├® suficiente para permitir o crescimento profissional dos empregados.
+69: Vetor: Lideran├ºa
+71: Dimens├úo: Estilo Gerencial (11 quest├Áes)  
+72: 18. Minha chefia ├® acess├¡vel e me trata com respeito.  
+73: 19. A presen├ºa da chefia em minha ├írea contribui de modo decisivo para o bom andamento das atividades.  
+74: 20. Eventuais diverg├¬ncias com minha chefia s├úo discutidas no plano profissional e n├úo no pessoal.  
+75: 21. Na maioria das vezes tenho autonomia para tomar decis├Áes e resolver problemas sem precisar recorrer ├á chefia em cada etapa do trabalho.  
+76: 22. Quando ├® necess├írio efetuar uma mudan├ºa, minha chefia procura garantir o meu envolvimento e o da equipe no processo.  
+77: 23. Tenho suficientes orienta├º├Áes de minha chefia para resolver eventuais dificuldades no trabalho.  
+78: 24. Percebo que minha chefia reconhece e valoriza minhas contribui├º├Áes, colocando-as em pr├ítica.  
+79: 25. Existe coer├¬ncia entre o discurso e a pr├ítica gerencial em minha ├írea de atua├º├úo.  
+80: 26. Minha chefia tem excelente habilidade para lidar com pessoas.  
+81: 103. Percebo que h├í autonomia suficiente para organizar meu trabalho e tomar decis├Áes relacionadas ├ás minhas atividades.  
+82: 104. A lideran├ºa oferece suporte adequado quando enfrento dificuldades ou sobrecarga no trabalho.
+84: Dimens├úo: Trabalho em Equipe (7 quest├Áes)  
+85: 27. A empresa prioriza a contribui├º├úo de todos atrav├®s de um di├ílogo centrado na melhoria permanente do trabalho cotidiano.  
+86: 28. N├úo h├í protecionismo de qualquer esp├®cie em rela├º├úo aos integrantes da equipe a que perten├ºo.  
+87: 29. Esta empresa fomenta o trabalho em equipe como uma de suas cren├ºas para a busca do sucesso.  
+88: 30. H├í uma grande uni├úo e apoio m├║tuo entre as pessoas da equipe em que trabalho.  
+89: 31. O trabalho em equipe flui muito bem na empresa onde atuo.  
+90: 32. H├í tempo suficiente para melhorar o relacionamento e a troca de experi├¬ncias entre as equipes de trabalho.  
+91: 108. Observo ou vivencio situa├º├Áes de ass├®dio moral, discrimina├º├úo ou comportamentos inadequados no ambiente de trabalho.
+93: Dimens├úo: Competi├º├úo no Trabalho (3 quest├Áes)  
+94: 33. A competi├º├úo entre pessoas ou grupos ├® sadia, sendo valorizada como forma de estimular a criatividade e melhorar o desempenho profissional.  
+95: 34. O n├¡vel de competi├º├úo existente entre as pessoas ├® normal e jamais compromete o bom andamento das atividades.  
+96: 35. H├í grande harmonia em meu ambiente de trabalho.
+98: Vetor: Filosofia de Gest├úo
+100: Dimens├úo: Clareza Organizacional (8 quest├Áes)  
+101: 36. A busca cont├¡nua de profissionalismo na gest├úo ├® uma das principais preocupa├º├Áes na empresa onde trabalho.  
+102: 37. O estilo de administra├º├úo adotado pela empresa onde trabalho influencia de modo positivo o comportamento dos seus empregados em rela├º├úo ao trabalho que executam.  
+103: 38. Est├í claro que a Diretoria da empresa onde trabalho se preocupa mais com os assuntos verdadeiramente estrat├®gicos para a empresa.  
+104: 39. ├ë forte a preocupa├º├úo da empresa onde trabalho em reter seus melhores talentos.  
+105: 40. As pessoas que trabalham aqui sabem quais s├úo os principais objetivos, metas ou planos da empresa.  
+106: 41. A postura da empresa onde trabalho demonstra claramente que as pessoas s├úo seu maior patrim├┤nio.  
+107: 42. Sem d├║vida um dos objetivos da empresa onde trabalho ├® crescer respeitando as necessidades e a satisfa├º├úo de seus clientes.  
+108: 43. Nesta empresa ├® grande a preocupa├º├úo de divulgar e transferir o conhecimento adquirido durante o exerc├¡cio das atividades entre as equipes de trabalho.
+110: Dimens├úo: Comunica├º├úo (10 quest├Áes)  
+111: 44. As informa├º├Áes necess├írias ├á realiza├º├úo de meu trabalho s├úo transmitidas de forma clara e objetiva.  
+112: 45. As mudan├ºas s├úo comunicadas e explicadas com anteced├¬ncia.  
+113: 46. A quantidade de reuni├Áes de trabalho ├® suficiente para manter as pessoas informadas sobre o que acontece na empresa onde trabalho.  
+114: 47. Gasto pouco tempo selecionando as informa├º├Áes que recebo atrav├®s dos diferentes canais de comunica├º├úo formais da empresa onde trabalho.  
+115: 48. A comunica├º├úo ├® verdadeiramente de m├úo dupla; n├úo h├í porque temer surpresas ou rea├º├Áes inesperadas de qualquer parte.  
+116: 49. Na empresa onde trabalho, as informa├º├Áes fluem igualmente para todos os empregados e ├íreas.  
+117: 50. Obtenho com facilidade junto a outras ├íreas da empresa onde trabalho as informa├º├Áes que necessito para o desempenho adequado de minhas atividades.  
+118: 51. Na empresa onde trabalho a rede de comunica├º├úo ├® ├ígil e eficiente.  
+119: 105. As mudan├ºas organizacionais (reestrutura├º├Áes, novos processos) s├úo comunicadas e gerenciadas de forma clara e com participa├º├úo da equipe.  
+120: 110. H├í canais eficazes e seguros para relatar preocupa├º├Áes relacionadas ao bem-estar ou ao clima organizacional.
+122: Dimens├úo: Estruturas, Regras e Conformidade (5 quest├Áes)  
+123: 52. A estrutura organizacional e funcional da empresa ├® consistente com seus objetivos.  
+124: 53. H├í uma n├¡tida e adequada divis├úo de pap├®is e de atribui├º├Áes entre ├íreas da empresa onde trabalho.  
+125: 54. As mudan├ºas que ocorrem na empresa onde trabalho s├úo sempre planejadas.  
+126: 55. H├í suficiente abertura e flexibilidade para aceita├º├úo de ideias e sugest├Áes voltadas ao aperfei├ºoamento ou melhoria da empresa onde trabalho.  
+127: 106. No meu ambiente de trabalho, h├í clareza quanto ├ás minhas responsabilidades e pap├®is, evitando ambiguidades ou sobreposi├º├Áes.
+129: Vetor: Gest├úo de Pessoas
+131: Dimens├úo: Pol├¡tica Salarial (7 quest├Áes)  
+132: 56. O sistema de compensa├º├úo (sal├írio + benef├¡cios) ├® adequado, n├úo interferindo na satisfa├º├úo dos empregados.  
+133: 57. Os benef├¡cios existentes complementam de modo suficiente os sal├írios pagos para os diferentes cargos.  
+134: 58. A remunera├º├úo ├® balanceada, incluindo, al├®m do sal├írio, benef├¡cios e outras formas de compensa├º├úo.  
+135: 59. Os benef├¡cios s├úo amplos e variados, auxiliando a manter os mais competentes.  
+136: 60. H├í equil├¡brio interno entre os sal├írios pagos; os cargos mais complexos ou mais importantes s├úo os mais bem remunerados.  
+137: 61. A progress├úo nas faixas salariais (promo├º├úo horizontal) ├® peri├│dica e realizada a intervalos adequados.  
+138: 62. Os aumentos salariais nesta empresa excedem a varia├º├úo do custo de vida no per├¡odo.
+140: Dimens├úo: Sal├írio (4 quest├Áes)  
+141: 63. O sal├írio que recebo ├® suficiente para atender meu padr├úo de vida.  
+142: 64. Os sal├írios pagos reconhecem o valor e a qualidade do desempenho dos funcion├írios da empresa onde trabalho.  
+143: 65. As diferen├ºas nos sal├írios refletem as diferen├ºas no conte├║do e exig├¬ncias dos cargos.  
+144: 66. Meu sal├írio ├® justo, representando o retorno compat├¡vel a meu rendimento dentro desta empresa.
+146: Dimens├úo: Imagem da ├ürea de RH (5 quest├Áes)  
+147: 67. O RH disp├Áe de instrumentos para realizar uma avalia├º├úo eficaz do desempenho dos empregados em suas atividades.  
+148: 68. O RH demonstra em suas pr├íticas grande preocupa├º├úo com aspectos de justi├ºa e ├®tica.  
+149: 69. A ├írea de RH est├í envolvida e preocupada em definir o papel e os requisitos necess├írios para os diferentes cargos existentes na empresa.  
+150: 70. O banco de horas ├® um instrumento eficaz para apurar minha dedica├º├úo extra ao trabalho.  
+151: 111. Sinto que o suporte emocional e psicol├│gico (quando necess├írio) est├í dispon├¡vel na organiza├º├úo.
+153: Dimens├úo: Perspectiva de Carreira (5 quest├Áes)  
+154: 71. Tenho boas oportunidades de adquirir compet├¬ncias gerenciais no exerc├¡cio de meu trabalho.  
+155: 72. Sinto que minhas qualifica├º├Áes e treinamento aumentam minhas possibilidades de promo├º├úo.  
+156: 73. N├úo ├® necess├írio ter um bom tempo de casa para se ter uma situa├º├úo melhor de trabalho nesta empresa.  
+157: 74. Tenho boas oportunidades de adquirir compet├¬ncias t├®cnicas no exerc├¡cio de meu trabalho.  
+158: 75. Meu horizonte profissional est├í bem claro para mim, sei exatamente onde posso chegar nesta empresa.
+160: Dimens├úo: Treinamento e Desenvolvimento (3 quest├Áes)  
+161: 76. A organiza├º├úo em que trabalho ├® reconhecidamente uma empresa que se preocupa em formar seus profissionais para o exerc├¡cio das atividades.  
+162: 77. H├í total apoio da empresa para a realiza├º├úo de treinamentos diretamente ligados ├á minha atividade profissional (treinamentos t├®cnicos).  
+163: 78. O treinamento ├® amplamente valorizado na empresa onde trabalho, at├® mesmo aqueles voltados para est├ígios futuros da carreira do empregado.
+165: Vetor: Natureza do Trabalho
+167: Dimens├úo: Conte├║do do Trabalho (5 quest├Áes)  
+168: 79. Estou fazendo progressos satisfat├│rios em rela├º├úo ├ás minhas metas profissionais.  
+169: 80. As tarefas que executo s├úo interessantes e desafiantes.  
+170: 81. Meu cargo atual est├í me ajudando a atingir minhas metas profissionais.  
+171: 82. Se necess├írio, sinto que tenho grandes possibilidades de influenciar as decis├Áes que afetam meu trabalho.  
+172: 83. Minha capacidade, habilidades e potencial s├úo bem aproveitados no trabalho que executo.
+174: Dimens├úo: Volume de Trabalho (23 quest├Áes ÔÇô NR-1 + NR-17 + NR-12)  
+175: 84. Raramente deixo de cumprir os prazos e metas de meu cargo, uma vez que o volume de trabalho ├® bem dimensionado na empresa onde atuo.  
+176: 85. Quase nunca considero minha jornada de trabalho muito extensa.  
+177: 86. Tenho a tranquilidade e o tempo necess├írios para executar minhas atividades.  
+178: 87. Os processos e rotinas de trabalho em minha ├írea atendem bem ├ás necessidades do servi├ºo.  
+179: 88. Disponho de tempo suficiente para refletir sobre como aperfei├ºoar a execu├º├úo de meu trabalho.  
+180: 101. Sinto que a carga de trabalho (quantidade e complexidade das tarefas) ├® excessiva e compromete meu bem-estar.  
+181: 102. Os prazos e metas estabelecidos pela empresa s├úo realistas e proporcionais aos recursos e tempo dispon├¡veis.  
+182: 109. O equil├¡brio entre vida profissional e pessoal ├® respeitado pela empresa (ex.: respeito a hor├írios, intervalos e desconex├úo ap├│s o expediente).  
+183: 112. O trabalho remoto ou h├¡brido, quando aplic├ível, ├® organizado de forma a evitar isolamento ou excesso de demandas digitais.
+185: Subse├º├úo: Aspectos Ergon├┤micos F├¡sicos e Cognitivos (NR-17)  
+186: 113. As condi├º├Áes de ilumina├º├úo, temperatura e ru├¡do no meu local de trabalho s├úo adequadas e n├úo prejudicam minha concentra├º├úo ou sa├║de f├¡sica.  
+187: 114. O ritmo de trabalho permite pausas suficientes para recupera├º├úo f├¡sica e mental durante a jornada.  
+188: 115. A empresa oferece condi├º├Áes para que eu realize minhas tarefas sem exposi├º├úo excessiva a posturas inadequadas ou movimentos repetitivos.  
+189: 116. Os equipamentos, mobili├írio e ferramentas dispon├¡veis s├úo ergon├┤micos e facilitam a execu├º├úo das minhas atividades di├írias.  
+190: 117. Sinto que o conte├║do das minhas tarefas exige esfor├ºo mental elevado e constante concentra├º├úo sem pausas adequadas (carga cognitiva).  
+191: 118. Percebo que minhas atividades s├úo repetitivas ou mon├│tonas, o que afeta minha motiva├º├úo e aten├º├úo ao longo do dia.
+193: Subse├º├úo: Integra├º├úo NR-12 ÔÇô Seguran├ºa e Ergonomia em M├íquinas e Equipamentos  
+194: 119. Percebo que as m├íquinas e equipamentos que utilizo possuem dispositivos de seguran├ºa (prote├º├Áes, paradas de emerg├¬ncia e sinaliza├º├úo) adequados e funcionais, sem gerar sensa├º├úo de risco ou desconforto durante o uso.  
+195: 120. A interface entre mim e as m├íquinas/equipamentos (controles, displays e posicionamento) ├® projetada de forma ergon├┤mica, facilitando o uso seguro e reduzindo esfor├ºo f├¡sico ou mental excessivo.
+197: Subse├º├úo: Complemento Ampliado NR-17 ÔÇô Organiza├º├úo do Trabalho e Exig├¬ncias Cognitivas  
+198: 121. Meu trabalho ├® organizado de forma que eu tenho controle suficiente sobre a sequ├¬ncia e o ritmo das minhas tarefas di├írias.  
+199: 122. As pausas previstas no meu trabalho s├úo suficientes para que eu me recupere f├¡sica e mentalmente.  
+200: 123. As exig├¬ncias cognitivas do meu trabalho (concentra├º├úo, mem├│ria, tomada de decis├úo) s├úo compat├¡veis com o tempo e os recursos dispon├¡veis.  
+201: 124. O mobili├írio e o layout do meu posto de trabalho permitem uma postura confort├ível e natural durante a maior parte da jornada.  
+202: 125. Sinto que o trabalho que realizo ├® excessivamente mon├│tono ou repetitivo, o que afeta minha aten├º├úo e motiva├º├úo.  
+203: 126. A combina├º├úo entre esfor├ºo f├¡sico e mental exigido pelo meu trabalho me deixa frequentemente exausto ao final do dia.
+205: 3.2. Fun├º├úo: FDAC ÔÇô Cultura Organizacional (12 perguntas)
+207: 89. As pol├¡ticas de reconhecimento s├úo aplicadas equitativamente a todos os colaboradores, independentemente de cargo ou departamento.  
+208: 90. Meu sal├írio reflete justamente minha contribui├º├úo, considerando padr├Áes internos e de mercado.  
+209: 91. As oportunidades de progress├úo na carreira s├úo transparentes e acess├¡veis, promovendo equidade.  
+211: 92. A lideran├ºa comunica os objetivos estrat├®gicos de forma clara, alinhando todos os n├¡veis organizacionais.  
+212: 93. Tenho acesso imediato a informa├º├Áes relevantes para minhas responsabilidades.  
+213: 94. Os canais de comunica├º├úo interna (e.g., intranet, reuni├Áes) promovem transpar├¬ncia e eliminam ambiguidades.  
+215: 95. Meus pap├®is e responsabilidades s├úo definidos com precis├úo, evitando sobreposi├º├Áes.  
+216: 96. A lideran├ºa promove responsabilidade compartilhada por resultados, incentivando a proatividade.  
+217: 97. O trabalho em equipe ├® estruturado com metas claras e pap├®is bem definidos.  
+219: 98. A empresa adere rigorosamente a normas ├®ticas e legais em todas as pr├íticas.  
+220: 99. Os programas de treinamento refor├ºam a conformidade com pol├¡ticas ├®ticas e regulat├│rias.  
+221: 100. O conte├║do do meu trabalho est├í alinhado ├ás expectativas ├®ticas da organiza├º├úo, promovendo integridade.
+223: 3.3. Fun├º├úo: NR-01 / SESMT ÔÇô Fatores de Risco Psicossocial e Neurocognitivo (46 itens)
+225: Bloco K ÔÇô Sintom├íticos Neuro-Vegetativos (K1ÔÇôK8)  
+226: K1. Dor de cabe├ºa frequente que n├úo passa com analg├®sico comum.  
+227: K2. Tremores ou movimentos involunt├írios em repouso.  
+228: K3. Epis├│dios de desmaio ou convuls├úo.  
+229: K4. Vis├úo emba├ºada ou dupla sem causa ocular conhecida.  
+230: K5. Tontura ou desequil├¡brio ao levantar ou andar.  
+231: K6. Palpita├º├Áes que duram mais de 10 min com medo de morrer.  
+232: K7. Formigamento ou dorm├¬ncia em bra├ºos/pernas sem compress├úo.  
+233: K8. Uso cont├¡nuo de rem├®dio sem receita para ÔÇ£nervosÔÇØ ou sono.
+235: Bloco L ÔÇô Antecedentes Bio-Neuro (L1ÔÇôL8) ÔÇô escala 0ÔÇô3  
+236: L1. Exame de sangue nos ├║ltimos 12 meses: altera├º├úo de TSH, B12 ou hemoglobina. (0 = n├úo fez/normal | 1 = normal | 2 = alterado | 3 = n├úo sei)  
+237: L2. Traumatismo craniano com perda de consci├¬ncia. (0 = nunca | 1 = < 5 min | 2 = 5-30 min | 3 = > 30 min)  
+238: L3. Epilepsia ou convuls├úo j├í diagnosticada. (0 = n├úo | 1 = sim, controlada | 2 = sim, em tratamento | 3 = sim, sem controle)  
+239: L4. Doen├ºa auto-imune (l├║pus, Hashimoto, etc.). (0 = n├úo | 1 = sim, sem sintomas atuais | 2 = sim, com sintomas leves | 3 = sim, com sintomas moderados/graves)  
+240: L5. Infec├º├úo grave nos ├║ltimos 6 meses com sintomas neurol├│gicos. (0 = n├úo | 1 = sim, sem sequelas | 2 = sim, com sequelas leves | 3 = sim, com sequelas moderadas)  
+241: L6. Cirurgia com anestesia geral nos ├║ltimos 3 meses. (0 = n├úo | 1 = sim, sem complica├º├Áes | 2 = sim, com complica├º├Áes leves | 3 = sim, com complica├º├Áes moderadas)  
+242: L7. Apneia do sono confirmada ou uso de CPAP. (0 = n├úo | 1 = sim, sem uso de CPAP | 2 = sim, uso irregular de CPAP | 3 = sim, uso regular de CPAP)  
+243: L8. Hist├│rico familiar de dem├¬ncia precoce, Parkinson ou esquizofrenia. (0 = n├úo | 1 = sim, em parente distante | 2 = sim, em parente de primeiro grau | 3 = sim, m├║ltiplos casos na fam├¡lia)
+245: Bloco M ÔÇô Fun├º├úo Executiva Autopercebida (M1ÔÇôM8)  
+246: M1. Esquecer o que estava fazendo no meio de uma tarefa simples.  
+247: M2. Perder chaves, celular ou crach├í mais de 2 vezes por semana.  
+248: M3. Iniciar v├írias tarefas e n├úo concluir nenhuma delas.  
+249: M4. Dificuldade de planejar a sequ├¬ncia de passos para elaborar um relat├│rio ou projeto.  
+250: M5. Atraso maior que 5 minutos para tomar decis├Áes simples do dia a dia.  
+251: M6. Esquecer data ou hor├írio de compromissos que j├í havia anotado.  
+252: M7. Precisar anotar absolutamente tudo para n├úo esquecer.  
+253: M8. Sentir-me ÔÇ£atrasadoÔÇØ em rela├º├úo ao ritmo dos meus colegas.
+255: Bloco N ÔÇô Contexto Ocupacional (N1ÔÇôN8)  
+256: N1. Quantas horas de sono voc├¬ tem dormido por noite, em m├®dia, na ├║ltima semana? (num├®rico aberto)  
+257: N2. Quantos dias por semana voc├¬ trabalha em home office ou modelo h├¡brido? (num├®rico aberto)  
+258: N3. Sofreu ass├®dio moral ou sexual no trabalho nos ├║ltimos 12 meses? (0 = n├úo | 1 = sim, n├úo formalizado | 2 = sim, formalizado internamente | 3 = sim, com procedimento jur├¡dico)  
+259: N4. Qual ├® o seu principal regime de escala de trabalho? (0 = diurno fixo | 1 = diurno com rod├¡zio | 2 = 12x36 | 3 = noturno ou turno rotativo)  
+260: N5. Quantas horas extras voc├¬ realiza por semana, em m├®dia? (num├®rico aberto)  
+261: N6. Quantos dias de f├®rias voc├¬ tirou nos ├║ltimos 12 meses? (num├®rico aberto)  
+262: N7. J├í teve afastamento m├®dico por problema mental ou estresse nos ├║ltimos 24 meses? (0 = n├úo | 1 = sim, menos de 15 dias | 2 = sim, 15 a 30 dias | 3 = sim, mais de 30 dias)  
+263: N8. A empresa oferece apoio psicol├│gico ou coaching de forma regular? (0 = n├úo oferece | 1 = oferece, mas pouco acess├¡vel | 2 = oferece, acesso moderado | 3 = oferece, acesso regular e facilitado)
+265: Bloco O ÔÇô Impacto Funcional (O1ÔÇôO6)  
+266: O1. Tenho dificuldade de chegar ao trabalho no hor├írio por motivos relacionados ao meu estado de sa├║de ou bem-estar.  
+267: O2. Percebo redu├º├úo de minha produtividade superior a 25% nos ├║ltimos meses (autoavalia├º├úo ou feedback do gestor).  
+268: O3. J├í recebi advert├¬ncias, suspens├Áes ou tive faltas justificadas por atrasos ou erros frequentes.  
+269: O4. Tenho pensado em pedir demiss├úo ou sinto temor constante de ser demitido.  
+270: O5. J├í precisei de afastamento m├®dico ou uso de benef├¡cio assistencial nos ├║ltimos 12 meses.  
+271: O6. Perdi oportunidade de promo├º├úo ou nova fun├º├úo nos ├║ltimos 6 meses devido ao meu desempenho ou sa├║de.
+273: Bloco P ÔÇô Depend├¬ncia Qu├¡mica (P1ÔÇôP6)  
+274: P1. Consumo bebida alco├│lica 4 ou mais vezes por semana para ÔÇ£relaxarÔÇØ ou dormir.  
+275: P2. Usei maconha, coca├¡na, anfetaminas ou opioides nos ├║ltimos 30 dias.  
+276: P3. J├í usei alguma subst├óncia pela manh├ú para ÔÇ£ativarÔÇØ ou acalmar os nervos antes do trabalho.  
+277: P4. J├í tentei diminuir ou parar o uso de alguma subst├óncia, mas n├úo consegui.  
+278: P5. J├í tive brigas familiares, advert├¬ncias ou faltas no trabalho relacionadas ao uso de subst├óncias.  
+279: P6. Sinto sintomas de abstin├¬ncia (tremor, suor, ins├┤nia, irritabilidade) quando fico sem a subst├óncia.
+281: Campo Aberto ÔÇô Percep├º├úo Subjetiva (1 quest├úo)  
+282: Q. Descreva, com suas palavras, o que MAIS tem afetado seu bem-estar ou trabalho nos ├║ltimos 3 meses:  
+283: [caixa de texto ÔÇô m├íximo 500 caracteres]
+285: Total de perguntas: 160.
+288: 4. Consentimento LGPD e Fluxo de Uso
+289: O respondente deve concordar explicitamente com dois termos:  
+290: Prote├º├úo da an├ílise individual.  
+291: Compartilhamento an├┤nimo de dados com a organiza├º├úo para fins de PGR, diagn├│sticos de clima e cultura organizacional, atendimento aos requisitos da NR-01, NR-17 e NR-12, e sugest├Áes ao SESMT.
+293: 5. Rastreabilidade, Reaplica├º├úo e Relat├│rios
+294: Rastreabilidade plena por CPF e CNPJ, com heran├ºa autom├ítica de hist├│rico.  
+295: Reaplica├º├úo semestral autom├ítica.  
+296: Relat├│rio Individual: C├│pia das respostas + an├ílise personalizada + gr├íficos + encaminhamento m├®dico (quando detectadas altera├º├Áes psicossociais).  
+297: Relat├│rio Departamental e Empresarial: An├ílise consolidada por departamento/organiza├º├úo + matriz de riscos + recomenda├º├Áes para PGR/GRO.  
+299: Todos os relat├│rios s├úo emitidos como laudos periciais assinados digitalmente pelo administrador, com farta ader├¬ncia ├á LGPD, NR-01, NR-17, NR-12 e demais normas aplic├íveis.
+301: 6. Intelig├¬ncia Artificial
+303: A IA elaborar├í an├ílises dos dados, diagn├│sticos de altera├º├Áes psicossociais, encaminhamentos a especialistas, gera├º├úo e monitoramento cont├¡nuo de PGR/GRO, registro de a├º├Áes das empresas e preven├º├úo de riscos trabalhistas, criminais e civis.
+305: 7. Referencial Bibliogr├ífico Restrito
+306: Utilizado exclusivamente o referencial prim├írio oriundo de:  
+308: ADAMS, J. S. Inequity in social exchange. In: BERKOWITZ, L. (ed.). Advances in experimental social psychology. New York: Academic Press, 1965. v. 2.
+309: ARCHER, A. O mito da motiva├º├úo. In: BERGAMINI, C. W.; CODA, R. (org.). Psicodin├ómica da vida organizacional: lideran├ºa e motiva├º├úo. S├úo Paulo: Atlas, 1978.
+310: ASHKANASY, N. M.; WILDEROM, C. P. M.; PETERSON, M. F. (ed.). Handbook of organizational culture and climate. Thousand Oaks: Sage, 2000.
+311: BAKKER, A. B.; DEMEROUTI, E. The job demands-resources model: state of the art. Journal of Managerial Psychology, v. 22, n. 3, p. 309ÔÇô328, 2007.
+312: BARDIN, L. An├ílise de conte├║do. Lisboa: Edi├º├Áes 70, 2011.
+313: BASS, B. M. Bass & Stogdill's handbook of leadership. New York: Free Press, 1990.
+314: BISWAS, S.; VARMA, A. Psychological climate and individual performance in India. Employee Relations, v. 29, n. 6, p. 664ÔÇô676, 2007.
+315: BROWN, S. P.; LAM, S. K. A meta-analysis of relationships linking employee satisfaction to customer responses. Journal of Retailing, v. 84, n. 3, p. 243ÔÇô255, 2008.
+316: CAMERON, K. S.; QUINN, R. E. Diagnosing and changing organizational culture. Reading: Addison-Wesley, 1999.
+317: CAMPBELL, J. P.; DUNNETTE, M. D.; LAWLER III, E. E.; WEICK, K. E. Managerial behavior, performance and effectiveness. New York: McGraw-Hill, 1970.
+318: CODA, R. Clima organizacional: uma contribui├º├úo metodol├│gica. 1992. Tese (Livre-doc├¬ncia) ÔÇô Faculdade de Economia, Administra├º├úo e Contabilidade, Universidade de S├úo Paulo, S├úo Paulo, 1992.
+319: CODA, R. Pesquisa de clima organizacional e gest├úo estrat├®gica de recursos humanos. In: BERGAMINI, C. W.; CODA, R. (org.). Psicodin├ómica da vida organizacional. S├úo Paulo: Atlas, 1997.
+320: CODA, R. et al. Nada mais pr├ítico do que uma boa teoria! Proposi├º├úo e valida├º├úo de modelo de clima organizacional. Revista de Administra├º├úo Contempor├ónea, v. 13, n. 3, p. 465ÔÇô486, 2009.
+321: CORSINI, R. J. The dictionary of psychology. Philadelphia: Taylor & Francis, 1999.
+322: CRESWELL, J. W.; PLANO CLARK, V. L. Designing and conducting mixed methods research. Thousand Oaks: Sage, 2011.
+323: CRONBACH, L. J. Fundamentos da testagem psicol├│gica. Porto Alegre: Artes M├®dicas, 1996.
+324: DENISON, D. R. Corporate culture and organizational effectiveness. New York: John Wiley & Sons, 1990.
+325: DENISON, D. R.; MISHRA, A. K. Toward a theory of organizational culture and effectiveness. Organization Science, v. 6, n. 2, p. 204ÔÇô223, 1995.
+326: FERREIRA, M. C. Governan├ºa corporativa e cultura organizacional. Revista Brasileira de Gest├úo de Neg├│cios, v. 20, n. 4, p. 567ÔÇô589, 2018.
+327: FOREHAND, G. A.; GILMER, B. H. Environmental variation in studies of organizational behavior. Psychological Bulletin, v. 62, n. 6, p. 361ÔÇô382, 1964.
+328: FRANEK, M.; VECERA, J. Personal characteristics and job satisfaction. Ekonomika a Management, n. 4, p. 63ÔÇô76, 2008.
+329: GARSON, G. D. Statnotes: topics in multivariate analysis. Raleigh: North Carolina State University, 2004.
+330: GIL, A. C. Como elaborar projetos de pesquisa. 5. ed. S├úo Paulo: Atlas, 2010.
+331: GON├çALVES, A. P. Transpar├¬ncia e resili├¬ncia organizacional. Revista de Administra├º├úo P├║blica, v. 54, n. 2, p. 234ÔÇô256, 2020.
+332: GOULART, L. E. T. Cultura organizacional e gest├úo de riscos: engajando equipes na preven├º├úo (RiskCon+). S├úo Paulo: RiskCon+, 2025.
+333: GREAT PLACE TO WORK; COPENE. An├ílise de resultados da pesquisa de ambiente 2001. S├úo Paulo: GPTW, 2001.
+334: GRA├çA, H. Clima organizacional: uma abordagem vivencial. Bras├¡lia: FUNADESP, 1999.
+335: HACKMAN, J. R.; OLDHAM, G. R. Motivation through the design of work. Organizational Behavior and Human Performance, v. 16, n. 2, p. 250ÔÇô279, 1976.
+336: HAFER, J.; GRESHAM, G. G. Organizational climate antecedents to the market orientation of cross-functional new product development teams. Journal of Behavioral and Applied Management, v. 8, n. 1, p. 34ÔÇô66, 2008.
+337: HAIR, J. F. et al. An├ílise multivariada de dados. Porto Alegre: Bookman, 2005.
+338: HAYDUK, L. A. Structural equation modeling with LISREL. Baltimore: Johns Hopkins University Press, 1987.
+339: HERZBERG, F. Work and the nature of man. Cleveland: World Publishing, 1966.
+340: HOFSTEDE, G. CultureÔÇÖs consequences. Thousand Oaks: Sage, 2001.
+341: J├ûRESKOG, K. G.; S├ûRBOM, D. LISREL 8: userÔÇÖs reference guide. Chicago: Scientific Software International, 1993.
+342: KARASEK, R. A. Job demands, job decision latitude, and mental strain. Administrative Science Quarterly, v. 24, n. 2, p. 285ÔÇô308, 1979.
+343: KATZ, D.; KAHN, R. L. Psicologia social das organiza├º├Áes. S├úo Paulo: Atlas, 1978.
+344: KELLER, E.; AGUIAR, M. A. F. An├ílise cr├¡tica te├│rica da evolu├º├úo do conceito de clima organizacional. Terra e Cultura, v. 20, n. 39, p. 91ÔÇô113, 2004.
+345: KILIC, C.; DURSUN, T. Job-related antecedents and performance outcomes of individual-level customer orientation. The Business Review, v. 10, n. 1, p. 39ÔÇô46, 2008.
+346: KOHN, A. No contest: the case against competition. Boston: Houghton Mifflin, 1992.
+347: KOLB, D. A.; RUBIN, I. M.; MCINTYRE, J. M. Psicologia organizacional: uma abordagem vivencial. S├úo Paulo: Atlas, 1986.
+348: KOTTER, J. P. Corporate culture and performance. New York: Free Press, 1992.
+349: KOZLOWSKI, S. W. J.; DOHERTY, M. L. Integration of climate and leadership. Journal of Applied Psychology, v. 74, n. 4, p. 546ÔÇô553, 1989.
+350: KREITNER, R.; KINICKI, A. Organizational behavior. New York: McGraw-Hill, 2007.
+351: LAROS, J. A.; PUENTE-PALACIOS, K. E. Valida├º├úo cruzada de uma escala de clima organizacional. Estudos de Psicologia, v. 9, n. 1, p. 113ÔÇô119, 2004.
+352: LITWIN, G. H.; STRINGER, R. A. Motivation and organizational climate. Boston: Harvard Business School Press, 1968.
+353: LOCKE, E. A. The nature and causes of job satisfaction. In: DUNNETTE, M. D. (ed.). Handbook of industrial and organizational psychology. Chicago: Rand McNally, 1976.
+354: LUZ, J. P. Metodologia para an├ílise de clima organizacional. 2001. Disserta├º├úo (Mestrado) ÔÇô Universidade Federal de Santa Catarina, Florian├│polis, 2001.
+355: MEYER, J. P.; ALLEN, N. J. A three-component conceptualization of organizational commitment. Human Resource Management Review, v. 1, n. 1, p. 61ÔÇô89, 1991.
+356: MINTZBERG, H. The structuring of organizations. Englewood Cliffs: Prentice-Hall, 1979.
+357: MUCHINSKY, P. M. Psychology applied to work. Belmont: Thomson Wadsworth, 2003.
+358: NOE, R. A. Employee training and development. New York: McGraw-Hill, 2008.
+359: OLIVEIRA, W. M. Perfil anal├¡tico-descritivo da pesquisa sobre clima organizacional em institui├º├Áes de ensino superior (1970ÔÇô1995). Tese (Doutorado), 1996.
+360: PATTERSON, M. G. et al. Validating the organizational climate measure. Journal of Organizational Behavior, v. 26, n. 4, p. 379ÔÇô408, 2005.
+361: PUENTE-PALACIOS, K. E. Abordagens te├│ricas e dimens├Áes emp├¡ricas do conceito de clima organizacional. Revista de Administra├º├úo, v. 37, n. 3, p. 96ÔÇô104, 2004.
+362: QUINN, R. E. et al. Compet├¬ncias gerenciais. Rio de Janeiro: Campus, 2004.
+363: REICHERS, A. E.; SCHNEIDER, B. Climate and culture: an evolution of constructs. In: SCHNEIDER, B. (ed.). Organizational climate and culture. San Francisco: Jossey-Bass, 1990.
+364: RESENDE, E.; BENAITER, P. R. Gest├úo de clima organizacional. Belo Horizonte: ├ènio Resende, 1997.
+365: RIBEIRO, N. Clima organizacional na Embrapa. Disserta├º├úo (Mestrado) ÔÇô FEA-USP, 1990.
+366: RIZZATTI, G.; COLOSSI, N. Clima organizacional da Universidade Federal de Santa Catarina. In: SILVEIRA, A.; COLOSSI, N.; SOUSA, C. G. (org.). Administra├º├úo universit├íria. Florian├│polis: UFSC, 1998.
+367: ROBBINS, S. P. Organizational behavior. Upper Saddle River: Prentice Hall, 2005.
+368: SBRAGIA, R. Um estudo emp├¡rico sobre o clima organizacional em institui├º├Áes de pesquisa. Revista de Administra├º├úo, v. 18, n. 2, p. 30ÔÇô39, 1983.
+369: SCHEIN, E. H. Organizational culture and leadership. 4. ed. San Francisco: Jossey-Bass, 2010.
+370: SOPOW, E. The communication climate change at RCMP. Strategic Communication Management, v. 12, n. 1, p. 20ÔÇô23, 2007.
+371: SROUR, R. H. Poder, cultura e ├®tica nas organiza├º├Áes. Rio de Janeiro: Campus, 1998.
+372: TAGIURI, R. The concept of organizational climate. In: TAGIURI, R.; LITWIN, G. H. (ed.). Organizational climate. Boston: Harvard Business School Press, 1968.
+373: TAGLIACARNE, G. T├®cnica y pr├íctica de las investigaciones de mercado. Barcelona: Ariel, 1963.
+374: TAMAYO, A. Prioridades axiol├│gicas, atividade f├¡sica e estresse ocupacional. Revista de Administra├º├úo Contempor├ónea, v. 5, n. 3, p. 127ÔÇô147, 2001.
+375: ULRICH, D. Human resource champions. Boston: Harvard Business School Press, 1997.
+376: WEST, M. A. Effective teamwork. Oxford: Blackwell, 2004.
+377: WOOLDRIDGE, B. R.; MINSKY, B. D. The role of climate and socialization in developing interfunctional coordination. The Learning Organization, v. 9, n. 1, p. 29ÔÇô38, 2003.
+378: BRASIL. Minist├®rio do Trabalho e Emprego. Norma Regulamentadora n┬║ 01 (NR-01): Disposi├º├Áes Gerais e Gerenciamento de Riscos Ocupacionais. Bras├¡lia: MTE, 2020. Dispon├¡vel em: https://www.gov.br/trabalho-e-emprego. Acesso em: 25 mar. 2026.
+379: BRASIL. Minist├®rio do Trabalho e Previd├¬ncia. Norma Regulamentadora n┬║ 17 (NR-17): Ergonomia. Bras├¡lia: MTP, 2021. Dispon├¡vel em: https://www.gov.br/trabalho-e-previdencia. Acesso em: 25 mar. 2026.
+380: BRASIL. Minist├®rio do Trabalho e Emprego. Norma Regulamentadora n┬║ 12 (NR-12): Seguran├ºa no Trabalho em M├íquinas e Equipamentos. Bras├¡lia: MTE, 2019. Dispon├¡vel em: https://www.gov.br/trabalho-e-emprego. Acesso em: 25 mar. 2026.
+382: 1. EIXO: MOTIVA├ç├âO, RECONHECIMENTO E SATISFA├ç├âO
+383: Dimens├Áes associadas:
+384: Reconhecimento
+385: Sal├írio / Pol├¡tica salarial
+386: Conte├║do do trabalho
+387: Satisfa├º├úo
+388: Refer├¬ncias:
+389: ADAMS, J. S. (1965) ÔåÆ teoria da equidade
+390: HERZBERG, F. (1966) ÔåÆ motiva├º├úo-higiene
+391: HACKMAN, J. R.; OLDHAM, G. R. (1976) ÔåÆ design do trabalho
+392: LOCKE, E. A. (1976) ÔåÆ satisfa├º├úo no trabalho
+393: KOHN, A. (1992) ÔåÆ cr├¡tica ├á motiva├º├úo extr├¡nseca
+394: FRANEK, M.; VECERA, J. (2008)
+395: BROWN, S. P.; LAM, S. K. (2008)
+396: Insight t├®cnico:
+397: ÔåÆ Sustenta itens sobre recompensa, engajamento e significado do trabalho
+399: 2. EIXO: COMPROMETIMENTO ORGANIZACIONAL
+400: Dimens├Áes:
+401: Comprometimento
+402: Fidelidade
+403: Orgulho organizacional
+404: Refer├¬ncias:
+405: MEYER, J. P.; ALLEN, N. J. (1991) ÔåÆ modelo tridimensional
+406: KATZ, D.; KAHN, R. L. (1978)
+407: ROBBINS, S. P. (2005)
+408: Insight:
+409: ÔåÆ Base conceitual dos itens sobre reten├º├úo e v├¡nculo psicol├│gico
+411: 3. EIXO: LIDERAN├çA E GEST├âO
+412: Dimens├Áes:
+413: Estilo gerencial
+414: Lideran├ºa
+415: Suporte
+416: Refer├¬ncias:
+417: BASS, B. M. (1990) ÔåÆ lideran├ºa transformacional
+418: KOTTER, J. P. (1992)
+419: KOZLOWSKI, S. W. J.; DOHERTY, M. L. (1989)
+420: QUINN, R. E. et al. (2004)
+421: Insight:
+422: ÔåÆ Fundamenta percep├º├úo de chefia, autonomia e suporte
+424: 4. EIXO: CLIMA ORGANIZACIONAL (N├ÜCLEO CENTRAL DO INSTRUMENTO)
+425: Dimens├Áes:
+426: Trabalho em equipe
+427: Comunica├º├úo
+428: Clareza organizacional
+429: Estrutura e regras
+430: Refer├¬ncias principais:
+431: LITWIN, G. H.; STRINGER, R. A. (1968) ÔåÆ base cl├íssica
+432: TAGIURI, R. (1968)
+433: CODA, R. (1992; 1997; 2009) ÔåÆ base brasileira
+434: SBRAGIA, R. (1983)
+435: PUENTE-PALACIOS, K. E. (2004)
+436: PATTERSON, M. G. et al. (2005) ÔåÆ valida├º├úo emp├¡rica
+437: DENISON, D. R. (1990)
+438: REICHERS, A. E.; SCHNEIDER, B. (1990)
+439: Complementares:
+440: ASHKANASY et al. (2000)
+441: CAMERON; QUINN (1999)
+442: Insight:
+443: ÔåÆ Este eixo sustenta mais de 60% do question├írio
+445: 5. EIXO: CULTURA ORGANIZACIONAL
+446: Dimens├Áes:
+447: Filosofia de gest├úo
+448: Valores organizacionais
+449: ├ëtica e conformidade
+450: Refer├¬ncias:
+451: SCHEIN, E. H. (2010) ÔåÆ principal base te├│rica
+452: HOFSTEDE, G. (2001)
+453: KOTTER, J. P. (1992)
+454: SROUR, R. H. (1998)
+455: FERREIRA, M. C. (2018)
+456: Insight:
+457: ÔåÆ Base para FDAC (cultura organizacional)
+459: 6. EIXO: ERGONOMIA E ORGANIZA├ç├âO DO TRABALHO
+460: Dimens├Áes:
+461: Volume de trabalho
+462: Ergonomia f├¡sica
+463: Ergonomia cognitiva
+464: Fadiga
+465: Refer├¬ncias:
+466: KARASEK, R. A. (1979) ÔåÆ demanda-controle
+467: HACKMAN; OLDHAM (1976)
+468: MUCHINSKY, P. M. (2003)
+469: Normas diretamente vinculadas:
+470: NR-17
+471: NR-01
+472: Insight:
+473: ÔåÆ Sustenta itens:
+474: carga mental
+475: pausas
+476: autonomia
+477: exaust├úo
+479: 7. EIXO: SEGURAN├çA DO TRABALHO E RISCO
+480: Dimens├Áes:
+481: Seguran├ºa em m├íquinas
+482: Percep├º├úo de risco
+483: Conformidade
+484: Refer├¬ncias:
+485: NR-12 (base normativa)
+486: GOULART, L. E. T. (2025) ÔåÆ integra├º├úo cultura + risco
+487: Insight:
+488: ÔåÆ Integra cultura organizacional com seguran├ºa operacional
+490: 8. EIXO: METODOLOGIA E PSICOMETRIA
+491: Dimens├Áes:
+492: Valida├º├úo do instrumento
+493: Confiabilidade
+494: An├ílise estat├¡stica
+495: Refer├¬ncias:
+496: CRONBACH, L. J. (1996)
+497: HAIR, J. F. et al. (2005)
+498: HAYDUK, L. A. (1987)
+499: J├ûRESKOG; S├ûRBOM (1993)
+500: CRESWELL; PLANO CLARK (2011)
+501: GIL, A. C. (2010)
+502: Insight:
+503: ÔåÆ Sustenta:
+504: alfa de Cronbach
+505: an├ílise fatorial
+506: modelagem estrutural
+508: 9. EIXO: TREINAMENTO E DESENVOLVIMENTO
+509: Dimens├Áes:
+510: Capacita├º├úo
+511: Desenvolvimento de carreira
+512: Refer├¬ncias:
+513: NOE, R. A. (2008)
+514: KREITNER; KINICKI (2007)
+516: 10. EIXO: COMUNICA├ç├âO ORGANIZACIONAL
+517: Dimens├Áes:
+518: Fluxo de informa├º├úo
+519: Transpar├¬ncia
+520: Refer├¬ncias:
+521: SOPOW, E. (2007)
+522: GON├çALVES, A. P. (2020)
+524: 11. ESTRUTURA FINAL (VIS├âO SIST├èMICA)
+526: 9. QUESTION├üRIO COMPLETO ÔÇô SIMDCCONR01 (160 perguntas)
+528: Instru├º├Áes Gerais (exibidas ao respondente):  
+530: Responda ├ás quest├Áes abaixo com base na sua percep├º├úo e experi├¬ncia pessoal. Suas respostas s├úo confidenciais, tratadas de forma agregada e destinadas ao diagn├│stico de cultura, clima organizacional e fatores de risco psicossocial, ergon├┤mico e de seguran├ºa relacionados ao trabalho (NR-1, NR-17 e NR-12). Todas as quest├Áes s├úo obrigat├│rias. O preenchimento levar├í aproximadamente 9 a 11 minutos.
+532: 1. Fun├º├úo: IMCO ÔÇô Clima Organizacional (88 perguntas)
+534: Vetor: Motiva├º├úo
+536: Dimens├úo: Reconhecimento (7 quest├Áes)  
+537: 1. Nesta empresa, as pol├¡ticas de reconhecimento existentes s├úo aplicadas de forma homog├¬nea e profissional para todos os empregados.  
+538: 2. O sistema de remunera├º├úo existente ├® um excelente instrumento para valorizar e reconhecer aqueles que atingem suas metas.  
+539: 3. A empresa reconhece e aproveita aqueles que demonstram esp├¡rito de lideran├ºa.  
+540: 4. Na minha ├írea, os empregados que desempenham bem suas tarefas s├úo devidamente reconhecidos pelos chefes.  
+541: 5. O caminho para ser reconhecido ├® obter os resultados esperados.  
+542: 6. Na empresa onde trabalho n├úo ├® necess├írio estar mais pr├│ximo da Diretoria/Chefia no dia-a-dia para ser reconhecido.  
+543: 107. Sinto que recebo reconhecimento adequado pelo esfor├ºo e pelos resultados que entrego.
+545: Dimens├úo: Comprometimento (6 quest├Áes)  
+546: 7. Na empresa onde trabalho, h├í grande empenho para encontrar as melhores alternativas para execu├º├úo das atividades.  
+547: 8. Mesmo que surgisse outra oportunidade, pensaria muito antes de deixar meu emprego na empresa onde trabalho.  
+548: 9. Na empresa onde trabalho, em situa├º├Áes de dificuldade, as pessoas preferem levantar o problema em busca de solu├º├Áes adequadas, ao inv├®s de ignor├í-lo.  
+549: 10. Posso garantir que a maioria de meus colegas atende prontamente ├ás demandas/necessidades de servi├ºo.  
+550: 11. O empregado da empresa onde trabalho tem grande orgulho de pertencer a ela.  
+551: 12. Percebo que os empregados da empresa onde trabalho demonstram um grau de fidelidade elevado ├á mesma.
+553: Dimens├úo: Progresso Profissional (5 quest├Áes)  
+554: 13. As oportunidades de crescimento profissional s├úo acess├¡veis a todos os empregados.  
+555: 14. H├í excelentes oportunidades de crescimento profissional na empresa onde trabalho.  
+556: 15. Meu trabalho me d├í a oportunidade de aprender novas t├®cnicas e habilidades, contribuindo para meu crescimento profissional.  
+557: 16. Tenho certeza de que as expectativas de crescimento profissional se concretizam nesta empresa.  
+558: 17. A estrutura de cargos existente ├® suficiente para permitir o crescimento profissional dos empregados.
+560: Vetor: Lideran├ºa
+562: Dimens├úo: Estilo Gerencial (11 quest├Áes)  
+563: 18. Minha chefia ├® acess├¡vel e me trata com respeito.  
+564: 19. A presen├ºa da chefia em minha ├írea contribui de modo decisivo para o bom andamento das atividades.  
+565: 20. Eventuais diverg├¬ncias com minha chefia s├úo discutidas no plano profissional e n├úo no pessoal.  
+566: 21. Na maioria das vezes tenho autonomia para tomar decis├Áes e resolver problemas sem precisar recorrer ├á chefia em cada etapa do trabalho.  
+567: 22. Quando ├® necess├írio efetuar uma mudan├ºa, minha chefia procura garantir o meu envolvimento e o da equipe no processo.  
+568: 23. Tenho suficientes orienta├º├Áes de minha chefia para resolver eventuais dificuldades no trabalho.  
+569: 24. Percebo que minha chefia reconhece e valoriza minhas contribui├º├Áes, colocando-as em pr├ítica.  
+570: 25. Existe coer├¬ncia entre o discurso e a pr├ítica gerencial em minha ├írea de atua├º├úo.  
+571: 26. Minha chefia tem excelente habilidade para lidar com pessoas.  
+572: 103. Percebo que h├í autonomia suficiente para organizar meu trabalho e tomar decis├Áes relacionadas ├ás minhas atividades.  
+573: 104. A lideran├ºa oferece suporte adequado quando enfrento dificuldades ou sobrecarga no trabalho.
+575: Dimens├úo: Trabalho em Equipe (7 quest├Áes)  
+576: 27. A empresa prioriza a contribui├º├úo de todos atrav├®s de um di├ílogo centrado na melhoria permanente do trabalho cotidiano.  
+577: 28. N├úo h├í protecionismo de qualquer esp├®cie em rela├º├úo aos integrantes da equipe a que perten├ºo.  
+578: 29. Esta empresa fomenta o trabalho em equipe como uma de suas cren├ºas para a busca do sucesso.  
+579: 30. H├í uma grande uni├úo e apoio m├║tuo entre as pessoas da equipe em que trabalho.  
+580: 31. O trabalho em equipe flui muito bem na empresa onde atuo.  
+581: 32. H├í tempo suficiente para melhorar o relacionamento e a troca de experi├¬ncias entre as equipes de trabalho.  
+582: 108. Observo ou vivencio situa├º├Áes de ass├®dio moral, discrimina├º├úo ou comportamentos inadequados no ambiente de trabalho.
+584: Dimens├úo: Competi├º├úo no Trabalho (3 quest├Áes)  
+585: 33. A competi├º├úo entre pessoas ou grupos ├® sadia, sendo valorizada como forma de estimular a criatividade e melhorar o desempenho profissional.  
+586: 34. O n├¡vel de competi├º├úo existente entre as pessoas ├® normal e jamais compromete o bom andamento das atividades.  
+587: 35. H├í grande harmonia em meu ambiente de trabalho.
+589: Vetor: Filosofia de Gest├úo
+591: Dimens├úo: Clareza Organizacional (8 quest├Áes)  
+592: 36. A busca cont├¡nua de profissionalismo na gest├úo ├® uma das principais preocupa├º├Áes na empresa onde trabalho.  
+593: 37. O estilo de administra├º├úo adotado pela empresa onde trabalho influencia de modo positivo o comportamento dos seus empregados em rela├º├úo ao trabalho que executam.  
+594: 38. Est├í claro que a Diretoria da empresa onde trabalho se preocupa mais com os assuntos verdadeiramente estrat├®gicos para a empresa.  
+595: 39. ├ë forte a preocupa├º├úo da empresa onde trabalho em reter seus melhores talentos.  
+596: 40. As pessoas que trabalham aqui sabem quais s├úo os principais objetivos, metas ou planos da empresa.  
+597: 41. A postura da empresa onde trabalho demonstra claramente que as pessoas s├úo seu maior patrim├┤nio.  
+598: 42. Sem d├║vida um dos objetivos da empresa onde trabalho ├® crescer respeitando as necessidades e a satisfa├º├úo de seus clientes.  
+599: 43. Nesta empresa ├® grande a preocupa├º├úo de divulgar e transferir o conhecimento adquirido durante o exerc├¡cio das atividades entre as equipes de trabalho.
+601: Dimens├úo: Comunica├º├úo (10 quest├Áes)  
+602: 44. As informa├º├Áes necess├írias ├á realiza├º├úo de meu trabalho s├úo transmitidas de forma clara e objetiva.  
+603: 45. As mudan├ºas s├úo comunicadas e explicadas com anteced├¬ncia.  
+604: 46. A quantidade de reuni├Áes de trabalho ├® suficiente para manter as pessoas informadas sobre o que acontece na empresa onde trabalho.  
+605: 47. Gasto pouco tempo selecionando as informa├º├Áes que recebo atrav├®s dos diferentes canais de comunica├º├úo formais da empresa onde trabalho.  
+606: 48. A comunica├º├úo ├® verdadeiramente de m├úo dupla; n├úo h├í porque temer surpresas ou rea├º├Áes inesperadas de qualquer parte.  
+607: 49. Na empresa onde trabalho, as informa├º├Áes fluem igualmente para todos os empregados e ├íreas.  
+608: 50. Obtenho com facilidade junto a outras ├íreas da empresa onde trabalho as informa├º├Áes que necessito para o desempenho adequado de minhas atividades.  
+609: 51. Na empresa onde trabalho a rede de comunica├º├úo ├® ├ígil e eficiente.  
+610: 105. As mudan├ºas organizacionais (reestrutura├º├Áes, novos processos) s├úo comunicadas e gerenciadas de forma clara e com participa├º├úo da equipe.  
+611: 110. H├í canais eficazes e seguros para relatar preocupa├º├Áes relacionadas ao bem-estar ou ao clima organizacional.
+613: Dimens├úo: Estruturas, Regras e Conformidade (5 quest├Áes)  
+614: 52. A estrutura organizacional e funcional da empresa ├® consistente com seus objetivos.  
+615: 53. H├í uma n├¡tida e adequada divis├úo de pap├®is e de atribui├º├Áes entre ├íreas da empresa onde trabalho.  
+616: 54. As mudan├ºas que ocorrem na empresa onde trabalho s├úo sempre planejadas.  
+617: 55. H├í suficiente abertura e flexibilidade para aceita├º├úo de ideias e sugest├Áes voltadas ao aperfei├ºoamento ou melhoria da empresa onde trabalho.  
+618: 106. No meu ambiente de trabalho, h├í clareza quanto ├ás minhas responsabilidades e pap├®is, evitando ambiguidades ou sobreposi├º├Áes.
+620: Vetor: Gest├úo de Pessoas
+622: Dimens├úo: Pol├¡tica Salarial (7 quest├Áes)  
+623: 56. O sistema de compensa├º├úo (sal├írio + benef├¡cios) ├® adequado, n├úo interferindo na satisfa├º├úo dos empregados.  
+624: 57. Os benef├¡cios existentes complementam de modo suficiente os sal├írios pagos para os diferentes cargos.  
+625: 58. A remunera├º├úo ├® balanceada, incluindo, al├®m do sal├írio, benef├¡cios e outras formas de compensa├º├úo.  
+626: 59. Os benef├¡cios s├úo amplos e variados, auxiliando a manter os mais competentes.  
+627: 60. H├í equil├¡brio interno entre os sal├írios pagos; os cargos mais complexos ou mais importantes s├úo os mais bem remunerados.  
+628: 61. A progress├úo nas faixas salariais (promo├º├úo horizontal) ├® peri├│dica e realizada a intervalos adequados.  
+629: 62. Os aumentos salariais nesta empresa excedem a varia├º├úo do custo de vida no per├¡odo.
+631: Dimens├úo: Sal├írio (4 quest├Áes)  
+632: 63. O sal├írio que recebo ├® suficiente para atender meu padr├úo de vida.  
+633: 64. Os sal├írios pagos reconhecem o valor e a qualidade do desempenho dos funcion├írios da empresa onde trabalho.  
+634: 65. As diferen├ºas nos sal├írios refletem as diferen├ºas no conte├║do e exig├¬ncias dos cargos.  
+635: 66. Meu sal├írio ├® justo, representando o retorno compat├¡vel a meu rendimento dentro desta empresa.
+637: Dimens├úo: Imagem da ├ürea de RH (5 quest├Áes)  
+638: 67. O RH disp├Áe de instrumentos para realizar uma avalia├º├úo eficaz do desempenho dos empregados em suas atividades.  
+639: 68. O RH demonstra em suas pr├íticas grande preocupa├º├úo com aspectos de justi├ºa e ├®tica.  
+640: 69. A ├írea de RH est├í envolvida e preocupada em definir o papel e os requisitos necess├írios para os diferentes cargos existentes na empresa.  
+641: 70. O banco de horas ├® um instrumento eficaz para apurar minha dedica├º├úo extra ao trabalho.  
+642: 111. Sinto que o suporte emocional e psicol├│gico (quando necess├írio) est├í dispon├¡vel na organiza├º├úo.
+644: Dimens├úo: Perspectiva de Carreira (5 quest├Áes)  
+645: 71. Tenho boas oportunidades de adquirir compet├¬ncias gerenciais no exerc├¡cio de meu trabalho.  
+646: 72. Sinto que minhas qualifica├º├Áes e treinamento aumentam minhas possibilidades de promo├º├úo.  
+647: 73. N├úo ├® necess├írio ter um bom tempo de casa para se ter uma situa├º├úo melhor de trabalho nesta empresa.  
+648: 74. Tenho boas oportunidades de adquirir compet├¬ncias t├®cnicas no exerc├¡cio de meu trabalho.  
+649: 75. Meu horizonte profissional est├í bem claro para mim, sei exatamente onde posso chegar nesta empresa.
+651: Dimens├úo: Treinamento e Desenvolvimento (3 quest├Áes)  
+652: 76. A organiza├º├úo em que trabalho ├® reconhecidamente uma empresa que se preocupa em formar seus profissionais para o exerc├¡cio das atividades.  
+653: 77. H├í total apoio da empresa para a realiza├º├úo de treinamentos diretamente ligados ├á minha atividade profissional (treinamentos t├®cnicos).  
+654: 78. O treinamento ├® amplamente valorizado na empresa onde trabalho, at├® mesmo aqueles voltados para est├ígios futuros da carreira do empregado.
+656: Vetor: Natureza do Trabalho
+658: Dimens├úo: Conte├║do do Trabalho (5 quest├Áes)  
+659: 79. Estou fazendo progressos satisfat├│rios em rela├º├úo ├ás minhas metas profissionais.  
+660: 80. As tarefas que executo s├úo interessantes e desafiantes.  
+661: 81. Meu cargo atual est├í me ajudando a atingir minhas metas profissionais.  
+662: 82. Se necess├írio, sinto que tenho grandes possibilidades de influenciar as decis├Áes que afetam meu trabalho.  
+663: 83. Minha capacidade, habilidades e potencial s├úo bem aproveitados no trabalho que executo.
+665: Dimens├úo: Volume de Trabalho (23 quest├Áes ÔÇô NR-1 + NR-17 + NR-12)  
+666: 84. Raramente deixo de cumprir os prazos e metas de meu cargo, uma vez que o volume de trabalho ├® bem dimensionado na empresa onde atuo.  
+667: 85. Quase nunca considero minha jornada de trabalho muito extensa.  
+668: 86. Tenho a tranquilidade e o tempo necess├írios para executar minhas atividades.  
+669: 87. Os processos e rotinas de trabalho em minha ├írea atendem bem ├ás necessidades do servi├ºo.  
+670: 88. Disponho de tempo suficiente para refletir sobre como aperfei├ºoar a execu├º├úo de meu trabalho.  
+671: 101. Sinto que a carga de trabalho (quantidade e complexidade das tarefas) ├® excessiva e compromete meu bem-estar.  
+672: 102. Os prazos e metas estabelecidos pela empresa s├úo realistas e proporcionais aos recursos e tempo dispon├¡veis.  
+673: 109. O equil├¡brio entre vida profissional e pessoal ├® respeitado pela empresa (ex.: respeito a hor├írios, intervalos e desconex├úo ap├│s o expediente).  
+674: 112. O trabalho remoto ou h├¡brido, quando aplic├ível, ├® organizado de forma a evitar isolamento ou excesso de demandas digitais.
+676: Subse├º├úo: Aspectos Ergon├┤micos F├¡sicos e Cognitivos (NR-17)  
+677: 113. As condi├º├Áes de ilumina├º├úo, temperatura e ru├¡do no meu local de trabalho s├úo adequadas e n├úo prejudicam minha concentra├º├úo ou sa├║de f├¡sica.  
+678: 114. O ritmo de trabalho permite pausas suficientes para recupera├º├úo f├¡sica e mental durante a jornada.  
+679: 115. A empresa oferece condi├º├Áes para que eu realize minhas tarefas sem exposi├º├úo excessiva a posturas inadequadas ou movimentos repetitivos.  
+680: 116. Os equipamentos, mobili├írio e ferramentas dispon├¡veis s├úo ergon├┤micos e facilitam a execu├º├úo das minhas atividades di├írias.  
+681: 117. Sinto que o conte├║do das minhas tarefas exige esfor├ºo mental elevado e constante concentra├º├úo sem pausas adequadas (carga cognitiva).  
+682: 118. Percebo que minhas atividades s├úo repetitivas ou mon├│tonas, o que afeta minha motiva├º├úo e aten├º├úo ao longo do dia.
+684: Subse├º├úo: Integra├º├úo NR-12 ÔÇô Seguran├ºa e Ergonomia em M├íquinas e Equipamentos  
+685: 119. Percebo que as m├íquinas e equipamentos que utilizo possuem dispositivos de seguran├ºa (prote├º├Áes, paradas de emerg├¬ncia e sinaliza├º├úo) adequados e funcionais, sem gerar sensa├º├úo de risco ou desconforto durante o uso.  
+686: 120. A interface entre mim e as m├íquinas/equipamentos (controles, displays e posicionamento) ├® projetada de forma ergon├┤mica, facilitando o uso seguro e reduzindo esfor├ºo f├¡sico ou mental excessivo.
+688: Subse├º├úo: Complemento Ampliado NR-17 ÔÇô Organiza├º├úo do Trabalho e Exig├¬ncias Cognitivas  
+689: 121. Meu trabalho ├® organizado de forma que eu tenho controle suficiente sobre a sequ├¬ncia e o ritmo das minhas tarefas di├írias.  
+690: 122. As pausas previstas no meu trabalho s├úo suficientes para que eu me recupere f├¡sica e mentalmente.  
+691: 123. As exig├¬ncias cognitivas do meu trabalho (concentra├º├úo, mem├│ria, tomada de decis├úo) s├úo compat├¡veis com o tempo e os recursos dispon├¡veis.  
+692: 124. O mobili├írio e o layout do meu posto de trabalho permitem uma postura confort├ível e natural durante a maior parte da jornada.  
+693: 125. Sinto que o trabalho que realizo ├® excessivamente mon├│tono ou repetitivo, o que afeta minha aten├º├úo e motiva├º├úo.  
+694: 126. A combina├º├úo entre esfor├ºo f├¡sico e mental exigido pelo meu trabalho me deixa frequentemente exausto ao final do dia.
+696:  2. Fun├º├úo: FDAC ÔÇô Cultura Organizacional (12 perguntas)
+698: 89. As pol├¡ticas de reconhecimento s├úo aplicadas equitativamente a todos os colaboradores, independentemente de cargo ou departamento.  
+699: 90. Meu sal├írio reflete justamente minha contribui├º├úo, considerando padr├Áes internos e de mercado.  
+700: 91. As oportunidades de progress├úo na carreira s├úo transparentes e acess├¡veis, promovendo equidade.  
+702: 92. A lideran├ºa comunica os objetivos estrat├®gicos de forma clara, alinhando todos os n├¡veis organizacionais.  
+703: 93. Tenho acesso imediato a informa├º├Áes relevantes para minhas responsabilidades.  
+704: 94. Os canais de comunica├º├úo interna (e.g., intranet, reuni├Áes) promovem transpar├¬ncia e eliminam ambiguidades.  
+706: 95. Meus pap├®is e responsabilidades s├úo definidos com precis├úo, evitando sobreposi├º├Áes.  
+707: 96. A lideran├ºa promove responsabilidade compartilhada por resultados, incentivando a proatividade.  
+708: 97. O trabalho em equipe ├® estruturado com metas claras e pap├®is bem definidos.  
+710: 98. A empresa adere rigorosamente a normas ├®ticas e legais em todas as pr├íticas.  
+711: 99. Os programas de treinamento refor├ºam a conformidade com pol├¡ticas ├®ticas e regulat├│rias.  
+712: 100. O conte├║do do meu trabalho est├í alinhado ├ás expectativas ├®ticas da organiza├º├úo, promovendo integridade.
+714:  3. Fun├º├úo: NR-01 / SESMT ÔÇô Fatores de Risco Psicossocial e Neurocognitivo (46 itens)
+716: Bloco K ÔÇô Sintom├íticos Neuro-Vegetativos (K1ÔÇôK8)  
+717: K1. Dor de cabe├ºa frequente que n├úo passa com analg├®sico comum.  
+718: K2. Tremores ou movimentos involunt├írios em repouso.  
+719: K3. Epis├│dios de desmaio ou convuls├úo.  
+720: K4. Vis├úo emba├ºada ou dupla sem causa ocular conhecida.  
+721: K5. Tontura ou desequil├¡brio ao levantar ou andar.  
+722: K6. Palpita├º├Áes que duram mais de 10 min com medo de morrer.  
+723: K7. Formigamento ou dorm├¬ncia em bra├ºos/pernas sem compress├úo.  
+724: K8. Uso cont├¡nuo de rem├®dio sem receita para ÔÇ£nervosÔÇØ ou sono.
+726: Bloco L ÔÇô Antecedentes Bio-Neuro (L1ÔÇôL8) ÔÇô escala 0ÔÇô3  
+727: L1. Exame de sangue nos ├║ltimos 12 meses: altera├º├úo de TSH, B12 ou hemoglobina. (0 = n├úo fez/normal | 1 = normal | 2 = alterado | 3 = n├úo sei)  
+728: L2. Traumatismo craniano com perda de consci├¬ncia. (0 = nunca | 1 = < 5 min | 2 = 5-30 min | 3 = > 30 min)  
+729: L3. Epilepsia ou convuls├úo j├í diagnosticada. (0 = n├úo | 1 = sim, controlada | 2 = sim, em tratamento | 3 = sim, sem controle)  
+730: L4. Doen├ºa auto-imune (l├║pus, Hashimoto, etc.). (0 = n├úo | 1 = sim, sem sintomas atuais | 2 = sim, com sintomas leves | 3 = sim, com sintomas moderados/graves)  
+731: L5. Infec├º├úo grave nos ├║ltimos 6 meses com sintomas neurol├│gicos. (0 = n├úo | 1 = sim, sem sequelas | 2 = sim, com sequelas leves | 3 = sim, com sequelas moderadas)  
+732: L6. Cirurgia com anestesia geral nos ├║ltimos 3 meses. (0 = n├úo | 1 = sim, sem complica├º├Áes | 2 = sim, com complica├º├Áes leves | 3 = sim, com complica├º├Áes moderadas)  
+733: L7. Apneia do sono confirmada ou uso de CPAP. (0 = n├úo | 1 = sim, sem uso de CPAP | 2 = sim, uso irregular de CPAP | 3 = sim, uso regular de CPAP)  
+734: L8. Hist├│rico familiar de dem├¬ncia precoce, Parkinson ou esquizofrenia. (0 = n├úo | 1 = sim, em parente distante | 2 = sim, em parente de primeiro grau | 3 = sim, m├║ltiplos casos na fam├¡lia)
+736: Bloco M ÔÇô Fun├º├úo Executiva Autopercebida (M1ÔÇôM8)  
+737: M1. Esquecer o que estava fazendo no meio de uma tarefa simples.  
+738: M2. Perder chaves, celular ou crach├í mais de 2 vezes por semana.  
+739: M3. Iniciar v├írias tarefas e n├úo concluir nenhuma delas.  
+740: M4. Dificuldade de planejar a sequ├¬ncia de passos para elaborar um relat├│rio ou projeto.  
+741: M5. Atraso maior que 5 minutos para tomar decis├Áes simples do dia a dia.  
+742: M6. Esquecer data ou hor├írio de compromissos que j├í havia anotado.  
+743: M7. Precisar anotar absolutamente tudo para n├úo esquecer.  
+744: M8. Sentir-me ÔÇ£atrasadoÔÇØ em rela├º├úo ao ritmo dos meus colegas.
+746: Bloco N ÔÇô Contexto Ocupacional (N1ÔÇôN8)  
+747: N1. Quantas horas de sono voc├¬ tem dormido por noite, em m├®dia, na ├║ltima semana? (num├®rico aberto)  
+748: N2. Quantos dias por semana voc├¬ trabalha em home office ou modelo h├¡brido? (num├®rico aberto)  
+749: N3. Sofreu ass├®dio moral ou sexual no trabalho nos ├║ltimos 12 meses? (0 = n├úo | 1 = sim, n├úo formalizado | 2 = sim, formalizado internamente | 3 = sim, com procedimento jur├¡dico)  
+750: N4. Qual ├® o seu principal regime de escala de trabalho? (0 = diurno fixo | 1 = diurno com rod├¡zio | 2 = 12x36 | 3 = noturno ou turno rotativo)  
+751: N5. Quantas horas extras voc├¬ realiza por semana, em m├®dia? (num├®rico aberto)  
+752: N6. Quantos dias de f├®rias voc├¬ tirou nos ├║ltimos 12 meses? (num├®rico aberto)  
+753: N7. J├í teve afastamento m├®dico por problema mental ou estresse nos ├║ltimos 24 meses? (0 = n├úo | 1 = sim, menos de 15 dias | 2 = sim, 15 a 30 dias | 3 = sim, mais de 30 dias)  
+754: N8. A empresa oferece apoio psicol├│gico ou coaching de forma regular? (0 = n├úo oferece | 1 = oferece, mas pouco acess├¡vel | 2 = oferece, acesso moderado | 3 = oferece, acesso regular e facilitado)
+756: Bloco O ÔÇô Impacto Funcional (O1ÔÇôO6)  
+757: O1. Tenho dificuldade de chegar ao trabalho no hor├írio por motivos relacionados ao meu estado de sa├║de ou bem-estar.  
+758: O2. Percebo redu├º├úo de minha produtividade superior a 25% nos ├║ltimos meses (autoavalia├º├úo ou feedback do gestor).  
+759: O3. J├í recebi advert├¬ncias, suspens├Áes ou tive faltas justificadas por atrasos ou erros frequentes.  
+760: O4. Tenho pensado em pedir demiss├úo ou sinto temor constante de ser demitido.  
+761: O5. J├í precisei de afastamento m├®dico ou uso de benef├¡cio assistencial nos ├║ltimos 12 meses.  
+762: O6. Perdi oportunidade de promo├º├úo ou nova fun├º├úo nos ├║ltimos 6 meses devido ao meu desempenho ou sa├║de.
+764: Bloco P ÔÇô Depend├¬ncia Qu├¡mica (P1ÔÇôP6)  
+765: P1. Consumo bebida alco├│lica 4 ou mais vezes por semana para ÔÇ£relaxarÔÇØ ou dormir.  
+766: P2. Usei maconha, coca├¡na, anfetaminas ou opioides nos ├║ltimos 30 dias.  
+767: P3. J├í usei alguma subst├óncia pela manh├ú para ÔÇ£ativarÔÇØ ou acalmar os nervos antes do trabalho.  
+768: P4. J├í tentei diminuir ou parar o uso de alguma subst├óncia, mas n├úo consegui.  
+769: P5. J├í tive brigas familiares, advert├¬ncias ou faltas no trabalho relacionadas ao uso de subst├óncias.  
+770: P6. Sinto sintomas de abstin├¬ncia (tremor, suor, ins├┤nia, irritabilidade) quando fico sem a subst├óncia.
+772: Campo Aberto ÔÇô Percep├º├úo Subjetiva (1 quest├úo)  
+773: Q. Descreva, com suas palavras, o que MAIS tem afetado seu bem-estar ou trabalho nos ├║ltimos 3 meses:  
+774: [caixa de texto ÔÇô m├íximo 500 caracteres]
+776: Total de perguntas: 160.

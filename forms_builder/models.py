@@ -35,6 +35,11 @@ class FormTemplate(models.Model):
     )
     
     is_global = models.BooleanField('Template Global', default=False)
+    is_locked = models.BooleanField(
+        'Bloqueado (Imutável)',
+        default=False,
+        help_text='Templates bloqueados não podem ter perguntas alteradas. Usado para o SIMDCCONR01 (160 itens).'
+    )
     is_active = models.BooleanField('Ativo', default=True)
     
     created_at = models.DateTimeField('Criado em', auto_now_add=True)

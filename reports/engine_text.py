@@ -83,7 +83,7 @@ class TextEngine:
 
             # Agregar por dimensão
             if value is not None:
-                dimension_scores[(meta['instrumento'], meta['dimensao'])].append(float(value))
+                dimension_scores[(meta['instrumento'], meta['vetor'], meta['dimensao'])].append(float(value))
 
             instruments_used.add(meta['instrumento'])
 
@@ -117,11 +117,12 @@ class TextEngine:
 
         # Resumo por dimensão
         dimension_summary = []
-        for (instrumento, dimensao), scores in sorted(dimension_scores.items()):
+        for (instrumento, vetor, dimensao), scores in sorted(dimension_scores.items()):
             avg = sum(scores) / len(scores) if scores else 0
             label, key = classify_score(avg)
             dimension_summary.append({
                 'instrumento': instrumento,
+                'vetor': vetor,
                 'dimensao': dimensao,
                 'media': round(avg, 2),
                 'classificacao': label,
@@ -278,19 +279,20 @@ class TextEngine:
 
                 value = self._get_answer_value(answer)
                 if value is not None:
-                    dimension_scores[(meta['instrumento'], meta['dimensao'])].append(float(value))
+                    dimension_scores[(meta['instrumento'], meta['vetor'], meta['dimensao'])].append(float(value))
 
         # Calcular médias por dimensão
         consolidation = []
         risk_clusters = []
 
-        for (instrumento, dimensao), scores in sorted(dimension_scores.items()):
+        for (instrumento, vetor, dimensao), scores in sorted(dimension_scores.items()):
             avg = sum(scores) / len(scores) if scores else 0
             label, key = classify_score(avg)
             risk_info = RISK_RULES.get(key, RISK_RULES['adequado'])
 
             entry = {
                 'instrumento': instrumento,
+                'vetor': vetor,
                 'dimensao': dimensao,
                 'media': round(avg, 2),
                 'classificacao': label,
@@ -381,11 +383,11 @@ class TextEngine:
                     continue
                 value = self._get_answer_value(answer)
                 if value is not None:
-                    all_dimension_scores[(meta['instrumento'], meta['dimensao'])].append(float(value))
+                    all_dimension_scores[(meta['instrumento'], meta['vetor'], meta['dimensao'])].append(float(value))
 
         # Matriz de risco organizacional
         risk_matrix = []
-        for (instrumento, dimensao), scores in sorted(all_dimension_scores.items()):
+        for (instrumento, vetor, dimensao), scores in sorted(all_dimension_scores.items()):
             avg = sum(scores) / len(scores) if scores else 0
             label, key = classify_score(avg)
             risk_info = RISK_RULES.get(key, RISK_RULES['adequado'])
@@ -395,6 +397,7 @@ class TextEngine:
 
             risk_matrix.append({
                 'instrumento': instrumento,
+                'vetor': vetor,
                 'dimensao': dimensao,
                 'media': round(avg, 2),
                 'classificacao': label,
@@ -449,7 +452,7 @@ class TextEngine:
         # Dados para gráficos
         chart_data = {
             'radar': {dim: round(sum(scores) / len(scores), 2)
-                     for (inst, dim), scores in all_dimension_scores.items()
+                     for (inst, vetor, dim), scores in all_dimension_scores.items()
                      if inst == 'IMCO'},
             'heatmap': {},
             'likert_distribution': self._likert_distribution(form_instance),

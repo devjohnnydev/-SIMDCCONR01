@@ -207,6 +207,57 @@
             </div>
         </div>
     </div>
+
+    {% if not is_readonly %}
+    <!-- Perigos Pendentes de Revisão -->
+    {% if pending_review > 0 %}
+    <div class="alert alert-warning border-0 shadow-sm mt-4 d-flex align-items-center justify-content-between">
+        <div>
+            <i class="bi bi-hourglass-split me-2 fs-5"></i>
+            <strong>{{ pending_review }} perigo{{ pending_review|pluralize:"s" }}</strong> aguardando sua revisão (gerados automaticamente pela análise da pesquisa).
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'risk_management:hazard_list' %}?status=PENDING_REVIEW" class="btn btn-warning btn-sm">
+                <i class="bi bi-eye me-1"></i>Revisar
+            </a>
+            <form method="POST" action="{% url 'risk_management:approve_all_hazards' %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Aprovar todos os perigos pendentes?')">
+                    <i class="bi bi-check-all me-1"></i>Aprovar Todos
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Geração Automática de Perigos -->
+    {% if closed_forms %}
+    <div class="card mt-4 border-0 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <i class="bi bi-robot me-2"></i><strong>Geração Automática de Perigos</strong>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-3">Selecione uma pesquisa encerrada para gerar automaticamente os perigos identificados pelo sistema SIMDCCONR01:</p>
+            <div class="list-group">
+                {% for form in closed_forms %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ form.title }}</strong>
+                        <span class="text-muted ms-2">{{ form.created_at|date:"d/m/Y" }}</span>
+                    </div>
+                    <form method="POST" action="{% url 'risk_management:generate_hazards' form.pk %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-cpu me-1"></i>Analisar e Gerar
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
 </div>
 {% endblock %}
 

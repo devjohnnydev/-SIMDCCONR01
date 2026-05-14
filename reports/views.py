@@ -686,6 +686,25 @@ def download_diagnostic_pdf(request, validation_code):
             'items': cat_data['items']
         })
 
+    # Gerar dados periciais (idêntico a view_diagnostic)
+    pcmso_data = engine.generate_pcmso_annex(diagnostic.assignment)
+    from .knowledge_base import get_interpretation, get_recommendation, RISK_RULES
+    dim_analysis = []
+    for dim in report_data.get('dimension_summary', []):
+        interp = get_interpretation(dim['instrumento'], dim['dimensao'], dim['classificacao_key'])
+        rec = get_recommendation('respondente', dim['classificacao_key'])
+        risk_info = RISK_RULES.get(dim['classificacao_key'], RISK_RULES['adequado'])
+        dim_analysis.append({
+            **dim,
+            'interpretacao': interp,
+            'recomendacao': rec,
+            'risco': risk_info['risco'],
+            'probabilidade': risk_info['probabilidade'],
+            'impacto': risk_info['impacto'],
+            'acao_pgr': risk_info['acao_pgr'],
+        })
+    pgr_items = [d for d in dim_analysis if d['classificacao_key'] in ('critico', 'atencao')]
+
     try:
         import io
         # Buffer de memória para o ReportLab
@@ -697,7 +716,7 @@ def download_diagnostic_pdf(request, validation_code):
                                      diagnostic=diagnostic)
         
         # Gerar o documento
-        pdf_gen.build(report_data, sections)
+        pdf_gen.build(report_data, sections, pcmso_data=pcmso_data, dim_analysis=dim_analysis, pgr_items=pgr_items)
         
         # Recuperar bytes do buffer de memória (evita erros de stream em WSGI)
         pdf_bytes = buffer.getvalue()
@@ -742,9 +761,46 @@ def download_department_pdf(request, setor, form_id):
         import io
         buffer = io.BytesIO()
         
-        # 3. Gera o PDF usando o novo engine
+        # 3. Gera dados periciais
+        from .knowledge_base import get_interpretation, get_recommendation, RISK_RULES
+        dim_analysis = []
+        for dim in engine_data.get('consolidation', []):
+            interp = get_interpretation(dim['instrumento'], dim['dimensao'], dim['classificacao_key'])
+            rec = get_recommendation('organizacao', dim['classificacao_key'])
+            risk_info = RISK_RULES.get(dim['classificacao_key'], RISK_RULES['adequado'])
+            dim_analysis.append({
+                **dim,
+                'interpretacao': interp,
+                'recomendacao': rec,
+                'acao_pgr': risk_info['acao_pgr'],
+                'risco': risk_info['risco'],
+                'probabilidade': risk_info['probabilidade'],
+                'impacto': risk_info['impacto'],
+            })
+            
+        pgr_items = [d for d in dim_analysis if d['classificacao_key'] in ('critico', 'atencao')]
+        
+        nr17_items = [d for d in dim_analysis if 'Ergonomia' in d.get('dimensao', '') or 'NR-17' in d.get('dimensao', '') or 'Volume' in d.get('dimensao', '')]
+        nr17_data = {
+            'items': nr17_items,
+            'achado': engine._nr17_achado(nr17_items),
+            'acoes': engine._nr17_acoes(nr17_items),
+            'base_teorica': 'Hackman & Oldham (1976)',
+        }
+        
+        nr12_items_list = [d for d in dim_analysis if 'NR-12' in d.get('dimensao', '') or 'Segurança' in d.get('dimensao', '')]
+        nr12_data = {
+            'items': nr12_items_list,
+            'achado': engine._nr12_achado(nr12_items_list),
+            'acoes': engine._nr12_acoes(nr12_items_list),
+            'base_normativa': 'NR-12 (Portaria 3.214/78) / Goulart (2025)',
+        }
+        
+        conclusao = engine._gerar_conclusao(report.diagnostic_data.get('overall_key', 'adequado'))
+
+        # 4. Gera o PDF usando o novo engine
         pdf_gen = DepartmentReportRL(buffer, company=report.company, diagnostic=report)
-        pdf_gen.build(report.diagnostic_data, engine_data=engine_data)
+        pdf_gen.build(report.diagnostic_data, engine_data=engine_data, dim_analysis=dim_analysis, pgr_items=pgr_items, nr17_data=nr17_data, nr12_data=nr12_data, conclusao=conclusao)
         
         pdf_bytes = buffer.getvalue()
         buffer.close()

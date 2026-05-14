@@ -462,6 +462,99 @@ class RespondentReportRL:
             story.append(items_table)
             story.append(Spacer(1, 10))
 
+        # Recuperar kwargs
+        pcmso_data = kwargs.get('pcmso_data')
+        dim_analysis = kwargs.get('dim_analysis')
+        pgr_items = kwargs.get('pgr_items')
+
+        # ═══════════════════════════════════════════════
+        # 5. ANÁLISE POR DIMENSÃO (Teórica)
+        # ═══════════════════════════════════════════════
+        if dim_analysis:
+            story.append(Spacer(1, 5*mm))
+            story.append(Paragraph("5. Análise por Dimensão — Fundamentação Teórica", self.styles['Heading2']))
+            for dim in dim_analysis:
+                story.append(Paragraph(f"<b>{saxutils.escape(dim['dimensao'])} ({saxutils.escape(dim['vetor'])}) — {dim['instrumento']}</b>", self.styles['Heading4']))
+                if dim.get('interpretacao'):
+                    story.append(Paragraph(saxutils.escape(dim['interpretacao']), self.styles['Normal']))
+                story.append(Paragraph(f"<font color='#64748b' size='8'>Média: {dim['media']} | Risco: {dim['risco']} | PGR: {dim['acao_pgr']}</font>", self.styles['Normal']))
+                if dim.get('recomendacao'):
+                    story.append(Paragraph(f"<b>Recomendação:</b> {saxutils.escape(dim['recomendacao'])}", self.styles['Normal']))
+                story.append(Spacer(1, 4*mm))
+
+        # ═══════════════════════════════════════════════
+        # 6. ANEXO PCMSO
+        # ═══════════════════════════════════════════════
+        if pcmso_data:
+            story.append(Spacer(1, 5*mm))
+            story.append(Paragraph("6. Anexo PCMSO — Saúde Ocupacional Individual", self.styles['Heading2']))
+            story.append(Paragraph(f"<b>Risco Psicossocial:</b> {pcmso_data.get('nivel', '')}", self.styles['Normal']))
+            story.append(Paragraph(f"<b>Classificação Geral:</b> {pcmso_data.get('overall', '')} ({pcmso_data.get('overall_avg', '')})", self.styles['Normal']))
+            story.append(Spacer(1, 2*mm))
+            story.append(Paragraph("<b>Síntese Psicossocial:</b>", self.styles['Normal']))
+            story.append(Paragraph(saxutils.escape(pcmso_data.get('sintese', '')), self.styles['Normal']))
+            story.append(Spacer(1, 2*mm))
+            story.append(Paragraph("<b>Recomendações Clínicas:</b>", self.styles['Normal']))
+            story.append(Paragraph(saxutils.escape(pcmso_data.get('recomendacoes', '')), self.styles['Normal']))
+            story.append(Spacer(1, 5*mm))
+
+        # ═══════════════════════════════════════════════
+        # 7. INTEGRAÇÃO PGR/GRO
+        # ═══════════════════════════════════════════════
+        if pgr_items:
+            story.append(Spacer(1, 5*mm))
+            story.append(Paragraph("7. Integração PGR/GRO — Inventário de Riscos", self.styles['Heading2']))
+            story.append(Paragraph("<font size='8' color='#64748b'>Dimensões classificadas como Crítico ou Atenção com integração obrigatória ao PGR (NR-01).</font>", self.styles['Normal']))
+            story.append(Spacer(1, 3*mm))
+            pgr_table_data = [['DIMENSÃO', 'VETOR', 'MÉDIA', 'PROB', 'IMP', 'AÇÃO PGR']]
+            for item in pgr_items:
+                pgr_table_data.append([
+                    Paragraph(f"<font size='7'>{saxutils.escape(item['dimensao'])}</font>", self.styles['Normal']),
+                    Paragraph(f"<font size='7'>{saxutils.escape(item['vetor'])}</font>", self.styles['Normal']),
+                    str(item['media']),
+                    str(item['probabilidade']),
+                    str(item['impacto']),
+                    Paragraph(f"<font size='7'>{saxutils.escape(item['acao_pgr'])}</font>", self.styles['Normal'])
+                ])
+            pgr_table = Table(pgr_table_data, colWidths=[35*mm, 25*mm, 15*mm, 15*mm, 15*mm, 75*mm])
+            pgr_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), COL_DARK),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('INNERGRID', (0, 0), (-1, -1), 0.25, COL_SLATE_100),
+                ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
+                ('FONTSIZE', (0, 0), (-1, -1), 7),
+            ]))
+            story.append(pgr_table)
+            story.append(Spacer(1, 5*mm))
+
+        # ═══════════════════════════════════════════════
+        # 8. NOTA METODOLÓGICA E CONCLUSÃO
+        # ═══════════════════════════════════════════════
+        story.append(Spacer(1, 5*mm))
+        story.append(Paragraph("8. Nota Metodológica", self.styles['Heading2']))
+        story.append(Paragraph("<b>Instrumento:</b> SIMDCCONR01 — 160 itens distribuídos em IMCO (88), FDAC (12) e NR-01/SESMT (46). Validação: Coda et al. (2009).", self.styles['Normal']))
+        story.append(Paragraph("<b>Escala:</b> Likert 1-5. Crítico (1.0-2.4), Atenção (2.5-3.4), Adequado (3.5-4.2), Forte (4.3-5.0).", self.styles['Normal']))
+        story.append(Paragraph("<b>Normativa:</b> NR-01 (Portaria 1.419/2024), NR-17, NR-12, LGPD.", self.styles['Normal']))
+        story.append(Spacer(1, 4*mm))
+        
+        story.append(Paragraph("9. Conclusão Pericial", self.styles['Heading2']))
+        overall = report_data.get('overall_key', 'adequado')
+        if overall == 'critico':
+            conc_txt = "Os resultados evidenciam a existência de fatores organizacionais críticos que impactam diretamente o clima e os riscos ocupacionais. A integração ao PGR/GRO é obrigatória."
+        elif overall == 'atencao':
+            conc_txt = "Os resultados evidenciam a existência de fatores em nível de atenção que demandam monitoramento e ações preventivas integradas ao PGR/GRO."
+        elif overall == 'adequado':
+            conc_txt = "Os resultados evidenciam condições organizacionais dentro de parâmetros adequados. Recomenda-se a manutenção das práticas atuais."
+        else:
+            conc_txt = "Os resultados evidenciam condições organizacionais fortes em todas as dimensões avaliadas."
+            
+        story.append(Paragraph(conc_txt, self.styles['AnalysisBox']))
+        story.append(Spacer(1, 2*mm))
+        story.append(Paragraph("<font size='7' color='#64748b'>Ressalva legal: Este documento constitui parecer técnico pericial elaborado com base em instrumento validado. O sigilo é garantido conforme LGPD.</font>", self.styles['Normal']))
+
         # ═══════════════════════════════════════════════
         # 5. ASSINATURA PROFISSIONAL
         # ═══════════════════════════════════════════════
@@ -849,6 +942,96 @@ class DepartmentReportRL:
         for i, s in enumerate(data.get('sugestoes_gestao', []), 1):
             story.append(Paragraph(f"<b>{i}.</b> {saxutils.escape(s)}", self.styles['Normal']))
             story.append(Spacer(1, 3*mm))
+
+        # Recuperar kwargs adicionais
+        dim_analysis = kwargs.get('dim_analysis')
+        pgr_items = kwargs.get('pgr_items')
+        nr17_data = kwargs.get('nr17_data')
+        nr12_data = kwargs.get('nr12_data')
+        conclusao = kwargs.get('conclusao')
+
+        # ═══════════════════════════════════════════════
+        # 4.1 ANÁLISE POR DIMENSÃO
+        # ═══════════════════════════════════════════════
+        if dim_analysis:
+            story.append(Spacer(1, 5*mm))
+            story.append(Paragraph("Análise por Dimensão — Fundamentação Teórica", self.styles['Heading2']))
+            for dim in dim_analysis:
+                story.append(Paragraph(f"<b>{saxutils.escape(dim['dimensao'])} ({saxutils.escape(dim['vetor'])}) — {dim['instrumento']}</b>", self.styles['Heading4']))
+                if dim.get('interpretacao'):
+                    story.append(Paragraph(saxutils.escape(dim['interpretacao']), self.styles['Normal']))
+                story.append(Paragraph(f"<font color='#64748b' size='8'>Média: {dim['media']} | Risco: {dim['risco']} | PGR: {dim['acao_pgr']}</font>", self.styles['Normal']))
+                if dim.get('recomendacao'):
+                    story.append(Paragraph(f"<b>Recomendação:</b> {saxutils.escape(dim['recomendacao'])}", self.styles['Normal']))
+                story.append(Spacer(1, 4*mm))
+
+        # ═══════════════════════════════════════════════
+        # 4.2 INVENTÁRIO PGR/GRO
+        # ═══════════════════════════════════════════════
+        if pgr_items:
+            story.append(Spacer(1, 5*mm))
+            story.append(Paragraph("Inventário de Riscos — PGR/GRO (NR-01)", self.styles['Heading2']))
+            story.append(Paragraph("<font size='8' color='#64748b'>Dimensões classificadas como Crítico ou Atenção com integração obrigatória ao PGR (NR-01).</font>", self.styles['Normal']))
+            story.append(Spacer(1, 3*mm))
+            pgr_table_data = [['DIMENSÃO', 'VETOR', 'MÉDIA', 'PROB', 'IMP', 'AÇÃO PGR']]
+            for item in pgr_items:
+                pgr_table_data.append([
+                    Paragraph(f"<font size='7'>{saxutils.escape(item['dimensao'])}</font>", self.styles['Normal']),
+                    Paragraph(f"<font size='7'>{saxutils.escape(item['vetor'])}</font>", self.styles['Normal']),
+                    str(item['media']),
+                    str(item['probabilidade']),
+                    str(item['impacto']),
+                    Paragraph(f"<font size='7'>{saxutils.escape(item['acao_pgr'])}</font>", self.styles['Normal'])
+                ])
+            pgr_table = Table(pgr_table_data, colWidths=[35*mm, 25*mm, 15*mm, 15*mm, 15*mm, 75*mm])
+            pgr_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), COL_DARK),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('INNERGRID', (0, 0), (-1, -1), 0.25, COL_SLATE_100),
+                ('BOX', (0, 0), (-1, -1), 0.5, COL_SLATE_100),
+                ('FONTSIZE', (0, 0), (-1, -1), 7),
+            ]))
+            story.append(pgr_table)
+            story.append(Spacer(1, 5*mm))
+
+        # ═══════════════════════════════════════════════
+        # 4.3 NR-17 e NR-12
+        # ═══════════════════════════════════════════════
+        if nr17_data and nr17_data.get('items'):
+            story.append(Spacer(1, 5*mm))
+            story.append(Paragraph("Achados Ergonômicos — NR-17", self.styles['Heading2']))
+            story.append(Paragraph(f"<b>Achado:</b> {saxutils.escape(nr17_data.get('achado', ''))}", self.styles['Normal']))
+            story.append(Paragraph(f"<b>Base Teórica:</b> {nr17_data.get('base_teorica', '')}", self.styles['Normal']))
+            for acao in nr17_data.get('acoes', []):
+                story.append(Paragraph(f"\u2022 {saxutils.escape(acao)}", self.styles['Normal']))
+            story.append(Spacer(1, 4*mm))
+
+        if nr12_data and nr12_data.get('items'):
+            story.append(Spacer(1, 5*mm))
+            story.append(Paragraph("Segurança em Máquinas — NR-12", self.styles['Heading2']))
+            story.append(Paragraph(f"<b>Achado:</b> {saxutils.escape(nr12_data.get('achado', ''))}", self.styles['Normal']))
+            story.append(Paragraph(f"<b>Base Normativa:</b> {nr12_data.get('base_normativa', '')}", self.styles['Normal']))
+            for acao in nr12_data.get('acoes', []):
+                story.append(Paragraph(f"\u2022 {saxutils.escape(acao)}", self.styles['Normal']))
+            story.append(Spacer(1, 4*mm))
+
+        # ═══════════════════════════════════════════════
+        # NOTA METODOLÓGICA E CONCLUSÃO
+        # ═══════════════════════════════════════════════
+        story.append(Spacer(1, 5*mm))
+        story.append(Paragraph("Nota Metodológica", self.styles['Heading2']))
+        story.append(Paragraph("<b>Instrumento:</b> SIMDCCONR01 — 160 itens. Validação: Coda et al. (2009).", self.styles['Normal']))
+        story.append(Paragraph("<b>Escala:</b> Likert 1-5. Crítico (1.0-2.4), Atenção (2.5-3.4), Adequado (3.5-4.2), Forte (4.3-5.0).", self.styles['Normal']))
+        story.append(Paragraph("<b>Normativa:</b> NR-01 (Portaria 1.419/2024), NR-17, NR-12, LGPD.", self.styles['Normal']))
+        story.append(Spacer(1, 4*mm))
+        
+        story.append(Paragraph("Conclusão Pericial", self.styles['Heading2']))
+        story.append(Paragraph(saxutils.escape(conclusao or "Análise concluída conforme parâmetros do SIMDCCONR01."), self.styles['Normal']))
+        story.append(Spacer(1, 2*mm))
+        story.append(Paragraph("<font size='7' color='#64748b'>Ressalva legal: Este documento constitui parecer técnico pericial elaborado com base em instrumento validado. O sigilo é garantido conforme LGPD.</font>", self.styles['Normal']))
 
         # 6. Referencias
         references = engine_data.get('references', [])

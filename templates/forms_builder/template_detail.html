@@ -38,16 +38,28 @@
                 {{ template.get_category_display }}
             </span>
             {% if template.is_global %}<span class="badge bg-info ms-1">Global</span>{% endif %}
+            {% if template.is_locked %}<span class="badge bg-dark ms-1"><i class="bi bi-lock-fill me-1"></i>Protegido</span>{% endif %}
         </div>
         <div class="d-flex gap-2">
             <a href="{% url 'forms:instance_create' template.pk %}" class="btn btn-primary rounded-pill px-3">
                 <i class="bi bi-play-circle me-1"></i>Usar Template
             </a>
+            {% if not template.is_locked %}
             <button class="btn btn-success rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#addQuestionModal">
                 <i class="bi bi-plus-lg me-1"></i>Adicionar Pergunta
             </button>
+            {% endif %}
         </div>
     </div>
+
+    {% if template.is_locked %}
+    <div class="alert alert-dark border-0 shadow-sm d-flex align-items-center mb-4" role="alert">
+        <i class="bi bi-shield-lock-fill fs-4 me-3"></i>
+        <div>
+            <strong>Template protegido.</strong> Este questionário é o padrão universal SIMDCCONR01 com 160 perguntas validadas cientificamente. Alterações não são permitidas para garantir a integridade do instrumento.
+        </div>
+    </div>
+    {% endif %}
 
     {% if template.description %}
     <div class="card border-0 shadow-sm rounded-3 mb-4">
@@ -86,6 +98,7 @@
                             </div>
                             {% endif %}
                         </div>
+                        {% if not template.is_locked %}
                         <div class="d-flex gap-1 ms-3 flex-shrink-0">
                             <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
                                 data-bs-target="#editQuestionModal_{{ question.pk }}">
@@ -97,9 +110,11 @@
                                 <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                             </form>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
 
+                {% if not template.is_locked %}
                 <!-- Edit Modal for each question -->
                 <div class="modal fade" id="editQuestionModal_{{ question.pk }}" tabindex="-1">
                     <div class="modal-dialog">
@@ -168,6 +183,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% empty %}
                 <div class="text-center py-5">
                     <i class="bi bi-clipboard-plus fs-1 text-muted"></i>
@@ -185,6 +201,7 @@
     </div>
 </div>
 
+{% if not template.is_locked %}
 <!-- Add Question Modal -->
 <div class="modal fade" id="addQuestionModal" tabindex="-1">
     <div class="modal-dialog">
@@ -245,4 +262,5 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock %}

@@ -795,7 +795,7 @@ def download_department_pdf(request, setor, form_id):
             'base_normativa': 'NR-12 (Portaria 3.214/78) / Goulart (2025)',
         }
         
-        conclusao = engine._gerar_conclusao(report.diagnostic_data.get('overall_key', 'adequado'))
+        conclusao = engine._gerar_conclusao(report.diagnostic_data.get('overall_key', 'adequado'), pgr_items)
 
         # 4. Gera o PDF usando o novo engine
         pdf_gen = DepartmentReportRL(buffer, company=report.company, diagnostic=report)

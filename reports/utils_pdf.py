@@ -320,7 +320,7 @@ class RespondentReportRL:
         for pt in points:
             canvas.circle(pt[0], pt[1], 1.2*mm, stroke=0, fill=1)
 
-    def build(self, report_data, sections):
+    def build(self, report_data, sections, **kwargs):
         doc = SimpleDocTemplate(
             self.buffer,
             pagesize=A4,
@@ -856,7 +856,7 @@ class DepartmentReportRL:
         for pt in points:
             canvas.circle(pt[0], pt[1], 1.2*mm, stroke=0, fill=1)
 
-    def build(self, data, engine_data=None):
+    def build(self, data, engine_data=None, **kwargs):
         if engine_data is None:
             engine_data = {}
             

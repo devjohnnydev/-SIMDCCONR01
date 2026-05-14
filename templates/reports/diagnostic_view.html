@@ -265,6 +265,203 @@
                 </div>
             </div>
 
+            {# ═══════════════ 5. ANÁLISE POR DIMENSÃO — FUNDAMENTAÇÃO TEÓRICA ═══════════════ #}
+            {% if dim_analysis %}
+            <div class="card border-0 shadow-sm rounded-4 mb-4 break-inside-avoid">
+                <div class="card-header bg-dark text-white p-4 rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-clipboard-data me-2"></i>5. Análise por Dimensão com Fundamentação Teórica</h5>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted small mb-4">Análise dimensão a dimensão com interpretação técnica, fundamentação bibliográfica e nível de risco conforme modelo FDAC (Goulart, 2025).</p>
+                    {% for dim in dim_analysis %}
+                    <div class="mb-4 p-3 rounded-3 border {% if dim.classificacao_key == 'critico' %}border-danger bg-danger bg-opacity-10{% elif dim.classificacao_key == 'atencao' %}border-warning bg-warning bg-opacity-10{% else %}border-light{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <span class="badge bg-dark bg-opacity-75 rounded-pill me-1" style="font-size:0.6rem;">{{ dim.instrumento }}</span>
+                                <span class="fw-bold text-dark">{{ dim.dimensao }}</span>
+                                <span class="text-muted small ms-1">(Vetor: {{ dim.vetor }})</span>
+                            </div>
+                            <div class="text-end">
+                                <span class="fw-bold">{{ dim.media }}</span>
+                                <span class="badge rounded-pill ms-1 {% if dim.classificacao_key == 'critico' %}bg-danger{% elif dim.classificacao_key == 'atencao' %}bg-warning text-dark{% elif dim.classificacao_key == 'adequado' %}bg-success{% else %}bg-primary{% endif %}" style="font-size:0.65rem;">{{ dim.classificacao }}</span>
+                            </div>
+                        </div>
+                        {% if dim.interpretacao %}
+                        <p class="mb-2 small text-dark" style="text-align:justify;line-height:1.7;">{{ dim.interpretacao }}</p>
+                        {% endif %}
+                        <div class="row g-2 mt-1" style="font-size:0.72rem;">
+                            <div class="col-md-4"><strong class="text-muted">Risco:</strong> {{ dim.risco }} ({{ dim.probabilidade }} × {{ dim.impacto }})</div>
+                            <div class="col-md-4"><strong class="text-muted">Itens:</strong> {{ dim.total_items }}</div>
+                            <div class="col-md-4"><strong class="text-muted">PGR:</strong> {{ dim.acao_pgr|truncatewords:12 }}</div>
+                        </div>
+                        {% if dim.recomendacao %}
+                        <div class="mt-2 p-2 bg-white rounded-2 border small"><i class="bi bi-arrow-right-circle text-primary me-1"></i><strong>Recomendação:</strong> {{ dim.recomendacao }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {# ═══════════════ 6. ANEXO PCMSO INDIVIDUAL ═══════════════ #}
+            {% if pcmso_data %}
+            <div class="card border-0 shadow-sm rounded-4 mb-4 break-inside-avoid">
+                <div class="card-header p-4 rounded-top-4" style="background: linear-gradient(135deg, #991b1b, #dc2626);">
+                    <h5 class="mb-0 fw-bold text-white"><i class="bi bi-hospital me-2"></i>6. Anexo PCMSO — Saúde Ocupacional Individual</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 rounded-3 border {% if pcmso_data.nivel == 'Elevado' %}border-danger bg-danger bg-opacity-10{% elif pcmso_data.nivel == 'Moderado' %}border-warning bg-warning bg-opacity-10{% else %}border-success bg-success bg-opacity-10{% endif %}">
+                                <div class="small text-muted fw-bold text-uppercase mb-1">Nível de Risco Psicossocial</div>
+                                <div class="fw-bold fs-4 {% if pcmso_data.nivel == 'Elevado' %}text-danger{% elif pcmso_data.nivel == 'Moderado' %}text-warning{% else %}text-success{% endif %}">{{ pcmso_data.nivel }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 rounded-3 border">
+                                <div class="small text-muted fw-bold text-uppercase mb-1">Classificação Geral</div>
+                                <div class="fw-bold fs-4 text-dark">{{ pcmso_data.overall }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 rounded-3 border">
+                                <div class="small text-muted fw-bold text-uppercase mb-1">Média Geral</div>
+                                <div class="fw-bold fs-4 text-dark">{{ pcmso_data.overall_avg }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-dark"><i class="bi bi-file-medical me-2"></i>Síntese Psicossocial</h6>
+                        <p class="mb-0 text-dark" style="text-align:justify;line-height:1.8;">{{ pcmso_data.sintese }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-dark"><i class="bi bi-prescription2 me-2"></i>Recomendações Clínicas Ocupacionais</h6>
+                        <div class="p-3 bg-light rounded-3 border">{{ pcmso_data.recomendacoes|default:"Sem recomendações específicas." }}</div>
+                    </div>
+                    {% if pcmso_data.dimensoes_alerta %}
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-dark"><i class="bi bi-exclamation-diamond me-2"></i>Dimensões em Alerta</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered mb-0" style="font-size:0.75rem;">
+                                <thead class="table-light"><tr><th>Dimensão</th><th>Vetor</th><th>Instrumento</th><th>Média</th><th>Status</th></tr></thead>
+                                <tbody>
+                                {% for d in pcmso_data.dimensoes_alerta %}
+                                <tr><td class="fw-medium">{{ d.dimensao }}</td><td>{{ d.vetor }}</td><td>{{ d.instrumento }}</td><td class="fw-bold">{{ d.media }}</td><td><span class="badge {% if d.classificacao_key == 'critico' %}bg-danger{% else %}bg-warning text-dark{% endif %} rounded-pill">{{ d.classificacao }}</span></td></tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border"><strong class="small text-muted d-block mb-1">Base Teórica:</strong><span class="small">{{ pcmso_data.base_teorica }}</span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-warning bg-opacity-10 rounded-3 border border-warning"><strong class="small text-muted d-block mb-1">Observação:</strong><span class="small">{{ pcmso_data.observacao }}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {# ═══════════════ 7. INTEGRAÇÃO PGR/GRO ═══════════════ #}
+            {% if pgr_items %}
+            <div class="card border-0 shadow-sm rounded-4 mb-4 break-inside-avoid">
+                <div class="card-header bg-warning bg-opacity-75 text-dark p-4 rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-shield-exclamation me-2"></i>7. Integração PGR/GRO — Inventário de Riscos Psicossociais</h5>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted small mb-3">Dimensões classificadas como Crítico ou Atenção que devem ser incluídas no Programa de Gerenciamento de Riscos (PGR) conforme NR-01 (Portaria MTE nº 1.419/2024).</p>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered mb-0" style="font-size:0.75rem;">
+                            <thead class="table-dark">
+                                <tr><th>Dimensão</th><th>Vetor</th><th>Instrumento</th><th>Média</th><th>Classificação</th><th>Probabilidade</th><th>Impacto</th><th>Ação PGR</th></tr>
+                            </thead>
+                            <tbody>
+                                {% for item in pgr_items %}
+                                <tr class="{% if item.classificacao_key == 'critico' %}table-danger{% else %}table-warning{% endif %}">
+                                    <td class="fw-medium">{{ item.dimensao }}</td>
+                                    <td>{{ item.vetor }}</td>
+                                    <td><span class="badge bg-dark rounded-pill" style="font-size:0.6rem;">{{ item.instrumento }}</span></td>
+                                    <td class="fw-bold">{{ item.media }}</td>
+                                    <td><span class="badge {% if item.classificacao_key == 'critico' %}bg-danger{% else %}bg-warning text-dark{% endif %} rounded-pill">{{ item.classificacao }}</span></td>
+                                    <td>{{ item.probabilidade }}</td>
+                                    <td>{{ item.impacto }}</td>
+                                    <td class="small">{{ item.acao_pgr }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3 p-3 bg-light rounded-3 border">
+                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i><strong>Base:</strong> SIMDCCONR01 (160/160 itens) — Rastreabilidade total conforme modelo FDAC (Goulart, 2025). Integração obrigatória ao PGR/GRO e PCMSO conforme NR-01.</small>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {# ═══════════════ 8. NOTA METODOLÓGICA ═══════════════ #}
+            <div class="card border-0 shadow-sm rounded-4 mb-4 break-inside-avoid">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-dark border-bottom pb-3 mb-4"><i class="bi bi-mortarboard me-2 text-primary"></i>8. Nota Metodológica</h5>
+                    <div class="row g-3" style="font-size:0.82rem;">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <strong class="d-block mb-2 text-primary"><i class="bi bi-clipboard-check me-1"></i>Instrumento</strong>
+                                <p class="mb-1">SIMDCCONR01 — 160 itens distribuídos em 3 instrumentos: IMCO (88), FDAC (12) e NR-01/SESMT (46), com sub-blocos NR-17 (12) e NR-12 (2).</p>
+                                <p class="mb-0 text-muted">Validação: Coda et al. (2009) — α de Cronbach ≥ 0,70.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <strong class="d-block mb-2 text-primary"><i class="bi bi-rulers me-1"></i>Escala e Classificação</strong>
+                                <p class="mb-1">Escala Likert 1-5 (1=Discordo Totalmente, 5=Concordo Totalmente).</p>
+                                <p class="mb-0">Faixas: <span class="badge bg-danger" style="font-size:0.6rem;">Crítico 1.0-2.4</span> <span class="badge bg-warning text-dark" style="font-size:0.6rem;">Atenção 2.5-3.4</span> <span class="badge bg-success" style="font-size:0.6rem;">Adequado 3.5-4.2</span> <span class="badge bg-primary" style="font-size:0.6rem;">Forte 4.3-5.0</span></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <strong class="d-block mb-2 text-primary"><i class="bi bi-bank me-1"></i>Base Normativa</strong>
+                                <p class="mb-0">NR-01 (Portaria 1.419/2024) — Riscos Psicossociais<br>NR-17 — Ergonomia<br>NR-12 — Segurança em Máquinas<br>LGPD (Lei 13.709/2018)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border h-100">
+                                <strong class="d-block mb-2 text-primary"><i class="bi bi-link-45deg me-1"></i>Rastreabilidade</strong>
+                                <p class="mb-0">160/160 itens vinculados a autor, obra, constructo teórico e referência ABNT. Referencial restrito: Litwin &amp; Stringer (1968), Coda (2009), Goulart (2025), Hackman &amp; Oldham (1976), Karasek (1979).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# ═══════════════ 9. CONCLUSÃO PERICIAL ═══════════════ #}
+            <div class="card border-0 shadow-sm rounded-4 mb-4 break-inside-avoid">
+                <div class="card-header p-4 rounded-top-4" style="background: linear-gradient(135deg, #111827, #1e3a5f);">
+                    <h5 class="mb-0 fw-bold text-white"><i class="bi bi-patch-check me-2"></i>9. Conclusão Pericial</h5>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <div class="p-4 border-start border-4 border-primary rounded-end-3 bg-light">
+                        <p class="mb-3 lh-lg text-dark fw-medium" style="text-align:justify;">
+                            Os resultados evidenciam, com base em análise item a item e fundamentação teórica rastreável,
+                            {% if report_data.overall_key == 'critico' %}
+                            a existência de fatores organizacionais críticos que impactam diretamente o clima, a cultura e os riscos ocupacionais. A integração dos achados ao PGR/GRO e ao PCMSO é obrigatória para atendimento à NR-01, sendo recomendadas intervenções estruturais, organizacionais e de monitoramento contínuo.
+                            {% elif report_data.overall_key == 'atencao' %}
+                            a existência de fatores organizacionais em nível de atenção que demandam monitoramento e ações preventivas. Recomenda-se a integração dos achados ao PGR/GRO e ao PCMSO, com planejamento de ações corretivas.
+                            {% elif report_data.overall_key == 'adequado' %}
+                            condições organizacionais dentro de parâmetros adequados. Recomenda-se a manutenção das práticas atuais com monitoramento periódico, garantindo a integração dos dados ao PGR/GRO e PCMSO.
+                            {% else %}
+                            condições organizacionais fortes em todas as dimensões avaliadas. Recomenda-se a manutenção e disseminação das boas práticas identificadas.
+                            {% endif %}
+                        </p>
+                        <p class="mb-0 text-muted small" style="text-align:justify;">
+                            <strong>Ressalva legal:</strong> Este documento constitui parecer técnico pericial elaborado com base em instrumento validado (SIMDCCONR01) e referencial teórico restrito. A interpretação dos resultados deve considerar o contexto organizacional e ser complementada por avaliações clínicas quando indicado. O sigilo das respostas individuais é garantido conforme LGPD (Lei nº 13.709/2018).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Signature Block (Unified — Single Signature) -->
             <div class="card border-0 shadow-sm rounded-4 mt-4 print-signature-block break-inside-avoid">
                 <div class="card-body p-4 p-md-5">

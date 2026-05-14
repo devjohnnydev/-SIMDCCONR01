@@ -607,6 +607,29 @@ def view_diagnostic(request, validation_code):
     engine = TextEngine()
     report_data = engine.generate_respondent_report(diagnostic.assignment)
     
+    # Gerar Anexo PCMSO individual (Karasek, 1979)
+    pcmso_data = engine.generate_pcmso_annex(diagnostic.assignment)
+    
+    # Gerar interpretações por dimensão para análise narrativa
+    from .knowledge_base import get_interpretation, get_recommendation, RISK_RULES
+    dim_analysis = []
+    for dim in report_data.get('dimension_summary', []):
+        interp = get_interpretation(dim['instrumento'], dim['dimensao'], dim['classificacao_key'])
+        rec = get_recommendation('respondente', dim['classificacao_key'])
+        risk_info = RISK_RULES.get(dim['classificacao_key'], RISK_RULES['adequado'])
+        dim_analysis.append({
+            **dim,
+            'interpretacao': interp,
+            'recomendacao': rec,
+            'risco': risk_info['risco'],
+            'probabilidade': risk_info['probabilidade'],
+            'impacto': risk_info['impacto'],
+            'acao_pgr': risk_info['acao_pgr'],
+        })
+    
+    # Filtrar dimensões em risco para seção PGR
+    pgr_items = [d for d in dim_analysis if d['classificacao_key'] in ('critico', 'atencao')]
+    
     # Buscar todos os perfis de signatários ativos para o dropdown de assinatura
     from .models import SignerProfile
     signatarios = SignerProfile.objects.filter(is_active=True)
@@ -614,6 +637,9 @@ def view_diagnostic(request, validation_code):
     return render(request, 'reports/diagnostic_view.html', {
         'diagnostic': diagnostic,
         'report_data': report_data,
+        'pcmso_data': pcmso_data,
+        'dim_analysis': dim_analysis,
+        'pgr_items': pgr_items,
         'signatarios': signatarios,
     })
 

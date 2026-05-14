@@ -320,7 +320,141 @@
                         </div>
                     </div>
 
-                    {# ═══════════════════════ REFERÊNCIAS BIBLIOGRÁFICAS ═══════════════════════ #}
+                    {# ═══════════════ ANÁLISE POR DIMENSÃO COM INTERPRETAÇÃO ═══════════════ #}
+                    {% if dim_analysis %}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-clipboard-data me-1"></i>Análise por Dimensão — Fundamentação Teórica</div>
+                        {% for dim in dim_analysis %}
+                        <div class="mb-3 p-3 bg-white rounded-3 border shadow-sm {% if dim.classificacao_key == 'critico' %}border-danger{% elif dim.classificacao_key == 'atencao' %}border-warning{% endif %}">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <span class="badge bg-dark bg-opacity-75 rounded-pill" style="font-size:0.6rem;">{{ dim.instrumento }}</span>
+                                    <span class="fw-bold text-dark ms-1">{{ dim.dimensao }}</span>
+                                    <span class="text-muted small ms-1">({{ dim.vetor }})</span>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">{{ dim.media }}</span>
+                                    <span class="risk-badge ms-1 {% if dim.classificacao_key == 'critico' %}risk-critico{% elif dim.classificacao_key == 'atencao' %}risk-atencao{% elif dim.classificacao_key == 'adequado' %}risk-adequado{% else %}risk-forte{% endif %}">{{ dim.classificacao }}</span>
+                                </div>
+                            </div>
+                            {% if dim.interpretacao %}<p class="mb-2 small text-dark" style="text-align:justify;line-height:1.7;">{{ dim.interpretacao }}</p>{% endif %}
+                            <div class="d-flex flex-wrap gap-3" style="font-size:0.7rem;">
+                                <span><strong class="text-muted">Risco:</strong> {{ dim.risco }}</span>
+                                <span><strong class="text-muted">Prob.×Imp.:</strong> {{ dim.probabilidade }} × {{ dim.impacto }}</span>
+                                <span><strong class="text-muted">Respostas:</strong> {{ dim.total_respostas }}</span>
+                            </div>
+                            {% if dim.recomendacao %}<div class="mt-2 p-2 bg-light rounded-2 border small"><i class="bi bi-arrow-right-circle text-primary me-1"></i>{{ dim.recomendacao }}</div>{% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {# ═══════════════ CONSOLIDAÇÃO POR INSTRUMENTO ═══════════════ #}
+                    {% if engine_data.imco or engine_data.fdac or engine_data.nr01 %}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-layers me-1"></i>Consolidação por Instrumento</div>
+                        {% if engine_data.imco %}
+                        <h6 class="fw-bold text-dark mb-2" style="font-size:0.8rem;"><i class="bi bi-thermometer-half text-primary me-1"></i>IMCO — Clima Organizacional (Coda, 2009)</h6>
+                        <div class="table-responsive mb-4"><table class="matrix-table"><thead><tr><th>Vetor</th><th>Dimensão</th><th>Média</th><th>Status</th><th>Risco</th></tr></thead><tbody>
+                        {% for i in engine_data.imco %}<tr><td class="fw-semibold" style="font-size:0.75rem;">{{ i.vetor }}</td><td class="fw-medium">{{ i.dimensao }}</td><td class="fw-bold">{{ i.media }}</td><td><span class="risk-badge {% if i.classificacao_key == 'critico' %}risk-critico{% elif i.classificacao_key == 'atencao' %}risk-atencao{% elif i.classificacao_key == 'adequado' %}risk-adequado{% else %}risk-forte{% endif %}">{{ i.classificacao }}</span></td><td class="small text-muted">{{ i.risco }}</td></tr>{% endfor %}
+                        </tbody></table></div>
+                        {% endif %}
+                        {% if engine_data.fdac %}
+                        <h6 class="fw-bold text-dark mb-2" style="font-size:0.8rem;"><i class="bi bi-diagram-3 text-success me-1"></i>FDAC — Cultura Organizacional (Goulart, 2025)</h6>
+                        <div class="table-responsive mb-4"><table class="matrix-table"><thead><tr><th>Vetor</th><th>Dimensão</th><th>Média</th><th>Status</th><th>Risco</th></tr></thead><tbody>
+                        {% for i in engine_data.fdac %}<tr><td class="fw-semibold" style="font-size:0.75rem;">{{ i.vetor }}</td><td class="fw-medium">{{ i.dimensao }}</td><td class="fw-bold">{{ i.media }}</td><td><span class="risk-badge {% if i.classificacao_key == 'critico' %}risk-critico{% elif i.classificacao_key == 'atencao' %}risk-atencao{% elif i.classificacao_key == 'adequado' %}risk-adequado{% else %}risk-forte{% endif %}">{{ i.classificacao }}</span></td><td class="small text-muted">{{ i.risco }}</td></tr>{% endfor %}
+                        </tbody></table></div>
+                        {% endif %}
+                        {% if engine_data.nr01 %}
+                        <h6 class="fw-bold text-dark mb-2" style="font-size:0.8rem;"><i class="bi bi-shield-exclamation text-danger me-1"></i>NR-01/SESMT — Riscos Psicossociais (Karasek, 1979)</h6>
+                        <div class="table-responsive"><table class="matrix-table"><thead><tr><th>Vetor</th><th>Dimensão</th><th>Média</th><th>Status</th><th>Risco</th></tr></thead><tbody>
+                        {% for i in engine_data.nr01 %}<tr><td class="fw-semibold" style="font-size:0.75rem;">{{ i.vetor }}</td><td class="fw-medium">{{ i.dimensao }}</td><td class="fw-bold">{{ i.media }}</td><td><span class="risk-badge {% if i.classificacao_key == 'critico' %}risk-critico{% elif i.classificacao_key == 'atencao' %}risk-atencao{% elif i.classificacao_key == 'adequado' %}risk-adequado{% else %}risk-forte{% endif %}">{{ i.classificacao }}</span></td><td class="small text-muted">{{ i.risco }}</td></tr>{% endfor %}
+                        </tbody></table></div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    {# ═══════════════ SESMT / PGR ═══════════════ #}
+                    {% if pgr_items %}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-shield-exclamation text-danger me-1"></i>Inventário de Riscos — PGR/GRO (NR-01)</div>
+                        <div class="p-4 bg-white rounded-4 border shadow-sm">
+                            <p class="text-muted small mb-3">Dimensões em Crítico ou Atenção com integração obrigatória ao PGR conforme Portaria MTE nº 1.419/2024.</p>
+                            <div class="table-responsive">
+                                <table class="matrix-table mb-3"><thead><tr><th>Dimensão</th><th>Vetor</th><th>Instr.</th><th>Média</th><th>Class.</th><th>Prob.</th><th>Impacto</th><th>Ação PGR</th></tr></thead><tbody>
+                                {% for item in pgr_items %}
+                                <tr style="{% if item.classificacao_key == 'critico' %}background:#fef2f2;{% else %}background:#fffbeb;{% endif %}">
+                                    <td class="fw-medium">{{ item.dimensao }}</td><td>{{ item.vetor }}</td><td><span class="badge bg-dark rounded-pill" style="font-size:0.6rem;">{{ item.instrumento }}</span></td><td class="fw-bold">{{ item.media }}</td>
+                                    <td><span class="risk-badge {% if item.classificacao_key == 'critico' %}risk-critico{% else %}risk-atencao{% endif %}">{{ item.classificacao }}</span></td>
+                                    <td>{{ item.probabilidade }}</td><td>{{ item.impacto }}</td><td class="small">{{ item.acao_pgr }}</td>
+                                </tr>{% endfor %}
+                                </tbody></table>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-4"><div class="p-2 bg-danger bg-opacity-10 rounded-3 border border-danger text-center"><div class="fw-bold text-danger" style="font-size:0.75rem;">CURTO PRAZO (0-3m)</div><small class="text-muted">Intervenção imediata</small></div></div>
+                                <div class="col-md-4"><div class="p-2 bg-warning bg-opacity-10 rounded-3 border border-warning text-center"><div class="fw-bold text-warning" style="font-size:0.75rem;">MÉDIO PRAZO (3-12m)</div><small class="text-muted">Ações corretivas</small></div></div>
+                                <div class="col-md-4"><div class="p-2 bg-success bg-opacity-10 rounded-3 border border-success text-center"><div class="fw-bold text-success" style="font-size:0.75rem;">LONGO PRAZO (>12m)</div><small class="text-muted">Monitoramento</small></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {# ═══════════════ NR-17 ═══════════════ #}
+                    {% if nr17_data.items %}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-person-workspace me-1"></i>Achados Ergonômicos — NR-17</div>
+                        <div class="p-4 bg-white rounded-4 border shadow-sm">
+                            <p class="mb-2"><strong>Achado:</strong> {{ nr17_data.achado }}</p>
+                            <p class="mb-2 text-muted small"><strong>Base Teórica:</strong> {{ nr17_data.base_teorica }} — Design do trabalho e exigências cognitivas.</p>
+                            <div class="mb-3"><strong class="small">Ações Recomendadas:</strong>
+                                <ul class="mb-0 small">{% for acao in nr17_data.acoes %}<li>{{ acao }}</li>{% endfor %}</ul>
+                            </div>
+                            <div class="table-responsive"><table class="matrix-table"><thead><tr><th>Dimensão</th><th>Vetor</th><th>Média</th><th>Status</th></tr></thead><tbody>
+                            {% for i in nr17_data.items %}<tr><td class="fw-medium">{{ i.dimensao }}</td><td>{{ i.vetor }}</td><td class="fw-bold">{{ i.media }}</td><td><span class="risk-badge {% if i.classificacao_key == 'critico' %}risk-critico{% elif i.classificacao_key == 'atencao' %}risk-atencao{% elif i.classificacao_key == 'adequado' %}risk-adequado{% else %}risk-forte{% endif %}">{{ i.classificacao }}</span></td></tr>{% endfor %}
+                            </tbody></table></div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {# ═══════════════ NR-12 ═══════════════ #}
+                    {% if nr12_data.items %}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-gear me-1"></i>Segurança em Máquinas — NR-12</div>
+                        <div class="p-4 bg-white rounded-4 border shadow-sm">
+                            <p class="mb-2"><strong>Achado:</strong> {{ nr12_data.achado }}</p>
+                            <p class="mb-2 text-muted small"><strong>Base Normativa:</strong> {{ nr12_data.base_normativa }} — Goulart (2025).</p>
+                            <div class="mb-3"><strong class="small">Ações Recomendadas:</strong>
+                                <ul class="mb-0 small">{% for acao in nr12_data.acoes %}<li>{{ acao }}</li>{% endfor %}</ul>
+                            </div>
+                            <div class="table-responsive"><table class="matrix-table"><thead><tr><th>Dimensão</th><th>Vetor</th><th>Média</th><th>Status</th></tr></thead><tbody>
+                            {% for i in nr12_data.items %}<tr><td class="fw-medium">{{ i.dimensao }}</td><td>{{ i.vetor }}</td><td class="fw-bold">{{ i.media }}</td><td><span class="risk-badge {% if i.classificacao_key == 'critico' %}risk-critico{% elif i.classificacao_key == 'atencao' %}risk-atencao{% elif i.classificacao_key == 'adequado' %}risk-adequado{% else %}risk-forte{% endif %}">{{ i.classificacao }}</span></td></tr>{% endfor %}
+                            </tbody></table></div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {# ═══════════════ NOTA METODOLÓGICA ═══════════════ #}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-mortarboard me-1"></i>Nota Metodológica</div>
+                        <div class="p-4 bg-white rounded-4 border shadow-sm">
+                            <div class="row g-3" style="font-size:0.8rem;">
+                                <div class="col-md-6"><div class="p-3 bg-light rounded-3 border h-100"><strong class="d-block mb-1 text-primary">Instrumento</strong>SIMDCCONR01 — 160 itens: IMCO (88), FDAC (12), NR-01/SESMT (46), NR-17 (12), NR-12 (2). Validação: Coda et al. (2009).</div></div>
+                                <div class="col-md-6"><div class="p-3 bg-light rounded-3 border h-100"><strong class="d-block mb-1 text-primary">Escala</strong>Likert 1-5. Faixas: <span class="risk-badge risk-critico">Crítico 1.0-2.4</span> <span class="risk-badge risk-atencao">Atenção 2.5-3.4</span> <span class="risk-badge risk-adequado">Adequado 3.5-4.2</span> <span class="risk-badge risk-forte">Forte 4.3-5.0</span></div></div>
+                                <div class="col-md-6"><div class="p-3 bg-light rounded-3 border h-100"><strong class="d-block mb-1 text-primary">Base Normativa</strong>NR-01 (Portaria 1.419/2024), NR-17, NR-12, LGPD (Lei 13.709/2018), ISO 45003:2021.</div></div>
+                                <div class="col-md-6"><div class="p-3 bg-light rounded-3 border h-100"><strong class="d-block mb-1 text-primary">Rastreabilidade</strong>160/160 itens → autor, obra, constructo. Referencial: Litwin & Stringer (1968), Coda (2009), Goulart (2025), Hackman & Oldham (1976), Karasek (1979).</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# ═══════════════ CONCLUSÃO PERICIAL ═══════════════ #}
+                    <div class="mb-5">
+                        <div class="section-title"><i class="bi bi-patch-check me-1"></i>Conclusão Pericial</div>
+                        <div class="narrative-box" style="border-left-color: #111827;">
+                            <p class="mb-3 fw-medium">{{ conclusao|default:"Análise concluída conforme parâmetros do SIMDCCONR01." }}</p>
+                            <p class="mb-0 text-muted small"><strong>Ressalva legal:</strong> Este documento constitui parecer técnico pericial elaborado com base em instrumento validado (SIMDCCONR01) e referencial teórico restrito. A interpretação deve considerar o contexto organizacional. O sigilo das respostas individuais é garantido conforme LGPD (Lei nº 13.709/2018). As respostas individuais são protegidas por sigilo psicossocial e protocolos de anonimato.</p>
+                        </div>
+                    </div>
+
                     {% if engine_data.references %}
                     <div class="mb-5">
                         <div class="section-title"><i class="bi bi-book me-1"></i>Referências Bibliográficas e Rastreabilidade</div>

@@ -750,11 +750,56 @@ def view_department_report(request, setor, form_id):
     
     # Gerar dados rastreáveis do Motor de Texto Determinístico
     engine_data = {}
+    dim_analysis = []
+    pgr_items = []
+    nr17_data = {}
+    nr12_data = {}
+    conclusao = ''
     try:
         engine = TextEngine()
         engine_data = engine.generate_department_report(
             report.form_instance, setor
         )
+        
+        # Gerar interpretações por dimensão
+        from reports.knowledge_base import get_interpretation, get_recommendation, RISK_RULES
+        for dim in engine_data.get('consolidation', []):
+            interp = get_interpretation(dim['instrumento'], dim['dimensao'], dim['classificacao_key'])
+            rec = get_recommendation('organizacao', dim['classificacao_key'])
+            risk_info = RISK_RULES.get(dim['classificacao_key'], RISK_RULES['adequado'])
+            dim_analysis.append({
+                **dim,
+                'interpretacao': interp,
+                'recomendacao': rec,
+                'acao_pgr': risk_info['acao_pgr'],
+            })
+        
+        # Items PGR (crítico + atenção)
+        pgr_items = [d for d in dim_analysis if d['classificacao_key'] in ('critico', 'atencao')]
+        
+        # NR-17 items
+        nr17_items = [d for d in dim_analysis if 'Ergonomia' in d.get('dimensao', '') or 'NR-17' in d.get('dimensao', '') or 'Volume' in d.get('dimensao', '')]
+        nr17_data = {
+            'items': nr17_items,
+            'achado': engine._nr17_achado(nr17_items),
+            'acoes': engine._nr17_acoes(nr17_items),
+            'base_teorica': 'Hackman & Oldham (1976)',
+        }
+        
+        # NR-12 items
+        nr12_items_list = [d for d in dim_analysis if 'NR-12' in d.get('dimensao', '') or 'Segurança' in d.get('dimensao', '')]
+        nr12_data = {
+            'items': nr12_items_list,
+            'achado': engine._nr12_achado(nr12_items_list),
+            'acoes': engine._nr12_acoes(nr12_items_list),
+            'base_normativa': 'NR-12',
+        }
+        
+        # Conclusão pericial
+        conclusao = engine._gerar_conclusao(
+            engine_data.get('overall_key', 'adequado'), pgr_items
+        )
+        
     except Exception as e:
         engine_data = {'error': str(e)}
         
@@ -762,6 +807,11 @@ def view_department_report(request, setor, form_id):
         'report': report,
         'data': report.diagnostic_data,
         'engine_data': engine_data,
+        'dim_analysis': dim_analysis,
+        'pgr_items': pgr_items,
+        'nr17_data': nr17_data,
+        'nr12_data': nr12_data,
+        'conclusao': conclusao,
     })
 
 def verify_contract_protocol(request, protocol):

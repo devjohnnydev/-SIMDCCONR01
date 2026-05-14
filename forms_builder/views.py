@@ -16,13 +16,16 @@ from audit.models import AuditLog
 
 
 @login_required
-@require_company_admin
 def template_list(request):
     """Lista templates de formularios disponiveis."""
-    company = request.user.company
+    if not (request.user.is_company_admin or request.user.is_admin_master):
+        messages.error(request, 'Acesso restrito a administradores.')
+        return redirect('accounts:dashboard')
+
+    company = getattr(request.user, 'company', None)
     
     global_templates = FormTemplate.objects.filter(is_global=True, is_active=True)
-    company_templates = FormTemplate.objects.filter(company=company, is_active=True)
+    company_templates = FormTemplate.objects.filter(company=company, is_active=True) if company else FormTemplate.objects.none()
     
     context = {
         'global_templates': global_templates,
@@ -32,12 +35,16 @@ def template_list(request):
 
 
 @login_required
-@require_company_admin
 def template_detail(request, pk):
     """Detalhes de um template."""
+    if not (request.user.is_company_admin or request.user.is_admin_master):
+        messages.error(request, 'Acesso restrito a administradores.')
+        return redirect('accounts:dashboard')
+
     template = get_object_or_404(FormTemplate, pk=pk)
     
-    if not template.is_global and template.company != request.user.company:
+    company = getattr(request.user, 'company', None)
+    if not template.is_global and template.company != company:
         messages.error(request, 'Acesso nao autorizado.')
         return redirect('forms:templates')
     

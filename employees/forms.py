@@ -53,18 +53,18 @@ class EmployeeForm(forms.ModelForm):
 
 
 class EmployeeImportForm(forms.Form):
-    """Formulario para upload de CSV de funcionarios."""
+    """Formulario para upload de planilha (Excel ou CSV) de funcionarios."""
     
     file = forms.FileField(
-        label='Arquivo CSV',
-        widget=forms.FileInput(attrs={'class': 'form-control', 'accept': '.csv'})
+        label='Arquivo (Excel ou CSV)',
+        widget=forms.FileInput(attrs={'class': 'form-control', 'accept': '.xlsx, .csv'})
     )
     
     def clean_file(self):
         file = self.cleaned_data.get('file')
         if file:
-            if not file.name.endswith('.csv'):
-                raise forms.ValidationError('O arquivo deve ser um CSV.')
+            if not file.name.endswith('.csv') and not file.name.endswith('.xlsx'):
+                raise forms.ValidationError('O arquivo deve ser um Excel (.xlsx) ou CSV.')
             if file.size > 5 * 1024 * 1024:
                 raise forms.ValidationError('O arquivo deve ter no maximo 5MB.')
         return file

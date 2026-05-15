@@ -168,50 +168,88 @@ def employee_import(request):
     if request.method == 'POST':
         form = EmployeeImportForm(request.POST, request.FILES)
         if form.is_valid():
-            csv_file = request.FILES['file']
+            uploaded_file = request.FILES['file']
             
             import_log = EmployeeImportLog.objects.create(
                 company=company,
-                file_name=csv_file.name,
+                file_name=uploaded_file.name,
                 status='PROCESSING',
                 created_by=request.user
             )
             
             try:
-                decoded_file = csv_file.read().decode('utf-8-sig')
-                io_string = io.StringIO(decoded_file)
-                reader = csv.DictReader(io_string, delimiter=';')
+                import unicodedata
+                def normalize_key(k):
+                    if not k: return ''
+                    k = str(k).lower().strip()
+                    k = ''.join(c for c in unicodedata.normalize('NFD', k) if unicodedata.category(c) != 'Mn')
+                    return k
+
+                rows = []
+                file_extension = uploaded_file.name.split('.')[-1].lower()
+                
+                if file_extension == 'xlsx':
+                    import openpyxl
+                    wb = openpyxl.load_workbook(uploaded_file, data_only=True)
+                    sheet = wb.active
+                    headers = [str(cell.value) if cell.value else '' for cell in sheet[1]]
+                    for row in sheet.iter_rows(min_row=2, values_only=True):
+                        if not any(row): continue
+                        row_dict = dict(zip(headers, row))
+                        rows.append(row_dict)
+                else:
+                    decoded_file = uploaded_file.read().decode('utf-8-sig')
+                    delimiter = ';'
+                    first_line = decoded_file.split('\n')[0] if decoded_file else ''
+                    if ';' not in first_line and ',' in first_line:
+                        delimiter = ','
+                        
+                    io_string = io.StringIO(decoded_file)
+                    reader = csv.DictReader(io_string, delimiter=delimiter)
+                    for row in reader:
+                        rows.append(row)
                 
                 success_count = 0
                 error_count = 0
                 errors = []
                 total_rows = 0
                 
-                for row_num, row in enumerate(reader, start=2):
+                for row_num, row in enumerate(rows, start=2):
                     total_rows += 1
                     try:
-                        # Helper to get value from multiple possible keys (Portuguese/Internal)
+                        # Normalize row keys for flexible matching
+                        row_norm = {normalize_key(k): v for k, v in row.items() if k is not None}
+                        
                         def get_val(keys):
                             for k in keys:
-                                if row.get(k): return row[k].strip()
+                                norm_k = normalize_key(k)
+                                if row_norm.get(norm_k): return row_norm[norm_k].strip()
                             return ''
 
-                        nome = get_val(['Nome Completo', 'nome'])
-                        email = get_val(['e-mail corporativo', 'email']).lower()
-                        cpf = get_val(['CPF', 'cpf'])
+                        nome = get_val(['nome completo', 'nome', 'funcionario', 'colaborador'])
+                        if not nome:
+                            raise ValueError("Nome do funcionario e obrigatorio")
+                            
+                        email = get_val(['e-mail corporativo', 'email', 'e-mail', 'email corporativo']).lower()
+                        telefone = get_val(['telefone', 'celular', 'contato', 'tel'])
+                        cpf = get_val(['cpf', 'documento'])
                         cpf = ''.join(filter(str.isdigit, cpf))
-                        setor = get_val(['Departamento', 'setor'])
-                        cargo = get_val(['Cargo/função', 'cargo'])
-                        centro_de_custo = get_val(['Centro de Custo', 'centro_de_custo'])
-                        matricula = get_val(['Matricula', 'matricula', 'MATRICULA'])
+                        setor = get_val(['departamento', 'setor', 'area'])
+                        cargo = get_val(['cargo/funcao', 'cargo', 'funcao'])
+                        centro_de_custo = get_val(['centro de custo', 'cc'])
+                        matricula = get_val(['matricula', 'registro', 're'])
                         
-                        raw_admissao = get_val(['data de admissão', 'data_admissao'])
-                        raw_nascimento = get_val(['data de nascimento', 'data_nascimento'])
-                        raw_demissao = get_val(['data de demissão', 'data_demissao'])
+                        raw_admissao = get_val(['data de admissao', 'data admissao', 'admissao'])
+                        raw_nascimento = get_val(['data de nascimento', 'data nascimento', 'nascimento'])
+                        raw_demissao = get_val(['data de demissao', 'data demissao', 'demissao'])
                         
-                        def parse_date(date_str):
-                            if not date_str: return None
-                            for fmt in ('%d/%m/%Y', '%Y-%m-%d'):
+                        def parse_date(date_val):
+                            if not date_val: return None
+                            if isinstance(date_val, datetime): return date_val.date()
+                            if hasattr(date_val, 'date'): return date_val.date()
+                            
+                            date_str = str(date_val).strip().split(' ')[0]
+                            for fmt in ('%d/%m/%Y', '%Y-%m-%d', '%d-%m-%Y', '%d/%m/%y', '%Y/%m/%d'):
                                 try:
                                     return datetime.strptime(date_str, fmt).date()
                                 except ValueError:
@@ -223,18 +261,26 @@ def employee_import(request):
                         data_demissao = parse_date(raw_demissao)
                         
                         # Superior Imediato (lookup by email or name if possible)
-                        gestor_val = get_val(['Superior Imediato', 'gestor'])
+                        gestor_val = get_val(['superior imediato', 'gestor', 'lider', 'chefe'])
                         gestor = None
                         if gestor_val:
-                            # Try email first, then name
                             gestor = Employee.objects.filter(company=company, email__iexact=gestor_val).first()
                             if not gestor:
                                 gestor = Employee.objects.filter(company=company, nome__icontains=gestor_val).first()
 
-                        status_val = get_val(['Status', 'status']).upper()
+                        status_val = get_val(['status', 'situacao', 'estado']).upper()
                         status = 'ACTIVE'
-                        if 'INATIVO' in status_val or 'OFF' in status_val or 'TERMINATED' in status_val:
+                        if 'INATIVO' in status_val or 'OFF' in status_val or 'TERMINATED' in status_val or 'DESLIGADO' in status_val:
                             status = 'TERMINATED'
+                        elif 'AFASTADO' in status_val:
+                            status = 'ON_LEAVE'
+                            
+                        turno_val = get_val(['turno', 'horario']).upper()
+                        turno = 'FULL'
+                        if 'MANHA' in turno_val: turno = 'MORNING'
+                        elif 'TARDE' in turno_val: turno = 'AFTERNOON'
+                        elif 'NOITE' in turno_val: turno = 'NIGHT'
+                        elif 'REVEZAMENTO' in turno_val: turno = 'ROTATING'
 
                         employee, created = Employee.objects.update_or_create(
                             company=company,
@@ -242,10 +288,11 @@ def employee_import(request):
                             defaults={
                                 'nome': nome,
                                 'cpf': cpf,
+                                'telefone': telefone,
                                 'setor': setor,
                                 'cargo': cargo,
                                 'centro_de_custo': centro_de_custo,
-                                'turno': row.get('turno', 'FULL').strip().upper(),
+                                'turno': turno,
                                 'data_admissao': data_admissao,
                                 'data_nascimento': data_nascimento,
                                 'data_demissao': data_demissao,
@@ -300,20 +347,40 @@ def employee_import(request):
 @login_required
 @require_company_admin
 def employee_export_template(request):
-    """Exporta template CSV para importacao."""
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="template_funcionarios.csv"'
-    response.write('\ufeff')
+    """Exporta template Excel para importacao."""
+    import openpyxl
+    from openpyxl.styles import Font, PatternFill, Alignment
+    from openpyxl.utils import get_column_letter
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Funcionarios"
+
+    headers = [
+        'Nome Completo', 'E-mail Corporativo', 'Telefone', 'CPF', 'Departamento', 'Cargo/Função',
+        'Centro de Custo', 'Superior Imediato', 'Data de Nascimento', 'Data de Admissão', 'Matrícula', 'Turno', 'Status'
+    ]
     
-    writer = csv.writer(response, delimiter=';')
-    writer.writerow([
-        'Nome Completo', 'e-mail corporativo', 'CPF', 'Departamento', 'Cargo/função',
-        'Centro de Custo', 'Superior Imediato', 'data de nascimento', 'data de admissão', 'matricula', 'turno'
+    ws.append(headers)
+    
+    header_fill = PatternFill(start_color="0D6EFD", end_color="0D6EFD", fill_type="solid")
+    header_font = Font(color="FFFFFF", bold=True)
+    
+    for col_num, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = Alignment(horizontal='center', vertical='center')
+        ws.column_dimensions[get_column_letter(col_num)].width = len(header) + 5
+
+    ws.append([
+        'João da Silva', 'joao@empresa.com.br', '(11) 99999-9999', '12345678901', 'TI', 'Analista de Sistemas',
+        'CC-001', 'gestor@empresa.com.br', '15/05/1985', '01/01/2024', '001', 'INTEGRAL', 'ATIVO'
     ])
-    writer.writerow([
-        'Joao da Silva', 'joao@empresa.com', '12345678901', 'TI', 'Analista',
-        'CC-001', 'gestor@empresa.com', '15/05/1985', '01/01/2024', '001', 'FULL'
-    ])
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="modelo_funcionarios.xlsx"'
+    wb.save(response)
     
     return response
 

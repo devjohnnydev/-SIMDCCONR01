@@ -63,7 +63,7 @@ def _activate_plan_for_company(company, plan, is_yearly=False, payment_intent_id
 @login_required
 def plan_pricing(request):
     """Pagina de precos e planos — acessivel por COMPANY_ADMIN (com ou sem plano)."""
-    plans = Plan.objects.filter(is_active=True).order_by('order')[:3]
+    plans = Plan.objects.filter(is_active=True).order_by('order')[:4]
 
     current_plan = None
     company = None

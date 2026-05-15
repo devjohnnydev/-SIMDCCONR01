@@ -242,7 +242,7 @@
     .testi-info span { font-size: 13px; color: var(--secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
     /* ─── PRICING ─── */
-    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 1200px; margin: 0 auto; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1400px; margin: 0 auto; }
     .price-card {
       background: #fff; border: 2px solid #e2e8f0; border-radius: 28px; padding: 48px 40px;
       position: relative; transition: all .4s cubic-bezier(0.19, 1, 0.22, 1);
@@ -507,7 +507,7 @@
       .features-grid { grid-template-columns: repeat(2, 1fr); }
       .diff-grid { grid-template-columns: repeat(2, 1fr); }
       .audience-grid { grid-template-columns: 1fr; }
-      .pricing-grid { grid-template-columns: 1fr; max-width: 500px; }
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); max-width: 700px; }
       .price-card.featured { transform: none; }
     }
     @media (max-width: 768px) {
@@ -1097,44 +1097,36 @@
       <h2 class="section-title">Escolha o plano ideal</h2>
     </div>
     <div class="pricing-grid">
-      <!-- STARTER -->
+      <!-- BASIC -->
       <div class="price-card">
-        <div class="price-name">Starter</div>
+        <div class="price-name">Basic</div>
         <div class="price-main">
           <span class="price-currency">R$</span>
-          <span class="price-value">{{ config.starter_price|intcomma }}</span>
+          <span class="price-value">200</span>
           <span class="price-period">/mês</span>
         </div>
-        <p class="price-desc">Para PMEs até 50 colaboradores</p>
+        <p class="price-desc">Para PMEs até 20 vidas<br><small style="font-size:11px; color:#64748b;">(plano semestral)</small></p>
         <ul class="price-features">
-          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Até 50 funcionários</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Até 5 vidas</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudos personalizados para respondentes</li>
-          
           <li class="feature-group-title">Para Organizações:</li>
           <li class="feature-checked feature-detailed">
-            <span class="feature-label">Diagnostico NR01 Disposições Gerais e Gerenciamento de Riscos Ocupacionais:</span>
+            <span class="feature-label">Diagnostico NR01 Disposições Gerais e GRO:</span>
             <span class="feature-text">Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</span>
           </li>
           <li class="feature-outline feature-detailed">
-            <span class="feature-label"><i class="bi bi-check-circle"></i> NR12 Segurança no Trabalho em Maquinas e Equipamentos:</span>
-            <span class="feature-text">Segurança e Ergonomia em Maquinas e Equipamentos.</span>
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR12 Segurança em Máquinas:</span>
+            <span class="feature-text">Segurança e Ergonomia em Máquinas e Equipamentos.</span>
           </li>
           <li class="feature-outline feature-detailed">
             <span class="feature-label"><i class="bi bi-check-circle"></i> NR17 Ergonomia:</span>
-            <span class="feature-text">Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho e Exigências Cognitivas.</span>
+            <span class="feature-text">Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho.</span>
           </li>
-          <li class="feature-checked feature-detailed">
-            <span class="feature-label">Diagnostico para Cultura Organizacional:</span>
-            <span class="feature-text">(Fairness/justiça, Disclosure / transparência, Accountability / responsabilidade, Compliance / conformidade)</span>
-          </li>
-          <li class="feature-checked feature-detailed">
-            <span class="feature-label">Diagnostico para Clima Organizacional:</span>
-            <span class="feature-text">Análise de Motivação(Reconhecimento, Comprometimento, Progresso Profissional), Liderança (Estilo Gerencial, Trabalho em Equipe, Competição no Trabalho), Filosofia de Gestão (Clareza Organizacional, Comunicação, Estruturas, Regras e Conformidade), Gestão de Pessoas (Política Salarial, Salário, Imagem do RH, Perspectiva de Carreira, Treinamento e Desenvolvimento), Natureza do Trabalho (Conteúdo do Trabalho, Volume de Trabalho).</span>
-          </li>
-
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Cultura e Clima Organizacional</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Reaplicação semestral</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudo PDF básico</li>
         </ul>
+        <p style="font-size:10px; color:#94a3b8; line-height:1.4; margin-bottom:16px;"><strong>Importante:</strong> De acordo com a abrangência da NR01, estão sob sua responsabilidade os terceirizados, temporários e prestadores de serviços habituais que frequentam sua organização/localização.</p>
         <a href="{% url 'accounts:signup' %}" class="btn-price btn-price-outline">Começar Agora</a>
       </div>
 
@@ -1144,42 +1136,34 @@
         <div class="price-name">Professional</div>
         <div class="price-main">
           <span class="price-currency">R$</span>
-          <span class="price-value">{{ config.pro_price|intcomma }}</span>
+          <span class="price-value">1.100</span>
           <span class="price-period">/mês</span>
         </div>
-        <p class="price-desc">Para empresas de 50 a 300 colaboradores</p>
+        <p class="price-desc">Para organizações de 6 a 30 colaboradores<br><small style="font-size:11px; color:#64748b;">(plano semestral)</small></p>
         <ul class="price-features">
-          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Até 300 funcionários</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Até 30 vidas</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudos personalizados para respondentes</li>
-          
           <li class="feature-group-title">Para Organizações:</li>
           <li class="feature-checked feature-detailed">
-            <span class="feature-label">Diagnostico NR01 Disposições Gerais e Gerenciamento de Riscos Ocupacionais:</span>
+            <span class="feature-label">Diagnostico NR01 Disposições Gerais e GRO:</span>
             <span class="feature-text">Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</span>
           </li>
           <li class="feature-outline feature-detailed">
-            <span class="feature-label"><i class="bi bi-check-circle"></i> NR12 Segurança no Trabalho em Maquinas e Equipamentos:</span>
-            <span class="feature-text">Segurança e Ergonomia em Maquinas e Equipamentos.</span>
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR12 Segurança em Máquinas:</span>
+            <span class="feature-text">Segurança e Ergonomia em Máquinas e Equipamentos.</span>
           </li>
           <li class="feature-outline feature-detailed">
             <span class="feature-label"><i class="bi bi-check-circle"></i> NR17 Ergonomia:</span>
-            <span class="feature-text">Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho e Exigências Cognitivas.</span>
+            <span class="feature-text">Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho.</span>
           </li>
-          <li class="feature-checked feature-detailed">
-            <span class="feature-label">Diagnostico para Cultura Organizacional:</span>
-            <span class="feature-text">(Fairness/justiça, Disclosure / transparência, Accountability / responsabilidade, Compliance / conformidade)</span>
-          </li>
-          <li class="feature-checked feature-detailed">
-            <span class="feature-label">Diagnostico para Clima Organizacional:</span>
-            <span class="feature-text">Análise de Motivação(Reconhecimento, Comprometimento, Progresso Profissional), Liderança (Estilo Gerencial, Trabalho em Equipe, Competição no Trabalho), Filosofia de Gestão (Clareza Organizacional, Comunicação, Estruturas, Regras e Conformidade), Gestão de Pessoas (Política Salarial, Salário, Imagem do RH, Perspectiva de Carreira, Treinamento e Desenvolvimento), Natureza do Trabalho (Conteúdo do Trabalho, Volume de Trabalho).</span>
-          </li>
-
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Cultura e Clima Organizacional</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudo Pericial Completo</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Rastreabilidade por CPF</li>
-          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Rerecomendação de Ajustes PGR/GRO/PCMSO</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Recomendação de Ajustes PGR/GRO/PCMSO</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Reaplicação Semestral</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Suporte prioritário</li>
         </ul>
+        <p style="font-size:10px; color:#94a3b8; line-height:1.4; margin-bottom:16px;"><strong>Importante:</strong> De acordo com a abrangência da NR01, estão sob sua responsabilidade os terceirizados, temporários e prestadores de serviços habituais que frequentam sua organização/localização.</p>
         <a href="{% url 'accounts:signup' %}" class="btn-price btn-price-primary">Começar Agora</a>
       </div>
 
@@ -1187,44 +1171,66 @@
       <div class="price-card">
         <div class="price-name">Enterprise</div>
         <div class="price-main">
-          <span class="price-value">Sob consulta</span>
+          <span class="price-currency">R$</span>
+          <span class="price-value">2.999</span>
+          <span class="price-period">/mês</span>
         </div>
-        <p class="price-desc">Para grupos e conglomerados +300</p>
+        <p class="price-desc">Para grupos e conglomerados +300<br>De 31 a 100 vidas<br><small style="font-size:11px; color:#64748b;">(plano semestral)</small></p>
+        <ul class="price-features">
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Até 100 vidas</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudos personalizados para respondentes</li>
+          <li class="feature-group-title">Para Organizações:</li>
+          <li class="feature-checked feature-detailed">
+            <span class="feature-label">Diagnostico NR01 Disposições Gerais e GRO:</span>
+            <span class="feature-text">Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</span>
+          </li>
+          <li class="feature-outline feature-detailed">
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR12 Segurança em Máquinas:</span>
+            <span class="feature-text">Segurança e Ergonomia em Máquinas e Equipamentos.</span>
+          </li>
+          <li class="feature-outline feature-detailed">
+            <span class="feature-label"><i class="bi bi-check-circle"></i> NR17 Ergonomia:</span>
+            <span class="feature-text">Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho.</span>
+          </li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Cultura e Clima Organizacional</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudo Pericial Completo</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Rastreabilidade por CPF</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Recomendação de Ajustes PGR/GRO/PCMSO</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Suporte prioritário</li>
+        </ul>
+        <p style="font-size:10px; color:#94a3b8; line-height:1.4; margin-bottom:16px;"><strong>Importante:</strong> De acordo com a abrangência da NR01, estão sob sua responsabilidade os terceirizados, temporários e prestadores de serviços habituais que frequentam sua organização/localização.</p>
+        <a href="{% url 'accounts:signup' %}" class="btn-price btn-price-outline">Começar Agora</a>
+      </div>
+
+      <!-- ADVANCED -->
+      <div class="price-card" style="border-color: #dc2626;">
+        <div class="price-name" style="color: #dc2626;">Advanced</div>
+        <div class="price-main">
+          <span class="price-value" style="font-size:28px;">A partir de R$ 3.000</span>
+          <span class="price-period">/mês</span>
+        </div>
+        <p class="price-desc">Sob consulta<br><small style="font-size:11px; color:#64748b;">(plano semestral)</small></p>
+        <p style="font-size:12px; color:#475569; background:#fef2f2; padding:12px; border-radius:10px; line-height:1.5; margin-bottom:16px;">Clique no botão abaixo <strong>'Fale com Especialista'</strong> e informe:<br>• Quantidade de CNPJ<br>• Quantidade de Vidas por CNPJ</p>
         <ul class="price-features">
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Colaboradores ilimitados</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Multi-empresa (CNPJ)</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> API de Integração</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> SLA e suporte dedicado</li>
-          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudos personalizados para respondentes</li>
-          
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudos personalizados</li>
           <li class="feature-group-title">Para Organizações:</li>
           <li class="feature-checked feature-detailed">
-            <span class="feature-label">Diagnostico NR01 Disposições Gerais e Gerenciamento de Riscos Ocupacionais:</span>
-            <span class="feature-text">Fatores de Risco Psicossocial e Neurocognitivo, Sintomáticos Neurovegetativos, Antecedentes Bio-Neuro, Função Executiva Autopercebida, Contexto Ocupacional, Impacto Funcional, Dependência Química e Percepção Subjetiva.</span>
+            <span class="feature-label">Diagnostico NR01 Disposições Gerais e GRO:</span>
+            <span class="feature-text">Todos os módulos inclusos.</span>
           </li>
-          <li class="feature-outline feature-detailed">
-            <span class="feature-label"><i class="bi bi-check-circle"></i> NR12 Segurança no Trabalho em Maquinas e Equipamentos:</span>
-            <span class="feature-text">Segurança e Ergonomia em Maquinas e Equipamentos.</span>
-          </li>
-          <li class="feature-outline feature-detailed">
-            <span class="feature-label"><i class="bi bi-check-circle"></i> NR17 Ergonomia:</span>
-            <span class="feature-text">Aspectos Ergonômicos Físicos e Cognitivos, Organização do Trabalho e Exigências Cognitivas.</span>
-          </li>
-          <li class="feature-checked feature-detailed">
-            <span class="feature-label">Diagnostico para Cultura Organizacional:</span>
-            <span class="feature-text">(Fairness/justiça, Disclosure / transparência, Accountability / responsabilidade, Compliance / conformidade)</span>
-          </li>
-          <li class="feature-checked feature-detailed">
-            <span class="feature-label">Diagnostico para Clima Organizacional:</span>
-            <span class="feature-text">Análise de Motivação(Reconhecimento, Comprometimento, Progresso Profissional), Liderança (Estilo Gerencial, Trabalho em Equipe, Competição no Trabalho), Filosofia de Gestão (Clareza Organizacional, Comunicação, Estruturas, Regras e Conformidade), Gestão de Pessoas (Política Salarial, Salário, Imagem do RH, Perspectiva de Carreira, Treinamento e Desenvolvimento), Natureza do Trabalho (Conteúdo do Trabalho, Volume de Trabalho).</span>
-          </li>
-
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> NR12 + NR17 inclusos</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Cultura e Clima Organizacional</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Laudo Pericial Completo</li>
           <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Rastreabilidade por CPF</li>
-          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Rerecomendação de Ajustes PGR/GRO/PCMSO</li>
-          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Suporte prioritário</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Recomendação PGR/GRO/PCMSO</li>
+          <li class="feature-checked"><i class="bi bi-check-circle-fill"></i> Suporte dedicado</li>
         </ul>
-        <a href="mailto:{{ config.enterprise_contact }}" class="btn-price btn-price-outline">Falar com Especialista</a>
+        <p style="font-size:10px; color:#94a3b8; line-height:1.4; margin-bottom:16px;"><strong>Importante:</strong> De acordo com a abrangência da NR01, estão sob sua responsabilidade os terceirizados, temporários e prestadores de serviços habituais que frequentam sua organização/localização.</p>
+        <a href="mailto:{{ config.enterprise_contact }}" class="btn-price btn-price-outline" style="border-color:#dc2626; color:#dc2626;">Fale com Especialista</a>
       </div>
     </div>
   </div>

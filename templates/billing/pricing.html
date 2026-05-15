@@ -259,6 +259,7 @@
     .plan-icon.starter { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
     .plan-icon.professional { background: rgba(99, 102, 241, 0.1); color: #6366f1; }
     .plan-icon.enterprise { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .plan-icon.advanced { background: rgba(220, 38, 38, 0.1); color: #dc2626; }
 
     .plan-card h3 {
         font-size: 1.35rem;
@@ -500,6 +501,7 @@
     .plan-card:nth-child(1) { animation-delay: 0.1s; }
     .plan-card:nth-child(2) { animation-delay: 0.25s; }
     .plan-card:nth-child(3) { animation-delay: 0.4s; }
+    .plan-card:nth-child(4) { animation-delay: 0.55s; }
 
     @keyframes fadeInUp {
         to {
@@ -640,7 +642,7 @@
     <div class="plans-container">
         <div class="row g-4 justify-content-center">
             {% for plan in plans %}
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-3 col-md-6">
                 <div class="plan-card {% if plan.is_featured %}featured{% endif %}">
                     {% if plan.is_featured %}
                     <div class="featured-badge">
@@ -655,13 +657,15 @@
                     {% endif %}
 
                     <!-- Icon -->
-                    <div class="plan-icon {% if plan.order == 1 %}starter{% elif plan.order == 2 %}professional{% else %}enterprise{% endif %}">
+                    <div class="plan-icon {% if plan.order == 1 %}starter{% elif plan.order == 2 %}professional{% elif plan.order == 3 %}enterprise{% else %}advanced{% endif %}">
                         {% if plan.order == 1 %}
                         <i class="bi bi-rocket-takeoff"></i>
                         {% elif plan.order == 2 %}
                         <i class="bi bi-lightning-charge-fill"></i>
-                        {% else %}
+                        {% elif plan.order == 3 %}
                         <i class="bi bi-building"></i>
+                        {% else %}
+                        <i class="bi bi-buildings"></i>
                         {% endif %}
                     </div>
 
@@ -691,7 +695,7 @@
                     <ul class="plan-features">
                         <li>
                             <i class="bi bi-check-circle-fill included"></i>
-                            Até {{ plan.max_employees }} funcionários
+                            Até {{ plan.max_employees }} vidas
                             <span class="feature-limit">{{ plan.max_employees }}</span>
                         </li>
                         <li>

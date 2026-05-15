@@ -361,6 +361,35 @@ def request_custom_plan(request):
     # Cancela requests anteriores pendentes/propostos
     CustomPlanRequest.objects.filter(company=company, status__in=['pending', 'proposed']).update(status='rejected')
     
+    # Monta user_message com dados de CNPJs se vier do modal Advanced
+    user_message = request.POST.get('user_message', '')
+    is_advanced = request.POST.get('is_advanced_plan') == '1'
+    
+    if is_advanced:
+        cnpj_names = request.POST.getlist('cnpj_name[]')
+        cnpj_vidas = request.POST.getlist('cnpj_vidas[]')
+        cnpj_numbers = request.POST.getlist('cnpj_number[]')
+        
+        cnpj_details = []
+        total_vidas = 0
+        for i in range(len(cnpj_names)):
+            name = cnpj_names[i] if i < len(cnpj_names) else ''
+            vidas = cnpj_vidas[i] if i < len(cnpj_vidas) else '0'
+            number = cnpj_numbers[i] if i < len(cnpj_numbers) else ''
+            if name:
+                vidas_int = int(vidas) if vidas.isdigit() else 0
+                total_vidas += vidas_int
+                line = f"  - {name}: {vidas_int} vidas"
+                if number:
+                    line += f" (CNPJ: {number})"
+                cnpj_details.append(line)
+        
+        advanced_info = f"[PLANO ADVANCED - SOB CONSULTA]\nTotal de CNPJs: {len(cnpj_details)}\nTotal de Vidas: {total_vidas}\n\nDetalhamento:\n"
+        advanced_info += "\n".join(cnpj_details)
+        if user_message:
+            advanced_info += f"\n\nMensagem adicional: {user_message}"
+        user_message = advanced_info
+    
     CustomPlanRequest.objects.create(
         company=company,
         status='pending',
@@ -370,16 +399,17 @@ def request_custom_plan(request):
         data_retention_days=int(request.POST.get('data_retention_days', 365)),
         has_pdf_export=request.POST.get('has_pdf_export') == 'on',
         has_csv_import=request.POST.get('has_csv_import') == 'on',
-        has_api_access=request.POST.get('has_api_access') == 'on',
+        has_api_access=False,
         has_priority_support=request.POST.get('has_priority_support') == 'on',
         has_custom_branding=request.POST.get('has_custom_branding') == 'on',
-        user_message=request.POST.get('user_message', '')
+        user_message=user_message
     )
     
-    # Notificar Admin Master (disparo assincrono seria ideal, mas síncrono resolve)
+    # Notificar Admin Master
     try:
-        subject = f"Nova Solicitação de Plano: {company.nome_fantasia}"
-        message = f"A empresa {company.nome_fantasia} enviou uma nova solicitação de plano personalizado.\nAcesse o painel para analisar."
+        plan_type = "Advanced (Multi-CNPJ)" if is_advanced else "Personalizado"
+        subject = f"Nova Solicitação de Plano {plan_type}: {company.nome_fantasia}"
+        message = f"A empresa {company.nome_fantasia} enviou uma nova solicitação de plano {plan_type}.\nAcesse o painel para analisar."
         send_mail(
             subject,
             message,

@@ -140,6 +140,27 @@ def employee_deactivate(request, pk):
 
 @login_required
 @require_company_admin
+def employee_activate(request, pk):
+    """Ativa um funcionario."""
+    company = request.user.company
+    employee = get_object_or_404(Employee, pk=pk, company=company)
+    
+    employee.activate()
+    
+    AuditLog.log(
+        user=request.user,
+        action='UPDATE',
+        description=f'Funcionario {employee.nome} ativado',
+        obj=employee,
+        request=request
+    )
+    
+    messages.success(request, f'Funcionario {employee.nome} ativado com sucesso.')
+    return redirect('employees:list')
+
+
+@login_required
+@require_company_admin
 def employee_import(request):
     """Importa funcionarios via CSV."""
     company = request.user.company

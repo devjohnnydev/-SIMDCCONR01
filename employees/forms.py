@@ -11,7 +11,7 @@ class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
         fields = [
-            'nome', 'email', 'cpf', 'setor', 'cargo',
+            'nome', 'email', 'telefone', 'cpf', 'setor', 'cargo',
             'turno', 'data_admissao', 'data_nascimento',
             'data_demissao', 'matricula', 'centro_de_custo',
             'gestor', 'status'
@@ -19,6 +19,7 @@ class EmployeeForm(forms.ModelForm):
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '(00) 00000-0000'}),
             'cpf': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '00000000000'}),
             'setor': forms.TextInput(attrs={'class': 'form-control'}),
             'cargo': forms.TextInput(attrs={'class': 'form-control'}),

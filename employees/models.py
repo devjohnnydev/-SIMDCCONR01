@@ -51,6 +51,7 @@ class Employee(models.Model):
     nome = models.CharField('Nome Completo', max_length=200)
     email = models.EmailField('Email Corporativo')
     cpf = models.CharField('CPF', max_length=11, blank=True, validators=[cpf_validator])
+    telefone = models.CharField('Telefone', max_length=20, blank=True, null=True)
     
     setor = models.CharField('Setor/Departamento', max_length=100)
     cargo = models.CharField('Cargo', max_length=100)
@@ -189,6 +190,16 @@ class Employee(models.Model):
         self.status = 'TERMINATED'
         if self.user:
             self.user.is_active = False
+            self.user.save(update_fields=['is_active'])
+        self.save(update_fields=['status', 'updated_at'])
+
+    def activate(self):
+        """
+        Ativa o funcionario.
+        """
+        self.status = 'ACTIVE'
+        if self.user:
+            self.user.is_active = True
             self.user.save(update_fields=['is_active'])
         self.save(update_fields=['status', 'updated_at'])
 

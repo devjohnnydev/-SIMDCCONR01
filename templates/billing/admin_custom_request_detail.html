@@ -76,10 +76,6 @@
                             <span>Importação CSV</span>
                             {% if req.has_csv_import %}<i class="bi bi-check-circle-fill text-success fs-5"></i>{% else %}<i class="bi bi-x-circle text-muted fs-5"></i>{% endif %}
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                            <span>Acesso API</span>
-                            {% if req.has_api_access %}<i class="bi bi-check-circle-fill text-success fs-5"></i>{% else %}<i class="bi bi-x-circle text-muted fs-5"></i>{% endif %}
-                        </li>
                     </ul>
 
                     {% if req.user_message %}
@@ -126,7 +122,7 @@
                             <label class="form-label fw-bold">Valor Mensal (R$)</label>
                             <div class="input-group input-group-lg">
                                 <span class="input-group-text border-end-0 bg-white text-muted">R$</span>
-                                <input type="number" step="0.01" class="form-control border-start-0 ps-0 fw-bold" name="proposed_price_monthly" value="{{ req.proposed_price_monthly|unlocalize }}" required placeholder="0.00" {% if req.status in 'accepted,rejected' %}readonly{% endif %}>
+                                <input type="number" step="0.01" class="form-control border-start-0 ps-0 fw-bold" name="proposed_price_monthly" value="{{ req.proposed_price_monthly|unlocalize|default_if_none:'' }}" required placeholder="0.00" {% if req.status in 'accepted,rejected' %}readonly{% endif %}>
                             </div>
                         </div>
 
@@ -134,7 +130,7 @@
                             <label class="form-label fw-bold">Valor Anual (R$) <span class="text-muted fw-normal small">(Opcional)</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-muted">R$</span>
-                                <input type="number" step="0.01" class="form-control" name="proposed_price_yearly" value="{{ req.proposed_price_yearly|unlocalize }}" placeholder="0.00" {% if req.status in 'accepted,rejected' %}readonly{% endif %}>
+                                <input type="number" step="0.01" class="form-control" name="proposed_price_yearly" value="{{ req.proposed_price_yearly|unlocalize|default_if_none:'' }}" placeholder="0.00" {% if req.status in 'accepted,rejected' %}readonly{% endif %}>
                             </div>
                             <div class="form-text">Deixe em branco se este plano for apenas mensal.</div>
                         </div>

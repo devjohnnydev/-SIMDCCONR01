@@ -540,12 +540,16 @@ def admin_custom_request_detail(request, request_id):
         
         if action == 'approve':
             try:
-                monthly = float(request.POST.get('proposed_price_monthly'))
-                yearly = request.POST.get('proposed_price_yearly')
+                monthly_str = request.POST.get('proposed_price_monthly', '')
+                yearly_str = request.POST.get('proposed_price_yearly', '')
                 
-                custom_req.proposed_price_monthly = monthly
-                if yearly:
-                    custom_req.proposed_price_yearly = float(yearly)
+                if monthly_str and monthly_str != 'None':
+                    monthly = float(monthly_str)
+                    custom_req.proposed_price_monthly = monthly
+                
+                if yearly_str and yearly_str != 'None':
+                    yearly = float(yearly_str)
+                    custom_req.proposed_price_yearly = yearly
                     
                 custom_req.admin_message = request.POST.get('admin_message', '')
                 
@@ -555,7 +559,14 @@ def admin_custom_request_detail(request, request_id):
                 custom_req.max_forms = int(request.POST.get('max_forms', custom_req.max_forms))
                 
                 custom_req.status = 'proposed'
-                custom_req.save()
+                
+                # Tratar erro de banco (ex: valor muito alto que estoura o DecimalField)
+                from django.db import DataError
+                try:
+                    custom_req.save()
+                except Exception as e:
+                    messages.error(request, 'Erro ao salvar: os valores podem ser muito grandes para os campos do sistema.')
+                    return redirect('billing:admin_custom_request_detail', request_id=request_id)
                 
                 # Notificar a empresa
                 try:

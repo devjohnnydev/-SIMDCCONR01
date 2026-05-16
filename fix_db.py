@@ -165,6 +165,22 @@ execute("ALTER TABLE landing_landingconfig ADD COLUMN IF NOT EXISTS whatsapp_num
 execute("ALTER TABLE landing_testimonial ADD COLUMN IF NOT EXISTS avatar_db bytea;")
 execute("ALTER TABLE landing_testimonial ADD COLUMN IF NOT EXISTS avatar_mime varchar(100);")
 
+print("\n--- FORCING SAFETY TABLE: landing_developmentpartner ---")
+execute("""
+    CREATE TABLE IF NOT EXISTS landing_developmentpartner (
+        id bigserial PRIMARY KEY,
+        name varchar(150) NOT NULL,
+        role varchar(150) NOT NULL,
+        description text NOT NULL,
+        link varchar(200) NOT NULL,
+        logo_db bytea,
+        logo_mime varchar(100),
+        "order" integer NOT NULL,
+        is_active boolean NOT NULL,
+        created_at timestamp with time zone NOT NULL
+    );
+""")
+
 print("\n--- FORCING SAFETY TABLE: billing_customplanrequest ---")
 execute("""
     CREATE TABLE IF NOT EXISTS billing_customplanrequest (

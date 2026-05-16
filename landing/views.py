@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 
-from .models import LandingConfig, Testimonial, Announcement
-from .forms import LandingConfigForm, AnnouncementForm
+from .models import LandingConfig, Testimonial, Announcement, DevelopmentPartner
+from .forms import LandingConfigForm, AnnouncementForm, DevelopmentPartnerForm
 from companies.models import Company
 
 
@@ -22,6 +22,8 @@ def landing_page(request):
         logo__isnull=False,
         website_url__isnull=False
     ).exclude(logo='').exclude(website_url='').order_by('?') 
+
+    development_partners = DevelopmentPartner.objects.filter(is_active=True)
     
     return render(request, 'landing/page.html', {
         'config': config,
@@ -29,6 +31,7 @@ def landing_page(request):
         'testimonials': testimonials,
         'announcements': announcements,
         'partner_companies': partner_companies,
+        'development_partners': development_partners,
     })
 
 
@@ -43,6 +46,7 @@ def landing_editor(request):
     announcements = Announcement.objects.all()
     pending_testimonials = Testimonial.objects.filter(is_approved=False)
     approved_testimonials = Testimonial.objects.filter(is_approved=True)
+    development_partners = DevelopmentPartner.objects.all()
 
     if request.method == 'POST':
         form = LandingConfigForm(request.POST, request.FILES, instance=config)
@@ -60,6 +64,8 @@ def landing_editor(request):
         'pending_testimonials': pending_testimonials,
         'approved_testimonials': approved_testimonials,
         'announcement_form': AnnouncementForm(),
+        'development_partners': development_partners,
+        'partner_form': DevelopmentPartnerForm(),
     })
 
 
@@ -180,5 +186,37 @@ def serve_testimonial_avatar(request, pk):
     """Serve o avatar do depoimento do banco."""
     t = get_object_or_404(Testimonial, pk=pk)
     if not t.avatar_db:
+        from django.http import HttpResponse
         return HttpResponse(status=404)
+    from django.http import HttpResponse
     return HttpResponse(t.avatar_db, content_type=t.avatar_mime or "image/png")
+
+@login_required
+@require_POST
+def create_partner(request):
+    if not request.user.is_admin_master:
+        return redirect('accounts:dashboard')
+    form = DevelopmentPartnerForm(request.POST, request.FILES)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Parceiro adicionado com sucesso!')
+    else:
+        messages.error(request, 'Erro ao adicionar parceiro. Verifique os dados.')
+    return redirect('landing:landing_editor')
+
+@login_required
+@require_POST
+def delete_partner(request, pk):
+    if not request.user.is_admin_master:
+        return redirect('accounts:dashboard')
+    get_object_or_404(DevelopmentPartner, pk=pk).delete()
+    messages.info(request, 'Parceiro removido.')
+    return redirect('landing:landing_editor')
+
+def serve_partner_logo(request, pk):
+    partner = get_object_or_404(DevelopmentPartner, pk=pk)
+    if not partner.logo_db:
+        from django.http import HttpResponse
+        return HttpResponse(status=404)
+    from django.http import HttpResponse
+    return HttpResponse(partner.logo_db, content_type=partner.logo_mime or "image/png")

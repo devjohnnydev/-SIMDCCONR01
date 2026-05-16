@@ -106,6 +106,7 @@
         <a href="#image"       onclick="showTab('image', this)"><span>🖼️</span> Imagem</a>
         <a href="#announce"    onclick="showTab('annunce', this)"><span>📢</span> Avisos</a>
         <a href="#testimonials" onclick="showTab('testimonials', this)"><span>💬</span> Depoimentos</a>
+        <a href="#devteam"     onclick="showTab('devteam', this)"><span>👨‍💻</span> Time Dev</a>
         <hr style="border-color:var(--border); margin:.5rem 0">
         <a href="/" target="_blank"><span>🌐</span> Ver Página Pública</a>
         <a href="/accounts/dashboard/"><span>◀</span> Voltar ao Dashboard</a>
@@ -323,6 +324,60 @@
                     </tbody>
                 </table>
                 {% else %}<p style="color:var(--muted)">Nenhum depoimento aprovado.</p>{% endif %}
+            </div>
+        </div>
+
+        <!-- SEÇÃO TIME DEV -->
+        <div id="tab-devteam" class="tab-panel">
+            <div class="card">
+                <div class="card-title">👨‍💻 Adicionar Parceiro de Desenvolvimento</div>
+                <form method="post" action="{% url 'landing:create_partner' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-grid">
+                        <div class="form-group"><label>Nome da Empresa</label>{{ partner_form.name }}</div>
+                        <div class="form-group"><label>Especialidade</label>{{ partner_form.role }}</div>
+                        <div class="form-group full"><label>Descrição (Breve)</label>{{ partner_form.description }}</div>
+                        <div class="form-group"><label>Link do Site</label>{{ partner_form.link }}</div>
+                        <div class="form-group"><label>Logo (Imagem)</label>{{ partner_form.logo }}</div>
+                        <div class="form-group"><label>Ordem (menor vem primeiro)</label>{{ partner_form.order }}</div>
+                    </div>
+                    <button type="submit" class="btn btn-teal" style="margin-top: 1rem;">Salvar Parceiro</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📋 Parceiros Cadastrados</div>
+                {% if development_partners %}
+                <table>
+                    <thead><tr><th>Logo</th><th>Empresa</th><th>Especialidade</th><th>Ordem</th><th>Ações</th></tr></thead>
+                    <tbody>
+                    {% for partner in development_partners %}
+                    <tr>
+                        <td>
+                            {% if partner.logo_db %}
+                            <img src="{% url 'landing:serve_partner_logo' partner.pk %}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
+                            {% else %}
+                            <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                🏢
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ partner.name }}</strong></td>
+                        <td>{{ partner.role }}</td>
+                        <td>{{ partner.order }}</td>
+                        <td>
+                            <form method="post" action="{% url 'landing:delete_partner' partner.pk %}" onsubmit="return confirm('Tem certeza que deseja remover esta empresa?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-red btn-sm">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p style="color:var(--muted)">Nenhuma empresa cadastrada no Time de Desenvolvimento.</p>
+                {% endif %}
             </div>
         </div>
 

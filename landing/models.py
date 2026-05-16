@@ -158,3 +158,42 @@ class Announcement(models.Model):
         if self.expires_at and self.expires_at < timezone.now():
             return False
         return True
+
+
+class DevelopmentPartner(models.Model):
+    """Empresas parceiras exibidas no 'Time de Desenvolvimento' da Landing Page."""
+    name = models.CharField('Nome da Empresa', max_length=150)
+    role = models.CharField('Ramo/Especialidade', max_length=150)
+    description = models.TextField('Descrição', blank=True)
+    link = models.URLField('Link de redirecionamento', blank=True)
+    
+    logo = models.ImageField('Logo da Empresa', upload_to='partners/', null=True, blank=True)
+    logo_db = models.BinaryField('Logo em Banco', null=True, blank=True)
+    logo_mime = models.CharField('MIME Type Logo', max_length=100, blank=True, null=True)
+    
+    order = models.PositiveIntegerField('Ordem de Exibição', default=0)
+    is_active = models.BooleanField('Ativo', default=True)
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Parceiro de Desenvolvimento'
+        verbose_name_plural = 'Parceiros de Desenvolvimento'
+        ordering = ['order', '-created_at']
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.logo:
+            try:
+                if hasattr(self.logo, 'file'):
+                    import mimetypes
+                    try: self.logo.seek(0)
+                    except: pass
+                    self.logo_db = self.logo.read()
+                    self.logo_mime = mimetypes.guess_type(self.logo.name)[0] or 'image/png'
+                    try: self.logo.seek(0)
+                    except: pass
+            except: pass
+        super().save(*args, **kwargs)
+

@@ -15,4 +15,7 @@ urlpatterns = [
     path('testimonials/manage/',          views.manage_testimonials,  name='manage_testimonials'),
     path('hero-image/',                   views.serve_hero_image,     name='serve_hero_image'),
     path('testimonial-avatar/<int:pk>/', views.serve_testimonial_avatar, name='serve_testimonial_avatar'),
+    path('partner/create/', views.create_partner, name='create_partner'),
+    path('partner/<int:pk>/delete/', views.delete_partner, name='delete_partner'),
+    path('partner-logo/<int:pk>/', views.serve_partner_logo, name='serve_partner_logo'),
 ]

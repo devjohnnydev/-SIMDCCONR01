@@ -1,5 +1,5 @@
 from django import forms
-from .models import LandingConfig, Testimonial, Announcement
+from .models import LandingConfig, Testimonial, Announcement, DevelopmentPartner
 
 
 class LandingConfigForm(forms.ModelForm):
@@ -49,4 +49,16 @@ class AnnouncementForm(forms.ModelForm):
             'content':  forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'announcement_type': forms.Select(attrs={'class': 'form-control'}),
             'expires_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        }
+
+class DevelopmentPartnerForm(forms.ModelForm):
+    class Meta:
+        model = DevelopmentPartner
+        fields = ['name', 'role', 'description', 'link', 'logo', 'order', 'is_active']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'role': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'link': forms.URLInput(attrs={'class': 'form-control'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control'}),
         }

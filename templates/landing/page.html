@@ -1320,33 +1320,46 @@
         </div>
 
         <!-- MODAL PARA CADA PARCEIRO -->
-        <div id="modal-partner-{{ partner.pk }}" class="partner-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-          <div class="partner-modal-content" style="background: white; width: 100%; max-width: 600px; border-radius: 40px; padding: 50px; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); transform: translateY(20px); transition: 0.3s;">
-            <button onclick="closePartnerModal('{{ partner.pk }}', event)" style="position: absolute; top: 25px; right: 25px; background: #f1f5f9; border: none; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;">
+        <div id="modal-partner-{{ partner.pk }}" class="partner-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+          <div class="partner-modal-content" style="background: white; width: 100%; max-width: 1000px; max-height: 90vh; border-radius: 40px; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); transform: translateY(20px); transition: 0.3s; overflow: hidden; display: flex; flex-direction: column;">
+            
+            <!-- Botão Fechar -->
+            <button onclick="closePartnerModal('{{ partner.pk }}', event)" style="position: absolute; top: 25px; right: 25px; background: #f1f5f9; border: none; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; z-index: 10;">
               <i class="bi bi-x-lg" style="font-size: 20px; color: #64748b;"></i>
             </button>
 
-            <div style="text-align: center;">
-              <div style="width: 160px; height: 160px; margin: 0 auto 30px; border-radius: 35px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; padding: 25px;">
-                {% if partner.logo_db %}
-                  <img src="{% url 'landing:serve_partner_logo' partner.pk %}" alt="{{ partner.name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                {% else %}
-                  <i class="bi bi-building" style="font-size: 60px; color: var(--primary);"></i>
-                {% endif %}
-              </div>
+            <!-- Conteúdo em Grid/Flex -->
+            <div class="modal-body-wrapper" style="display: flex; height: 100%; flex-wrap: wrap;">
               
-              <h3 style="font-size: 32px; font-weight: 900; color: #0f172a; margin-bottom: 10px;">{{ partner.name }}</h3>
-              <p style="color: var(--primary); font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px;">{{ partner.role }}</p>
-              
-              <div style="background: #f8fafc; padding: 30px; border-radius: 24px; text-align: left; margin-bottom: 35px;">
-                <p style="font-size: 16px; color: #475569; line-height: 1.8; margin: 0;">
-                  {{ partner.description }}
-                </p>
+              <!-- Coluna Esquerda: Logo e Header -->
+              <div class="modal-sidebar" style="flex: 1; min-width: 300px; background: #f8fafc; padding: 60px 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid #e2e8f0; text-align: center;">
+                <div style="width: 180px; height: 180px; margin-bottom: 30px; border-radius: 40px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; padding: 30px;">
+                  {% if partner.logo_db %}
+                    <img src="{% url 'landing:serve_partner_logo' partner.pk %}" alt="{{ partner.name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                  {% else %}
+                    <i class="bi bi-building" style="font-size: 70px; color: var(--primary);"></i>
+                  {% endif %}
+                </div>
+                <h3 style="font-size: 28px; font-weight: 900; color: #0f172a; margin-bottom: 10px; line-height: 1.2;">{{ partner.name }}</h3>
+                <span style="display: inline-block; padding: 8px 20px; border-radius: 100px; font-size: 13px; font-weight: 700; background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe;">
+                  {{ partner.role }}
+                </span>
               </div>
 
-              <a href="{{ partner.link|default:'#' }}" target="_blank" style="display: inline-flex; align-items: center; gap: 12px; background: #0f172a; color: white; padding: 18px 40px; border-radius: 100px; text-decoration: none; font-weight: 700; transition: 0.3s; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);">
-                VISITAR SITE OFICIAL <i class="bi bi-box-arrow-up-right"></i>
-              </a>
+              <!-- Coluna Direita: Descrição e CTA -->
+              <div class="modal-main-content" style="flex: 1.5; min-width: 350px; padding: 60px; display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto;">
+                <div>
+                  <h4 style="font-size: 14px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px;">Sobre a Empresa</h4>
+                  <div style="font-size: 17px; color: #475569; line-height: 1.8; margin-bottom: 40px;">
+                    {{ partner.description|linebreaks }}
+                  </div>
+                </div>
+
+                <a href="{{ partner.link|default:'#' }}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: #2563eb; color: white; padding: 20px 45px; border-radius: 100px; text-decoration: none; font-weight: 700; transition: 0.3s; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); width: fit-content;">
+                  VISITAR SITE OFICIAL <i class="bi bi-box-arrow-up-right"></i>
+                </a>
+              </div>
+
             </div>
           </div>
         </div>
@@ -1373,6 +1386,14 @@
     }
     .partner-modal-overlay.active .partner-modal-content {
       transform: translateY(0);
+    }
+
+    /* Ajustes para telas menores */
+    @media (max-width: 768px) {
+      .modal-body-wrapper { flex-direction: column; }
+      .modal-sidebar { border-right: none; border-bottom: 1px solid #e2e8f0; padding: 40px !important; }
+      .modal-main-content { padding: 40px !important; overflow-y: visible !important; }
+      .partner-modal-content { max-height: 95vh; overflow-y: auto; }
     }
   </style>
 

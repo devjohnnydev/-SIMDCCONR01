@@ -54,7 +54,7 @@ class AnnouncementForm(forms.ModelForm):
 class DevelopmentPartnerForm(forms.ModelForm):
     class Meta:
         model = DevelopmentPartner
-        fields = ['name', 'role', 'description', 'link', 'logo', 'order', 'is_active']
+        fields = ['name', 'role', 'description', 'link', 'logo', 'order']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'role': forms.TextInput(attrs={'class': 'form-control'}),

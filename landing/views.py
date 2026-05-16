@@ -53,7 +53,7 @@ def landing_editor(request):
         if form.is_valid():
             form.save()
             messages.success(request, '✅ Landing page atualizada com sucesso!')
-            return redirect('landing:landing_editor')
+            return redirect('landing:editor')
     else:
         form = LandingConfigForm(instance=config)
 
@@ -202,7 +202,7 @@ def create_partner(request):
         messages.success(request, 'Parceiro adicionado com sucesso!')
     else:
         messages.error(request, 'Erro ao adicionar parceiro. Verifique os dados.')
-    return redirect('landing:landing_editor')
+    return redirect('landing:editor')
 
 @login_required
 @require_POST
@@ -211,7 +211,7 @@ def delete_partner(request, pk):
         return redirect('accounts:dashboard')
     get_object_or_404(DevelopmentPartner, pk=pk).delete()
     messages.info(request, 'Parceiro removido.')
-    return redirect('landing:landing_editor')
+    return redirect('landing:editor')
 
 def serve_partner_logo(request, pk):
     partner = get_object_or_404(DevelopmentPartner, pk=pk)

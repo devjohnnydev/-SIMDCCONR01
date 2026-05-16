@@ -248,6 +248,119 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Seção Time de Desenvolvimento -->
+            <div class="mt-5 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="mb-1 text-dark fw-bold">
+                            <i class="bi bi-code-slash me-2 text-primary"></i>Time de Desenvolvimento
+                        </h4>
+                        <p class="text-muted small mb-0">Conheça as empresas por trás da arquitetura e evolução contínua da plataforma</p>
+                    </div>
+                </div>
+
+                <style>
+                    .dev-card-link {
+                        transition: all 0.3s ease;
+                        text-decoration: none !important;
+                        display: block;
+                        height: 100%;
+                    }
+                    .dev-card-link:hover {
+                        transform: translateY(-5px);
+                    }
+                    .dev-card-link .card {
+                        transition: all 0.3s ease;
+                        border: 1px solid rgba(0,0,0,0.05);
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+                    }
+                    .dev-card-link:hover .card {
+                        box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+                        border-color: rgba(0,0,0,0.1);
+                    }
+                    .dev-logo-container {
+                        width: 80px;
+                        height: 80px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin: 0 auto;
+                        border-radius: 20px;
+                        font-size: 2rem;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                        transition: all 0.3s ease;
+                    }
+                    .dev-card-link:hover .dev-logo-container {
+                        transform: scale(1.05);
+                    }
+                </style>
+
+                <div class="row g-4">
+                    <!-- Empresa 1 -->
+                    <div class="col-md-4">
+                        <a href="#" class="dev-card-link" target="_blank" title="Visitar site">
+                            <div class="card h-100 bg-white">
+                                <div class="card-body p-4 text-center">
+                                    <!-- Placeholder para Logo Master -->
+                                    <div class="dev-logo-container bg-primary text-white mb-3">
+                                        <i class="bi bi-building"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2 text-dark">Nome da Empresa 1</h5>
+                                    <div class="mb-3">
+                                        <span class="badge bg-primary-soft text-primary px-3 py-2 rounded-pill fw-medium" style="background-color: rgba(13, 110, 253, 0.1);">Engenharia de Software</span>
+                                    </div>
+                                    <p class="text-muted small mb-0">
+                                        Breve descrição sobre a especialidade desta empresa e sua contribuição vital para a plataforma.
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Empresa 2 -->
+                    <div class="col-md-4">
+                        <a href="#" class="dev-card-link" target="_blank" title="Visitar site">
+                            <div class="card h-100 bg-white">
+                                <div class="card-body p-4 text-center">
+                                    <!-- Placeholder para Logo Master -->
+                                    <div class="dev-logo-container bg-dark text-white mb-3">
+                                        <i class="bi bi-laptop"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2 text-dark">Nome da Empresa 2</h5>
+                                    <div class="mb-3">
+                                        <span class="badge bg-secondary-soft text-secondary px-3 py-2 rounded-pill fw-medium" style="background-color: rgba(108, 117, 125, 0.1);">Arquitetura de Dados</span>
+                                    </div>
+                                    <p class="text-muted small mb-0">
+                                        Breve descrição sobre a especialidade desta empresa e sua contribuição vital para a plataforma.
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Empresa 3 -->
+                    <div class="col-md-4">
+                        <a href="#" class="dev-card-link" target="_blank" title="Visitar site">
+                            <div class="card h-100 bg-white">
+                                <div class="card-body p-4 text-center">
+                                    <!-- Placeholder para Logo Master -->
+                                    <div class="dev-logo-container text-white mb-3" style="background-color: #6f42c1;">
+                                        <i class="bi bi-cpu"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2 text-dark">Nome da Empresa 3</h5>
+                                    <div class="mb-3">
+                                        <span class="badge px-3 py-2 rounded-pill fw-medium" style="background-color: rgba(111, 66, 193, 0.1); color: #6f42c1;">Inteligência Artificial</span>
+                                    </div>
+                                    <p class="text-muted small mb-0">
+                                        Breve descrição sobre a especialidade desta empresa e sua contribuição vital para a plataforma.
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
     </div>
 </div>
 {% endblock %}

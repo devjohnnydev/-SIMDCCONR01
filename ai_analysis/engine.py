@@ -9,6 +9,16 @@ GROQ_API_KEY = config('GROQ_API_KEY', default='')
 
 client = Groq(api_key=GROQ_API_KEY)
 
+# Carrega base teórica extraída dos PDFs para injetar no prompt
+BASE_TEORICA_TEXT = ""
+try:
+    base_teorica_path = os.path.join(settings.BASE_DIR, 'ai_analysis', 'base_teorica.txt')
+    if os.path.exists(base_teorica_path):
+        with open(base_teorica_path, 'r', encoding='utf-8') as f:
+            BASE_TEORICA_TEXT = f.read()
+except Exception as e:
+    print(f"Aviso: Não foi possível carregar base_teorica.txt: {e}")
+
 def generate_employee_diagnostic(assignment):
     """
     Usa Groq para analisar respostas e gerar laudo individual (EmployeeDiagnostic).
@@ -44,11 +54,15 @@ def generate_employee_diagnostic(assignment):
     6. justificativa_encaminhamento: Caso verdadeiro, explique o motivo.
     """
     
+    system_prompt = "Voce é um especialista em SST e NR-01 que responde exclusivamente em JSON."
+    if BASE_TEORICA_TEXT:
+        system_prompt += f"\n\nATENÇÃO: Utilize o seguinte referencial teórico (livros, palestras e diretrizes da empresa) como base absoluta para sua análise:\n\n{BASE_TEORICA_TEXT}"
+
     try:
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": "Voce é um especialista em SST e NR-01 que responde exclusivamente em JSON."},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
             response_format={ "type": "json_object" },
@@ -139,11 +153,15 @@ def generate_department_diagnostic(company, sector_name, form_instance, user=Non
     Cada ponto/alerta/sugestão deve ser uma frase completa e profissional.
     """
 
+    system_prompt = "Você é um analista de clima organizacional e riscos psicossociais NR-01. Responda exclusivamente em JSON válido. Use linguagem técnica profissional em português formal."
+    if BASE_TEORICA_TEXT:
+        system_prompt += f"\n\nATENÇÃO: Utilize o seguinte referencial teórico (livros, palestras e diretrizes da empresa) como base absoluta para sua análise departamental:\n\n{BASE_TEORICA_TEXT}"
+
     try:
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": "Você é um analista de clima organizacional e riscos psicossociais NR-01. Responda exclusivamente em JSON válido. Use linguagem técnica profissional em português formal."},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
             response_format={ "type": "json_object" },

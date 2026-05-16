@@ -160,7 +160,7 @@ execute("ALTER TABLE companies_company ADD COLUMN IF NOT EXISTS logo_mime_type v
 
 execute("ALTER TABLE landing_landingconfig ADD COLUMN IF NOT EXISTS hero_image_db bytea;")
 execute("ALTER TABLE landing_landingconfig ADD COLUMN IF NOT EXISTS hero_image_mime varchar(100);")
-execute("ALTER TABLE landing_landingconfig ADD COLUMN IF NOT EXISTS whatsapp_number varchar(20) DEFAULT '5511964291090';")
+execute("ALTER TABLE landing_landingconfig ADD COLUMN IF NOT EXISTS whatsapp_number varchar(20) DEFAULT '11920881521';")
 
 execute("ALTER TABLE landing_testimonial ADD COLUMN IF NOT EXISTS avatar_db bytea;")
 execute("ALTER TABLE landing_testimonial ADD COLUMN IF NOT EXISTS avatar_mime varchar(100);")
@@ -180,6 +180,9 @@ execute("""
         created_at timestamp with time zone NOT NULL
     );
 """)
+
+execute("UPDATE landing_landingconfig SET whatsapp_number = '11920881521';")
+execute("UPDATE landing_developmentpartner SET is_active = true;")
 
 print("\n--- FORCING SAFETY TABLE: billing_customplanrequest ---")
 execute("""

@@ -38,6 +38,7 @@
                 <div class="d-flex justify-content-between align-items-end mb-2">
                     <h6 class="text-white mb-0 opacity-75 small text-uppercase fw-bold">{{ instance.title }}</h6>
                     <span class="text-white fw-bold" id="progress-text">0%</span>
+                    <span class="text-white-50 small ms-2" id="autosave-status" style="display:none;"><i class="bi bi-check-circle-fill text-success"></i> Salvo</span>
                 </div>
                 <div class="survey-progress-container">
                     <div class="survey-progress-bar" id="survey-bar" role="progressbar" style="width: 0%"></div>
@@ -88,6 +89,9 @@
             <!-- Perguntas -->
             <form method="post" id="survey-form">
                 {% csrf_token %}
+                <script type="application/json" id="existing-answers-data">
+                    {{ existing_answers_json|safe }}
+                </script>
                 
                 {% for cat_key, cat_data in grouped_questions.items %}
                 <!-- Section Header: {{ cat_data.meta.label }} -->
@@ -208,15 +212,56 @@
         const form = document.getElementById('survey-form');
         const progressBar = document.getElementById('survey-bar');
         const progressText = document.getElementById('progress-text');
+        const autosaveStatus = document.getElementById('autosave-status');
+        const AUTOSAVE_URL = '{% url "forms:autosave" assignment.pk %}';
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-        // Lógica de seleção Premium
+        // ═══ 1. Pre-fill de respostas salvas (Save & Resume) ═══
+        try {
+            const savedDataEl = document.getElementById('existing-answers-data');
+            if (savedDataEl) {
+                const savedAnswers = JSON.parse(savedDataEl.textContent);
+                Object.entries(savedAnswers).forEach(([qId, value]) => {
+                    if (Array.isArray(value)) {
+                        value.forEach(v => {
+                            const input = form.querySelector(`input[name="question_${qId}"][value="${v}"]`);
+                            if (input) {
+                                input.checked = true;
+                                const label = input.closest('.premium-scale-option');
+                                if (label) label.classList.add('selected');
+                            }
+                        });
+                    } else if (value !== '' && value !== null) {
+                        const radio = form.querySelector(`input[type="radio"][name="question_${qId}"][value="${value}"]`);
+                        if (radio) {
+                            radio.checked = true;
+                            const label = radio.closest('.premium-scale-option');
+                            if (label) {
+                                const qIdAttr = label.dataset.questionId;
+                                if (qIdAttr) {
+                                    document.querySelectorAll(`.premium-scale-option[data-question-id="${qIdAttr}"]`).forEach(opt => opt.classList.remove('selected'));
+                                }
+                                label.classList.add('selected');
+                            }
+                        }
+                        const textInput = form.querySelector(`textarea[name="question_${qId}"], input[type="number"][name="question_${qId}"], input[type="date"][name="question_${qId}"]`);
+                        if (textInput) {
+                            textInput.value = value;
+                        }
+                    }
+                });
+            }
+        } catch(e) {
+            console.warn('Erro ao restaurar respostas:', e);
+        }
+
+        // ═══ 2. Lógica de seleção Premium (existente) ═══
         document.querySelectorAll('.premium-scale-option').forEach(function(el) {
             el.addEventListener('click', function() {
                 const input = this.querySelector('input');
                 const isCheckbox = input.type === 'checkbox';
                 
                 if (!isCheckbox) {
-                    // Limpar seleção anterior da mesma questão
                     const qId = this.dataset.questionId;
                     document.querySelectorAll(`.premium-scale-option[data-question-id="${qId}"]`).forEach(opt => {
                         opt.classList.remove('selected');
@@ -230,24 +275,80 @@
                 }
                 
                 updateProgress();
+                autoSaveAnswer(input);
             });
         });
 
+        // ═══ 3. Auto-save AJAX ═══
+        let saveTimeout = null;
+        
+        function autoSaveAnswer(input) {
+            const name = input.name;
+            const qId = name.replace('question_', '');
+            let value;
+
+            if (input.type === 'checkbox') {
+                const checked = form.querySelectorAll(`input[name="${name}"]:checked`);
+                value = Array.from(checked).map(c => c.value);
+            } else if (input.type === 'radio') {
+                value = input.value;
+            } else {
+                value = input.value;
+            }
+
+            if (autosaveStatus) {
+                autosaveStatus.style.display = 'inline';
+                autosaveStatus.innerHTML = '<i class="bi bi-arrow-repeat text-warning spin-icon"></i> Salvando...';
+            }
+
+            fetch(AUTOSAVE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ question_id: qId, value: value })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    showSaveStatus();
+                }
+            })
+            .catch(err => console.warn('Auto-save error:', err));
+        }
+
+        function showSaveStatus() {
+            if (autosaveStatus) {
+                autosaveStatus.style.display = 'inline';
+                autosaveStatus.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> Salvo';
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => {
+                    autosaveStatus.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Auto-save para campos de texto/número/data (com debounce)
+        let textDebounce = {};
+        form.querySelectorAll('textarea, input[type="date"], input[type="number"]').forEach(input => {
+            input.addEventListener('input', function() {
+                updateProgress();
+                const name = this.name;
+                clearTimeout(textDebounce[name]);
+                textDebounce[name] = setTimeout(() => autoSaveAnswer(this), 1000);
+            });
+        });
+
+        // ═══ 4. Barra de Progresso ═══
         function updateProgress() {
-            // Conta quantos grupos de rádio ou campos de texto estão preenchidos
             const answered = new Set();
-            
-            // Rádios selecionados
             form.querySelectorAll('input[type="radio"]:checked').forEach(input => {
                 answered.add(input.name);
             });
-
-            // Checkboxes (pelo menos um selecionado)
             form.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
                 answered.add(input.name);
             });
-
-            // Campos de texto/data preenchidos
             form.querySelectorAll('textarea, input[type="date"], input[type="number"]').forEach(input => {
                 if (input.value.trim() !== "") {
                     answered.add(input.name);
@@ -260,7 +361,6 @@
             progressBar.style.width = percentage + '%';
             progressText.innerText = percentage + '%';
             
-            // Alterar cor se completado
             if (percentage === 100) {
                 progressBar.classList.add('bg-success');
             } else {
@@ -268,12 +368,7 @@
             }
         }
 
-        // Listener para inputs de texto
-        form.querySelectorAll('textarea, input[type="date"], input[type="number"]').forEach(input => {
-            input.addEventListener('input', updateProgress);
-        });
-
-        // Efeito de scroll no header
+        // ═══ 5. Efeito de scroll no header ═══
         window.addEventListener('scroll', function() {
             const header = document.querySelector('.sticky-survey-header');
             if (window.scrollY > 50) {
@@ -285,7 +380,7 @@
             }
         });
         
-        // Inicializar progresso
+        // Inicializar progresso (com respostas pré-carregadas)
         updateProgress();
     });
 </script>

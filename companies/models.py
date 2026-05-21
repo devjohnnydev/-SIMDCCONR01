@@ -92,6 +92,17 @@ class Company(models.Model):
         verbose_name='Aprovado por'
     )
     
+    # Multi-CNPJ: Grupo Empresarial
+    parent_company = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='subsidiaries',
+        verbose_name='Empresa Matriz',
+        help_text='Se pertence a um grupo empresarial (Multi-CNPJ)'
+    )
+    
     class Meta:
         verbose_name = 'Empresa'
         verbose_name_plural = 'Empresas'
@@ -192,6 +203,32 @@ class Company(models.Model):
             self.plan is not None
             and self.subscription_status in ('active', 'trialing')
         )
+
+    @property
+    def is_holding(self):
+        """Verifica se é uma empresa matriz com subsidiárias."""
+        return self.subsidiaries.exists()
+
+    def get_group_companies(self):
+        """Retorna todas as empresas do grupo (inclui a si mesma)."""
+        if self.parent_company:
+            # É subsidiária — retorna matriz + todas as irmãs
+            return Company.objects.filter(
+                models.Q(pk=self.parent_company_id) | 
+                models.Q(parent_company=self.parent_company)
+            ).order_by('nome_fantasia')
+        elif self.is_holding:
+            # É matriz — retorna si mesma + subsidiárias
+            return Company.objects.filter(
+                models.Q(pk=self.pk) | 
+                models.Q(parent_company=self)
+            ).order_by('nome_fantasia')
+        return Company.objects.filter(pk=self.pk)
+
+    @property
+    def has_group(self):
+        """Verifica se pertence a um grupo empresarial."""
+        return self.parent_company_id is not None or self.is_holding
 
 
 class Announcement(models.Model):

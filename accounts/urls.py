@@ -70,5 +70,9 @@ urlpatterns = [
     # Dashboard Financeiro (Admin Master)
     path('dashboard/admin/financeiro/', views.admin_financial_dashboard, name='admin_financial_dashboard'),
     path('dashboard/admin/financeiro/empresa/<int:pk>/', views.admin_financial_company_detail, name='admin_financial_company_detail'),
+
+    # Multi-CNPJ (Grupo Empresarial)
+    path('dashboard/company/group/', views.group_dashboard, name='group_dashboard'),
+    path('dashboard/company/switch/<int:company_id>/', views.switch_company, name='switch_company'),
 ]
 

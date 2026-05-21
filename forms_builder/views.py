@@ -1,12 +1,14 @@
 """
 Views para gestao de formularios e respostas.
 """
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Avg, Count
+from django.views.decorators.http import require_POST as django_require_POST
 
 from .models import FormTemplate, FormQuestion, FormInstance, FormAssignment, FormAnswer
 from .forms import FormInstanceForm, FormQuestionFormSet
@@ -340,13 +342,109 @@ def form_respond(request, assignment_pk):
             messages.success(request, 'Formulario enviado com sucesso! Obrigado pela sua participacao.')
             return redirect('accounts:employee_dashboard')
     
+    # Save & Resume: carregar respostas já salvas
+    existing_answers = {}
+    saved_answers = FormAnswer.objects.filter(assignment=assignment).select_related('question')
+    for ans in saved_answers:
+        q_id = str(ans.question_id)
+        if ans.question.question_type in ['SCALE', 'SCALE_10', 'NUMBER']:
+            existing_answers[q_id] = str(int(ans.numeric_value)) if ans.numeric_value is not None else ''
+        elif ans.question.question_type == 'YESNO':
+            if ans.boolean_value is True:
+                existing_answers[q_id] = 'Sim'
+            elif ans.boolean_value is False:
+                existing_answers[q_id] = 'Nao'
+            else:
+                existing_answers[q_id] = ''
+        elif ans.question.question_type == 'DATE':
+            existing_answers[q_id] = str(ans.date_value) if ans.date_value else ''
+        elif ans.question.question_type in ['MULTIPLE', 'SINGLE']:
+            existing_answers[q_id] = ans.selected_options or []
+        else:
+            existing_answers[q_id] = ans.text_value or ''
+
     context = {
         'assignment': assignment,
         'instance': instance,
         'questions': questions,
         'grouped_questions': grouped_questions,
+        'existing_answers_json': json.dumps(existing_answers),
     }
     return render(request, 'forms_builder/form_respond.html', context)
+
+
+@login_required
+@django_require_POST
+def form_autosave(request, assignment_pk):
+    """Endpoint AJAX para salvar respostas parciais (Save & Resume)."""
+    assignment = get_object_or_404(FormAssignment, pk=assignment_pk)
+    
+    # Validar que o usuário é o dono do assignment
+    if hasattr(request.user, 'employee_profile'):
+        employee = request.user.employee_profile
+    else:
+        employee = Employee.objects.filter(
+            email=request.user.email,
+            company=request.user.company
+        ).first()
+    
+    if not employee or assignment.employee != employee:
+        return JsonResponse({'status': 'error', 'message': 'Não autorizado'}, status=403)
+    
+    if assignment.status == 'COMPLETED':
+        return JsonResponse({'status': 'error', 'message': 'Formulário já finalizado'}, status=400)
+    
+    try:
+        data = json.loads(request.body)
+        question_id = data.get('question_id')
+        value = data.get('value', '')
+        
+        question = get_object_or_404(FormQuestion, pk=question_id, template=assignment.form_instance.template)
+        
+        answer, created = FormAnswer.objects.update_or_create(
+            assignment=assignment,
+            question=question,
+            defaults={}
+        )
+        
+        # Salvar valor conforme tipo da pergunta
+        if question.question_type in ['SCALE', 'SCALE_10', 'NUMBER']:
+            answer.numeric_value = float(value) if value else None
+        elif question.question_type == 'YESNO':
+            answer.boolean_value = value.lower() == 'sim' if value else None
+        elif question.question_type == 'DATE':
+            answer.date_value = value if value else None
+        elif question.question_type in ['MULTIPLE']:
+            answer.selected_options = value if isinstance(value, list) else [value] if value else []
+        elif question.question_type == 'SINGLE':
+            answer.selected_options = [value] if value else []
+        else:
+            answer.text_value = value
+        
+        if assignment.form_instance.is_anonymous:
+            answer.anonymous_employee = employee
+        
+        answer.save()
+        
+        # Atualizar status para IN_PROGRESS se ainda PENDING
+        if assignment.status == 'PENDING':
+            assignment.status = 'IN_PROGRESS'
+            assignment.started_at = timezone.now()
+            assignment.save(update_fields=['status', 'started_at'])
+        
+        # Contar progresso
+        total_questions = assignment.form_instance.template.questions.count()
+        answered_count = assignment.answers.count()
+        
+        return JsonResponse({
+            'status': 'ok',
+            'saved': True,
+            'answered': answered_count,
+            'total': total_questions,
+            'progress': round((answered_count / total_questions) * 100) if total_questions > 0 else 0
+        })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
 @login_required

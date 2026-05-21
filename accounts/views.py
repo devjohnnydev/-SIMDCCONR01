@@ -174,7 +174,17 @@ def company_admin_dashboard(request):
         messages.error(request, 'Acesso nao autorizado.')
         return redirect('accounts:dashboard')
     
-    company = request.user.company
+    # Multi-CNPJ: usar empresa ativa da sessão se disponível
+    user_company = request.user.company
+    active_company_id = request.session.get('active_company_id')
+    if active_company_id and user_company.has_group:
+        allowed_ids = list(user_company.get_group_companies().values_list('pk', flat=True))
+        if active_company_id in allowed_ids:
+            company = Company.objects.get(pk=active_company_id)
+        else:
+            company = user_company
+    else:
+        company = user_company
     
     active_forms = FormInstance.objects.filter(
         company=company,
@@ -228,6 +238,11 @@ def company_admin_dashboard(request):
         'company_hazards': company_hazards,
         'company_critical': company_critical,
         'company_alerts': company_alerts,
+        # Multi-CNPJ
+        'has_group': user_company.has_group,
+        'group_companies': user_company.get_group_companies() if user_company.has_group else None,
+        'active_company': company,
+        'is_switched': company.pk != user_company.pk,
     }
     
     return render(request, 'accounts/company_admin_dashboard.html', context)
@@ -1125,3 +1140,111 @@ def admin_financial_company_detail(request, pk):
     }
 
     return JsonResponse(data)
+
+
+# --- MULTI-CNPJ: GRUPO EMPRESARIAL ---
+
+@login_required
+def switch_company(request, company_id):
+    """Permite ao COMPANY_ADMIN trocar de empresa dentro do grupo Multi-CNPJ."""
+    if not request.user.is_company_admin:
+        messages.error(request, 'Acesso não autorizado.')
+        return redirect('accounts:dashboard')
+    
+    target_company = get_object_or_404(Company, pk=company_id)
+    user_company = request.user.company
+    
+    # Verificar se o usuário tem acesso a esta empresa (mesmo grupo)
+    allowed_ids = list(user_company.get_group_companies().values_list('pk', flat=True))
+    
+    if target_company.pk not in allowed_ids:
+        messages.error(request, 'Você não tem permissão para acessar esta empresa.')
+        return redirect('accounts:dashboard')
+    
+    # Salvar a empresa ativa na sessão
+    request.session['active_company_id'] = target_company.pk
+    request.session.modified = True
+    
+    AuditLog.log(
+        user=request.user,
+        action='UPDATE',
+        description=f'Alternou contexto para empresa: {target_company.nome_fantasia}',
+        obj=target_company,
+        request=request
+    )
+    
+    messages.success(request, f'Você está agora gerenciando: {target_company.nome_fantasia}')
+    return redirect('accounts:company_admin_dashboard')
+
+
+@login_required
+def group_dashboard(request):
+    """Painel do Grupo Empresarial — visão consolidada Multi-CNPJ."""
+    if not request.user.is_company_admin:
+        messages.error(request, 'Acesso não autorizado.')
+        return redirect('accounts:dashboard')
+    
+    user_company = request.user.company
+    if not user_company.has_group:
+        messages.info(request, 'Sua empresa não pertence a um grupo empresarial.')
+        return redirect('accounts:company_admin_dashboard')
+    
+    group_companies = user_company.get_group_companies()
+    
+    # Métricas consolidadas por empresa
+    companies_data = []
+    total_employees = 0
+    total_responded = 0
+    total_pending = 0
+    
+    for company in group_companies:
+        emp_count = company.get_employee_count()
+        forms_count = company.get_active_forms_count()
+        
+        from forms_builder.models import FormInstance, FormAssignment
+        active_forms = FormInstance.objects.filter(company=company, status='ACTIVE')
+        responded = FormAssignment.objects.filter(
+            form_instance__in=active_forms, status='COMPLETED'
+        ).count()
+        pending = FormAssignment.objects.filter(
+            form_instance__in=active_forms, status__in=['PENDING', 'IN_PROGRESS']
+        ).count()
+        
+        from risk_management.models import HazardRegistry, RiskAssessment
+        hazards = HazardRegistry.objects.filter(company=company, status='ACTIVE').count()
+        critical = RiskAssessment.objects.filter(
+            hazard__company=company,
+            nivel_risco__in=['SUBSTANCIAL', 'INTOLERAVEL'],
+            hazard__status='ACTIVE'
+        ).count()
+        
+        companies_data.append({
+            'company': company,
+            'employees': emp_count,
+            'active_forms': forms_count,
+            'responded': responded,
+            'pending': pending,
+            'response_rate': round((responded / (responded + pending)) * 100) if (responded + pending) > 0 else 0,
+            'hazards': hazards,
+            'critical_risks': critical,
+            'is_current': company.pk == request.session.get('active_company_id', user_company.pk),
+        })
+        
+        total_employees += emp_count
+        total_responded += responded
+        total_pending += pending
+    
+    # Identificar a matriz
+    matriz = user_company.parent_company if user_company.parent_company else user_company
+    
+    context = {
+        'matriz': matriz,
+        'companies_data': companies_data,
+        'total_companies': group_companies.count(),
+        'total_employees': total_employees,
+        'total_responded': total_responded,
+        'total_pending': total_pending,
+        'overall_response_rate': round((total_responded / (total_responded + total_pending)) * 100) if (total_responded + total_pending) > 0 else 0,
+    }
+    
+    return render(request, 'accounts/group_dashboard.html', context)

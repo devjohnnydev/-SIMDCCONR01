@@ -25,4 +25,7 @@ urlpatterns = [
     path('responses/<int:assignment_pk>/', views.form_view_responses, name='view_responses'),
     path('resend-notification/<int:assignment_pk>/', views.resend_form_notification, name='resend_notification'),
     path('resend-notification/employee/<int:employee_id>/', views.resend_form_notification, name='resend_notification_employee'),
+    
+    # Save & Resume (auto-save AJAX)
+    path('autosave/<int:assignment_pk>/', views.form_autosave, name='autosave'),
 ]

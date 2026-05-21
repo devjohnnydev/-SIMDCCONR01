@@ -73,6 +73,7 @@ urlpatterns = [
 
     # Multi-CNPJ (Grupo Empresarial)
     path('dashboard/company/group/', views.group_dashboard, name='group_dashboard'),
+    path('dashboard/company/group/add/', views.add_subsidiary, name='add_subsidiary'),
     path('dashboard/company/switch/<int:company_id>/', views.switch_company, name='switch_company'),
 ]
 

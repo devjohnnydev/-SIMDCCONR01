@@ -230,6 +230,17 @@ class Company(models.Model):
         """Verifica se pertence a um grupo empresarial."""
         return self.parent_company_id is not None or self.is_holding
 
+    @property
+    def can_use_multi_cnpj(self):
+        """Verifica se a empresa pode usar o recurso de Multi-CNPJ (planos corporativos/avançados/exclusivos)."""
+        if self.parent_company_id is not None or self.is_holding:
+            return True
+        if self.plan:
+            plan_name = self.plan.name.lower()
+            return any(k in plan_name for k in ['advanced', 'enterprise', 'exclusivo', 'corporate', 'multi', 'cnpj', 'múltiplos', 'holding'])
+        return False
+
+
 
 class Announcement(models.Model):
     """Comunicados e avisos da empresa para funcionarios."""

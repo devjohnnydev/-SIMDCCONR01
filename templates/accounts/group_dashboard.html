@@ -176,12 +176,15 @@
         </div>
     </div>
 
-    <!-- Breadcrumb -->
-    <nav class="mb-4">
+    <!-- Breadcrumb e Ações -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <a href="{% url 'accounts:company_admin_dashboard' %}" class="text-decoration-none text-muted">
             <i class="bi bi-arrow-left me-1"></i> Voltar ao Dashboard
         </a>
-    </nav>
+        <button class="btn btn-primary d-flex align-items-center gap-2" style="border-radius: 0.75rem; padding: 0.6rem 1.5rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#addCnpjModal">
+            <i class="bi bi-plus-circle"></i> Adicionar Novo CNPJ
+        </button>
+    </div>
 
     <!-- Grid de Empresas -->
     <div class="row g-4">
@@ -248,4 +251,128 @@
         {% endfor %}
     </div>
 </div>
+
+<!-- Modal Adicionar CNPJ -->
+<div class="modal fade" id="addCnpjModal" tabindex="-1" aria-labelledby="addCnpjModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 1.25rem;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold" id="addCnpjModalLabel">
+                    <i class="bi bi-buildings text-primary me-2"></i>Cadastrar Nova Empresa (Filial)
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <form id="add-cnpj-form" method="POST" action="{% url 'accounts:add_subsidiary' %}">
+                {% csrf_token %}
+                <div class="modal-body py-4">
+                    <p class="text-muted small mb-4">
+                        Adicione um novo CNPJ ao seu grupo empresarial. A nova empresa herdará as configurações de cores, marca e o plano de faturamento da matriz.
+                    </p>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Nome Fantasia *</label>
+                        <input type="text" name="nome_fantasia" class="form-control form-control-lg" placeholder="Ex: Itaú Campinas" required style="border-radius: 0.75rem;">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Razão Social *</label>
+                        <input type="text" name="razao_social" class="form-control form-control-lg" placeholder="Ex: Itaú Unibanco S.A." required style="border-radius: 0.75rem;">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">CNPJ *</label>
+                        <input type="text" name="cnpj" id="input-cnpj" class="form-control form-control-lg" placeholder="Apenas os 14 números" maxlength="14" required style="border-radius: 0.75rem;">
+                        <div class="form-text text-muted small">Digite apenas números (14 dígitos).</div>
+                    </div>
+
+                    <div class="accordion" id="accordionOptionalFields" style="border-radius: 0.75rem; overflow: hidden;">
+                        <div class="accordion-item border-0 bg-light">
+                            <h2 class="accordion-header" id="headingOptional">
+                                <button class="accordion-button collapsed bg-light shadow-none fw-semibold small text-muted py-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptional" aria-expanded="false" aria-controls="collapseOptional">
+                                    Informações Adicionais (Opcional)
+                                </button>
+                            </h2>
+                            <div id="collapseOptional" class="accordion-collapse collapse" aria-labelledby="headingOptional" data-bs-parent="#accordionOptionalFields">
+                                <div class="accordion-body bg-light pt-1 pb-3">
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold text-muted small">Responsável</label>
+                                        <input type="text" name="responsavel_nome" class="form-control form-control-sm" placeholder="Nome do Responsável" style="border-radius: 0.5rem;">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold text-muted small">E-mail</label>
+                                        <input type="email" name="responsavel_email" class="form-control form-control-sm" placeholder="email@exemplo.com" style="border-radius: 0.5rem;">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label fw-semibold text-muted small">Telefone</label>
+                                        <input type="text" name="telefone" class="form-control form-control-sm" placeholder="Apenas números com DDD" style="border-radius: 0.5rem;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius: 0.75rem; font-weight: 600;">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="border-radius: 0.75rem; font-weight: 600;">
+                        <span class="spinner-border spinner-border-sm me-2 d-none" role="status" id="submit-spinner"></span>
+                        Salvar e Criar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('add-cnpj-form');
+        const spinner = document.getElementById('submit-spinner');
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Desabilitar o botão e mostrar spinner
+            submitBtn.disabled = true;
+            spinner.classList.remove('d-none');
+
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                if (key !== 'csrfmiddlewaretoken') {
+                    data[key] = value;
+                }
+            });
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('d-none');
+                submitBtn.disabled = false;
+
+                if (data.status === 'ok') {
+                    alert('Empresa filial cadastrada com sucesso!');
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Ocorreu um erro ao cadastrar a empresa.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                spinner.classList.add('d-none');
+                submitBtn.disabled = false;
+                alert('Erro na comunicação com o servidor.');
+            });
+        });
+    });
+</script>
 {% endblock %}

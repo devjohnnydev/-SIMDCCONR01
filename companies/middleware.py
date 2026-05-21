@@ -40,6 +40,21 @@ class CompanyMiddleware:
         if request.user.is_authenticated:
             if hasattr(request.user, 'company') and request.user.company:
                 company = request.user.company
+                
+                # Multi-CNPJ: switched company context
+                active_company_id = request.session.get('active_company_id')
+                if active_company_id and active_company_id != company.pk:
+                    if company.can_use_multi_cnpj:
+                        allowed_ids = list(company.get_group_companies().values_list('pk', flat=True))
+                        if active_company_id in allowed_ids:
+                            from companies.models import Company
+                            try:
+                                switched_company = Company.objects.get(pk=active_company_id)
+                                company = switched_company
+                                request.user.company = switched_company
+                            except Company.DoesNotExist:
+                                pass
+                
                 request.current_company = company
 
                 # ── Verificar expiração do plano por tempo ──

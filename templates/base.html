@@ -804,11 +804,7 @@
                             <i class="bi bi-shield-exclamation"></i> Gestão de Riscos (GRO)
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if 'compare' in request.path %}active{% endif %}" href="{% url 'risk_management:compare_surveys' %}">
-                            <i class="bi bi-arrow-left-right"></i> Comparar Pesquisas
-                        </a>
-                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link {% if 'evolution' in request.path and 'todas-empresas' not in request.path %}active{% endif %}" href="{% url 'evolution:dashboard' %}">
                             <i class="bi bi-graph-up-arrow"></i> Evolução da Empresa
@@ -855,6 +851,13 @@
                             <i class="bi bi-grid-1x2-fill"></i> System Dashboard
                         </a>
                     </li>
+                    {% if current_company.can_use_multi_cnpj %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'group_dashboard' %}active{% endif %}" href="{% url 'accounts:group_dashboard' %}">
+                            <i class="bi bi-buildings"></i> Meus CNPJs (Multi-CNPJ)
+                        </a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link {% if 'employee' in request.path %}active{% endif %}" href="{% url 'employees:list' %}">
                             <i class="bi bi-people-fill"></i> Funcionários
@@ -898,11 +901,6 @@
                     <li class="nav-item">
                         <a class="nav-link {% if 'evolution' in request.path %}active{% endif %}" href="{% url 'evolution:dashboard' %}">
                             <i class="bi bi-graph-up-arrow"></i> Evolução e Inteligência
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if 'compare' in request.path %}active{% endif %}" href="{% url 'risk_management:compare_surveys' %}">
-                            <i class="bi bi-arrow-left-right"></i> Comparar Pesquisas
                         </a>
                     </li>
                     <li class="nav-item">

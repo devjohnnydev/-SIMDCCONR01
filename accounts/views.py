@@ -4,6 +4,7 @@ Views para autenticacao e dashboards de usuarios.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import messages
 from django.http import JsonResponse
@@ -1185,8 +1186,8 @@ def group_dashboard(request):
         return redirect('accounts:dashboard')
     
     user_company = request.user.company
-    if not user_company.has_group:
-        messages.info(request, 'Sua empresa não pertence a um grupo empresarial.')
+    if not user_company or not user_company.can_use_multi_cnpj:
+        messages.info(request, 'Sua empresa não possui permissão ou plano habilitado para Multi-CNPJ.')
         return redirect('accounts:company_admin_dashboard')
     
     group_companies = user_company.get_group_companies()
@@ -1248,3 +1249,85 @@ def group_dashboard(request):
     }
     
     return render(request, 'accounts/group_dashboard.html', context)
+
+
+@login_required
+@require_POST
+def add_subsidiary(request):
+    """Cria uma nova sub-empresa/CNPJ sob a empresa logada (Multi-CNPJ)."""
+    from django.views.decorators.http import require_POST
+    from django.http import JsonResponse
+    import json
+    
+    if not request.user.is_company_admin:
+        return JsonResponse({'status': 'error', 'message': 'Não autorizado.'}, status=403)
+        
+    # Precisamos da matriz real do usuário no banco de dados (o cadastro primário)
+    # Buscamos diretamente do banco para evitar o switch temporário da middleware
+    from accounts.models import User
+    db_user = User.objects.get(pk=request.user.pk)
+    real_company = db_user.company
+    
+    if not real_company:
+        return JsonResponse({'status': 'error', 'message': 'Empresa matriz não encontrada.'}, status=400)
+        
+    if not real_company.can_use_multi_cnpj:
+        return JsonResponse({'status': 'error', 'message': 'Seu plano não suporta Multi-CNPJ.'}, status=403)
+        
+    matriz = real_company.parent_company if real_company.parent_company else real_company
+    
+    try:
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+        else:
+            data = request.POST
+            
+        nome_fantasia = data.get('nome_fantasia')
+        razao_social = data.get('razao_social')
+        cnpj = data.get('cnpj')
+        
+        if cnpj:
+            cnpj = ''.join(filter(str.isdigit, cnpj))
+            
+        if not nome_fantasia or not razao_social or not cnpj:
+            return JsonResponse({'status': 'error', 'message': 'Preencha todos os campos obrigatórios (Nome Fantasia, Razão Social e CNPJ).'}, status=400)
+            
+        if len(cnpj) != 14:
+            return JsonResponse({'status': 'error', 'message': 'CNPJ deve conter 14 dígitos.'}, status=400)
+            
+        if Company.objects.filter(cnpj=cnpj).exists():
+            return JsonResponse({'status': 'error', 'message': 'Este CNPJ já está cadastrado no sistema.'}, status=400)
+            
+        new_company = Company.objects.create(
+            nome_fantasia=nome_fantasia,
+            razao_social=razao_social,
+            cnpj=cnpj,
+            responsavel_nome=data.get('responsavel_nome') or matriz.responsavel_nome,
+            responsavel_email=data.get('responsavel_email') or matriz.responsavel_email,
+            telefone=data.get('telefone') or matriz.telefone,
+            endereco=data.get('endereco', ''),
+            cidade=data.get('cidade', ''),
+            estado=data.get('estado', ''),
+            cep=data.get('cep', ''),
+            cor_primaria=matriz.cor_primaria,
+            cor_secundaria=matriz.cor_secundaria,
+            logo_db=matriz.logo_db,
+            logo_mime_type=matriz.logo_mime_type,
+            status='ACTIVE',
+            plan=matriz.plan,
+            subscription_status=matriz.subscription_status,
+            current_period_end=matriz.current_period_end,
+            parent_company=matriz
+        )
+        
+        AuditLog.log(
+            user=request.user,
+            action='CREATE',
+            description=f'Adicionou filial/CNPJ: {new_company.nome_fantasia} ({new_company.cnpj})',
+            obj=new_company,
+            request=request
+        )
+        
+        return JsonResponse({'status': 'ok', 'message': 'Empresa cadastrada com sucesso!'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': f'Erro ao cadastrar empresa: {str(e)}'}, status=500)

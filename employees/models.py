@@ -132,7 +132,7 @@ class Employee(models.Model):
         from forms_builder.models import FormAssignment
         return FormAssignment.objects.filter(
             employee=self,
-            status='PENDING',
+            status__in=['PENDING', 'IN_PROGRESS'],
             form_instance__status='ACTIVE'
         ).select_related('form_instance', 'form_instance__template')
     
